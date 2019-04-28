@@ -137,9 +137,9 @@ namespace AMI.Portable
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
-                SourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath("AMI"), "data", "SMIR.Brain.XX.O.MR_Flair.36620.mha"),
-                DestinationPath = Path.Combine(FileSystemHelper.BuildCurrentPath("AMI"), "temp", Guid.NewGuid().ToString("N")),
-                // WatermarkSourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath("AMI"), "data", "watermark.png"),
+                SourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", "SMIR.Brain.XX.O.MR_Flair.36620.mha"),
+                DestinationPath = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "temp", Guid.NewGuid().ToString("N")),
+                // WatermarkSourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", "watermark.png"),
                 OpenCombinedGif = true
             };
 

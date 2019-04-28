@@ -202,7 +202,7 @@ namespace AMI.Core.Extractors
                 });
             }
 
-            output.Images = images;
+            output.Images = images.OrderBy(e => e.Position).ToList();
 
             return output;
         }

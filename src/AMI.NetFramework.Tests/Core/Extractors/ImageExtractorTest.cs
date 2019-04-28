@@ -15,6 +15,7 @@ namespace AMI.NetFramework.Tests.Core.Extractors
         [Test]
         public void NetFramework_ImageExtractor_Extract()
         {
+            // Arrange
             var loggerFactory = base.GetService<ILoggerFactory>();
             var fileSystemStrategy = base.GetService<IFileSystemStrategy>();
             var reader = base.GetService<IItkImageReader>();
@@ -25,8 +26,11 @@ namespace AMI.NetFramework.Tests.Core.Extractors
 
             IImageExtractor extractor = new ItkImageExtractor(loggerFactory, fileSystemStrategy, reader);
             var ct = new CancellationToken();
+
+            // Act
             var output = extractor.ExtractAsync(sourcePath, destinationPath, amount, ct).Result;
 
+            // Assert
             Assert.AreEqual(3*Convert.ToInt32(amount), output.Images.Count);
         }
     }

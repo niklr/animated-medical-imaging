@@ -29,12 +29,12 @@ namespace AMI.NetFramework.Tests
 
         public string GetDataPath(string filename)
         {
-            return Path.Combine(FileSystemHelper.BuildCurrentPath("AMI"), "data", filename);
+            return Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", filename);
         }
 
         public string GetTempPath()
         {
-            string path = Path.Combine(FileSystemHelper.BuildCurrentPath("AMI"), "temp", Guid.NewGuid().ToString("N"));
+            string path = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "temp", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(path);
             return path;
         }

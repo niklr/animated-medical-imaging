@@ -1,8 +1,6 @@
-<p align="center">
-  <img src="assets/images/logo_combined.png" alt="animated-medical-imaging logo" />
-</p>
-
-## Overview
+<h1 align="center">
+	<img src="assets/images/logo_combined.png" alt="animated-medical-imaging logo">
+</h1>
 
 Animated Medical Imaging (AMI) is a software-based solution to streamline the process of generating an optimal subset 
 representing a multi-dimensional medical image and combining the subset to an animated sequence.

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace AMI.Core.Serializers
@@ -21,6 +22,10 @@ namespace AMI.Core.Serializers
                 Formatting = Formatting.Indented,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
+            settings.Converters.Add(new StringEnumConverter
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            });
         }
 
         /// <summary>
