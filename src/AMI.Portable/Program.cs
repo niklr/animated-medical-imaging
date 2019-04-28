@@ -7,6 +7,7 @@ using AMI.Core.Configuration;
 using AMI.Core.Enums;
 using AMI.Core.Extensions.Time;
 using AMI.Core.Extractors;
+using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.Models;
 using AMI.Core.Serializers;
@@ -46,6 +47,7 @@ namespace AMI.Portable
                 .AddScoped<IGifImageWriter, AnimatedGifImageWriter>()
                 .AddScoped<IDefaultJsonWriter, DefaultJsonWriter>()
                 .AddScoped<IFileSystemStrategy, FileSystemStrategy>()
+                .AddSingleton<IAppInfoFactory, AppInfoFactory>()
                 .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
                 .BuildServiceProvider();
 

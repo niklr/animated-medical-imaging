@@ -1,5 +1,4 @@
 ﻿using System;
-using AMI.Core.Helpers;
 
 namespace AMI.Core.Models
 {
@@ -23,28 +22,6 @@ namespace AMI.Core.Models
 
             AppName = appName;
             AppVersion = version;
-        }
-
-        /// <summary>
-        /// Gets an empty object used for initialization.
-        /// </summary>
-        public static AppInfo Empty
-        {
-            get
-            {
-                return new AppInfo(string.Empty);
-            }
-        }
-
-        /// <summary>
-        /// Gets the default application information instance.
-        /// </summary>
-        public static AppInfo Default
-        {
-            get
-            {
-                return new AppInfo(ReflectionHelper.GetAssemblyName(), ReflectionHelper.GetAssemblyVersion());
-            }
         }
 
         /// <summary>

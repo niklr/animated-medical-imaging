@@ -7,17 +7,17 @@ namespace AMI.Core.Helpers
     {
         public static string GetAssemblyName()
         {
-            var assembly = GetExecutingOrEntryAssembly();
+            var assembly = GetEntryOrCallingAssembly();
             return assembly.GetName().Name;
         }
 
         public static string GetAssemblyVersion()
         {
-            var assembly = GetExecutingOrEntryAssembly();
+            var assembly = GetEntryOrCallingAssembly();
             return assembly.GetName().Version.ToStringInvariant();
         }
 
-        private static Assembly GetExecutingOrEntryAssembly()
+        private static Assembly GetEntryOrCallingAssembly()
         {
             return Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
         }

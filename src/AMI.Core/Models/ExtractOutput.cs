@@ -13,7 +13,7 @@ namespace AMI.Core.Models
         /// <summary>
         /// Gets or sets the application version.
         /// </summary>
-        public string Version { get; set; } = AppInfo.Default.AppVersion;
+        public string Version { get; set; }
 
         /// <summary>
         /// Gets or sets the label count.

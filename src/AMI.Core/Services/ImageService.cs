@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
 using AMI.Core.Extractors;
+using AMI.Core.Factories;
 using AMI.Core.Models;
 using AMI.Core.Strategies;
 using AMI.Core.Writers;
@@ -20,6 +21,7 @@ namespace AMI.Core.Services
         private readonly ILogger logger;
         private readonly IAmiConfigurationManager configuration;
         private readonly IFileSystemStrategy fileSystemStrategy;
+        private readonly IAppInfoFactory appInfoFactory;
         private readonly IDefaultJsonWriter jsonWriter;
         private readonly IImageExtractor imageExtractor;
         private readonly IGifImageWriter gifImageWriter;
@@ -30,6 +32,7 @@ namespace AMI.Core.Services
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="appInfoFactory">The application information factory.</param>
         /// <param name="jsonWriter">The JSON writer.</param>
         /// <param name="imageExtractor">The image extractor.</param>
         /// <param name="gifImageWriter">The GIF image writer.</param>
@@ -39,6 +42,8 @@ namespace AMI.Core.Services
         /// configuration
         /// or
         /// fileSystemStrategy
+        /// or
+        /// appInfoFactory
         /// or
         /// jsonWriter
         /// or
@@ -50,6 +55,7 @@ namespace AMI.Core.Services
             ILoggerFactory loggerFactory,
             IAmiConfigurationManager configuration,
             IFileSystemStrategy fileSystemStrategy,
+            IAppInfoFactory appInfoFactory,
             IDefaultJsonWriter jsonWriter,
             IImageExtractor imageExtractor,
             IGifImageWriter gifImageWriter)
@@ -70,6 +76,12 @@ namespace AMI.Core.Services
             if (this.fileSystemStrategy == null)
             {
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
+            }
+
+            this.appInfoFactory = appInfoFactory;
+            if (this.appInfoFactory == null)
+            {
+                throw new ArgumentNullException(nameof(appInfoFactory));
             }
 
             this.jsonWriter = jsonWriter;
@@ -145,13 +157,13 @@ namespace AMI.Core.Services
 
             // TODO: support zip files
             var imageOutput = await imageExtractor.ExtractAsync(input.SourcePath, input.DestinationPath, input.AmountPerAxis, ct);
-
             var gifs = await gifImageWriter.WriteAsync(input.DestinationPath, imageOutput.Images, input.BezierEasingTypePerAxis, ct);
-
             var combinedGifFilename = await gifImageWriter.WriteAsync(input.DestinationPath, imageOutput.Images, "combined", input.BezierEasingTypeCombined, ct);
 
+            var appInfo = appInfoFactory.Create();
             var output = new ExtractOutput()
             {
+                Version = appInfo.AppVersion,
                 LabelCount = Convert.ToInt32(imageOutput.LabelCount),
                 Images = imageOutput.Images,
                 Gifs = gifs,

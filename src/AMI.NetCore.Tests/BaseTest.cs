@@ -3,6 +3,7 @@ using System.IO;
 using AMI.Compress.Readers;
 using AMI.Core.Configuration;
 using AMI.Core.Extractors;
+using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.Readers;
 using AMI.Core.Serializers;
@@ -12,6 +13,7 @@ using AMI.Core.Writers;
 using AMI.Gif.Writers;
 using AMI.Itk.Extractors;
 using AMI.Itk.Readers;
+using AMI.NetCore.Tests.Mocks.Core.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -33,6 +35,7 @@ namespace AMI.NetCore.Tests
                 .AddTransient<IImageExtractor, ItkImageExtractor>()
                 .AddTransient<IImageService, ImageService>()
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
+                .AddSingleton<IAppInfoFactory, MockAppInfoFactory>()
                 .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
                 .BuildServiceProvider();
