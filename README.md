@@ -27,19 +27,19 @@ AMI.Portable.exe --SourcePath SMIR.Brain.XX.O.MR_Flair.36620.mha --DestinationPa
 </p>
 
 <p align="center">
-  <img src="assets/images/example1/Z_0.png" alt="position 0 z-axis">
-  <img src="assets/images/example1/Z_1.png" alt="position 1 z-axis">
-  <img src="assets/images/example1/Z_2.png" alt="position 2 z-axis">
-  <img src="assets/images/example1/Z_3.png" alt="position 3 z-axis">
-  <img src="assets/images/example1/Z_4.png" alt="position 4 z-axis">
+  <img src="assets/images/example1/Z_0.png" alt="position 0 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_1.png" alt="position 1 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_2.png" alt="position 2 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_3.png" alt="position 3 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_4.png" alt="position 4 z-axis" style="max-width:150px">
 </p>
 
 <p align="center">
-  <img src="assets/images/example1/Z_5.png" alt="position 5 z-axis">
-  <img src="assets/images/example1/Z_6.png" alt="position 6 z-axis">
-  <img src="assets/images/example1/Z_7.png" alt="position 7 z-axis">
-  <img src="assets/images/example1/Z_8.png" alt="position 8 z-axis">
-  <img src="assets/images/example1/Z_9.png" alt="position 9 z-axis">
+  <img src="assets/images/example1/Z_5.png" alt="position 5 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_6.png" alt="position 6 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_7.png" alt="position 7 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_8.png" alt="position 8 z-axis" style="max-width:150px">
+  <img src="assets/images/example1/Z_9.png" alt="position 9 z-axis" style="max-width:150px">
 </p>
 
 The second example [[2]](#ref2) is part of the ISLES 2018: Ischemic Stroke Lesion Segmentation Challenge dataset hosted on the SMIR platform [[3]](#ref3).
@@ -54,23 +54,25 @@ AMI.Portable.exe --SourcePath SMIR.Brain.XX.O.CT.346124.nii --DestinationPath te
 </p>
 
 <p align="center">
-  <img src="assets/images/example2/Z_0.png" alt="position 0 z-axis">
-  <img src="assets/images/example2/Z_1.png" alt="position 1 z-axis">
-  <img src="assets/images/example2/Z_2.png" alt="position 2 z-axis">
-  <img src="assets/images/example2/Z_3.png" alt="position 3 z-axis">
-  <img src="assets/images/example2/Z_4.png" alt="position 4 z-axis">
+  <img src="assets/images/example2/Z_0.png" alt="position 0 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_1.png" alt="position 1 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_2.png" alt="position 2 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_3.png" alt="position 3 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_4.png" alt="position 4 z-axis" style="max-width:150px">
 </p>
 
 <p align="center">
-  <img src="assets/images/example2/Z_5.png" alt="position 5 z-axis">
-  <img src="assets/images/example2/Z_6.png" alt="position 6 z-axis">
-  <img src="assets/images/example2/Z_7.png" alt="position 7 z-axis">
-  <img src="assets/images/example2/Z_8.png" alt="position 8 z-axis">
-  <img src="assets/images/example2/Z_9.png" alt="position 9 z-axis">
+  <img src="assets/images/example2/Z_5.png" alt="position 5 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_6.png" alt="position 6 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_7.png" alt="position 7 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_8.png" alt="position 8 z-axis" style="max-width:150px">
+  <img src="assets/images/example2/Z_9.png" alt="position 9 z-axis" style="max-width:150px">
 </p>
 
 [1]<a name="ref1"></a> [SMIR.Brain.XX.O.MR_Flair.36620.mha: BRATS 2015 - Training - HGG - tcia_pat499_0001](https://www.smir.ch/objects/36620)
+
 [2]<a name="ref2"></a> [SMIR.Brain.XX.O.CT.346124.nii: ISLES 2018 - Training - Train_52_A](https://www.smir.ch/objects/346124)
+
 [3]<a name="ref3"></a> [SICAS Medical Image Repository](https://www.smir.ch/) 
 
 ### Installation
