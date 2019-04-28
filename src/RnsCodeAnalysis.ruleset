@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="RNS Ruleset" Description="RNS Ruleset" ToolsVersion="15.0">
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+	<Rule Id="SA1101" Action="None" /> <!-- A call to an instance member of the local class or a base class is not prefixed with 'this.', within a C# code file. -->
+	<Rule Id="SA1200" Action="None" /> <!-- A C# using directive is placed outside of a namespace element. -->
+	<Rule Id="SA1600" Action="None" /> <!-- A C# code element is missing a documentation header. -->
+	<Rule Id="SA1633" Action="None" /> <!-- A C# code file is missing a standard file header. -->
+  </Rules>
+</RuleSet>

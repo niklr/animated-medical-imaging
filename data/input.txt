@@ -1,0 +1,2 @@
+AMI.Portable.exe --SourcePath SMIR.Brain.XX.O.MR_Flair.36620.mha --DestinationPath temp
+

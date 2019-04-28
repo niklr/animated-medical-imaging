@@ -1,0 +1,4 @@
+SMIR.Brain.XX.O.CT.339203.nii: ISLES 2018 - Training - Train_01_A - CT
+SMIR.Brain.XX.O.CT.346124.nii: ISLES 2018 - Training - Train_52_A - CT
+SMIR.Brain.XX.O.MR_Flair.36620.mha: BRATS 2015 - Training - HGG - tcia_pat499_0001
+SMIR.Brain_3more.XX.O.OT.6560.mha: BRATS 2013 - Training - High Grade - Truth4 001 fused
