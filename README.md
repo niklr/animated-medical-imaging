@@ -173,8 +173,8 @@ In order to debug the application, you will need the following tools:
 
 Additionally, the special dependency **SimpleITK** needs to be installed:
 
-  1. Download & extract [32bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win32-x86.zip) or [64bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win64-x64.zip) version
-  2. Copy the following DLLs to the **lib** folder
+1. Download & extract [32bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win32-x86.zip) or [64bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win64-x64.zip) version.
+2. Copy the following DLLs to the **lib** folder.
     - SimpleITKCSharpManaged.dll
     - SimpleITKCSharpNative.dll
 

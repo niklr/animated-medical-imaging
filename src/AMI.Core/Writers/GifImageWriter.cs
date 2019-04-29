@@ -41,38 +41,39 @@ namespace AMI.Core.Writers
             BezierEasingType bezierEasingType = BezierEasingType.Linear,
             CancellationToken ct = default)
         {
-            return await Task.Run(() =>
-            {
-                var result = new List<AxisContainer<string>>();
-
-                try
+            return await Task.Run(
+                () =>
                 {
-                    ParallelOptions po = new ParallelOptions
+                    var result = new List<AxisContainer<string>>();
+
+                    try
                     {
-                        CancellationToken = ct,
-                        MaxDegreeOfParallelism = Environment.ProcessorCount
-                    };
+                        ParallelOptions po = new ParallelOptions
+                        {
+                            CancellationToken = ct,
+                            MaxDegreeOfParallelism = Environment.ProcessorCount
+                        };
 
-                    Parallel.ForEach(images.GroupBy(e => e.AxisType), po, async axisImages =>
+                        Parallel.ForEach(images.GroupBy(e => e.AxisType), po, async axisImages =>
+                        {
+                            po.CancellationToken.ThrowIfCancellationRequested();
+
+                            string name = $"{axisImages.Key}";
+                            string filename = await WriteAsync(destinationPath, axisImages.ToList(), name, bezierEasingType, ct);
+                            result.Add(new AxisContainer<string>(axisImages.Key, filename));
+                        });
+
+                        return result;
+                    }
+                    catch (OperationCanceledException e)
                     {
-                        po.CancellationToken.ThrowIfCancellationRequested();
-
-                        string name = $"{axisImages.Key}";
-                        string filename = await WriteAsync(destinationPath, axisImages.ToList(), name, bezierEasingType, ct);
-                        result.Add(new AxisContainer<string>(axisImages.Key, filename));
-                    });
-
-                    return result;
-                }
-                catch (OperationCanceledException e)
-                {
-                    throw new AmiException("The writing of the GIF has been cancelled.", e);
-                }
-                catch (Exception e)
-                {
-                    throw new AmiException("The GIF could not be written.", e);
-                }
-            });
+                        throw new AmiException("The writing of the GIF has been cancelled.", e);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new AmiException("The GIF could not be written.", e);
+                    }
+                }, ct);
         }
 
         /// <summary>

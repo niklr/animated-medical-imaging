@@ -21,33 +21,34 @@ namespace AMI.Core.Readers
         /// <returns>The image as bitmap.</returns>
         public async Task<Bitmap> ReadAsync(string path, uint? desiredSize, CancellationToken ct)
         {
-            return await Task.Run(() =>
-            {
-                try
+            return await Task.Run(
+                () =>
                 {
-                    ct.ThrowIfCancellationRequested();
-
-                    if (!string.IsNullOrWhiteSpace(path))
+                    try
                     {
-                        Image image = Image.FromFile(path);
+                        ct.ThrowIfCancellationRequested();
 
-                        if (image != null)
+                        if (!string.IsNullOrWhiteSpace(path))
                         {
-                            Bitmap bitmap = new Bitmap(image);
-                            return bitmap.Resize(desiredSize);
+                            Image image = Image.FromFile(path);
+
+                            if (image != null)
+                            {
+                                Bitmap bitmap = new Bitmap(image);
+                                return bitmap.Resize(desiredSize);
+                            }
                         }
+                        return null;
                     }
-                    return null;
-                }
-                catch (OperationCanceledException e)
-                {
-                    throw new AmiException("The reading of the bitmap has been cancelled.", e);
-                }
-                catch (Exception e)
-                {
-                    throw new AmiException("The bitmap could not be read.", e);
-                }
-            });
+                    catch (OperationCanceledException e)
+                    {
+                        throw new AmiException("The reading of the bitmap has been cancelled.", e);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new AmiException("The bitmap could not be read.", e);
+                    }
+                }, ct);
         }
     }
 }

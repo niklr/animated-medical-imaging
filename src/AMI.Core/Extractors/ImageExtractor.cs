@@ -67,8 +67,6 @@ namespace AMI.Core.Extractors
             {
                 throw new ArgumentNullException(nameof(reader));
             }
-
-            logger.LogInformation("ImageExtractor created");
         }
 
         /// <summary>
@@ -138,10 +136,13 @@ namespace AMI.Core.Extractors
         /// <exception cref="AmiException">Watermark could not be read.</exception>
         public async Task<ImageExtractOutput> ExtractAsync(string sourcePath, string destinationPath, uint amount, CancellationToken ct)
         {
+            logger.LogInformation("ImageExtractor ExtractAsync started");
+
             var output = new ImageExtractOutput();
             var fs = fileSystemStrategy.Create(destinationPath);
 
             await reader.InitAsync(sourcePath, ct);
+
             reader.Mapper = new AxisPositionMapper(amount, reader.Width, reader.Height, reader.Depth);
 
             PreProcess(reader, amount);
@@ -203,6 +204,8 @@ namespace AMI.Core.Extractors
             }
 
             output.Images = images.OrderBy(e => e.Position).ToList();
+
+            this.logger.LogInformation("ImageExtractor ExtractAsync ended");
 
             return output;
         }

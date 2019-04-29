@@ -41,23 +41,24 @@ namespace AMI.Gif.Writers
             BezierPositionMapper mapper,
             CancellationToken ct)
         {
-            await Task.Run(() =>
-            {
-                // 33ms delay (~30fps)
-                using (var gif = AnimatedGif.AnimatedGif.Create(Path.Combine(destinationPath, destinationFilename), 33))
+            await Task.Run(
+                () =>
                 {
-                    for (uint i = 0; i < sourceFilenames.Length; i++)
+                    // 33ms delay (~30fps)
+                    using (var gif = AnimatedGif.AnimatedGif.Create(Path.Combine(destinationPath, destinationFilename), 33))
                     {
-                        ct.ThrowIfCancellationRequested();
-
-                        using (Image image = Image.FromFile(Path.Combine(sourcePath, sourceFilenames[i])))
+                        for (uint i = 0; i < sourceFilenames.Length; i++)
                         {
-                            int delay = mapper == null ? -1 : Convert.ToInt32(mapper.GetMappedPosition(i));
-                            gif.AddFrame(image, delay, quality: GifQuality.Bit8);
+                            ct.ThrowIfCancellationRequested();
+
+                            using (Image image = Image.FromFile(Path.Combine(sourcePath, sourceFilenames[i])))
+                            {
+                                int delay = mapper == null ? -1 : Convert.ToInt32(mapper.GetMappedPosition(i));
+                                gif.AddFrame(image, delay, quality: GifQuality.Bit8);
+                            }
                         }
                     }
-                }
-            });
+                }, ct);
         }
     }
 }

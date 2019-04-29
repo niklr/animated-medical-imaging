@@ -101,8 +101,6 @@ namespace AMI.Core.Services
             {
                 throw new ArgumentNullException(nameof(gifImageWriter));
             }
-
-            logger.LogInformation("ImageService created");
         }
 
         /// <summary>
@@ -121,7 +119,7 @@ namespace AMI.Core.Services
         /// </exception>
         public async Task<ExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct)
         {
-            logger.LogInformation("Execute started");
+            logger.LogInformation("ImageService ExtractAsync started");
 
             if (input == null)
             {
@@ -171,6 +169,8 @@ namespace AMI.Core.Services
             };
 
             await jsonWriter.WriteAsync(input.DestinationPath, "output", output, (filename) => { output.JsonFilename = filename; });
+
+            logger.LogInformation("ImageService ExtractAsync ended");
 
             return output;
         }

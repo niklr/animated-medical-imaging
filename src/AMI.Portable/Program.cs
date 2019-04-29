@@ -62,36 +62,42 @@ namespace AMI.Portable
 
         public IAmiConfigurationManager Configuration { get; }
 
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
             var program = new Program();
             try
-            {                
+            {
                 var cts = new CancellationTokenSource();
                 var ct = cts.Token;
 
-                var processInformationTask = Task.Run(async () =>
+                Console.CancelKeyPress += (s, e) =>
                 {
-                    await program.Execute(args, ct);
-                }, ct);
+                    e.Cancel = true;
+                    cts.Cancel();
+                };
+
+                var task = program.Execute(args, ct);
 
                 if (program.Configuration.TimeoutMilliseconds > 0)
                 {
-                    if (!processInformationTask.Wait(program.Configuration.TimeoutMilliseconds, ct))
+                    if (!task.Wait(program.Configuration.TimeoutMilliseconds, ct))
                     {
-                        program.Logger?.LogInformation("Process timed out");
+                        program.Logger.LogInformation("Process timed out");
                         cts.Cancel();
                     }
                 }
                 else
                 {
-                    processInformationTask.Wait();
+                    task.Wait();
                 }
             }
             catch (Exception e)
             {
-                program.Logger?.LogError(e.Message);
+                program.Logger.LogError(e.ToString());
+                Environment.ExitCode = 1;
             }
+
+            return Environment.ExitCode;
         }
 
         public async Task Execute(string[] args, CancellationToken ct)
@@ -112,22 +118,28 @@ namespace AMI.Portable
                        input.OpenCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
                    });
 
-            if (!string.IsNullOrWhiteSpace(input.SourcePath) &&
-                !string.IsNullOrWhiteSpace(input.DestinationPath))
+            if (string.IsNullOrWhiteSpace(input.SourcePath))
             {
-                var output = await ImageService.ExtractAsync(input, ct);
-
-                if (input.OpenCombinedGif)
-                {
-                    Process.Start(Path.Combine(input.DestinationPath, output.CombinedGif));
-                }
-
-                watch.Stop();
-
-                TimeSpan t = TimeSpan.FromMilliseconds(watch.ElapsedMilliseconds);
-
-                Logger.LogInformation($"AMI.Portable ended after {t.ToReadableTime()}");
+                throw new ArgumentNullException(nameof(input.SourcePath));
             }
+
+            if (string.IsNullOrWhiteSpace(input.DestinationPath))
+            {
+                throw new ArgumentNullException(nameof(input.DestinationPath));
+            }
+
+            var output = await ImageService.ExtractAsync(input, ct);
+
+            if (input.OpenCombinedGif)
+            {
+                Process.Start(Path.Combine(input.DestinationPath, output.CombinedGif));
+            }
+
+            watch.Stop();
+
+            TimeSpan t = TimeSpan.FromMilliseconds(watch.ElapsedMilliseconds);
+
+            Logger.LogInformation($"AMI.Portable ended after {t.ToReadableTime()}");
         }
 
         public async Task ExecuteTest(string[] args, CancellationToken ct)
