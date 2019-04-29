@@ -11,6 +11,14 @@ Supported file formats:
 * Multi-frame DICOM (.dcm)
 * Nifti (.nii)
 
+Table of Content:
+* [Installation](#installation)
+* [Usage](#usage)
+* [Configuration](#configuration)
+* [Output](#output)
+* [Debug](#debug)
+* [Build](#build)
+
 ### Examples
 
 The first example [[1]](#ref1) is part of the BRATS 2015: Brain Tumor Image Segmentation Challenge dataset hosted on the SMIR platform [[3]](#ref3).
@@ -73,7 +81,7 @@ AMI.Portable.exe --SourcePath SMIR.Brain.XX.O.CT.346124.nii --DestinationPath te
 
 [3]<a name="ref3"></a> [SICAS Medical Image Repository](https://www.smir.ch/) 
 
-### Installation
+### Installation <a name="installation"></a>
 
 Easiest is to obtain the latest AMI.Portable executable from [GitHub](https://github.com/niklr/animated-medical-imaging/releases). 
 This compressed archive contains the exectuable, required third-party binaries and configuration files.
@@ -81,7 +89,7 @@ This compressed archive contains the exectuable, required third-party binaries a
 Other dependencies:
 * [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982)
 
-### Usage
+### Usage <a name="usage"></a>
 
 ```
 AMI.Portable.exe --help
@@ -96,7 +104,7 @@ AMI.Portable.exe --help
 * `--help` Display this help screen.
 * `--version` Display version information.
 
-### Configuration
+### Configuration <a name="configuration"></a>
 
 logging.json
 
@@ -125,9 +133,12 @@ If a provider supports log scopes, `IncludeScopes` indicates whether they're ena
 A provider property (such as `Console` in the example) may also specify a `LogLevel` property. 
 `LogLevel` under a provider specifies levels to log for that provider.
 
-### Output
+### Output <a name="output"></a>
 
-ExtractOutput
+Each successful execution will generate an **output.json** file in addition to an optimal subset 
+representing a multi-dimensional medical image. This json file consists of models described below.
+
+#### ExtractOutput
 
 * `version (string)` The version number of the application.
 * `labelCount (number)` The amount of labels in the image.
@@ -135,24 +146,41 @@ ExtractOutput
 * `gifs (array of AxisContainer)` A list of created GIFs.
 * `combinedGif (string)` The filename of the combined GIF (contains all requested axis types).
 
-PositionAxisContainer
+#### PositionAxisContainer
 
 * `position (number)` The position of the extracted image on the respective axis.
 * `axisType (string / enum)` The respective axis of the coordinate system.
 * `entity (string)` The filename of the extracted image.
 
-AxisContainer
+#### AxisContainer
 
 * `axisType (string / enum)` The respective axis of the coordinate system.
 * `entity (string)` The filename of the extracted image.
 
-AxisType (enum)
+#### AxisType (enum)
 
 * `x` The x-axis of the coordinate system.
 * `y` The y-axis of the coordinate system.
 * `z` The z-axis of the coordinate system.
 
-### Build
+### Debug <a name="debug"></a>
+
+In order to debug the application, you will need the following tools:
+
+* [Visual Studio 2017](https://www.visualstudio.com/downloads/)
+* [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982)
+* [.NET Core SDK 2.1](https://www.microsoft.com/net/download/dotnet-core/2.1)
+
+Additionally, the special dependency **SimpleITK** needs to be installed:
+
+  1. Download & extract [32bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win32-x86.zip) or [64bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win64-x64.zip) version
+  2. Copy the following DLLs to the **lib** folder
+    - SimpleITKCSharpManaged.dll
+    - SimpleITKCSharpNative.dll
+
+**Caution**: The build process described below will overwrite those DLLs depending on the specified platform.
+
+### Build <a name="build"></a>
 
 The build process makes use of cake (C# make) a cross-platform build automation system with a C# DSL for tasks such as compiling code, copying files and folders, 
 running unit tests, compressing files and building NuGet packages.

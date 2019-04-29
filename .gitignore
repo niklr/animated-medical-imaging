@@ -39,6 +39,6 @@ msbuild.wrn
 
 # Custom
 **/libs/*
-**/data/**/*.zip
+!**/libs/*.url
 **/temp/*
 **/tools/*
