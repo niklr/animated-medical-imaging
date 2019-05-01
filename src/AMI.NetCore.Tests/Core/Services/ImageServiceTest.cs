@@ -33,7 +33,7 @@ namespace AMI.NetCore.Tests.Core.Services
             Assert.AreEqual(input.AmountPerAxis, output.Images.Count);
             Assert.AreEqual(5, output.LabelCount);
             Assert.AreEqual(json, @"{
-  ""version"": ""0.0.1.0"",
+  ""version"": ""0.0.2.0"",
   ""labelCount"": 5,
   ""images"": [
     {

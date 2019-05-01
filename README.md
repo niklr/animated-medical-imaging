@@ -180,6 +180,15 @@ Additionally, the special dependency **SimpleITK** needs to be installed:
 
 **Caution**: The build process described below will overwrite those DLLs depending on the specified platform.
 
+#### Unit tests
+
+Change the default processor architecture in Visual Studio under `Test` > `Test Settings` > `Default Processor Architecture` > `x64` 
+to prevent NUnit error messages such as:
+
+```
+NUnit failed to load ...\AMI.NetFramework.Tests\bin\Debug\AMI.NetFramework.Tests.dll
+```
+
 ### Build <a name="build"></a>
 
 The build process makes use of cake (C# make) a cross-platform build automation system with a C# DSL for tasks such as compiling code, copying files and folders, 
