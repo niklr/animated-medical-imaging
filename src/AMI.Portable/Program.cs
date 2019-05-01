@@ -64,9 +64,9 @@ namespace AMI.Portable
 
         public static int Main(string[] args)
         {
-            var program = new Program();
             try
             {
+                var program = new Program();
                 var cts = new CancellationTokenSource();
                 var ct = cts.Token;
 
@@ -76,14 +76,19 @@ namespace AMI.Portable
                     cts.Cancel();
                 };
 
-                var task = program.Execute(args, ct);
+                var task = Task.Run(async () =>
+                {
+                    await program.Execute(args, ct);
+                }, ct);
 
                 if (program.Configuration.TimeoutMilliseconds > 0)
                 {
                     if (!task.Wait(program.Configuration.TimeoutMilliseconds, ct))
                     {
-                        program.Logger.LogInformation("Process timed out");
+                        string timeoutMessage = "Process timed out";
+                        program.Logger.LogInformation(timeoutMessage);
                         cts.Cancel();
+                        throw new Exception(timeoutMessage);
                     }
                 }
                 else
@@ -93,7 +98,7 @@ namespace AMI.Portable
             }
             catch (Exception e)
             {
-                program.Logger.LogError(e.ToString());
+                Console.WriteLine(e.ToString());
                 Environment.ExitCode = 1;
             }
 
