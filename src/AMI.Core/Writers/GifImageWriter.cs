@@ -41,39 +41,27 @@ namespace AMI.Core.Writers
             BezierEasingType bezierEasingType = BezierEasingType.Linear,
             CancellationToken ct = default)
         {
-            return await Task.Run(
-                () =>
+            try
+            {
+                var result = new List<AxisContainer<string>>();
+
+                foreach (var axisImages in images.GroupBy(e => e.AxisType))
                 {
-                    var result = new List<AxisContainer<string>>();
+                    string name = $"{axisImages.Key}";
+                    string filename = await WriteAsync(destinationPath, axisImages.ToList(), name, bezierEasingType, ct);
+                    result.Add(new AxisContainer<string>(axisImages.Key, filename));
+                }
 
-                    try
-                    {
-                        ParallelOptions po = new ParallelOptions
-                        {
-                            CancellationToken = ct,
-                            MaxDegreeOfParallelism = Environment.ProcessorCount
-                        };
-
-                        Parallel.ForEach(images.GroupBy(e => e.AxisType), po, async axisImages =>
-                        {
-                            po.CancellationToken.ThrowIfCancellationRequested();
-
-                            string name = $"{axisImages.Key}";
-                            string filename = await WriteAsync(destinationPath, axisImages.ToList(), name, bezierEasingType, ct);
-                            result.Add(new AxisContainer<string>(axisImages.Key, filename));
-                        });
-
-                        return result;
-                    }
-                    catch (OperationCanceledException e)
-                    {
-                        throw new AmiException("The writing of the GIF has been cancelled.", e);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new AmiException("The GIF could not be written.", e);
-                    }
-                }, ct);
+                return result;
+            }
+            catch (OperationCanceledException e)
+            {
+                throw new AmiException("The writing of the GIF has been cancelled.", e);
+            }
+            catch (Exception e)
+            {
+                throw new AmiException("The GIF could not be written.", e);
+            }
         }
 
         /// <summary>
