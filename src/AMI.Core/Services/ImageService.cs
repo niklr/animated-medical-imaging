@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
+using AMI.Core.Extensions.FileSystemExtensions;
+using AMI.Core.Extensions.ObjectExtensions;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
 using AMI.Core.Models;
@@ -136,27 +138,23 @@ namespace AMI.Core.Services
                 throw new ArgumentException("Empty destination path.");
             }
 
-            if (input.DesiredSize.HasValue)
-            {
-                imageExtractor.SetDesiredSize(input.DesiredSize.Value);
-            }
+            var sourceFs = fileSystemStrategy.Create(input.SourcePath);
+            var destFs = fileSystemStrategy.Create(input.DestinationPath);
+            var watermarkFs = fileSystemStrategy.Create(input.WatermarkSourcePath);
 
-            if (input.AxisTypes.Count > 0)
-            {
-                imageExtractor.SetAxisTypes(input.AxisTypes.ToArray());
-            }
+            var inputClone = input.DeepClone();
 
-            imageExtractor.SetImageFormat(input.ImageFormat);
-            imageExtractor.SetGrayscale(input.Grayscale);
-            imageExtractor.SetWatermarkPath(input.WatermarkSourcePath);
+            inputClone.SourcePath = sourceFs.BuildAbsolutePath(input.SourcePath);
+            inputClone.DestinationPath = destFs.BuildAbsolutePath(input.DestinationPath);
+            inputClone.WatermarkSourcePath = watermarkFs.BuildAbsolutePath(input.WatermarkSourcePath);
 
-            var destinationFileSystem = fileSystemStrategy.Create(input.DestinationPath);
-            destinationFileSystem.Directory.CreateDirectory(input.DestinationPath);
+            // Creates all directories and subdirectories in the specified path unless they already exist.
+            destFs.Directory.CreateDirectory(inputClone.DestinationPath);
 
             // TODO: support zip files
-            var imageOutput = await imageExtractor.ExtractAsync(input.SourcePath, input.DestinationPath, input.AmountPerAxis, ct);
-            var gifs = await gifImageWriter.WriteAsync(input.DestinationPath, imageOutput.Images, input.BezierEasingTypePerAxis, ct);
-            var combinedGifFilename = await gifImageWriter.WriteAsync(input.DestinationPath, imageOutput.Images, "combined", input.BezierEasingTypeCombined, ct);
+            var imageOutput = await imageExtractor.ExtractAsync(inputClone, ct);
+            var gifs = await gifImageWriter.WriteAsync(inputClone.DestinationPath, imageOutput.Images, inputClone.BezierEasingTypePerAxis, ct);
+            var combinedGifFilename = await gifImageWriter.WriteAsync(inputClone.DestinationPath, imageOutput.Images, "combined", inputClone.BezierEasingTypeCombined, ct);
 
             var appInfo = appInfoFactory.Create();
             var output = new ExtractOutput()
@@ -168,7 +166,7 @@ namespace AMI.Core.Services
                 CombinedGif = combinedGifFilename
             };
 
-            await jsonWriter.WriteAsync(input.DestinationPath, "output", output, (filename) => { output.JsonFilename = filename; });
+            await jsonWriter.WriteAsync(inputClone.DestinationPath, "output", output, (filename) => { output.JsonFilename = filename; });
 
             logger.LogInformation("ImageService ExtractAsync ended");
 

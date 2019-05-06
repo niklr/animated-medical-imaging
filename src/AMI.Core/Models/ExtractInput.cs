@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AMI.Core.Enums;
 
 namespace AMI.Core.Models
@@ -6,6 +7,7 @@ namespace AMI.Core.Models
     /// <summary>
     /// A model containing information about the input needed for extraction.
     /// </summary>
+    [Serializable]
     public class ExtractInput
     {
         /// <summary>

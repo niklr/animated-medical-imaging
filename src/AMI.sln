@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.CLI", "AMI.CLI\AMI.CLI.csproj", "{C6339967-EBD5-411B-982C-D2535E420071}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +124,18 @@ Global
 		{C721F11C-BE7C-4E26-B33F-49315C45A9B9}.Release|x64.Build.0 = Release|x64
 		{C721F11C-BE7C-4E26-B33F-49315C45A9B9}.Release|x86.ActiveCfg = Release|x86
 		{C721F11C-BE7C-4E26-B33F-49315C45A9B9}.Release|x86.Build.0 = Release|x86
+		{C6339967-EBD5-411B-982C-D2535E420071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Debug|x64.Build.0 = Debug|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Debug|x86.Build.0 = Debug|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Release|x64.ActiveCfg = Release|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Release|x64.Build.0 = Release|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Release|x86.ActiveCfg = Release|Any CPU
+		{C6339967-EBD5-411B-982C-D2535E420071}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

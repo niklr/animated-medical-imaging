@@ -28,13 +28,6 @@ namespace AMI.Core.Extractors
         private readonly IFileSystemStrategy fileSystemStrategy;
         private readonly IImageReader<T> reader;
 
-        private uint? desiredSize = null;
-        private ISet<AxisType> axisTypes = new HashSet<AxisType>();
-        private ImageFormat imageFormat = ImageFormat.Png;
-        private string imageExtension = ImageFormat.Png.FileExtensionFromEncoder();
-        private bool grayscale = true;
-        private string watermarkPath = string.Empty;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageExtractor{T}"/> class.
         /// </summary>
@@ -70,84 +63,30 @@ namespace AMI.Core.Extractors
         }
 
         /// <summary>
-        /// Sets the desired size.
-        /// </summary>
-        /// <param name="desiredSize">The desired size.</param>
-        public void SetDesiredSize(uint desiredSize)
-        {
-            this.desiredSize = desiredSize;
-        }
-
-        /// <summary>
-        /// Sets the axis types.
-        /// </summary>
-        /// <param name="axisTypes">The axis types.</param>
-        public void SetAxisTypes(params AxisType[] axisTypes)
-        {
-            this.axisTypes = new HashSet<AxisType>(axisTypes);
-        }
-
-        /// <summary>
-        /// Sets the image format.
-        /// </summary>
-        /// <param name="imageFormat">The image format.</param>
-        public void SetImageFormat(Enums.ImageFormat imageFormat)
-        {
-            switch (imageFormat)
-            {
-                case Enums.ImageFormat.Jpeg:
-                    this.imageFormat = ImageFormat.Jpeg;
-                    break;
-                case Enums.ImageFormat.Png:
-                default:
-                    this.imageFormat = ImageFormat.Png;
-                    break;
-            }
-
-            imageExtension = this.imageFormat.FileExtensionFromEncoder();
-        }
-
-        /// <summary>
-        /// Sets whether the images should be converted to grayscale.
-        /// </summary>
-        /// <param name="grayscale">if set to <c>true</c> convert the images to grayscale.</param>
-        public void SetGrayscale(bool grayscale)
-        {
-            this.grayscale = grayscale;
-        }
-
-        /// <summary>
-        /// Sets the path pointing to the watermark.
-        /// </summary>
-        /// <param name="path">The path pointing to the watermark.</param>
-        public void SetWatermarkPath(string path)
-        {
-            watermarkPath = path;
-        }
-
-        /// <summary>
         /// Extracts the images asynchronous.
         /// </summary>
-        /// <param name="sourcePath">The source path.</param>
-        /// <param name="destinationPath">The destination path.</param>
-        /// <param name="amount">The amount of images to be extracted.</param>
+        /// <param name="input">The input information.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>The output of the image extraction.</returns>
         /// <exception cref="AmiException">Watermark could not be read.</exception>
-        public async Task<ImageExtractOutput> ExtractAsync(string sourcePath, string destinationPath, uint amount, CancellationToken ct)
+        public async Task<ImageExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct)
         {
             logger.LogInformation("ImageExtractor ExtractAsync started");
 
             var output = new ImageExtractOutput();
-            var fs = fileSystemStrategy.Create(destinationPath);
+            var imageFormat = GetImageFormat(input.ImageFormat);
+            var imageExtension = imageFormat.FileExtensionFromEncoder();
+            var fs = fileSystemStrategy.Create(input.DestinationPath);
 
-            await reader.InitAsync(sourcePath, ct);
+            await reader.InitAsync(input.SourcePath, ct);
 
-            reader.Mapper = new AxisPositionMapper(amount, reader.Width, reader.Height, reader.Depth);
+            reader.Mapper = new AxisPositionMapper(input.AmountPerAxis, reader.Width, reader.Height, reader.Depth);
 
-            PreProcess(reader, amount);
+            PreProcess(reader, imageFormat, input.AmountPerAxis, input.DesiredSize);
 
             output.LabelCount = reader.GetLabelCount();
+
+            ISet<AxisType> axisTypes = new HashSet<AxisType>(input.AxisTypes);
 
             if (axisTypes.Count == 0)
             {
@@ -155,10 +94,10 @@ namespace AMI.Core.Extractors
             }
 
             BitmapContainer watermark = null;
-            if (!string.IsNullOrWhiteSpace(watermarkPath))
+            if (!string.IsNullOrWhiteSpace(input.WatermarkSourcePath))
             {
                 BitmapReader bitmapReader = new BitmapReader();
-                var watermarkBitmap = await bitmapReader.ReadAsync(watermarkPath, desiredSize, ct);
+                var watermarkBitmap = await bitmapReader.ReadAsync(input.WatermarkSourcePath, input.DesiredSize, ct);
                 if (watermarkBitmap == null)
                 {
                     throw new AmiException("Watermark could not be read.");
@@ -177,27 +116,27 @@ namespace AMI.Core.Extractors
 
             foreach (AxisType axisType in axisTypes)
             {
-                Parallel.For(0, Convert.ToInt32(amount), po, i =>
+                Parallel.For(0, Convert.ToInt32(input.AmountPerAxis), po, i =>
                 {
                     po.CancellationToken.ThrowIfCancellationRequested();
 
                     string filename = $"{axisType}_{i}{imageExtension}";
-                    var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), desiredSize);
+                    var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), input.DesiredSize);
                     if (bitmap != null)
                     {
-                        if (grayscale)
+                        if (input.Grayscale)
                         {
                             bitmap = bitmap.To8bppIndexedGrayscale();
                         }
 
-                        bitmap = bitmap.ToCenter(desiredSize, Color.Black);
+                        bitmap = bitmap.ToCenter(input.DesiredSize, Color.Black);
 
                         if (watermark != null)
                         {
                             bitmap = bitmap.AppendWatermark(watermark);
                         }
 
-                        fs.File.WriteAllBytes(fs.Path.Combine(destinationPath, filename), bitmap.ToByteArray(imageFormat));
+                        fs.File.WriteAllBytes(fs.Path.Combine(input.DestinationPath, filename), bitmap.ToByteArray(imageFormat));
                         images.Add(new PositionAxisContainer<string>(Convert.ToUInt32(i), axisType, filename));
                     }
                 });
@@ -210,7 +149,7 @@ namespace AMI.Core.Extractors
             return output;
         }
 
-        private void PreProcess(IImageReader<T> reader, uint amount)
+        private void PreProcess(IImageReader<T> reader, ImageFormat imageFormat, uint amount, uint? desiredSize)
         {
             if (amount > 1)
             {
@@ -295,6 +234,23 @@ namespace AMI.Core.Extractors
 
                 // set a new mapper with the new map
                 reader.Mapper = new AxisPositionMapper(newMap);
+            }
+        }
+
+        /// <summary>
+        /// Gets the image format.
+        /// </summary>
+        /// <param name="imageFormat">The image format.</param>
+        /// <returns>The <see cref="ImageFormat"/>.</returns>
+        private ImageFormat GetImageFormat(Enums.ImageFormat imageFormat)
+        {
+            switch (imageFormat)
+            {
+                case Enums.ImageFormat.Jpeg:
+                    return ImageFormat.Jpeg;
+                case Enums.ImageFormat.Png:
+                default:
+                    return ImageFormat.Png;
             }
         }
     }

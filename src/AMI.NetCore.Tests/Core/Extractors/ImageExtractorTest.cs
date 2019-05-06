@@ -1,5 +1,6 @@
 using System.Threading;
 using AMI.Core.Extractors;
+using AMI.Core.Models;
 using NUnit.Framework;
 
 namespace AMI.NetCore.Tests.Core.Extractors
@@ -13,12 +14,15 @@ namespace AMI.NetCore.Tests.Core.Extractors
             // Arrange
             var extractor = GetService<IImageExtractor>();
             var ct = new CancellationToken();
-            string sourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha");
-            string destinationPath = GetTempPath();
-            uint amount = 6;
+            var input = new ExtractInput()
+            {
+                SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
+                DestinationPath = GetTempPath(),
+                AmountPerAxis = 6
+            };
 
             // Act
-            var output = extractor.ExtractAsync(sourcePath, destinationPath, amount, ct).Result;
+            var output = extractor.ExtractAsync(input, ct).Result;
 
             // Assert
             // 6 (per axis) * 3 (x, y, z) = 18

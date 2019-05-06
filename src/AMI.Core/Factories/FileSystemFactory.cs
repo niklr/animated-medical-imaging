@@ -11,7 +11,7 @@ namespace AMI.Core.Factories
         /// <summary>
         /// Determines whether this factory can provide a file system for the provided path.
         /// </summary>
-        /// <param name="path">The path.</param>
+        /// <param name="path">The path used to determine the file system.</param>
         /// <returns>
         ///     <c>true</c> if the provided path is supported by this factory; otherwise, <c>false</c>.
         /// </returns>

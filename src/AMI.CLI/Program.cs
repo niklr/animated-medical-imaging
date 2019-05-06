@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -22,7 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AMI.Portable
+namespace AMI.NetCore.Portable
 {
     public class Program
     {
@@ -137,7 +137,14 @@ namespace AMI.Portable
 
             if (input.OpenCombinedGif)
             {
-                Process.Start(Path.Combine(input.DestinationPath, output.CombinedGif));
+                var p = new Process
+                {
+                    StartInfo = new ProcessStartInfo(Path.Combine(input.DestinationPath, output.CombinedGif))
+                    {
+                        UseShellExecute = true
+                    }
+                };
+                p.Start();
             }
 
             watch.Stop();
@@ -168,7 +175,14 @@ namespace AMI.Portable
 
             if (Convert.ToBoolean(input.OpenCombinedGif))
             {
-                Process.Start(Path.Combine(input.DestinationPath, output.CombinedGif));
+                var p = new Process
+                {
+                    StartInfo = new ProcessStartInfo(Path.Combine(input.DestinationPath, output.CombinedGif))
+                    {
+                        UseShellExecute = true
+                    }
+                };
+                p.Start();
             }
 
             watch.Stop();
