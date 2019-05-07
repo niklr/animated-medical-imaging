@@ -2,7 +2,7 @@
 using System.IO;
 using AMI.Core.Helpers;
 using AMI.Core.Strategies;
-using AMI.Itk.Readers;
+using AMI.Itk.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -16,8 +16,8 @@ namespace AMI.NetFramework.Tests
         public BaseTest()
         {
             _serviceProvider = new ServiceCollection()
-                .AddTransient<IItkImageReader, ItkImageReader>()
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
+                .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
                 .BuildServiceProvider();
         }
@@ -29,12 +29,12 @@ namespace AMI.NetFramework.Tests
 
         public string GetDataPath(string filename)
         {
-            return Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", filename);
+            return Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", filename);
         }
 
         public string GetTempPath()
         {
-            string path = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "temp", Guid.NewGuid().ToString("N"));
+            string path = Path.Combine(FileSystemHelper.BuildCurrentPath(), "temp", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(path);
             return path;
         }

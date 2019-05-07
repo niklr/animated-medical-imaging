@@ -133,6 +133,15 @@ If a provider supports log scopes, `IncludeScopes` indicates whether they're ena
 A provider property (such as `Console` in the example) may also specify a `LogLevel` property. 
 `LogLevel` under a provider specifies levels to log for that provider.
 
+#### Unit tests
+
+Change the default processor architecture in Visual Studio under `Test` > `Test Settings` > `Default Processor Architecture` > `x64` 
+to prevent NUnit error messages such as:
+
+```
+NUnit failed to load ...\AMI.NetFramework.Tests\bin\Debug\AMI.NetFramework.Tests.dll
+```
+
 ### Output <a name="output"></a>
 
 Each successful execution will generate an **output.json** file in addition to an optimal subset 
@@ -179,15 +188,6 @@ Additionally, the special dependency **SimpleITK** needs to be installed:
     - SimpleITKCSharpNative.dll
 
 **Caution**: The build process described below will overwrite those DLLs depending on the specified platform.
-
-#### Unit tests
-
-Change the default processor architecture in Visual Studio under `Test` > `Test Settings` > `Default Processor Architecture` > `x64` 
-to prevent NUnit error messages such as:
-
-```
-NUnit failed to load ...\AMI.NetFramework.Tests\bin\Debug\AMI.NetFramework.Tests.dll
-```
 
 ### Build <a name="build"></a>
 

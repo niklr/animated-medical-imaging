@@ -12,7 +12,7 @@ using AMI.Core.Strategies;
 using AMI.Core.Writers;
 using AMI.Gif.Writers;
 using AMI.Itk.Extractors;
-using AMI.Itk.Readers;
+using AMI.Itk.Factories;
 using AMI.NetCore.Tests.Mocks.Core.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,7 +28,6 @@ namespace AMI.NetCore.Tests
         {
             _serviceProvider = new ServiceCollection()
                 .AddTransient<ICompressibleReader, SharpCompressReader>()
-                .AddTransient<IItkImageReader, ItkImageReader>()
                 .AddTransient<IGifImageWriter, AnimatedGifImageWriter>()
                 .AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>()
                 .AddTransient<IDefaultJsonWriter, DefaultJsonWriter>()
@@ -36,6 +35,7 @@ namespace AMI.NetCore.Tests
                 .AddTransient<IImageService, ImageService>()
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
                 .AddSingleton<IAppInfoFactory, MockAppInfoFactory>()
+                .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
                 .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
                 .BuildServiceProvider();
@@ -48,12 +48,12 @@ namespace AMI.NetCore.Tests
 
         public string GetDataPath(string filename)
         {
-            return Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", filename);
+            return Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", filename);
         }
 
         public string GetTempPath()
         {
-            string path = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "temp", Guid.NewGuid().ToString("N"));
+            string path = Path.Combine(FileSystemHelper.BuildCurrentPath(), "temp", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(path);
             return path;
         }

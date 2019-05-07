@@ -4,7 +4,7 @@ using AMI.Core.Extractors;
 using AMI.Core.Models;
 using AMI.Core.Strategies;
 using AMI.Itk.Extractors;
-using AMI.Itk.Readers;
+using AMI.Itk.Factories;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
@@ -19,7 +19,7 @@ namespace AMI.NetFramework.Tests.Core.Extractors
             // Arrange
             var loggerFactory = base.GetService<ILoggerFactory>();
             var fileSystemStrategy = base.GetService<IFileSystemStrategy>();
-            var reader = base.GetService<IItkImageReader>();
+            var factory = base.GetService<IItkImageReaderFactory>();
             var input = new ExtractInput()
             {
                 SourcePath = GetDataPath("SMIR.Brain.XX.O.CT.339203.nii"),
@@ -27,7 +27,7 @@ namespace AMI.NetFramework.Tests.Core.Extractors
                 AmountPerAxis = 10
             };
 
-            IImageExtractor extractor = new ItkImageExtractor(loggerFactory, fileSystemStrategy, reader);
+            IImageExtractor extractor = new ItkImageExtractor(loggerFactory, fileSystemStrategy, factory);
             var ct = new CancellationToken();
 
             // Act

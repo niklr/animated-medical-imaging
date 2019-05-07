@@ -11,7 +11,9 @@ namespace AMI.Core.Helpers
 {
     internal static class FileSystemHelper
     {
-        internal static string BuildCurrentPath(string folderName)
+        private const string RootFolderName = "animated-medical-imaging";
+
+        internal static string BuildCurrentPath(string folderName = RootFolderName)
         {
             string path = AppDomain.CurrentDomain.BaseDirectory;
             if (string.IsNullOrWhiteSpace(folderName))

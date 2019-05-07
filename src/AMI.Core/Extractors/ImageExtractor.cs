@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AMI.Core.Enums;
 using AMI.Core.Exceptions;
 using AMI.Core.Extensions.Drawing;
+using AMI.Core.Factories;
 using AMI.Core.Mappers;
 using AMI.Core.Models;
 using AMI.Core.Readers;
@@ -20,30 +21,32 @@ namespace AMI.Core.Extractors
     /// <summary>
     /// An extractor for images.
     /// </summary>
-    /// <typeparam name="T">The type of image.</typeparam>
+    /// <typeparam name="T1">The type of the reader.</typeparam>
+    /// <typeparam name="T2">The type of the image.</typeparam>
     /// <seealso cref="IImageExtractor" />
-    public abstract class ImageExtractor<T> : IImageExtractor
+    public abstract class ImageExtractor<T1, T2> : IImageExtractor
+        where T1 : IImageReader<T2>
     {
         private readonly ILogger logger;
         private readonly IFileSystemStrategy fileSystemStrategy;
-        private readonly IImageReader<T> reader;
+        private readonly IImageReaderFactory<T1, T2> readerFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageExtractor{T}"/> class.
+        /// Initializes a new instance of the <see cref="ImageExtractor{T1, T2}"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
-        /// <param name="reader">The image reader.</param>
+        /// <param name="readerFactory">The image reader factory.</param>
         /// <exception cref="ArgumentNullException">
         /// loggerFactory
         /// or
         /// fileSystemStrategy
         /// or
-        /// reader
+        /// readerFactory
         /// </exception>
-        public ImageExtractor(ILoggerFactory loggerFactory, IFileSystemStrategy fileSystemStrategy, IImageReader<T> reader)
+        public ImageExtractor(ILoggerFactory loggerFactory, IFileSystemStrategy fileSystemStrategy, IImageReaderFactory<T1, T2> readerFactory)
         {
-            logger = loggerFactory?.CreateLogger<ImageExtractor<T>>();
+            logger = loggerFactory?.CreateLogger<ImageExtractor<T1, T2>>();
             if (logger == null)
             {
                 throw new ArgumentNullException(nameof(loggerFactory));
@@ -55,10 +58,10 @@ namespace AMI.Core.Extractors
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            this.reader = reader;
-            if (this.reader == null)
+            this.readerFactory = readerFactory;
+            if (this.readerFactory == null)
             {
-                throw new ArgumentNullException(nameof(reader));
+                throw new ArgumentNullException(nameof(readerFactory));
             }
         }
 
@@ -77,6 +80,7 @@ namespace AMI.Core.Extractors
             var imageFormat = GetImageFormat(input.ImageFormat);
             var imageExtension = imageFormat.FileExtensionFromEncoder();
             var fs = fileSystemStrategy.Create(input.DestinationPath);
+            var reader = readerFactory.Create();
 
             await reader.InitAsync(input.SourcePath, ct);
 
@@ -149,7 +153,7 @@ namespace AMI.Core.Extractors
             return output;
         }
 
-        private void PreProcess(IImageReader<T> reader, ImageFormat imageFormat, uint amount, uint? desiredSize)
+        private void PreProcess(IImageReader<T2> reader, ImageFormat imageFormat, uint amount, uint? desiredSize)
         {
             if (amount > 1)
             {

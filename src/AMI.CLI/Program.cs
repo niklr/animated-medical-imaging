@@ -16,7 +16,7 @@ using AMI.Core.Strategies;
 using AMI.Core.Writers;
 using AMI.Gif.Writers;
 using AMI.Itk.Extractors;
-using AMI.Itk.Readers;
+using AMI.Itk.Factories;
 using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,11 +43,11 @@ namespace AMI.NetCore.Portable
                 .AddScoped<IImageService, ImageService>()
                 .AddScoped<IDefaultJsonSerializer, DefaultJsonSerializer>()
                 .AddScoped<IImageExtractor, ItkImageExtractor>()
-                .AddScoped<IItkImageReader, ItkImageReader>()
                 .AddScoped<IGifImageWriter, AnimatedGifImageWriter>()
                 .AddScoped<IDefaultJsonWriter, DefaultJsonWriter>()
                 .AddScoped<IFileSystemStrategy, FileSystemStrategy>()
                 .AddSingleton<IAppInfoFactory, AppInfoFactory>()
+                .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
                 .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
                 .BuildServiceProvider();
 
@@ -163,8 +163,8 @@ namespace AMI.NetCore.Portable
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
-                SourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", "SMIR.Brain.XX.O.MR_Flair.36620.mha"),
-                DestinationPath = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "temp", Guid.NewGuid().ToString("N")),
+                SourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "SMIR.Brain.XX.O.MR_Flair.36620.mha"),
+                DestinationPath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "temp", Guid.NewGuid().ToString("N")),
                 // WatermarkSourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", "watermark.png"),
                 OpenCombinedGif = true
             };
