@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CodeAnalysisRuleSet>..\RnsCodeAnalysis.ruleset</CodeAnalysisRuleSet>	
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,6 +17,11 @@
     <None Remove="logging.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="..\RnsCodeAnalysis.ruleset" Link="Properties\RnsCodeAnalysis.ruleset" />
+    <AdditionalFiles Include="..\StyleCop.json" Link="Properties\StyleCop.json" />
+  </ItemGroup>  
+  
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
   </ItemGroup>
@@ -37,6 +44,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

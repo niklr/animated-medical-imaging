@@ -24,8 +24,14 @@ using Microsoft.Extensions.Logging;
 
 namespace AMI.NetCore.Portable
 {
+    /// <summary>
+    /// The entry point of the application.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Program"/> class.
+        /// </summary>
         public Program()
         {
             var loggingConfiguration = new ConfigurationBuilder()
@@ -56,12 +62,26 @@ namespace AMI.NetCore.Portable
             Configuration = serviceProvider.GetService<IAmiConfigurationManager>();
         }
 
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
         public ILogger Logger { get; }
 
+        /// <summary>
+        /// Gets the image service.
+        /// </summary>
         public IImageService ImageService { get; }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
         public IAmiConfigurationManager Configuration { get; }
 
+        /// <summary>
+        /// Defines the entry point of the application.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The exit code.</returns>
         public static int Main(string[] args)
         {
             try
@@ -76,10 +96,11 @@ namespace AMI.NetCore.Portable
                     cts.Cancel();
                 };
 
-                var task = Task.Run(async () =>
-                {
-                    await program.Execute(args, ct);
-                }, ct);
+                var task = Task.Run(
+                    async () =>
+                    {
+                        await program.Execute(args, ct);
+                    }, ct);
 
                 if (program.Configuration.TimeoutMilliseconds > 0)
                 {
@@ -105,6 +126,17 @@ namespace AMI.NetCore.Portable
             return Environment.ExitCode;
         }
 
+        /// <summary>
+        /// Executes the specified arguments.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <param name="ct">The cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// SourcePath
+        /// or
+        /// DestinationPath
+        /// </exception>
         public async Task Execute(string[] args, CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
@@ -154,7 +186,7 @@ namespace AMI.NetCore.Portable
             Logger.LogInformation($"AMI.Portable ended after {t.ToReadableTime()}");
         }
 
-        public async Task ExecuteTest(string[] args, CancellationToken ct)
+        private async Task ExecuteTest(string[] args, CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
             Logger.LogInformation("AMI.Portable started");
@@ -165,7 +197,6 @@ namespace AMI.NetCore.Portable
                 DesiredSize = 250,
                 SourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "SMIR.Brain.XX.O.MR_Flair.36620.mha"),
                 DestinationPath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "temp", Guid.NewGuid().ToString("N")),
-                // WatermarkSourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath("animated-medical-imaging"), "data", "watermark.png"),
                 OpenCombinedGif = true
             };
 
