@@ -1,0 +1,18 @@
+{
+  "Version": 3,
+  "ListAllProjects": true,
+  "MultiProjectConfigurations": {
+    "API + Website": {
+      "Projects": {
+        "AMI.API": {
+          "StartProject": true,
+          "ProfileName": "AMI.API"
+        },
+        "AMI.Website": {
+          "StartProject": true,
+          "ProfileName": "AMI.Website"
+        }
+      }
+    }
+  }
+}

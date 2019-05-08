@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8ACB7F3F-CF30-4DD0-A548-C23197945C6B}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		AMI.sln.startup.json = AMI.sln.startup.json
 		..\appveyor.yml = ..\appveyor.yml
 		..\build.cake = ..\build.cake
 		..\build.ps1 = ..\build.ps1
@@ -30,9 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.CLI", "AMI.CLI\AMI.CLI.csproj", "{C6339967-EBD5-411B-982C-D2535E420071}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.API", "AMI.API\AMI.API.csproj", "{BE51A65B-FA5A-43DD-8CB2-83D10AE605DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.API", "AMI.API\AMI.API.csproj", "{BE51A65B-FA5A-43DD-8CB2-83D10AE605DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.Website", "AMI.Website\AMI.Website.csproj", "{DAFB996A-420F-4EE1-94C0-10C354F8B53A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.Website", "AMI.Website\AMI.Website.csproj", "{DAFB996A-420F-4EE1-94C0-10C354F8B53A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

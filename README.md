@@ -180,7 +180,10 @@ In order to debug the application, you will need the following tools:
 * [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982)
 * [.NET Core SDK 2.1](https://www.microsoft.com/net/download/dotnet-core/2.1)
 
-Additionally, the special dependency **SimpleITK** needs to be installed:
+The optional [SwitchStartupProject](https://bitbucket.org/thirteen/switchstartupproject) extension for Visual Studio can be used to quickly select startup projects from a dropdown.
+Additionally, this extension enables to switch between multi-project startup configurations e.g. to start `AMI.API` and `AMI.Website` together.
+
+Last but not least, the special dependency **SimpleITK** needs to be installed:
 
 1. Download & extract [32bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win32-x86.zip) or [64bit](https://github.com/SimpleITK/SimpleITK/releases/download/v1.2.0/SimpleITK-1.2.0-CSharp-win64-x64.zip) version.
 2. Copy the following DLLs to the **lib** folder.
