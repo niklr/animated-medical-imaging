@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AMI.API.Controllers
 {
     /// <summary>
-    /// The API endpoints related to values.
+    /// The endpoints related to values.
     /// </summary>
     /// <seealso cref="ControllerBase" />
     [Route("api/[controller]")]

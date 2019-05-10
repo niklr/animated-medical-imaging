@@ -28,16 +28,19 @@ namespace AMI.Portable
     {
         public Program()
         {
-            var loggingConfiguration = new ConfigurationBuilder()
+            var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("logging.json", optional: false, reloadOnChange: true)
                 .Build();
 
             var serviceProvider = new ServiceCollection()
+                .AddOptions()
+                .Configure<AppSettings>(configuration.GetSection("AppSettings"))
                 .AddLogging(builder =>
                 {
                     builder
-                        .AddConfiguration(loggingConfiguration.GetSection("Logging"))
+                        .AddConfiguration(configuration.GetSection("Logging"))
                         .AddConsole();
                 })
                 .AddScoped<IImageService, ImageService>()
@@ -45,7 +48,7 @@ namespace AMI.Portable
                 .AddScoped<IImageExtractor, ItkImageExtractor>()
                 .AddScoped<IGifImageWriter, AnimatedGifImageWriter>()
                 .AddScoped<IDefaultJsonWriter, DefaultJsonWriter>()
-                .AddScoped<IFileSystemStrategy, FileSystemStrategy>()
+                .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
                 .AddSingleton<IAppInfoFactory, AppInfoFactory>()
                 .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
                 .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()

@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using AMI.Core.Models;
+using Microsoft.Extensions.Options;
 
 namespace AMI.Core.Configuration
 {
@@ -11,11 +12,13 @@ namespace AMI.Core.Configuration
         /// <summary>
         /// Initializes a new instance of the <see cref="AmiConfigurationManager"/> class.
         /// </summary>
-        public AmiConfigurationManager()
+        /// <param name="configuration">The configuration.</param>
+        public AmiConfigurationManager(IOptions<AppSettings> configuration)
         {
-            MaxSizeKilobytes = int.TryParse(ConfigurationManager.AppSettings["AMI.MaxSizeKilobytes"], out int maxSizeKilobytes) ? maxSizeKilobytes : 0;
-            MaxCompressedEntries = int.TryParse(ConfigurationManager.AppSettings["AMI.MaxCompressedEntries"], out int maxCompressedEntries) ? maxCompressedEntries : 0;
-            TimeoutMilliseconds = int.TryParse(ConfigurationManager.AppSettings["AMI.TimeoutMilliseconds"], out int timeoutMilliseconds) ? timeoutMilliseconds : 0;
+            MaxSizeKilobytes = configuration.Value.MaxSizeKilobytes;
+            MaxCompressedEntries = configuration.Value.MaxCompressedEntries;
+            TimeoutMilliseconds = configuration.Value.TimeoutMilliseconds;
+            WorkingDirectory = configuration.Value.WorkingDirectory;
         }
 
         /// <summary>
@@ -32,5 +35,10 @@ namespace AMI.Core.Configuration
         /// Gets the timeout in milliseconds.
         /// </summary>
         public int TimeoutMilliseconds { get; private set; }
+
+        /// <summary>
+        /// Gets the working directory.
+        /// </summary>
+        public string WorkingDirectory { get; private set; }
     }
 }

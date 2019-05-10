@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AMI.API.Configuration;
+using AMI.Core.Configuration;
+using AMI.Core.Strategies;
+using AMI.Core.Uploaders;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +35,11 @@ namespace AMI.API
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IResumableUploader, ResumableUploader>()
+                .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
+                .AddSingleton<IApiConfiguration, ApiConfiguration>()
+                .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

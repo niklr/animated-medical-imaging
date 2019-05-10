@@ -5,6 +5,7 @@ using AMI.Core.Configuration;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
+using AMI.Core.Models;
 using AMI.Core.Readers;
 using AMI.Core.Serializers;
 using AMI.Core.Services;
@@ -14,6 +15,7 @@ using AMI.Gif.Writers;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using AMI.NetCore.Tests.Mocks.Core.Factories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -22,11 +24,18 @@ namespace AMI.NetCore.Tests
 {
     public class BaseTest
     {
-        private readonly ServiceProvider _serviceProvider;
+        private readonly ServiceProvider serviceProvider;
 
         public BaseTest()
         {
-            _serviceProvider = new ServiceCollection()
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            serviceProvider = new ServiceCollection()
+                .AddOptions()
+                .Configure<AppSettings>(configuration.GetSection("AppSettings"))
                 .AddTransient<ICompressibleReader, SharpCompressReader>()
                 .AddTransient<IGifImageWriter, AnimatedGifImageWriter>()
                 .AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>()
@@ -43,7 +52,7 @@ namespace AMI.NetCore.Tests
 
         public T GetService<T>()
         {
-            return _serviceProvider.GetService<T>();
+            return serviceProvider.GetService<T>();
         }
 
         public string GetDataPath(string filename)

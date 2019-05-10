@@ -10,6 +10,10 @@
     <CodeAnalysisRuleSet>..\RnsCodeAnalysis.ruleset</CodeAnalysisRuleSet>	
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="..\RnsCodeAnalysis.ruleset" Link="Properties\RnsCodeAnalysis.ruleset" />
     <AdditionalFiles Include="..\StyleCop.json" Link="Properties\StyleCop.json" />
@@ -27,6 +31,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+  </ItemGroup>  
+  
+  <ItemGroup>
+    <ProjectReference Include="..\AMI.Core\AMI.Core.csproj" />
   </ItemGroup>
 
 </Project>

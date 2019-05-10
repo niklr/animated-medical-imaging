@@ -19,5 +19,10 @@
         /// Gets the timeout in milliseconds.
         /// </summary>
         int TimeoutMilliseconds { get; }
+
+        /// <summary>
+        /// Gets the working directory.
+        /// </summary>
+        string WorkingDirectory { get; }
     }
 }
