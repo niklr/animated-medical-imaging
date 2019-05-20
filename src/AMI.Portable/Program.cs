@@ -21,6 +21,7 @@ using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RNS.Framework.Extensions.Reflection;
 
 namespace AMI.Portable
 {
@@ -111,7 +112,7 @@ namespace AMI.Portable
         public async Task Execute(string[] args, CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
-            Logger.LogInformation("AMI.Portable started");
+            Logger.LogInformation($"{this.GetMethodName()} started");
 
             var input = new ExtractInput();
 
@@ -147,13 +148,13 @@ namespace AMI.Portable
 
             TimeSpan t = TimeSpan.FromMilliseconds(watch.ElapsedMilliseconds);
 
-            Logger.LogInformation($"AMI.Portable ended after {t.ToReadableTime()}");
+            Logger.LogInformation($"{this.GetMethodName()} ended after {t.ToReadableTime()}");
         }
 
         public async Task ExecuteTest(string[] args, CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
-            Logger.LogInformation("AMI.Portable started");
+            Logger.LogInformation($"{this.GetMethodName()} started");
 
             var input = new ExtractInput()
             {
@@ -178,7 +179,7 @@ namespace AMI.Portable
 
             TimeSpan t = TimeSpan.FromMilliseconds(watch.ElapsedMilliseconds);
 
-            Logger.LogInformation($"AMI.Portable ended after {t.ToReadableTime()}");
+            Logger.LogInformation($"{this.GetMethodName()} ended after {t.ToReadableTime()}");
         }
     }
 }

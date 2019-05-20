@@ -74,8 +74,6 @@ namespace AMI.Core.Extractors
         /// <exception cref="AmiException">Watermark could not be read.</exception>
         public async Task<ImageExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct)
         {
-            logger.LogInformation("ImageExtractor ExtractAsync started");
-
             var output = new ImageExtractOutput();
             var imageFormat = GetImageFormat(input.ImageFormat);
             var imageExtension = imageFormat.FileExtensionFromEncoder();
@@ -147,8 +145,6 @@ namespace AMI.Core.Extractors
             }
 
             output.Images = images.OrderBy(e => e.Position).ToList();
-
-            this.logger.LogInformation("ImageExtractor ExtractAsync ended");
 
             return output;
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
@@ -121,8 +120,6 @@ namespace AMI.Core.Services
         /// </exception>
         public async Task<ExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct)
         {
-            logger.LogInformation("ImageService ExtractAsync started");
-
             if (input == null)
             {
                 throw new ArgumentNullException(nameof(input));
@@ -167,8 +164,6 @@ namespace AMI.Core.Services
             };
 
             await jsonWriter.WriteAsync(inputClone.DestinationPath, "output", output, (filename) => { output.JsonFilename = filename; });
-
-            logger.LogInformation("ImageService ExtractAsync ended");
 
             return output;
         }
