@@ -46,7 +46,7 @@ namespace AMI.NetFramework.Tests
 
         public void DeleteDirectory(string path)
         {
-            Directory.Delete(path);
+            Directory.Delete(path, true);
         }
     }
 }

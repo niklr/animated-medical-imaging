@@ -19,13 +19,13 @@ namespace AMI.Core.Readers
         /// <param name="configuration">The configuration.</param>
         public CompressibleReader(IAmiConfigurationManager configuration)
         {
-            MaxCompressibleEntries = Convert.ToUInt32(configuration.MaxCompressedEntries);
+            MaxCompressibleEntries = configuration.MaxCompressedEntries;
         }
 
         /// <summary>
         /// Gets the maximum of compressible entries.
         /// </summary>
-        public uint MaxCompressibleEntries { get; private set; } = uint.MinValue;
+        public int MaxCompressibleEntries { get; private set; } = int.MinValue;
 
         /// <summary>
         /// Reads the specified compressed file asynchronous.

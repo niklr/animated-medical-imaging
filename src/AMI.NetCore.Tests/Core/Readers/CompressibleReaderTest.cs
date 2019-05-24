@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
+using AMI.Core.Configuration;
 using AMI.Core.Readers;
 using NUnit.Framework;
 
@@ -12,14 +14,20 @@ namespace AMI.NetCore.Tests.Core.Readers
         {
             // Arrange
             var reader = GetService<ICompressibleReader>();
-            string path = GetDataPath("SMIR.Brain.XX.O.CT.346124.zip");
+            var configuration = GetService<IAmiConfigurationManager>();
+            string path = GetDataPath("SMIR.Brain.XX.O.CT.346124.dcm.zip");
             var ct = new CancellationToken();
 
             // Act
             var result = reader.ReadAsync(path, ct).Result;
+            var firstEntry = result.FirstOrDefault();
+            var lastEntry = result.LastOrDefault();
 
             // Assert
-            Assert.AreEqual(16, result.Count);
+            Assert.AreEqual(configuration.MaxCompressedEntries, result.Count);
+            Assert.IsNotNull(firstEntry);
+            Assert.AreEqual("SMIR.Brain.XX.O.CT.346124_Frame_1.dcm", firstEntry.Key);
+            Assert.AreEqual("SMIR.Brain.XX.O.CT.346124_Frame_10.dcm", lastEntry.Key);
         }
     }
 }

@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Compress.Mappers;
 using AMI.Core.Configuration;
 using AMI.Core.Models;
 using AMI.Core.Readers;
+using RNS.Framework.Comparers;
+using RNS.Framework.Extensions.EnumerableExtensions;
+using SharpCompress.Archives;
 using SharpCompress.Readers;
 
 namespace AMI.Compress.Readers
@@ -38,25 +42,21 @@ namespace AMI.Compress.Readers
                     IList<CompressedEntry> entries = new List<CompressedEntry>();
 
                     // TODO: add options as parameters
-                    var options = new ReaderOptions();
+                    var options = new ReaderOptions()
+                    {
+                        LeaveStreamOpen = false,
+                        LookForHeader = false
+                    };
 
                     using (var file = File.OpenRead(path))
                     {
-                        using (var reader = ReaderFactory.Open(file, options))
+                        using (var archive = ArchiveFactory.Open(file, options))
+                        using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))
                         {
-                            int count = 0;
-                            while (reader.MoveToNextEntry())
+                            var sortedEntries = archive.Entries.Sort(comparer).Take(MaxCompressibleEntries);
+                            foreach (var entry in sortedEntries)
                             {
-                                ct.ThrowIfCancellationRequested();
-
-                                if (!MaxCompressibleEntries.Equals(uint.MinValue) && MaxCompressibleEntries <= count)
-                                {
-                                    break;
-                                }
-
-                                entries.Add(EntryMapper.Map(reader.Entry));
-
-                                count++;
+                                entries.Add(EntryMapper.Map(entry));
                             }
                         }
                     }

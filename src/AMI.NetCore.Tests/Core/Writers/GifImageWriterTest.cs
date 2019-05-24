@@ -19,19 +19,25 @@ namespace AMI.NetCore.Tests.Core.Writers
             var writer = GetService<IGifImageWriter>();
             string filename = $"combined_{Guid.NewGuid().ToString("N")}";
             string sourcePath = GetDataPath("watermark.png");
-            string destinationPath = Path.GetTempPath();
+            string destinationPath = GetTempPath();
             var images = new List<PositionAxisContainer<string>>()
             {
                 new PositionAxisContainer<string>(0, AxisType.X, sourcePath)
             };
 
-            // Act
-            var resultFilename = writer.WriteAsync(destinationPath, images, filename, BezierEasingType.Linear, new CancellationToken()).Result;
+            try
+            {
+                // Act
+                var resultFilename = writer.WriteAsync(destinationPath, images, filename, BezierEasingType.Linear, new CancellationToken()).Result;
 
-            // Assert
-            string destinationFullPath = Path.Combine(destinationPath, resultFilename);
-            Assert.IsTrue(File.Exists(destinationFullPath));
-            DeleteFile(destinationFullPath);
+                // Assert
+                string destinationFullPath = Path.Combine(destinationPath, resultFilename);
+                Assert.IsTrue(File.Exists(destinationFullPath));
+            }
+            finally
+            {
+                DeleteDirectory(destinationPath);
+            }
         }
     }
 }

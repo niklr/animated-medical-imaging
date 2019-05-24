@@ -52,7 +52,8 @@ namespace AMI.Core.Uploaders
         public void Upload(int chunkNumber, string uid, Stream input)
         {
             string localPath = CreateLocalUploadPath(uid);
-            string outputFile = fileSystem.Path.Combine(localPath, uid + (chunkNumber > 0 ? ".part" + chunkNumber : string.Empty));
+            string filename = string.Concat(uid, chunkNumber > 0 ? $".part{chunkNumber}" : string.Empty);
+            string outputFile = fileSystem.Path.Combine(localPath, filename);
 
             using (Stream output = fileSystem.File.OpenWrite(outputFile))
             {

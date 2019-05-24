@@ -30,11 +30,18 @@ namespace AMI.NetFramework.Tests.Core.Extractors
             IImageExtractor extractor = new ItkImageExtractor(loggerFactory, fileSystemStrategy, factory);
             var ct = new CancellationToken();
 
-            // Act
-            var output = extractor.ExtractAsync(input, ct).Result;
+            try
+            {
+                // Act
+                var output = extractor.ExtractAsync(input, ct).Result;
 
-            // Assert
-            Assert.AreEqual(3*Convert.ToInt32(input.AmountPerAxis), output.Images.Count);
+                // Assert
+                Assert.AreEqual(3 * Convert.ToInt32(input.AmountPerAxis), output.Images.Count);
+            }
+            finally
+            {
+                DeleteDirectory(input.DestinationPath);
+            }
         }
     }
 }

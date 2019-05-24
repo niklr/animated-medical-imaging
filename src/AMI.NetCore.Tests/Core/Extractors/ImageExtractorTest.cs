@@ -21,13 +21,20 @@ namespace AMI.NetCore.Tests.Core.Extractors
                 AmountPerAxis = 6
             };
 
-            // Act
-            var output = extractor.ExtractAsync(input, ct).Result;
+            try
+            {
+                // Act
+                var output = extractor.ExtractAsync(input, ct).Result;
 
-            // Assert
-            // 6 (per axis) * 3 (x, y, z) = 18
-            Assert.AreEqual(18, output.Images.Count);
-            Assert.AreEqual(5, (int)output.LabelCount);
+                // Assert
+                // 6 (per axis) * 3 (x, y, z) = 18
+                Assert.AreEqual(18, output.Images.Count);
+                Assert.AreEqual(5, (int)output.LabelCount);
+            }
+            finally
+            {
+                DeleteDirectory(input.DestinationPath);
+            }
         }
     }
 }

@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Compress.Mappers;
 using AMI.Core.Configuration;
 using AMI.Core.Extractors;
 using AMI.Core.Models;
+using RNS.Framework.Comparers;
+using RNS.Framework.Extensions.EnumerableExtensions;
+using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 
@@ -33,7 +37,7 @@ namespace AMI.Compress.Extractors
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>A list of compressed entries.</returns>
-        public async Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct)
+        public override async Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct)
         {
             return await Task.Run(
                 () =>
@@ -41,37 +45,32 @@ namespace AMI.Compress.Extractors
                     IList<CompressedEntry> entries = new List<CompressedEntry>();
 
                     // TODO: add options as parameters
-                    var options = new ReaderOptions();
+                    var options = new ReaderOptions()
+                    {
+                        LeaveStreamOpen = false,
+                        LookForHeader = false
+                    };
 
                     using (var file = File.OpenRead(sourcePath))
                     {
-                        using (var reader = ReaderFactory.Open(file, options))
+                        using (var archive = ArchiveFactory.Open(file, options))
+                        using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))
                         {
-                            int count = 0;
-                            while (reader.MoveToNextEntry())
+                            var sortedEntries = archive.Entries.Sort(comparer).Take(MaxCompressibleEntries);
+                            foreach (var entry in sortedEntries)
                             {
-                                ct.ThrowIfCancellationRequested();
-
-                                if (!MaxCompressibleEntries.Equals(uint.MinValue) && MaxCompressibleEntries <= count)
-                                {
-                                    break;
-                                }
-
-                                if (!reader.Entry.IsDirectory)
+                                if (!entry.IsDirectory)
                                 {
                                     // TODO: add options as parameters
                                     var extractionOptions = new ExtractionOptions()
                                     {
-                                        ExtractFullPath = true,
-                                        Overwrite = true
+                                        ExtractFullPath = false,
+                                        Overwrite = false
                                     };
 
-                                    reader.WriteEntryToDirectory(destinationPath, extractionOptions);
+                                    entry.WriteToDirectory(destinationPath, extractionOptions);
+                                    entries.Add(EntryMapper.Map(entry));
                                 }
-
-                                entries.Add(EntryMapper.Map(reader.Entry));
-
-                                count++;
                             }
                         }
                     }

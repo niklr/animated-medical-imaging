@@ -25,14 +25,16 @@ namespace AMI.NetCore.Tests.Core.Services
             };
             input.AxisTypes.Add(AxisType.Z);
 
-            // Act
-            var output = service.ExtractAsync(input, ct).Result;
-            var json = File.ReadAllText(Path.Combine(input.DestinationPath, output.JsonFilename));
+            try
+            {
+                // Act
+                var output = service.ExtractAsync(input, ct).Result;
+                var json = File.ReadAllText(Path.Combine(input.DestinationPath, output.JsonFilename));
 
-            // Assert
-            Assert.AreEqual(input.AmountPerAxis, output.Images.Count);
-            Assert.AreEqual(5, output.LabelCount);
-            Assert.AreEqual(json, @"{
+                // Assert
+                Assert.AreEqual(input.AmountPerAxis, output.Images.Count);
+                Assert.AreEqual(5, output.LabelCount);
+                Assert.AreEqual(json, @"{
   ""version"": ""0.0.2.0"",
   ""labelCount"": 5,
   ""images"": [
@@ -96,6 +98,11 @@ namespace AMI.NetCore.Tests.Core.Services
   ""combinedGif"": ""combined.gif"",
   ""jsonFilename"": ""output.json""
 }");
+            }
+            finally
+            {
+                DeleteDirectory(input.DestinationPath);
+            }
         }
     }
 }

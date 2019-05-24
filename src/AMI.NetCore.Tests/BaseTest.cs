@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using AMI.Compress.Extractors;
 using AMI.Compress.Readers;
 using AMI.Core.Configuration;
 using AMI.Core.Extractors;
@@ -41,6 +42,7 @@ namespace AMI.NetCore.Tests
                 .AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>()
                 .AddTransient<IDefaultJsonWriter, DefaultJsonWriter>()
                 .AddTransient<IImageExtractor, ItkImageExtractor>()
+                .AddTransient<ICompressibleExtractor, SharpCompressExtractor>()
                 .AddTransient<IImageService, ImageService>()
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
                 .AddSingleton<IAppInfoFactory, MockAppInfoFactory>()
@@ -74,7 +76,7 @@ namespace AMI.NetCore.Tests
 
         public void DeleteDirectory(string path)
         {
-            Directory.Delete(path);
+            Directory.Delete(path, true);
         }
     }
 }
