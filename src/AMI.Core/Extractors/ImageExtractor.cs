@@ -74,11 +74,35 @@ namespace AMI.Core.Extractors
         /// <exception cref="AmiException">Watermark could not be read.</exception>
         public async Task<ImageExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct)
         {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             var output = new ImageExtractOutput();
             var imageFormat = GetImageFormat(input.ImageFormat);
             var imageExtension = imageFormat.FileExtensionFromEncoder();
+            if (string.IsNullOrWhiteSpace(imageExtension))
+            {
+                throw new AmiException("Image file extension could not be determined.");
+            }
+
             var fs = fileSystemStrategy.Create(input.DestinationPath);
+            if (fs == null)
+            {
+                throw new AmiException("Filesystem could not be created based on the destination path.");
+            }
+
             var reader = readerFactory.Create();
+            if (reader == null)
+            {
+                throw new AmiException("Image reader could not be created.");
+            }
 
             await reader.InitAsync(input.SourcePath, ct);
 
@@ -108,20 +132,13 @@ namespace AMI.Core.Extractors
                 watermark = new BitmapContainer(watermarkBitmap);
             }
 
-            ParallelOptions po = new ParallelOptions
-            {
-                CancellationToken = ct,
-                MaxDegreeOfParallelism = Environment.ProcessorCount
-            };
-
             var images = new List<PositionAxisContainer<string>>();
 
             foreach (AxisType axisType in axisTypes)
             {
-                Parallel.For(0, Convert.ToInt32(input.AmountPerAxis), po, i =>
+                for (int i = 0; i < input.AmountPerAxis; i++)
                 {
-                    po.CancellationToken.ThrowIfCancellationRequested();
-
+                    ct.ThrowIfCancellationRequested();
                     string filename = $"{axisType}_{i}{imageExtension}";
                     var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), input.DesiredSize);
                     if (bitmap != null)
@@ -132,6 +149,10 @@ namespace AMI.Core.Extractors
                         }
 
                         bitmap = bitmap.ToCenter(input.DesiredSize, Color.Black);
+                        if (bitmap == null)
+                        {
+                            throw new AmiException("Bitmap could not be centered.");
+                        }
 
                         if (watermark != null)
                         {
@@ -141,7 +162,7 @@ namespace AMI.Core.Extractors
                         fs.File.WriteAllBytes(fs.Path.Combine(input.DestinationPath, filename), bitmap.ToByteArray(imageFormat));
                         images.Add(new PositionAxisContainer<string>(Convert.ToUInt32(i), axisType, filename));
                     }
-                });
+                }
             }
 
             output.Images = images.OrderBy(e => e.Position).ToList();
@@ -151,6 +172,11 @@ namespace AMI.Core.Extractors
 
         private void PreProcess(IImageReader<T2> reader, ImageFormat imageFormat, uint amount, uint? desiredSize)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             if (amount > 1)
             {
                 // calculate hashes of images for the defined amount for each axis
@@ -158,6 +184,10 @@ namespace AMI.Core.Extractors
                 IDictionary<AxisType, uint[]> newMap = new Dictionary<AxisType, uint[]>();
 
                 IAxisPositionMapper mapper = reader.Mapper;
+                if (mapper == null)
+                {
+                    throw new AmiException("The image reader does not contain a mapper.");
+                }
 
                 foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))
                 {

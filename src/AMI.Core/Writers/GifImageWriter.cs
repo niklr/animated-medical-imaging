@@ -38,8 +38,8 @@ namespace AMI.Core.Writers
         public async Task<IReadOnlyList<AxisContainer<string>>> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainer<string>> images,
-            BezierEasingType bezierEasingType = BezierEasingType.Linear,
-            CancellationToken ct = default)
+            BezierEasingType bezierEasingType,
+            CancellationToken ct)
         {
             try
             {
@@ -47,8 +47,13 @@ namespace AMI.Core.Writers
 
                 foreach (var axisImages in images.GroupBy(e => e.AxisType))
                 {
-                    string name = $"{axisImages.Key}";
-                    string filename = await WriteAsync(destinationPath, axisImages.ToList(), name, bezierEasingType, ct);
+                    ct.ThrowIfCancellationRequested();
+                    string filename = await WriteAsync(
+                        destinationPath,
+                        axisImages.ToList(),
+                        axisImages.Key.ToString(),
+                        bezierEasingType,
+                        ct);
                     result.Add(new AxisContainer<string>(axisImages.Key, filename));
                 }
 
@@ -77,8 +82,8 @@ namespace AMI.Core.Writers
             string destinationPath,
             IReadOnlyList<PositionAxisContainer<string>> images,
             string name,
-            BezierEasingType bezierEasingType = BezierEasingType.Linear,
-            CancellationToken ct = default)
+            BezierEasingType bezierEasingType,
+            CancellationToken ct)
         {
             try
             {

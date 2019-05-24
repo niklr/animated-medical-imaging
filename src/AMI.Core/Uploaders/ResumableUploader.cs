@@ -71,7 +71,7 @@ namespace AMI.Core.Uploaders
         /// <returns>
         /// A <see cref="Task" /> representing the asynchronous operation.
         /// </returns>
-        public Task CommitAsync(string filename, string fullDestPath, string uid, CancellationToken ct = default)
+        public Task CommitAsync(string filename, string fullDestPath, string uid, CancellationToken ct)
         {
             throw new NotImplementedException();
         }

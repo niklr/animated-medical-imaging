@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Uploaders;
 using Microsoft.AspNetCore.Http;
@@ -50,6 +51,7 @@ namespace AMI.API.Controllers
         /// <param name="resumableFilename">The resumable filename.</param>
         /// <param name="resumableRelativePath">The resumable relative path.</param>
         /// <param name="resumableTotalChunks">The resumable total chunks.</param>
+        /// <param name="ct">The cancellation token.</param>
         /// <returns>The result of the resumable upload.</returns>
         [HttpPost]
         public async Task<IActionResult> ResumableUpload(
@@ -62,7 +64,8 @@ namespace AMI.API.Controllers
             string resumableIdentifier,
             string resumableFilename,
             string resumableRelativePath,
-            int resumableTotalChunks)
+            int resumableTotalChunks,
+            CancellationToken ct)
         {
             try
             {
@@ -71,7 +74,7 @@ namespace AMI.API.Controllers
                 bool isFinalChunk = resumableChunkNumber == resumableTotalChunks;
                 if (isFinalChunk)
                 {
-                    await uploader.CommitAsync(resumableFilename, resumableRelativePath, resumableIdentifier);
+                    await uploader.CommitAsync(resumableFilename, resumableRelativePath, resumableIdentifier, ct);
                 }
 
                 return Content(string.Empty);

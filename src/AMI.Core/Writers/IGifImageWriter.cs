@@ -22,8 +22,8 @@ namespace AMI.Core.Writers
         Task<IReadOnlyList<AxisContainer<string>>> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainer<string>> images,
-            BezierEasingType bezierEasingType = BezierEasingType.Linear,
-            CancellationToken ct = default);
+            BezierEasingType bezierEasingType,
+            CancellationToken ct);
 
         /// <summary>
         /// Writes the GIF image asynchronous.
@@ -38,7 +38,7 @@ namespace AMI.Core.Writers
             string destinationPath,
             IReadOnlyList<PositionAxisContainer<string>> images,
             string name,
-            BezierEasingType bezierEasingType = BezierEasingType.Linear,
-            CancellationToken ct = default);
+            BezierEasingType bezierEasingType,
+            CancellationToken ct);
     }
 }
