@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 
 namespace AMI.Core.Extensions.FileSystemExtensions
 {
@@ -12,9 +13,17 @@ namespace AMI.Core.Extensions.FileSystemExtensions
         /// </summary>
         /// <param name="fs">The file system.</param>
         /// <param name="path">The partial path.</param>
-        /// <returns>The absolute path.</returns>
+        /// <returns>
+        /// The absolute path.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">fs</exception>
         public static string BuildAbsolutePath(this IFileSystem fs, string path)
         {
+            if (fs == null)
+            {
+                throw new ArgumentNullException(nameof(fs));
+            }
+
             if (string.IsNullOrWhiteSpace(path))
             {
                 return path;
@@ -26,20 +35,6 @@ namespace AMI.Core.Extensions.FileSystemExtensions
             else
             {
                 return fs.Path.GetFullPath(path);
-            }
-        }
-
-        /// <summary>
-        /// Clears the directory.
-        /// </summary>
-        /// <param name="fs">The file system.</param>
-        /// <param name="path">The path.</param>
-        public static void ClearDirectory(this IFileSystem fs, string path)
-        {
-            IDirectoryInfo di = fs.Directory.CreateDirectory(path);
-            foreach (IFileInfo file in di.GetFiles())
-            {
-                file.Delete();
             }
         }
     }

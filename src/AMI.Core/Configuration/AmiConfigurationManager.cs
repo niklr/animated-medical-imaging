@@ -1,5 +1,7 @@
-﻿using AMI.Core.Models;
+﻿using System;
+using AMI.Core.Models;
 using Microsoft.Extensions.Options;
+using PNL.Application.Exceptions;
 
 namespace AMI.Core.Configuration
 {
@@ -13,8 +15,20 @@ namespace AMI.Core.Configuration
         /// Initializes a new instance of the <see cref="AmiConfigurationManager"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
+        /// <exception cref="ArgumentNullException">configuration</exception>
+        /// <exception cref="UnexpectedNullException">configuration - AppSettings</exception>
         public AmiConfigurationManager(IOptions<AppSettings> configuration)
         {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            if (configuration.Value == null)
+            {
+                throw new UnexpectedNullException(nameof(configuration), nameof(AppSettings));
+            }
+
             IsDevelopment = configuration.Value.IsDevelopment;
             MaxSizeKilobytes = configuration.Value.MaxSizeKilobytes;
             MaxCompressedEntries = configuration.Value.MaxCompressedEntries;

@@ -16,5 +16,15 @@ namespace PNL.Application.Exceptions
             : base($"Unexpected null exception. {message}")
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnexpectedNullException"/> class.
+        /// </summary>
+        /// <param name="baseEntityName">Name of the base entity.</param>
+        /// <param name="nullEntityName">Name of the null entity.</param>
+        public UnexpectedNullException(string baseEntityName, string nullEntityName)
+            : base($"The entity \"{nullEntityName}\" of \"{baseEntityName}\" is null.")
+        {
+        }
     }
 }

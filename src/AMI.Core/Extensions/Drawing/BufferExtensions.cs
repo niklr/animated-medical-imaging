@@ -15,9 +15,17 @@ namespace AMI.Core.Extensions.Drawing
         /// <param name="intPtr">The pointer to the image.</param>
         /// <param name="width">The width of the image.</param>
         /// <param name="height">The height of the image.</param>
-        /// <returns>The image as bitmap.</returns>
+        /// <returns>
+        /// The image as bitmap.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">intPtr</exception>
         public static Bitmap ToBitmap(this IntPtr intPtr, int width, int height)
         {
+            if (intPtr == null)
+            {
+                throw new ArgumentNullException(nameof(intPtr));
+            }
+
             Bitmap bitmap;
 
             // Set pixel format as 8-bit grayscale
@@ -77,9 +85,17 @@ namespace AMI.Core.Extensions.Drawing
         /// Return image as buffer.
         /// </summary>
         /// <param name="bitmap">The image to be converted.</param>
-        /// <returns>The image as buffer.</returns>
+        /// <returns>
+        /// The image as buffer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">bitmap</exception>
         public static Tuple<IntPtr, int> ToBufferAndStride(this Bitmap bitmap)
         {
+            if (bitmap == null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
             BitmapData bitmapData = null;
 
             try

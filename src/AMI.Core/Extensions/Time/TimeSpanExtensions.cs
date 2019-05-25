@@ -13,8 +13,14 @@ namespace AMI.Core.Extensions.Time
         /// </summary>
         /// <param name="t">The time span.</param>
         /// <returns>The time span in a readable format.</returns>
+        /// <exception cref="ArgumentNullException">t</exception>
         public static string ToReadableTime(this TimeSpan t)
         {
+            if (t == null)
+            {
+                throw new ArgumentNullException(nameof(t));
+            }
+
             var parts = new List<string>();
             Action<int, string> add = (val, unit) =>
             {

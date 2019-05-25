@@ -16,9 +16,17 @@ namespace AMI.Core.Extensions.Drawing
         /// Source: https://web.archive.org/web/20130111215043/http://www.switchonthecode.com/tutorials/csharp-tutorial-convert-a-color-image-to-grayscale
         /// </summary>
         /// <param name="original">The original image.</param>
-        /// <returns>The image in grayscale.</returns>
+        /// <returns>
+        /// The image in grayscale.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap ToGrayscale(this Bitmap original)
         {
+            if (original == null)
+            {
+                throw new ArgumentNullException(nameof(original));
+            }
+
             // create a blank bitmap the same size as original
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);
 
@@ -63,9 +71,17 @@ namespace AMI.Core.Extensions.Drawing
         /// The format is 8 bits per pixel, indexed. The color table therefore has 256 colors in it.
         /// </summary>
         /// <param name="original">The original image.</param>
-        /// <returns>The image in grayscale.</returns>
+        /// <returns>
+        /// The image in grayscale.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap To8bppIndexedGrayscale(this Bitmap original)
         {
+            if (original == null)
+            {
+                throw new ArgumentNullException(nameof(original));
+            }
+
             // Set pixel format as 8-bit grayscale
             PixelFormat format = PixelFormat.Format8bppIndexed;
 
@@ -95,9 +111,17 @@ namespace AMI.Core.Extensions.Drawing
         /// </summary>
         /// <param name="original">The original image.</param>
         /// <param name="size">The desired size.</param>
-        /// <returns>The resized image.</returns>
+        /// <returns>
+        /// The resized image.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap Resize(this Bitmap original, uint? size)
         {
+            if (original == null)
+            {
+                throw new ArgumentNullException(nameof(original));
+            }
+
             if (size.HasValue && size.Value > 0)
             {
                 int desiredSize = Convert.ToInt32(size.Value);
@@ -155,9 +179,17 @@ namespace AMI.Core.Extensions.Drawing
         /// <param name="original">The original.</param>
         /// <param name="size">The size.</param>
         /// <param name="color">The color.</param>
-        /// <returns>The centered image.</returns>
+        /// <returns>
+        /// The centered image.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap ToCenter(this Bitmap original, uint? size, Color color)
         {
+            if (original == null)
+            {
+                throw new ArgumentNullException(nameof(original));
+            }
+
             if (size.HasValue && size.Value > 0)
             {
                 int desiredSize = Convert.ToInt32(size.Value);
@@ -187,10 +219,21 @@ namespace AMI.Core.Extensions.Drawing
         /// </summary>
         /// <param name="original">The original image.</param>
         /// <param name="watermark">The watermark.</param>
-        /// <returns>The image containing the watermark.</returns>
-        /// <exception cref="ArgumentNullException">watermark</exception>
+        /// <returns>
+        /// The image containing the watermark.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// original
+        /// or
+        /// watermark
+        /// </exception>
         public static Bitmap AppendWatermark(this Bitmap original, BitmapContainer watermark)
         {
+            if (original == null)
+            {
+                throw new ArgumentNullException(nameof(original));
+            }
+
             if (watermark == null)
             {
                 throw new ArgumentNullException(nameof(watermark));
@@ -219,7 +262,9 @@ namespace AMI.Core.Extensions.Drawing
         /// </summary>
         /// <param name="format">The pixel format.</param>
         /// <param name="numberOfEntries">The number of entries in the palette.</param>
-        /// <returns>The grayscale color palette.</returns>
+        /// <returns>
+        /// The grayscale color palette.
+        /// </returns>
         public static ColorPalette CreateGrayscalePalette(PixelFormat format, int numberOfEntries)
         {
             // Make a new bitmap object to steal its palette
