@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Uploaders;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +10,10 @@ namespace AMI.API.Controllers
     /// <summary>
     /// The endpoints related to upload.
     /// </summary>
-    /// <seealso cref="ControllerBase" />
-    [Route("api/[controller]")]
+    /// <seealso cref="BaseController" />
     [ApiController]
-    public class UploadController : ControllerBase
+    [Route("upload")]
+    public class UploadController : BaseController
     {
         private readonly IResumableUploader uploader;
 
@@ -26,16 +24,6 @@ namespace AMI.API.Controllers
         public UploadController(IResumableUploader uploader)
         {
             this.uploader = uploader;
-        }
-
-        /// <summary>
-        /// Gets a list of values.
-        /// </summary>
-        /// <returns>A list of values.</returns>
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return new string[] { "value1", "value2" };
         }
 
         /// <summary>
@@ -51,7 +39,6 @@ namespace AMI.API.Controllers
         /// <param name="resumableFilename">The resumable filename.</param>
         /// <param name="resumableRelativePath">The resumable relative path.</param>
         /// <param name="resumableTotalChunks">The resumable total chunks.</param>
-        /// <param name="ct">The cancellation token.</param>
         /// <returns>The result of the resumable upload.</returns>
         [HttpPost]
         public async Task<IActionResult> ResumableUpload(
@@ -64,8 +51,7 @@ namespace AMI.API.Controllers
             string resumableIdentifier,
             string resumableFilename,
             string resumableRelativePath,
-            int resumableTotalChunks,
-            CancellationToken ct)
+            int resumableTotalChunks)
         {
             try
             {
@@ -74,7 +60,7 @@ namespace AMI.API.Controllers
                 bool isFinalChunk = resumableChunkNumber == resumableTotalChunks;
                 if (isFinalChunk)
                 {
-                    await uploader.CommitAsync(resumableFilename, resumableRelativePath, resumableIdentifier, ct);
+                    await uploader.CommitAsync(resumableFilename, resumableRelativePath, resumableIdentifier, CancellationToken);
                 }
 
                 return Content(string.Empty);

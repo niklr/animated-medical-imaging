@@ -1,5 +1,11 @@
-﻿using AMI.API.Configuration;
+﻿using System.Net;
+using AMI.API.Configuration;
+using AMI.API.Filters;
+using AMI.API.Handlers;
+using AMI.API.Serializers;
 using AMI.Core.Configuration;
+using AMI.Core.Entities.ViewModels;
+using AMI.Core.Serializers;
 using AMI.Core.Strategies;
 using AMI.Core.Uploaders;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PNL.Web.Extensions.ApplicationBuilderExtensions;
 
 namespace AMI.API
 {
@@ -35,12 +42,31 @@ namespace AMI.API
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            var defaultSerializer = new ExtendedJsonSerializer();
+
             services.AddScoped<IResumableUploader, ResumableUploader>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
                 .AddSingleton<IApiConfiguration, ApiConfiguration>()
-                .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+                .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
+                .AddTransient<IDefaultJsonSerializer, ExtendedJsonSerializer>()
+                .AddTransient<IExtendedJsonSerializer, ExtendedJsonSerializer>()
+                .AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.BadRequest));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.Unauthorized));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.Forbidden));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.NotFound));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.Conflict));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.InternalServerError));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options =>
+                {
+                    defaultSerializer.SetJsonSerializerSettings(options.SerializerSettings);
+                });
         }
 
         /// <summary>
@@ -60,6 +86,7 @@ namespace AMI.API
                 app.UseHsts();
             }
 
+            app.UseCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

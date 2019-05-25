@@ -6,6 +6,11 @@
     public class AppSettings
     {
         /// <summary>
+        /// Gets or sets a value indicating whether the current environment is development.
+        /// </summary>
+        public bool IsDevelopment { get; set; }
+
+        /// <summary>
         /// Gets or sets the maximum size in kilobytes.
         /// </summary>
         public int MaxSizeKilobytes { get; set; }

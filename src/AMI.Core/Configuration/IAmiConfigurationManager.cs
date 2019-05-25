@@ -6,6 +6,11 @@
     public interface IAmiConfigurationManager
     {
         /// <summary>
+        /// Gets a value indicating whether the current environment is development.
+        /// </summary>
+        bool IsDevelopment { get; }
+
+        /// <summary>
         /// Gets the maximum size in kilobytes.
         /// </summary>
         int MaxSizeKilobytes { get; }
