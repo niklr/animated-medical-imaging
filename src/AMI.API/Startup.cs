@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using AMI.API.Configuration;
+using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Filters;
 using AMI.API.Handlers;
 using AMI.Core.Configuration;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PNL.Web.Extensions.ApplicationBuilderExtensions;
+using NSwag.AspNetCore;
 
 namespace AMI.API
 {
@@ -86,6 +87,23 @@ namespace AMI.API
 
             app.UseCustomExceptionMiddleware();
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            // Add OpenAPI/Swagger middlewares
+            // https://github.com/RSuter/NSwag/wiki/Assembly-loading#net-core
+            app.UseReDoc(options =>
+            {
+                options.Path = "/redoc";
+                options.DocumentPath = "/specification.json";
+            });
+
+            // Serves the Swagger UI 3 web ui to view the OpenAPI/Swagger documents by default on `/swagger`
+            app.UseSwaggerUi3(options =>
+            {
+                options.Path = "/swagger";
+                options.SwaggerRoutes.Add(new SwaggerUi3Route("v0.0.1", "/specification.json"));
+            });
+
             app.UseMvc();
         }
     }

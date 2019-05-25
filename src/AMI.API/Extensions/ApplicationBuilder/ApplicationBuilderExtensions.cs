@@ -2,7 +2,7 @@
 using AMI.API.Middlewares;
 using Microsoft.AspNetCore.Builder;
 
-namespace PNL.Web.Extensions.ApplicationBuilderExtensions
+namespace AMI.API.Extensions.ApplicationBuilderExtensions
 {
     /// <summary>
     /// Extensions related to <see cref="IApplicationBuilder"/>.
