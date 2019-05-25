@@ -17,11 +17,18 @@ namespace AMI.Core.Serializers
         /// </summary>
         public DefaultJsonSerializer()
         {
-            settings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
+            settings = new JsonSerializerSettings();
+            OverrideJsonSerializerSettings(settings);
+        }
+
+        /// <summary>
+        /// Overrides the provided JSON serializer settings with the default settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        public void OverrideJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            settings.Formatting = Formatting.Indented;
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             settings.Converters.Add(new StringEnumConverter
             {
                 NamingStrategy = new CamelCaseNamingStrategy()

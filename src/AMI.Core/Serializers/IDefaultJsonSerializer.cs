@@ -1,10 +1,18 @@
-﻿namespace AMI.Core.Serializers
+﻿using Newtonsoft.Json;
+
+namespace AMI.Core.Serializers
 {
     /// <summary>
     /// A serializer for JSON data.
     /// </summary>
     public interface IDefaultJsonSerializer
     {
+        /// <summary>
+        /// Overrides the provided JSON serializer settings with the default settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        void OverrideJsonSerializerSettings(JsonSerializerSettings settings);
+
         /// <summary>
         /// Serializes the specified object.
         /// </summary>

@@ -2,7 +2,6 @@
 using AMI.API.Configuration;
 using AMI.API.Filters;
 using AMI.API.Handlers;
-using AMI.API.Serializers;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.ViewModels;
 using AMI.Core.Serializers;
@@ -42,14 +41,13 @@ namespace AMI.API
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            var defaultSerializer = new ExtendedJsonSerializer();
+            var defaultSerializer = new DefaultJsonSerializer();
 
             services.AddScoped<IResumableUploader, ResumableUploader>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
                 .AddSingleton<IApiConfiguration, ApiConfiguration>()
                 .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
-                .AddTransient<IDefaultJsonSerializer, ExtendedJsonSerializer>()
-                .AddTransient<IExtendedJsonSerializer, ExtendedJsonSerializer>()
+                .AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>()
                 .AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
 
             services.AddMvc(options =>
@@ -65,7 +63,7 @@ namespace AMI.API
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options =>
                 {
-                    defaultSerializer.SetJsonSerializerSettings(options.SerializerSettings);
+                    defaultSerializer.OverrideJsonSerializerSettings(options.SerializerSettings);
                 });
         }
 

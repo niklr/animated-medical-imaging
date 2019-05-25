@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using AMI.API.Serializers;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.ViewModels;
+using AMI.Core.Serializers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using PNL.Application.Exceptions;
@@ -18,7 +18,7 @@ namespace AMI.API.Handlers
     {
         private readonly IAmiConfigurationManager configuration;
         private readonly ILogger<CustomExceptionHandler> logger;
-        private readonly IExtendedJsonSerializer serializer;
+        private readonly IDefaultJsonSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomExceptionHandler"/> class.
@@ -33,7 +33,7 @@ namespace AMI.API.Handlers
         /// or
         /// serializer
         /// </exception>
-        public CustomExceptionHandler(IAmiConfigurationManager configuration, ILoggerFactory loggerFactory, IExtendedJsonSerializer serializer)
+        public CustomExceptionHandler(IAmiConfigurationManager configuration, ILoggerFactory loggerFactory, IDefaultJsonSerializer serializer)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             logger = loggerFactory?.CreateLogger<CustomExceptionHandler>() ?? throw new ArgumentNullException(nameof(loggerFactory));
