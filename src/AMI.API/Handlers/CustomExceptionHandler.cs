@@ -3,10 +3,10 @@ using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.ViewModels;
+using AMI.Core.Exceptions;
 using AMI.Core.Serializers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using PNL.Application.Exceptions;
 
 namespace AMI.API.Handlers
 {

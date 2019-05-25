@@ -15,6 +15,11 @@ namespace AMI.Core.Uploaders
         /// <param name="chunkNumber">The chunk number.</param>
         /// <param name="uid">The unique identifier.</param>
         /// <param name="input">The input stream.</param>
+        /// <exception cref="ArgumentNullException">
+        /// uid
+        /// or
+        /// input
+        /// </exception>
         void Upload(int chunkNumber, string uid, Stream input);
 
         /// <summary>

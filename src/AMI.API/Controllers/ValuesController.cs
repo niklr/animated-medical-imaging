@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using AMI.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using PNL.Application.Exceptions;
 
 namespace AMI.API.Controllers
 {

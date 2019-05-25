@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
+using AMI.Core.Exceptions;
 using AMI.Core.Extensions.FileSystemExtensions;
 using AMI.Core.Extensions.ObjectExtensions;
 using AMI.Core.Extractors;
@@ -112,8 +113,12 @@ namespace AMI.Core.Services
         /// <returns>
         /// The output information.
         /// </returns>
-        /// <exception cref="ArgumentNullException">input</exception>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
+        /// input
+        /// or
+        /// ct
+        /// </exception>
+        /// <exception cref="UnexpectedNullException">
         /// Empty source path.
         /// or
         /// Empty destination path.
@@ -125,14 +130,19 @@ namespace AMI.Core.Services
                 throw new ArgumentNullException(nameof(input));
             }
 
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             if (string.IsNullOrWhiteSpace(input.SourcePath))
             {
-                throw new ArgumentException("Empty source path.");
+                throw new UnexpectedNullException("Empty source path.");
             }
 
             if (string.IsNullOrWhiteSpace(input.DestinationPath))
             {
-                throw new ArgumentException("Empty destination path.");
+                throw new UnexpectedNullException("Empty destination path.");
             }
 
             var sourceFs = fileSystemStrategy.Create(input.SourcePath);

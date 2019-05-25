@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
@@ -12,11 +13,17 @@ namespace AMI.Core.Extractors
     public abstract class CompressibleExtractor : ICompressibleExtractor
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompressibleExtractor"/> class.
+        /// Initializes a new instance of the <see cref="CompressibleExtractor" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
+        /// <exception cref="ArgumentNullException">configuration</exception>
         public CompressibleExtractor(IAmiConfigurationManager configuration)
         {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
             MaxCompressibleEntries = configuration.MaxCompressedEntries;
         }
 
@@ -31,7 +38,9 @@ namespace AMI.Core.Extractors
         /// <param name="sourcePath">The source path.</param>
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>A list of compressed entries.</returns>
+        /// <returns>
+        /// A list of compressed entries.
+        /// </returns>
         public abstract Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct);
     }
 }

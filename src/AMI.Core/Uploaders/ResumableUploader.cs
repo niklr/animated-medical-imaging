@@ -23,7 +23,7 @@ namespace AMI.Core.Uploaders
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         /// <exception cref="ArgumentNullException">
-        /// baseUploadPath
+        /// configuration
         /// or
         /// fileSystemStrategy
         /// </exception>
@@ -49,8 +49,23 @@ namespace AMI.Core.Uploaders
         /// <param name="chunkNumber">The chunk number.</param>
         /// <param name="uid">The unique identifier.</param>
         /// <param name="input">The input stream.</param>
+        /// <exception cref="ArgumentNullException">
+        /// uid
+        /// or
+        /// input
+        /// </exception>
         public void Upload(int chunkNumber, string uid, Stream input)
         {
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                throw new ArgumentNullException(nameof(uid));
+            }
+
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
             string localPath = CreateLocalUploadPath(uid);
             string filename = string.Concat(uid, chunkNumber > 0 ? $".part{chunkNumber}" : string.Empty);
             string outputFile = fileSystem.Path.Combine(localPath, filename);

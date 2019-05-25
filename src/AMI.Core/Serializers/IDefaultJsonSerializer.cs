@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace AMI.Core.Serializers
 {
@@ -11,6 +12,7 @@ namespace AMI.Core.Serializers
         /// Overrides the provided JSON serializer settings with the default settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
+        /// <exception cref="ArgumentNullException">settings</exception>
         void OverrideJsonSerializerSettings(JsonSerializerSettings settings);
 
         /// <summary>

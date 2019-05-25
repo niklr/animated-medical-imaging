@@ -1,7 +1,7 @@
 ﻿using System;
+using AMI.Core.Exceptions;
 using AMI.Core.Models;
 using Microsoft.Extensions.Options;
-using PNL.Application.Exceptions;
 
 namespace AMI.Core.Configuration
 {

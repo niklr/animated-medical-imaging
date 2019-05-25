@@ -28,6 +28,16 @@ namespace AMI.Core.Helpers
 
         private static string TraversePathRecursive(string path, string folderName)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (string.IsNullOrWhiteSpace(folderName))
+            {
+                throw new ArgumentNullException(nameof(folderName));
+            }
+
             if (path.Split(Path.DirectorySeparatorChar).Length <= 0)
             {
                 throw new ArgumentException("The current path does not contain a folder with the provided name.");

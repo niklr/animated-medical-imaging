@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
@@ -25,8 +26,14 @@ namespace AMI.Core.Serializers
         /// Overrides the provided JSON serializer settings with the default settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
+        /// <exception cref="ArgumentNullException">settings</exception>
         public void OverrideJsonSerializerSettings(JsonSerializerSettings settings)
         {
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
             settings.Formatting = Formatting.Indented;
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             settings.Converters.Add(new StringEnumConverter

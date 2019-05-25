@@ -70,8 +70,25 @@ namespace AMI.Core.Extractors
         /// </summary>
         /// <param name="input">The input information.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>The output of the image extraction.</returns>
-        /// <exception cref="AmiException">Watermark could not be read.</exception>
+        /// <returns>
+        /// The output of the image extraction.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// input
+        /// or
+        /// ct
+        /// </exception>
+        /// <exception cref="UnexpectedNullException">
+        /// Image file extension could not be determined.
+        /// or
+        /// Filesystem could not be created based on the destination path.
+        /// or
+        /// Image reader could not be created.
+        /// or
+        /// Watermark could not be read.
+        /// or
+        /// Bitmap could not be centered.
+        /// </exception>
         public async Task<ImageExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct)
         {
             if (input == null)
@@ -89,19 +106,19 @@ namespace AMI.Core.Extractors
             var imageExtension = imageFormat.FileExtensionFromEncoder();
             if (string.IsNullOrWhiteSpace(imageExtension))
             {
-                throw new AmiException("Image file extension could not be determined.");
+                throw new UnexpectedNullException("Image file extension could not be determined.");
             }
 
             var fs = fileSystemStrategy.Create(input.DestinationPath);
             if (fs == null)
             {
-                throw new AmiException("Filesystem could not be created based on the destination path.");
+                throw new UnexpectedNullException("Filesystem could not be created based on the destination path.");
             }
 
             var reader = readerFactory.Create();
             if (reader == null)
             {
-                throw new AmiException("Image reader could not be created.");
+                throw new UnexpectedNullException("Image reader could not be created.");
             }
 
             await reader.InitAsync(input.SourcePath, ct);
@@ -126,7 +143,7 @@ namespace AMI.Core.Extractors
                 var watermarkBitmap = await bitmapReader.ReadAsync(input.WatermarkSourcePath, input.DesiredSize, ct);
                 if (watermarkBitmap == null)
                 {
-                    throw new AmiException("Watermark could not be read.");
+                    throw new UnexpectedNullException("Watermark could not be read.");
                 }
 
                 watermark = new BitmapContainer(watermarkBitmap);
@@ -151,7 +168,7 @@ namespace AMI.Core.Extractors
                         bitmap = bitmap.ToCenter(input.DesiredSize, Color.Black);
                         if (bitmap == null)
                         {
-                            throw new AmiException("Bitmap could not be centered.");
+                            throw new UnexpectedNullException("Bitmap could not be centered.");
                         }
 
                         if (watermark != null)
@@ -186,7 +203,7 @@ namespace AMI.Core.Extractors
                 IAxisPositionMapper mapper = reader.Mapper;
                 if (mapper == null)
                 {
-                    throw new AmiException("The image reader does not contain a mapper.");
+                    throw new UnexpectedNullException("The image reader does not contain a mapper.");
                 }
 
                 foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PNL.Application.Exceptions
+namespace AMI.Core.Exceptions
 {
     /// <summary>
     /// This exception is thrown when an exception related to validation occurs.

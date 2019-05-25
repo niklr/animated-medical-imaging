@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PNL.Application.Exceptions
+namespace AMI.Core.Exceptions
 {
     /// <summary>
     /// This exception is thrown when an update failure occurs.
