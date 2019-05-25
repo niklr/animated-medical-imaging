@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -33,9 +34,26 @@ namespace AMI.Compress.Readers
         /// </summary>
         /// <param name="path">The location of the compressed file.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>A list of compressed entries.</returns>
+        /// <returns>
+        /// A list of compressed entries.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// path
+        /// or
+        /// ct
+        /// </exception>
         protected override async Task<IList<CompressedEntry>> AbstractReadAsync(string path, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             return await Task.Run(
                 () =>
                 {

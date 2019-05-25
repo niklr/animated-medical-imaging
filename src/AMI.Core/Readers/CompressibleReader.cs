@@ -73,7 +73,14 @@ namespace AMI.Core.Readers
         /// </summary>
         /// <param name="path">The location of the compressed file.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>A list of compressed entries.</returns>
+        /// <returns>
+        /// A list of compressed entries.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// path
+        /// or
+        /// ct
+        /// </exception>
         protected abstract Task<IList<CompressedEntry>> AbstractReadAsync(string path, CancellationToken ct);
     }
 }

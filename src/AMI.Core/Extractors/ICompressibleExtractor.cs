@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Models;
@@ -16,7 +17,16 @@ namespace AMI.Core.Extractors
         /// <param name="sourcePath">The source path.</param>
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>A list of compressed entries.</returns>
+        /// <returns>
+        /// A list of compressed entries.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// sourcePath
+        /// or
+        /// destinationPath
+        /// or
+        /// ct
+        /// </exception>
         Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct);
     }
 }

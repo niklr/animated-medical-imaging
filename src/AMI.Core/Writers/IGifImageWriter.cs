@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Enums;
+using AMI.Core.Exceptions;
 using AMI.Core.Models;
 
 namespace AMI.Core.Writers
@@ -18,7 +19,14 @@ namespace AMI.Core.Writers
         /// <param name="images">The images.</param>
         /// <param name="bezierEasingType">Type of the bezier easing.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>The output information for each axis.</returns>
+        /// <returns>
+        /// The output information for each axis.
+        /// </returns>
+        /// <exception cref="AmiException">
+        /// The writing of the GIF has been cancelled.
+        /// or
+        /// The GIF could not be written.
+        /// </exception>
         Task<IReadOnlyList<AxisContainer<string>>> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainer<string>> images,
@@ -33,7 +41,14 @@ namespace AMI.Core.Writers
         /// <param name="name">The name of the GIF image without file extension.</param>
         /// <param name="bezierEasingType">Type of the bezier easing.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>The filename of the GIF image.</returns>
+        /// <returns>
+        /// The filename of the GIF image.
+        /// </returns>
+        /// <exception cref="AmiException">
+        /// The writing of the GIF has been cancelled.
+        /// or
+        /// The GIF could not be written.
+        /// </exception>
         Task<string> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainer<string>> images,

@@ -70,10 +70,27 @@ namespace AMI.Itk.Readers
         /// </summary>
         /// <param name="path">The location of the image.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>
+        /// A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// path
+        /// or
+        /// ct
+        /// </exception>
         /// <exception cref="AmiException">The ITK image could not be read.</exception>
         public async Task InitAsync(string path, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             await SemaphoreSlim.WaitAsync();
             try
             {

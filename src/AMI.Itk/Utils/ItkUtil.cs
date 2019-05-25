@@ -22,8 +22,23 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The ITK image.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// path
+        /// or
+        /// ct
+        /// </exception>
         public async Task<Image> ReadImageAsync(string path, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             return await Task.Run(
                 () =>
                 {
@@ -67,8 +82,37 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// A <see cref="T:System.Threading.Tasks.Task" /> representing the asynchronous operation.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// image
+        /// or
+        /// path
+        /// or
+        /// filename
+        /// or
+        /// ct
+        /// </exception>
         public async Task WriteImageAsync(Image image, string path, string filename, CancellationToken ct)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             await Task.Run(
                 () =>
                     {
@@ -107,8 +151,14 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The extracted position as two-dimensional ITK image.
         /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         public Image ExtractPosition(Image image, AxisType axisType, uint index)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             var size = image.GetSize();
             var indexVector = new VectorInt32 { 0, 0, 0 };
             int indexConverted = Convert.ToInt32(index);
@@ -146,9 +196,15 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The resampled two-dimensional ITK image.
         /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
         public Image ResampleImage2D(Image image, uint desiredSize)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             var dimension = image.GetDimension();
             if (dimension != 2)
             {
@@ -214,9 +270,15 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The resampled three-dimensional ITK image.
         /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
         public Image ResampleImage3D(Image image, uint desiredSize)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             var dimension = image.GetDimension();
             if (dimension != 3)
             {
@@ -282,9 +344,15 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The image as bitmap.
         /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
         public System.Drawing.Bitmap ToBitmap(Image image)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             var dimension = image.GetDimension();
             if (dimension != 2)
             {
@@ -301,9 +369,17 @@ namespace AMI.Itk.Utils
         /// Convert the image to a specific format.
         /// </summary>
         /// <param name="image">The ITK image.</param>
-        /// <returns>The rescaled ITK image.</returns>
+        /// <returns>
+        /// The rescaled ITK image.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         private Image ApplyRescaleIntensityImageFilter(Image image)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             Image output = null;
 
             try
@@ -328,9 +404,17 @@ namespace AMI.Itk.Utils
         /// Applies the cast image filter.
         /// </summary>
         /// <param name="image">The ITK image.</param>
-        /// <returns>The modified ITK image.</returns>
+        /// <returns>
+        /// The modified ITK image.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         private Image ApplyCastImageFilter(Image image)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             // TODO: find mapping between itk.simple.PixelIDValueEnum and System.Drawing.Imaging.PixelFormat
             // see https://github.com/SimpleITK/SimpleITK/issues/582
 
@@ -345,6 +429,11 @@ namespace AMI.Itk.Utils
 
         private IntPtr GetBuffer(Image image)
         {
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             PixelIDValueEnum imageType = PixelIDValueEnum.swigToEnum(image.GetPixelIDValue());
 
             if (imageType.swigValue == PixelIDValueEnum.sitkUInt8.swigValue)

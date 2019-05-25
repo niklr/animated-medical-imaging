@@ -16,7 +16,14 @@ namespace AMI.Itk.Utils
         /// </summary>
         /// <param name="path">The location of the image on the file system.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>The ITK image.</returns>
+        /// <returns>
+        /// The ITK image.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// path
+        /// or
+        /// ct
+        /// </exception>
         Task<Image> ReadImageAsync(string path, CancellationToken ct);
 
         /// <summary>
@@ -26,7 +33,18 @@ namespace AMI.Itk.Utils
         /// <param name="path">The file system location where the image should be written.</param>
         /// <param name="filename">The name of the file.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <returns>
+        /// A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// image
+        /// or
+        /// path
+        /// or
+        /// filename
+        /// or
+        /// ct
+        /// </exception>
         Task WriteImageAsync(Image image, string path, string filename, CancellationToken ct);
 
         /// <summary>
@@ -35,7 +53,10 @@ namespace AMI.Itk.Utils
         /// <param name="image">The ITK image.</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <param name="index">The position.</param>
-        /// <returns>The extracted position as two-dimensional ITK image.</returns>
+        /// <returns>
+        /// The extracted position as two-dimensional ITK image.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         Image ExtractPosition(Image image, AxisType axisType, uint index);
 
         /// <summary>
@@ -46,6 +67,7 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The resampled two-dimensional ITK image.
         /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
         Image ResampleImage2D(Image image, uint desiredSize);
 
@@ -64,6 +86,7 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The image as bitmap.
         /// </returns>
+        /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
         System.Drawing.Bitmap ToBitmap(Image image);
     }

@@ -1,4 +1,5 @@
-﻿using AMI.Core.Models;
+﻿using System;
+using AMI.Core.Models;
 using SharpCompress.Common;
 
 namespace AMI.Compress.Mappers
@@ -7,6 +8,11 @@ namespace AMI.Compress.Mappers
     {
         internal static CompressedEntry Map(IEntry entry)
         {
+            if (entry == null)
+            {
+                throw new ArgumentNullException(nameof(entry));
+            }
+
             return new CompressedEntry()
             {
                 ArchivedTime = entry.ArchivedTime,

@@ -41,6 +41,13 @@ namespace AMI.Core.Extractors
         /// <returns>
         /// A list of compressed entries.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// sourcePath
+        /// or
+        /// destinationPath
+        /// or
+        /// ct
+        /// </exception>
         public abstract Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct);
     }
 }

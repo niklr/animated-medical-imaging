@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -36,9 +37,33 @@ namespace AMI.Compress.Extractors
         /// <param name="sourcePath">The source path.</param>
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="ct">The cancellation token.</param>
-        /// <returns>A list of compressed entries.</returns>
+        /// <returns>
+        /// A list of compressed entries.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// sourcePath
+        /// or
+        /// destinationPath
+        /// or
+        /// ct
+        /// </exception>
         public override async Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(sourcePath))
+            {
+                throw new ArgumentNullException(nameof(sourcePath));
+            }
+
+            if (string.IsNullOrWhiteSpace(destinationPath))
+            {
+                throw new ArgumentNullException(nameof(destinationPath));
+            }
+
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             return await Task.Run(
                 () =>
                 {
