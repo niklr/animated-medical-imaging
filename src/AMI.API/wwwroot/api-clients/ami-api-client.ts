@@ -16,6 +16,10 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IUploadAmiApiClient {
     /**
+     * Gets a list of values.
+     */
+    get(): Observable<void>;
+    /**
      * The resumable upload endpoint.
      * @param file The file.
      * @param resumableChunkNumber The resumable chunk number.
@@ -40,6 +44,91 @@ export class UploadAmiApiClient implements IUploadAmiApiClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Gets a list of values.
+     */
+    get(): Observable<void> {
+        let url_ = this.baseUrl + "/upload";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 
     /**
@@ -222,7 +311,7 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
      * Gets a list of values.
      */
     get(): Observable<void> {
-        let url_ = this.baseUrl + "/api/Values";
+        let url_ = this.baseUrl + "/values";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -308,7 +397,7 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
      * @param value The value.
      */
     post(value: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Values";
+        let url_ = this.baseUrl + "/values";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(value);
@@ -398,7 +487,7 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
      * @param id The identifier.
      */
     get2(id: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Values/{id}";
+        let url_ = this.baseUrl + "/values/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -488,7 +577,7 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
      * @param value The value.
      */
     put(id: number, value: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Values/{id}";
+        let url_ = this.baseUrl + "/values/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -581,7 +670,7 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
      * @param id The identifier.
      */
     delete(id: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/Values/{id}";
+        let url_ = this.baseUrl + "/values/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 

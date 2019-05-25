@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using PNL.Application.Exceptions;
 
 namespace AMI.API.Controllers
 {
     /// <summary>
     /// The endpoints related to values.
     /// </summary>
-    /// <seealso cref="ControllerBase" />
-    [Route("api/[controller]")]
+    /// <seealso cref="BaseController" />
+    [Route("values")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : BaseController
     {
         /// <summary>
         /// Gets a list of values.
@@ -29,7 +30,7 @@ namespace AMI.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            throw new NotFoundException("Value", id);
         }
 
         /// <summary>

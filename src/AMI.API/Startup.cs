@@ -5,6 +5,7 @@ using AMI.API.Filters;
 using AMI.API.Handlers;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.ViewModels;
+using AMI.Core.Models;
 using AMI.Core.Serializers;
 using AMI.Core.Strategies;
 using AMI.Core.Uploaders;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NSwag.AspNetCore;
 
 namespace AMI.API
@@ -44,7 +46,15 @@ namespace AMI.API
         {
             var defaultSerializer = new DefaultJsonSerializer();
 
-            services.AddScoped<IResumableUploader, ResumableUploader>()
+            services.AddOptions()
+                .Configure<AppSettings>(Configuration.GetSection("AppSettings"))
+                .AddLogging(builder =>
+                {
+                    builder
+                        .AddConfiguration(Configuration.GetSection("Logging"))
+                        .AddConsole();
+                })
+                .AddScoped<IResumableUploader, ResumableUploader>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
                 .AddSingleton<IApiConfiguration, ApiConfiguration>()
                 .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
