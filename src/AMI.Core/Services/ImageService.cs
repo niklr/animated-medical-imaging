@@ -2,12 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
+using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Exceptions;
 using AMI.Core.Extensions.FileSystemExtensions;
 using AMI.Core.Extensions.ObjectExtensions;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
-using AMI.Core.Models;
 using AMI.Core.Strategies;
 using AMI.Core.Writers;
 using Microsoft.Extensions.Logging;
@@ -106,15 +107,15 @@ namespace AMI.Core.Services
         }
 
         /// <summary>
-        /// Extracts images based on the provided input information asynchronous.
+        /// Extracts images based on the provided command information asynchronous.
         /// </summary>
-        /// <param name="input">The input information.</param>
+        /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// The output information.
+        /// The result information.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// input
+        /// command
         /// or
         /// ct
         /// </exception>
@@ -123,11 +124,11 @@ namespace AMI.Core.Services
         /// or
         /// Empty destination path.
         /// </exception>
-        public async Task<ExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct)
+        public async Task<ExtractResult> ExtractAsync(ExtractObjectCommand command, CancellationToken ct)
         {
-            if (input == null)
+            if (command == null)
             {
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentNullException(nameof(command));
             }
 
             if (ct == null)
@@ -135,47 +136,47 @@ namespace AMI.Core.Services
                 throw new ArgumentNullException(nameof(ct));
             }
 
-            if (string.IsNullOrWhiteSpace(input.SourcePath))
+            if (string.IsNullOrWhiteSpace(command.SourcePath))
             {
                 throw new UnexpectedNullException("Empty source path.");
             }
 
-            if (string.IsNullOrWhiteSpace(input.DestinationPath))
+            if (string.IsNullOrWhiteSpace(command.DestinationPath))
             {
                 throw new UnexpectedNullException("Empty destination path.");
             }
 
-            var sourceFs = fileSystemStrategy.Create(input.SourcePath);
-            var destFs = fileSystemStrategy.Create(input.DestinationPath);
-            var watermarkFs = fileSystemStrategy.Create(input.WatermarkSourcePath);
+            var sourceFs = fileSystemStrategy.Create(command.SourcePath);
+            var destFs = fileSystemStrategy.Create(command.DestinationPath);
+            var watermarkFs = fileSystemStrategy.Create(command.WatermarkSourcePath);
 
-            var inputClone = input.DeepClone();
+            var commandClone = command.DeepClone();
 
-            inputClone.SourcePath = sourceFs.BuildAbsolutePath(input.SourcePath);
-            inputClone.DestinationPath = destFs.BuildAbsolutePath(input.DestinationPath);
-            inputClone.WatermarkSourcePath = watermarkFs.BuildAbsolutePath(input.WatermarkSourcePath);
+            commandClone.SourcePath = sourceFs.BuildAbsolutePath(command.SourcePath);
+            commandClone.DestinationPath = destFs.BuildAbsolutePath(command.DestinationPath);
+            commandClone.WatermarkSourcePath = watermarkFs.BuildAbsolutePath(command.WatermarkSourcePath);
 
             // Creates all directories and subdirectories in the specified path unless they already exist.
-            destFs.Directory.CreateDirectory(inputClone.DestinationPath);
+            destFs.Directory.CreateDirectory(commandClone.DestinationPath);
 
             // TODO: support zip files
-            var imageOutput = await imageExtractor.ExtractAsync(inputClone, ct);
-            var gifs = await gifImageWriter.WriteAsync(inputClone.DestinationPath, imageOutput.Images, inputClone.BezierEasingTypePerAxis, ct);
-            var combinedGifFilename = await gifImageWriter.WriteAsync(inputClone.DestinationPath, imageOutput.Images, "combined", inputClone.BezierEasingTypeCombined, ct);
+            var imageResult = await imageExtractor.ExtractAsync(commandClone, ct);
+            var gifs = await gifImageWriter.WriteAsync(commandClone.DestinationPath, imageResult.Images, commandClone.BezierEasingTypePerAxis, ct);
+            var combinedGifFilename = await gifImageWriter.WriteAsync(commandClone.DestinationPath, imageResult.Images, "combined", commandClone.BezierEasingTypeCombined, ct);
 
             var appInfo = appInfoFactory.Create();
-            var output = new ExtractOutput()
+            var result = new ExtractResult()
             {
                 Version = appInfo.AppVersion,
-                LabelCount = Convert.ToInt32(imageOutput.LabelCount),
-                Images = imageOutput.Images,
+                LabelCount = Convert.ToInt32(imageResult.LabelCount),
+                Images = imageResult.Images,
                 Gifs = gifs,
                 CombinedGif = combinedGifFilename
             };
 
-            await jsonWriter.WriteAsync(inputClone.DestinationPath, "output", output, (filename) => { output.JsonFilename = filename; });
+            await jsonWriter.WriteAsync(commandClone.DestinationPath, "output", result, (filename) => { result.JsonFilename = filename; });
 
-            return output;
+            return result;
         }
     }
 }

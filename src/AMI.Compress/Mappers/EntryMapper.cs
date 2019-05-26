@@ -1,5 +1,5 @@
 ﻿using System;
-using AMI.Core.Models;
+using AMI.Core.Entities.Models;
 using SharpCompress.Common;
 
 namespace AMI.Compress.Mappers

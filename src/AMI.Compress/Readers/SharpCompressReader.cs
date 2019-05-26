@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Compress.Mappers;
 using AMI.Core.Configuration;
-using AMI.Core.Models;
+using AMI.Core.Entities.Models;
 using AMI.Core.Readers;
 using RNS.Framework.Comparers;
 using RNS.Framework.Extensions.EnumerableExtensions;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AMI.Core.Entities.ViewModels
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// A model representing an error result.

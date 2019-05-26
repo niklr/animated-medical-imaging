@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AMI.Core.Models
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// A model containing information about the compressed entry.

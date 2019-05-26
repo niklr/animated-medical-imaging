@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
+using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Enums;
-using AMI.Core.Models;
 using AMI.Core.Services;
 using NUnit.Framework;
 
@@ -16,24 +16,24 @@ namespace AMI.NetCore.Tests.Core.Services
             // Arrange
             var service = GetService<IImageService>();
             var ct = new CancellationToken();
-            var input = new ExtractInput()
+            var command = new ExtractObjectCommand()
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
                 SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
                 DestinationPath = GetTempPath()
             };
-            input.AxisTypes.Add(AxisType.Z);
+            command.AxisTypes.Add(AxisType.Z);
 
             try
             {
                 // Act
-                var output = service.ExtractAsync(input, ct).Result;
-                var json = File.ReadAllText(Path.Combine(input.DestinationPath, output.JsonFilename));
+                var result = service.ExtractAsync(command, ct).Result;
+                var json = File.ReadAllText(Path.Combine(command.DestinationPath, result.JsonFilename));
 
                 // Assert
-                Assert.AreEqual(input.AmountPerAxis, output.Images.Count);
-                Assert.AreEqual(5, output.LabelCount);
+                Assert.AreEqual(command.AmountPerAxis, result.Images.Count);
+                Assert.AreEqual(5, result.LabelCount);
                 Assert.AreEqual(json, @"{
   ""version"": ""0.0.2.0"",
   ""labelCount"": 5,
@@ -101,7 +101,7 @@ namespace AMI.NetCore.Tests.Core.Services
             }
             finally
             {
-                DeleteDirectory(input.DestinationPath);
+                DeleteDirectory(command.DestinationPath);
             }
         }
     }

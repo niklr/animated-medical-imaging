@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
+using AMI.Core.Entities.Models;
 using AMI.Core.Extensions.StringExtensions;
 using AMI.Core.Factories;
-using AMI.Core.Models;
 
 namespace AMI.NetCore.Tests.Mocks.Core.Factories
 {

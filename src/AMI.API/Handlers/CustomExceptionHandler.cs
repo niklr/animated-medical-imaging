@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
-using AMI.Core.Entities.ViewModels;
+using AMI.Core.Entities.Models;
 using AMI.Core.Exceptions;
 using AMI.Core.Serializers;
 using Microsoft.AspNetCore.Http;

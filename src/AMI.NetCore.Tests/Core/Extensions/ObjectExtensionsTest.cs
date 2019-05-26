@@ -1,6 +1,6 @@
-﻿using AMI.Core.Enums;
+﻿using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Enums;
 using AMI.Core.Extensions.ObjectExtensions;
-using AMI.Core.Models;
 using NUnit.Framework;
 
 namespace AMI.NetCore.Tests.Core.Extensions
@@ -12,7 +12,7 @@ namespace AMI.NetCore.Tests.Core.Extensions
         public void NetCore_ObjectExtensions_DeepClone()
         {
             // Arrange
-            var expected = new ExtractInput()
+            var expected = new ExtractObjectCommand()
             {
                 AmountPerAxis = 10,
                 SourcePath = "test.txt"

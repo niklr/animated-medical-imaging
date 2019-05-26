@@ -1,4 +1,4 @@
-﻿namespace AMI.Core.Models
+﻿namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// The application settings.

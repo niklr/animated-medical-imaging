@@ -4,12 +4,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
+using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Enums;
 using AMI.Core.Extensions.Time;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
-using AMI.Core.Models;
 using AMI.Core.Serializers;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -146,36 +147,36 @@ namespace AMI.CLI
             var watch = Stopwatch.StartNew();
             Logger.LogInformation($"{this.GetMethodName()} started");
 
-            var input = new ExtractInput();
+            var command = new ExtractObjectCommand();
 
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed(o =>
                    {
-                       input.DesiredSize = o.DesiredSize;
-                       input.AmountPerAxis = o.AmountPerAxis;
-                       input.SourcePath = o.SourcePath;
-                       input.DestinationPath = o.DestinationPath;
-                       input.Grayscale = Convert.ToBoolean(o.Grayscale);
-                       input.OpenCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
+                       command.DesiredSize = o.DesiredSize;
+                       command.AmountPerAxis = o.AmountPerAxis;
+                       command.SourcePath = o.SourcePath;
+                       command.DestinationPath = o.DestinationPath;
+                       command.Grayscale = Convert.ToBoolean(o.Grayscale);
+                       command.OpenCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
                    });
 
-            if (string.IsNullOrWhiteSpace(input.SourcePath))
+            if (string.IsNullOrWhiteSpace(command.SourcePath))
             {
-                throw new ArgumentNullException(nameof(input.SourcePath));
+                throw new ArgumentNullException(nameof(command.SourcePath));
             }
 
-            if (string.IsNullOrWhiteSpace(input.DestinationPath))
+            if (string.IsNullOrWhiteSpace(command.DestinationPath))
             {
-                throw new ArgumentNullException(nameof(input.DestinationPath));
+                throw new ArgumentNullException(nameof(command.DestinationPath));
             }
 
-            var output = await ImageService.ExtractAsync(input, ct);
+            var result = await ImageService.ExtractAsync(command, ct);
 
-            if (input.OpenCombinedGif)
+            if (command.OpenCombinedGif)
             {
                 var p = new Process
                 {
-                    StartInfo = new ProcessStartInfo(Path.Combine(input.DestinationPath, output.CombinedGif))
+                    StartInfo = new ProcessStartInfo(Path.Combine(command.DestinationPath, result.CombinedGif))
                     {
                         UseShellExecute = true
                     }
@@ -195,7 +196,7 @@ namespace AMI.CLI
             var watch = Stopwatch.StartNew();
             Logger.LogInformation($"{this.GetMethodName()} started");
 
-            var input = new ExtractInput()
+            var command = new ExtractObjectCommand()
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
@@ -204,15 +205,15 @@ namespace AMI.CLI
                 OpenCombinedGif = true
             };
 
-            input.AxisTypes.Add(AxisType.Z);
+            command.AxisTypes.Add(AxisType.Z);
 
-            var output = await ImageService.ExtractAsync(input, ct);
+            var result = await ImageService.ExtractAsync(command, ct);
 
-            if (Convert.ToBoolean(input.OpenCombinedGif))
+            if (Convert.ToBoolean(command.OpenCombinedGif))
             {
                 var p = new Process
                 {
-                    StartInfo = new ProcessStartInfo(Path.Combine(input.DestinationPath, output.CombinedGif))
+                    StartInfo = new ProcessStartInfo(Path.Combine(command.DestinationPath, result.CombinedGif))
                     {
                         UseShellExecute = true
                     }

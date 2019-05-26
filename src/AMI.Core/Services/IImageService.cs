@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Exceptions;
-using AMI.Core.Models;
 
 namespace AMI.Core.Services
 {
@@ -12,15 +13,15 @@ namespace AMI.Core.Services
     public interface IImageService
     {
         /// <summary>
-        /// Extracts images based on the provided input information asynchronous.
+        /// Extracts images based on the provided command information asynchronous.
         /// </summary>
-        /// <param name="input">The input information.</param>
+        /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// The output information.
+        /// The result information.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// input
+        /// command
         /// or
         /// ct
         /// </exception>
@@ -29,6 +30,6 @@ namespace AMI.Core.Services
         /// or
         /// Empty destination path.
         /// </exception>
-        Task<ExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct);
+        Task<ExtractResult> ExtractAsync(ExtractObjectCommand command, CancellationToken ct);
     }
 }

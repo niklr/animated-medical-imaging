@@ -1,4 +1,4 @@
-﻿using AMI.Core.Models;
+﻿using AMI.Core.Entities.Models;
 
 namespace AMI.Core.Factories
 {

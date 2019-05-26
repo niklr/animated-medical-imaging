@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using AMI.Core.Enums;
 
-namespace AMI.Core.Models
+namespace AMI.Core.Entities.Objects.Commands.Extract
 {
     /// <summary>
-    /// A model containing information about the input needed for extraction.
+    /// A command containing information needed for extraction.
     /// </summary>
     [Serializable]
-    public class ExtractInput
+    public class ExtractObjectCommand
     {
         /// <summary>
         /// Gets or sets the desired size of the extracted images.

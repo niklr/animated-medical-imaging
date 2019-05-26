@@ -1,6 +1,6 @@
 using System.Threading;
+using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Extractors;
-using AMI.Core.Models;
 using NUnit.Framework;
 
 namespace AMI.NetCore.Tests.Core.Extractors
@@ -14,7 +14,7 @@ namespace AMI.NetCore.Tests.Core.Extractors
             // Arrange
             var extractor = GetService<IImageExtractor>();
             var ct = new CancellationToken();
-            var input = new ExtractInput()
+            var command = new ExtractObjectCommand()
             {
                 SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
                 DestinationPath = GetTempPath(),
@@ -24,16 +24,16 @@ namespace AMI.NetCore.Tests.Core.Extractors
             try
             {
                 // Act
-                var output = extractor.ExtractAsync(input, ct).Result;
+                var result = extractor.ExtractAsync(command, ct).Result;
 
                 // Assert
                 // 6 (per axis) * 3 (x, y, z) = 18
-                Assert.AreEqual(18, output.Images.Count);
-                Assert.AreEqual(5, (int)output.LabelCount);
+                Assert.AreEqual(18, result.Images.Count);
+                Assert.AreEqual(5, (int)result.LabelCount);
             }
             finally
             {
-                DeleteDirectory(input.DestinationPath);
+                DeleteDirectory(command.DestinationPath);
             }
         }
     }

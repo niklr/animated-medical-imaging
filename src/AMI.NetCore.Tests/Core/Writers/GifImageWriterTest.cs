@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using AMI.Core.Entities.Models;
 using AMI.Core.Enums;
-using AMI.Core.Models;
 using AMI.Core.Writers;
 using NUnit.Framework;
 

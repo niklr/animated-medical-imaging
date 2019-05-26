@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace AMI.Core.Models
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A model containing information about the output of the extraction.
+    /// A model containing information about the result of the extraction.
     /// </summary>
-    public class ExtractOutput
+    public class ExtractResult
     {
         private IReadOnlyList<PositionAxisContainer<string>> images = new List<PositionAxisContainer<string>>();
         private IReadOnlyList<AxisContainer<string>> gifs = new List<AxisContainer<string>>();

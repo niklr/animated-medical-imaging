@@ -57,6 +57,10 @@
 
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\Objects\Queries\" />
   </ItemGroup>  
   
 </Project>

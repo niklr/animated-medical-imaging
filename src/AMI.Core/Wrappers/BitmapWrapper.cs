@@ -3,19 +3,19 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using AMI.Core.Extensions.Drawing;
 
-namespace AMI.Core.Models
+namespace AMI.Core.Wrappers
 {
     /// <summary>
-    /// A container for bitmaps.
+    /// A wrapper for bitmaps.
     /// </summary>
-    public class BitmapContainer
+    public class BitmapWrapper
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapContainer"/> class.
+        /// Initializes a new instance of the <see cref="BitmapWrapper"/> class.
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
         /// <exception cref="ArgumentNullException">bitmap</exception>
-        public BitmapContainer(Bitmap bitmap)
+        public BitmapWrapper(Bitmap bitmap)
         {
             if (bitmap == null)
             {

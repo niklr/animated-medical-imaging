@@ -1,5 +1,5 @@
-﻿using AMI.Core.Helpers;
-using AMI.Core.Models;
+﻿using AMI.Core.Entities.Models;
+using AMI.Core.Helpers;
 
 namespace AMI.Core.Factories
 {

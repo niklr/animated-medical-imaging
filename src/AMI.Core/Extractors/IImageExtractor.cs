@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Exceptions;
-using AMI.Core.Models;
 
 namespace AMI.Core.Extractors
 {
@@ -14,13 +15,13 @@ namespace AMI.Core.Extractors
         /// <summary>
         /// Extracts images asynchronous.
         /// </summary>
-        /// <param name="input">The input information.</param>
+        /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// The output of the image extraction.
+        /// The result of the image extraction.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// input
+        /// command
         /// or
         /// ct
         /// </exception>
@@ -35,6 +36,6 @@ namespace AMI.Core.Extractors
         /// or
         /// Bitmap could not be centered.
         /// </exception>
-        Task<ImageExtractOutput> ExtractAsync(ExtractInput input, CancellationToken ct);
+        Task<ImageExtractResult> ExtractAsync(ExtractObjectCommand command, CancellationToken ct);
     }
 }

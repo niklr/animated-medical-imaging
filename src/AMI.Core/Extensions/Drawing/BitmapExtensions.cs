@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using AMI.Core.Models;
+using AMI.Core.Wrappers;
 
 namespace AMI.Core.Extensions.Drawing
 {
@@ -227,7 +227,7 @@ namespace AMI.Core.Extensions.Drawing
         /// or
         /// watermark
         /// </exception>
-        public static Bitmap AppendWatermark(this Bitmap original, BitmapContainer watermark)
+        public static Bitmap AppendWatermark(this Bitmap original, BitmapWrapper watermark)
         {
             if (original == null)
             {

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Models;
 using AMI.Core.Enums;
 using AMI.Core.Exceptions;
 using AMI.Core.Extensions.Drawing;
 using AMI.Core.Mappers;
-using AMI.Core.Models;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace AMI.Core.Writers
