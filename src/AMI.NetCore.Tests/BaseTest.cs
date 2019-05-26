@@ -65,8 +65,9 @@ namespace AMI.NetCore.Tests
             services.AddMediatR(typeof(ExtractCommandHandler).GetTypeInfo().Assembly);
 
             // Add FluentValidation
-            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair => {
-                // filter out validators you don't want here
+            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair =>
+            {
+                // filter out validators that are not needed here
                 services.AddTransient(pair.InterfaceType, pair.ValidatorType);
             });
 

@@ -67,8 +67,9 @@ namespace AMI.Portable
             services.AddMediatR(typeof(ExtractCommandHandler).GetTypeInfo().Assembly);
 
             // Add FluentValidation
-            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair => {
-                // filter out validators you don't want here
+            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair =>
+            {
+                // filter out validators that are not needed here
                 services.AddTransient(pair.InterfaceType, pair.ValidatorType);
             });
 
@@ -101,7 +102,7 @@ namespace AMI.Portable
 
                 var task = Task.Run(async () =>
                 {
-                    await program.Execute(args, ct);
+                    await program.ExecuteAsync(args, ct);
                 }, ct);
 
                 if (program.Configuration.TimeoutMilliseconds > 0)
@@ -128,11 +129,8 @@ namespace AMI.Portable
             return Environment.ExitCode;
         }
 
-        public async Task Execute(string[] args, CancellationToken ct)
+        public async Task ExecuteAsync(string[] args, CancellationToken ct)
         {
-            var watch = Stopwatch.StartNew();
-            Logger.LogInformation($"{this.GetMethodName()} started");
-
             var command = new ExtractObjectCommand();
 
             Parser.Default.ParseArguments<Options>(args)
@@ -146,25 +144,11 @@ namespace AMI.Portable
                        command.OpenCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
                    });
 
-            var result = await Mediator.Send(command, ct);
-
-            if (command.OpenCombinedGif)
-            {
-                Process.Start(Path.Combine(command.DestinationPath, result.CombinedGif));
-            }
-
-            watch.Stop();
-
-            TimeSpan t = TimeSpan.FromMilliseconds(watch.ElapsedMilliseconds);
-
-            Logger.LogInformation($"{this.GetMethodName()} ended after {t.ToReadableTime()}");
+            await ExecuteCommandAsync(command, ct);
         }
 
-        public async Task ExecuteTest(string[] args, CancellationToken ct)
+        public async Task ExecuteTestAsync(string[] args, CancellationToken ct)
         {
-            var watch = Stopwatch.StartNew();
-            Logger.LogInformation($"{this.GetMethodName()} started");
-
             var command = new ExtractObjectCommand()
             {
                 AmountPerAxis = 10,
@@ -177,11 +161,26 @@ namespace AMI.Portable
 
             command.AxisTypes.Add(AxisType.Z);
 
+            await ExecuteCommandAsync(command, ct);
+        }
+
+        private async Task ExecuteCommandAsync(ExtractObjectCommand command, CancellationToken ct)
+        {
+            var watch = Stopwatch.StartNew();
+            Logger.LogInformation($"{this.GetMethodName()} started");
+
             var result = await Mediator.Send(command, ct);
 
-            if (Convert.ToBoolean(command.OpenCombinedGif))
+            if (command.OpenCombinedGif)
             {
-                Process.Start(Path.Combine(command.DestinationPath, result.CombinedGif));
+                var p = new Process
+                {
+                    StartInfo = new ProcessStartInfo(Path.Combine(command.DestinationPath, result.CombinedGif))
+                    {
+                        UseShellExecute = true
+                    }
+                };
+                p.Start();
             }
 
             watch.Stop();

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Behaviors;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Extract;
@@ -19,6 +21,9 @@ using AMI.Gif.Writers;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using CommandLine;
+using FluentValidation;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,28 +47,42 @@ namespace AMI.CLI
                 .AddJsonFile("logging.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            var serviceProvider = new ServiceCollection()
-                .AddOptions()
-                .Configure<AppSettings>(configuration.GetSection("AppSettings"))
-                .AddLogging(builder =>
+            var services = new ServiceCollection();
+            services.AddOptions();
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.AddLogging(builder =>
                 {
                     builder
                         .AddConfiguration(configuration.GetSection("Logging"))
                         .AddConsole();
-                })
-                .AddScoped<IImageService, ImageService>()
-                .AddScoped<IDefaultJsonSerializer, DefaultJsonSerializer>()
-                .AddScoped<IImageExtractor, ItkImageExtractor>()
-                .AddScoped<IGifImageWriter, AnimatedGifImageWriter>()
-                .AddScoped<IDefaultJsonWriter, DefaultJsonWriter>()
-                .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
-                .AddSingleton<IAppInfoFactory, AppInfoFactory>()
-                .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
-                .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
-                .BuildServiceProvider();
+                });
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IDefaultJsonSerializer, DefaultJsonSerializer>();
+            services.AddScoped<IImageExtractor, ItkImageExtractor>();
+            services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
+            services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
+            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
+            services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
+            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
+            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+
+            // Add MediatR
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddMediatR(typeof(ExtractCommandHandler).GetTypeInfo().Assembly);
+
+            // Add FluentValidation
+            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair =>
+            {
+                // filter out validators that are not needed here
+                services.AddTransient(pair.InterfaceType, pair.ValidatorType);
+            });
+
+            var serviceProvider = services.BuildServiceProvider();
 
             Logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
-            ImageService = serviceProvider.GetService<IImageService>();
+            Mediator = serviceProvider.GetService<IMediator>();
             Configuration = serviceProvider.GetService<IAmiConfigurationManager>();
         }
 
@@ -73,9 +92,9 @@ namespace AMI.CLI
         public ILogger Logger { get; }
 
         /// <summary>
-        /// Gets the image service.
+        /// Gets the mediator.
         /// </summary>
-        public IImageService ImageService { get; }
+        public IMediator Mediator { get; }
 
         /// <summary>
         /// Gets the configuration.
@@ -104,7 +123,7 @@ namespace AMI.CLI
                 var task = Task.Run(
                     async () =>
                     {
-                        await program.Execute(args, ct);
+                        await program.ExecuteTestAsync(args, ct);
                     }, ct);
 
                 if (program.Configuration.TimeoutMilliseconds > 0)
@@ -132,7 +151,7 @@ namespace AMI.CLI
         }
 
         /// <summary>
-        /// Executes the specified arguments.
+        /// Executes the specified arguments asynchronous.
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="ct">The cancellation token.</param>
@@ -142,11 +161,8 @@ namespace AMI.CLI
         /// or
         /// DestinationPath
         /// </exception>
-        public async Task Execute(string[] args, CancellationToken ct)
+        public async Task ExecuteAsync(string[] args, CancellationToken ct)
         {
-            var watch = Stopwatch.StartNew();
-            Logger.LogInformation($"{this.GetMethodName()} started");
-
             var command = new ExtractObjectCommand();
 
             Parser.Default.ParseArguments<Options>(args)
@@ -160,42 +176,11 @@ namespace AMI.CLI
                        command.OpenCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
                    });
 
-            if (string.IsNullOrWhiteSpace(command.SourcePath))
-            {
-                throw new ArgumentNullException(nameof(command.SourcePath));
-            }
-
-            if (string.IsNullOrWhiteSpace(command.DestinationPath))
-            {
-                throw new ArgumentNullException(nameof(command.DestinationPath));
-            }
-
-            var result = await ImageService.ExtractAsync(command, ct);
-
-            if (command.OpenCombinedGif)
-            {
-                var p = new Process
-                {
-                    StartInfo = new ProcessStartInfo(Path.Combine(command.DestinationPath, result.CombinedGif))
-                    {
-                        UseShellExecute = true
-                    }
-                };
-                p.Start();
-            }
-
-            watch.Stop();
-
-            TimeSpan t = TimeSpan.FromMilliseconds(watch.ElapsedMilliseconds);
-
-            Logger.LogInformation($"{this.GetMethodName()} ended after {t.ToReadableTime()}");
+            await ExecuteCommandAsync(command, ct);
         }
 
-        private async Task ExecuteTest(string[] args, CancellationToken ct)
+        private async Task ExecuteTestAsync(string[] args, CancellationToken ct)
         {
-            var watch = Stopwatch.StartNew();
-            Logger.LogInformation($"{this.GetMethodName()} started");
-
             var command = new ExtractObjectCommand()
             {
                 AmountPerAxis = 10,
@@ -207,9 +192,17 @@ namespace AMI.CLI
 
             command.AxisTypes.Add(AxisType.Z);
 
-            var result = await ImageService.ExtractAsync(command, ct);
+            await ExecuteCommandAsync(command, ct);
+        }
 
-            if (Convert.ToBoolean(command.OpenCombinedGif))
+        private async Task ExecuteCommandAsync(ExtractObjectCommand command, CancellationToken ct)
+        {
+            var watch = Stopwatch.StartNew();
+            Logger.LogInformation($"{this.GetMethodName()} started");
+
+            var result = await Mediator.Send(command, ct);
+
+            if (command.OpenCombinedGif)
             {
                 var p = new Process
                 {
