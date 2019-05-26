@@ -13,6 +13,8 @@ namespace AMI.Core.Entities.Objects.Commands.Extract
         /// </summary>
         public ExtractCommandValidator()
         {
+            RuleFor(x => x.SourcePath).NotEmpty().MaximumLength(1024);
+            RuleFor(x => x.DestinationPath).NotEmpty().MaximumLength(1024);
         }
     }
 }

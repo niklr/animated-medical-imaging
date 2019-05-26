@@ -146,16 +146,6 @@ namespace AMI.Portable
                        command.OpenCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
                    });
 
-            if (string.IsNullOrWhiteSpace(command.SourcePath))
-            {
-                throw new ArgumentNullException(nameof(command.SourcePath));
-            }
-
-            if (string.IsNullOrWhiteSpace(command.DestinationPath))
-            {
-                throw new ArgumentNullException(nameof(command.DestinationPath));
-            }
-
             var result = await Mediator.Send(command, ct);
 
             if (command.OpenCombinedGif)

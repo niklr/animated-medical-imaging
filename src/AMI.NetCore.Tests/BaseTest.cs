@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using AMI.Compress.Extractors;
 using AMI.Compress.Readers;
+using AMI.Core.Behaviors;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
@@ -16,6 +19,9 @@ using AMI.Gif.Writers;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using AMI.NetCore.Tests.Mocks.Core.Factories;
+using FluentValidation;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -34,22 +40,37 @@ namespace AMI.NetCore.Tests
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            serviceProvider = new ServiceCollection()
-                .AddOptions()
-                .Configure<AppSettings>(configuration.GetSection("AppSettings"))
-                .AddTransient<ICompressibleReader, SharpCompressReader>()
-                .AddTransient<IGifImageWriter, AnimatedGifImageWriter>()
-                .AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>()
-                .AddTransient<IDefaultJsonWriter, DefaultJsonWriter>()
-                .AddTransient<IImageExtractor, ItkImageExtractor>()
-                .AddTransient<ICompressibleExtractor, SharpCompressExtractor>()
-                .AddTransient<IImageService, ImageService>()
-                .AddSingleton<ILoggerFactory, NullLoggerFactory>()
-                .AddSingleton<IAppInfoFactory, MockAppInfoFactory>()
-                .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
-                .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
-                .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
-                .BuildServiceProvider();
+            var services = new ServiceCollection();
+
+            services.AddOptions();
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.AddLogging();
+            services.AddTransient<ICompressibleReader, SharpCompressReader>();
+            services.AddTransient<IGifImageWriter, AnimatedGifImageWriter>();
+            services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
+            services.AddTransient<IDefaultJsonWriter, DefaultJsonWriter>();
+            services.AddTransient<IImageExtractor, ItkImageExtractor>();
+            services.AddTransient<ICompressibleExtractor, SharpCompressExtractor>();
+            services.AddTransient<IImageService, ImageService>();
+            services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+            services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
+            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
+            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
+
+            // Add MediatR
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddMediatR(typeof(ExtractCommandHandler).GetTypeInfo().Assembly);
+
+            // Add FluentValidation
+            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair => {
+                // filter out validators you don't want here
+                services.AddTransient(pair.InterfaceType, pair.ValidatorType);
+            });
+
+            serviceProvider = services.BuildServiceProvider();
         }
 
         public T GetService<T>()
