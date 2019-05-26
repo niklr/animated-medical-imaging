@@ -123,7 +123,7 @@ namespace AMI.CLI
                 var task = Task.Run(
                     async () =>
                     {
-                        await program.ExecuteTestAsync(args, ct);
+                        await program.ExecuteAsync(args, ct);
                     }, ct);
 
                 if (program.Configuration.TimeoutMilliseconds > 0)
