@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
@@ -19,6 +20,9 @@ using AMI.Gif.Writers;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using CommandLine;
+using FluentValidation;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -36,34 +40,47 @@ namespace AMI.Portable
                 .AddJsonFile("logging.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            var serviceProvider = new ServiceCollection()
-                .AddOptions()
-                .Configure<AppSettings>(configuration.GetSection("AppSettings"))
-                .AddLogging(builder =>
+            var services = new ServiceCollection();
+            services.AddOptions();
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.AddLogging(builder =>
                 {
                     builder
                         .AddConfiguration(configuration.GetSection("Logging"))
                         .AddConsole();
-                })
-                .AddScoped<IImageService, ImageService>()
-                .AddScoped<IDefaultJsonSerializer, DefaultJsonSerializer>()
-                .AddScoped<IImageExtractor, ItkImageExtractor>()
-                .AddScoped<IGifImageWriter, AnimatedGifImageWriter>()
-                .AddScoped<IDefaultJsonWriter, DefaultJsonWriter>()
-                .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
-                .AddSingleton<IAppInfoFactory, AppInfoFactory>()
-                .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
-                .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
-                .BuildServiceProvider();
+                });
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IDefaultJsonSerializer, DefaultJsonSerializer>();
+            services.AddScoped<IImageExtractor, ItkImageExtractor>();
+            services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
+            services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
+            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
+            services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
+            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
+            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+
+            // Add MediatR
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddMediatR(typeof(ExtractCommandHandler).GetTypeInfo().Assembly);
+
+            // Add FluentValidation
+            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair => {
+                // filter out validators you don't want here
+                services.AddTransient(pair.InterfaceType, pair.ValidatorType);
+            });
+
+            var serviceProvider = services.BuildServiceProvider();
 
             Logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
-            ImageService = serviceProvider.GetService<IImageService>();
+            Mediator = serviceProvider.GetService<IMediator>();
             Configuration = serviceProvider.GetService<IAmiConfigurationManager>();
         }
 
         public ILogger Logger { get; }
 
-        public IImageService ImageService { get; }
+        public IMediator Mediator { get; }
 
         public IAmiConfigurationManager Configuration { get; }
 
@@ -138,7 +155,7 @@ namespace AMI.Portable
                 throw new ArgumentNullException(nameof(command.DestinationPath));
             }
 
-            var result = await ImageService.ExtractAsync(command, ct);
+            var result = await Mediator.Send(command, ct);
 
             if (command.OpenCombinedGif)
             {
@@ -169,7 +186,7 @@ namespace AMI.Portable
 
             command.AxisTypes.Add(AxisType.Z);
 
-            var result = await ImageService.ExtractAsync(command, ct);
+            var result = await Mediator.Send(command, ct);
 
             if (Convert.ToBoolean(command.OpenCombinedGif))
             {

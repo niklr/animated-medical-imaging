@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using AMI.Core.Entities.Models;
 using AMI.Core.Enums;
+using MediatR;
 
 namespace AMI.Core.Entities.Objects.Commands.Extract
 {
@@ -8,7 +10,7 @@ namespace AMI.Core.Entities.Objects.Commands.Extract
     /// A command containing information needed for extraction.
     /// </summary>
     [Serializable]
-    public class ExtractObjectCommand
+    public class ExtractObjectCommand : IRequest<ExtractResult>
     {
         /// <summary>
         /// Gets or sets the desired size of the extracted images.

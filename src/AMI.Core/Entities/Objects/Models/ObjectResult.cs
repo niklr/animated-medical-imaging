@@ -12,7 +12,7 @@ namespace AMI.Core.Entities.Models
         /// </summary>
         public ObjectResult()
         {
-            Status = new ObjectStatusResult();
+            Status = new ObjectStatus();
         }
 
         /// <summary>
@@ -33,6 +33,6 @@ namespace AMI.Core.Entities.Models
         /// <summary>
         /// Gets or sets the status.
         /// </summary>
-        public ObjectStatusResult Status { get; set; }
+        public ObjectStatus Status { get; set; }
     }
 }

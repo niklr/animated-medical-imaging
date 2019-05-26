@@ -1,9 +1,9 @@
 ﻿namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A model representing an object status result.
+    /// A model representing an object status.
     /// </summary>
-    public class ObjectStatusResult
+    public class ObjectStatus
     {
         /// <summary>
         /// Gets or sets the name.
