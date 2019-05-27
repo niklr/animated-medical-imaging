@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using AMI.Core.Exceptions;
 using AMI.Core.Factories;
+using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Strategies
 {

@@ -44,7 +44,7 @@ namespace AMI.Core.Behaviors
         /// or
         /// next
         /// </exception>
-        /// <exception cref="Exceptions.ValidationException">validation failures</exception>
+        /// <exception cref="Domain.Exceptions.ValidationException">validation failures</exception>
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             if (request == null)
@@ -72,7 +72,7 @@ namespace AMI.Core.Behaviors
 
             if (failures.Count != 0)
             {
-                throw new Exceptions.ValidationException(failures.ToDictionary());
+                throw new Domain.Exceptions.ValidationException(failures.ToDictionary());
             }
 
             return next();

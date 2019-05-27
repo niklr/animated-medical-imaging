@@ -3,8 +3,8 @@ using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.Models;
-using AMI.Core.Exceptions;
 using AMI.Core.Serializers;
+using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

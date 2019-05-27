@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AMI.Core.Exceptions
+namespace AMI.Domain.Exceptions
 {
     /// <summary>
     /// This exception is thrown when an exception specific to the AMI application occurs.

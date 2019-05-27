@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using AMI.Core.Entities.Objects.Commands.Extract;
-using AMI.Core.Exceptions;
+using AMI.Domain.Exceptions;
 using MediatR;
 using NUnit.Framework;
 

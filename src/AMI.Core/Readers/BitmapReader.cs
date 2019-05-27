@@ -2,8 +2,8 @@
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Exceptions;
 using AMI.Core.Extensions.Drawing;
+using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Readers
 {

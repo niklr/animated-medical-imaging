@@ -1,6 +1,6 @@
 ﻿using System;
 using AMI.Core.Entities.Models;
-using AMI.Core.Exceptions;
+using AMI.Domain.Exceptions;
 using Microsoft.Extensions.Options;
 
 namespace AMI.Core.Configuration

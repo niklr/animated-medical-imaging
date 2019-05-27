@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using AMI.Core.Exceptions;
 using AMI.Core.Serializers;
 using AMI.Core.Strategies;
+using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Writers
 {

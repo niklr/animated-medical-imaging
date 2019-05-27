@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Exceptions;
+using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Readers
 {

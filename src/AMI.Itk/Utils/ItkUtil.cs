@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Exceptions;
 using AMI.Core.Extensions.Drawing;
 using AMI.Domain.Enums;
+using AMI.Domain.Exceptions;
 using itk.simple;
 
 namespace AMI.Itk.Utils

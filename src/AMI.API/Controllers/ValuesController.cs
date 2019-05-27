@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AMI.Core.Exceptions;
+using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AMI.API.Controllers

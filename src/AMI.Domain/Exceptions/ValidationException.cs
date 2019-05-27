@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AMI.Core.Exceptions
+namespace AMI.Domain.Exceptions
 {
     /// <summary>
     /// This exception is thrown when an exception related to validation occurs.
