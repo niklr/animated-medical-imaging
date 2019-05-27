@@ -153,8 +153,8 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RNS.Framework, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RNS.Framework.0.0.5\lib\net46\RNS.Framework.dll</HintPath>
+    <Reference Include="RNS.Framework, Version=0.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RNS.Framework.0.0.7\lib\net46\RNS.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -230,6 +230,10 @@
     <ProjectReference Include="..\AMI.Core\AMI.Core.csproj">
       <Project>{E1800535-FB41-4DCA-A31B-ACAC17272038}</Project>
       <Name>AMI.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AMI.Domain\AMI.Domain.csproj">
+      <Project>{2c8dc449-43aa-41bc-82b7-62b8d38878fa}</Project>
+      <Name>AMI.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\AMI.Gif\AMI.Gif.csproj">
       <Project>{466966CC-A948-4097-9849-42F8778E581E}</Project>

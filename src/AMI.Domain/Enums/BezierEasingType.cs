@@ -1,4 +1,4 @@
-﻿namespace AMI.Core.Enums
+﻿namespace AMI.Domain.Enums
 {
     /// <summary>
     /// A type to describe the Bézier curve easing.

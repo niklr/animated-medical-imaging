@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AMI.Core.Enums;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.Mappers
 {

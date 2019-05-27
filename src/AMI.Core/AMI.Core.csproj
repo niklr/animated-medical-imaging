@@ -42,6 +42,7 @@
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="RNS.Framework" Version="0.0.7" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -63,6 +64,10 @@
 
   <ItemGroup>
     <Folder Include="Entities\Objects\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AMI.Domain\AMI.Domain.csproj" />
   </ItemGroup>  
   
 </Project>

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Enums;
 using AMI.Core.Exceptions;
 using AMI.Core.Extensions.Drawing;
 using AMI.Core.Mappers;
+using AMI.Domain.Enums;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace AMI.Core.Writers

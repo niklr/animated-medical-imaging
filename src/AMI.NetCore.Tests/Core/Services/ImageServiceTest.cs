@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Threading;
 using AMI.Core.Entities.Objects.Commands.Extract;
-using AMI.Core.Enums;
 using AMI.Core.Services;
+using AMI.Domain.Enums;
 using NUnit.Framework;
 
 namespace AMI.NetCore.Tests.Core.Services
@@ -35,7 +35,7 @@ namespace AMI.NetCore.Tests.Core.Services
                 Assert.AreEqual(command.AmountPerAxis, result.Images.Count);
                 Assert.AreEqual(5, result.LabelCount);
                 Assert.AreEqual(json, @"{
-  ""version"": ""0.0.2.0"",
+  ""version"": ""0.0.3.0"",
   ""labelCount"": 5,
   ""images"": [
     {

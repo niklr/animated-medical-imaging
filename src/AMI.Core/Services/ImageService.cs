@@ -6,12 +6,12 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Extract;
 using AMI.Core.Exceptions;
 using AMI.Core.Extensions.FileSystemExtensions;
-using AMI.Core.Extensions.ObjectExtensions;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
 using AMI.Core.Strategies;
 using AMI.Core.Writers;
 using Microsoft.Extensions.Logging;
+using RNS.Framework.Extensions.ObjectExtensions;
 
 namespace AMI.Core.Services
 {

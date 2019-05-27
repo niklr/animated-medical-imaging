@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Extensions.FluentValidationExtensions;
 using FluentValidation;
 using MediatR;
 
@@ -71,7 +72,7 @@ namespace AMI.Core.Behaviors
 
             if (failures.Count != 0)
             {
-                throw new Exceptions.ValidationException(failures);
+                throw new Exceptions.ValidationException(failures.ToDictionary());
             }
 
             return next();

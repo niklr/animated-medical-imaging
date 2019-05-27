@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using FluentValidation.Results;
 
 namespace AMI.Core.Exceptions
 {
@@ -24,27 +22,12 @@ namespace AMI.Core.Exceptions
         /// Initializes a new instance of the <see cref="ValidationException" /> class.
         /// </summary>
         /// <param name="failures">The validation failures.</param>
-        /// <exception cref="ArgumentNullException">failures</exception>
-        public ValidationException(List<ValidationFailure> failures)
+        public ValidationException(IDictionary<string, string[]> failures)
             : this()
         {
-            if (failures == null)
+            if (failures != null)
             {
-                throw new ArgumentNullException(nameof(failures));
-            }
-
-            var propertyNames = failures
-                .Select(e => e.PropertyName)
-                .Distinct();
-
-            foreach (var propertyName in propertyNames)
-            {
-                var propertyFailures = failures
-                    .Where(e => e.PropertyName == propertyName)
-                    .Select(e => e.ErrorMessage)
-                    .ToArray();
-
-                Failures.Add(propertyName, propertyFailures);
+                Failures = failures;
             }
         }
 

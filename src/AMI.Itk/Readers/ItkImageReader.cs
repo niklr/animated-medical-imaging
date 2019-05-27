@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Enums;
 using AMI.Core.Exceptions;
 using AMI.Core.Mappers;
+using AMI.Domain.Enums;
 using AMI.Itk.Utils;
 using itk.simple;
 

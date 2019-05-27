@@ -6,16 +6,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Extract;
-using AMI.Core.Enums;
 using AMI.Core.Exceptions;
 using AMI.Core.Extensions.Drawing;
 using AMI.Core.Factories;
 using AMI.Core.Mappers;
 using AMI.Core.Readers;
-using AMI.Core.Security;
 using AMI.Core.Strategies;
 using AMI.Core.Wrappers;
+using AMI.Domain.Enums;
 using Microsoft.Extensions.Logging;
+using RNS.Framework.Security;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace AMI.Core.Extractors
@@ -221,7 +221,7 @@ namespace AMI.Core.Extractors
                         {
                             if (bitmap != null)
                             {
-                                string hash = Cryptography.CalculateSha1Hash(bitmap.ToByteArray(imageFormat));
+                                string hash = Cryptography.CalculateSHA1Hash(bitmap.ToByteArray(imageFormat));
                                 hashes.Add(new PositionAxisContainer<string>(i, axisType, hash));
                             }
                         }
@@ -291,13 +291,13 @@ namespace AMI.Core.Extractors
         /// </summary>
         /// <param name="imageFormat">The image format.</param>
         /// <returns>The <see cref="ImageFormat"/>.</returns>
-        private ImageFormat GetImageFormat(Enums.ImageFormat imageFormat)
+        private ImageFormat GetImageFormat(Domain.Enums.ImageFormat imageFormat)
         {
             switch (imageFormat)
             {
-                case Enums.ImageFormat.Jpeg:
+                case Domain.Enums.ImageFormat.Jpeg:
                     return ImageFormat.Jpeg;
-                case Enums.ImageFormat.Png:
+                case Domain.Enums.ImageFormat.Png:
                 default:
                     return ImageFormat.Png;
             }

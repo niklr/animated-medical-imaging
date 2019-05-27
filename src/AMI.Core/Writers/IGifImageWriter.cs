@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Enums;
 using AMI.Core.Exceptions;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.Writers
 {

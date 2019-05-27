@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AMI.Core\AMI.Core.csproj" />
+    <ProjectReference Include="..\AMI.Domain\AMI.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

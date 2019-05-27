@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Enums;
 using AMI.Core.Mappers;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.Readers
 {

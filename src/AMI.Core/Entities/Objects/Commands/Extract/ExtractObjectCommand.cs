@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AMI.Core.Entities.Models;
-using AMI.Core.Enums;
+using AMI.Domain.Enums;
 using MediatR;
 
 namespace AMI.Core.Entities.Objects.Commands.Extract

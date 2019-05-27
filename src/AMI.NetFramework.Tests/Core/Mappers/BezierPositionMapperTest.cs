@@ -1,6 +1,6 @@
 ﻿using System;
-using AMI.Core.Enums;
 using AMI.Core.Mappers;
+using AMI.Domain.Enums;
 using NUnit.Framework;
 
 namespace AMI.NetFramework.Tests.Core.Mappers

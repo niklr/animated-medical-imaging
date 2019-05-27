@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Enums;
+using AMI.Domain.Enums;
 using itk.simple;
 
 namespace AMI.Itk.Utils

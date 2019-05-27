@@ -177,6 +177,10 @@
       <Project>{E1800535-FB41-4DCA-A31B-ACAC17272038}</Project>
       <Name>AMI.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AMI.Domain\AMI.Domain.csproj">
+      <Project>{2c8dc449-43aa-41bc-82b7-62b8d38878fa}</Project>
+      <Name>AMI.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AMI.Itk\AMI.Itk.csproj">
       <Project>{4287b16b-2328-4d48-849d-6bec0d8c8667}</Project>
       <Name>AMI.Itk</Name>

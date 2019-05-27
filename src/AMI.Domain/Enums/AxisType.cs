@@ -1,4 +1,4 @@
-﻿namespace AMI.Core.Enums
+﻿namespace AMI.Domain.Enums
 {
     /// <summary>
     /// The different axis types of the coordinate system.
