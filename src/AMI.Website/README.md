@@ -10,11 +10,8 @@ https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/angular?view=aspnet
 
 To install third-party npm packages, use a command prompt in the ClientApp subdirectory. For example:
 
-console
-```
 * cd ClientApp
 * npm install --save <package_name>
-```
 
 ### Publish and deploy
 
@@ -40,12 +37,8 @@ If you're making frequent C# code edits and don't want to wait for Angular CLI t
 To do so:
 
 1. In a command prompt, switch to the ClientApp subdirectory, and launch the Angular CLI development server:
-
-console 
-```
-* cd ClientApp
-* npm start
-```
+  * cd ClientApp
+  * npm start
 
 > **Important**
 > 
