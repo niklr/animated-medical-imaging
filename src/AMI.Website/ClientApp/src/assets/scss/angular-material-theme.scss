@@ -1,0 +1,81 @@
+// https://medium.com/@tomastrajan/the-complete-guide-to-angular-material-themes-4d165a9d24d1
+// https://material.io/design/color/#tools-for-picking-colors
+
+$ami-primary: (
+    50 : #E3F2FD,
+    100 : #E3F2FD,
+    200 : #E3F2FD,
+    300 : #E3F2FD,
+    400 : #E3F2FD,
+    500 : #6CA5DA,
+    600 : #6CA5DA,
+    700 : #6CA5DA,
+    800 : #6CA5DA,
+    900 : #6CA5DA,
+    A100 : #6CA5DA,
+    A200 : #6CA5DA,
+    A400 : #6CA5DA,
+    A700 : #6CA5DA,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #ffffff,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+
+$ami-accent: (
+    50 : #E0E0E0,
+    100 : #E0E0E0,
+    200 : #E0E0E0,
+    300 : #E0E0E0,
+    400 : #E0E0E0,
+    500 : #67727c,
+    600 : #67727c,
+    700 : #67727c,
+    800 : #67727c,
+    900 : #67727c,
+    A100 : #67727c,
+    A200 : #67727c,
+    A400 : #67727c,
+    A700 : #67727c,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #ffffff,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+
+// define 3 theme color
+// mat-palette accepts $palette-name, main, lighter and darker variants
+$ami-theme-primary: mat-palette($ami-primary, 900, 200, 900);
+$ami-theme-accent: mat-palette($ami-accent, 700, 400, 900);
+$ami-theme-warn: mat-palette($mat-red);
+
+// create theme (use mat-dark-theme for themes with dark backgrounds)
+$ami-theme: mat-light-theme(
+    $ami-theme-primary,
+    $ami-theme-accent,
+    $ami-theme-warn
+);

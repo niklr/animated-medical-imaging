@@ -1,0 +1,9 @@
+/* render an ellipsis ("...") to represent clipped text
+    http://www.quirksmode.org/css/textoverflow.html
+-------------------------------------------------- */
+@mixin text-ellipsis($width) {
+    white-space: nowrap;
+    width: $width;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
