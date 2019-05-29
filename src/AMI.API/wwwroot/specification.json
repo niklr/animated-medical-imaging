@@ -6,6 +6,122 @@
     "version": "0.0.1"
   },
   "paths": {
+    "/app-info": {
+      "get": {
+        "tags": [
+          "AppInfo"
+        ],
+        "summary": "Get application information",
+        "operationId": "AppInfo_Get",
+        "responses": {
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The application information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/AppInfo"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/upload": {
       "post": {
         "tags": [
@@ -812,6 +928,23 @@
           "stackTrace": {
             "type": "string",
             "description": "Gets or sets the stack trace.",
+            "nullable": true
+          }
+        }
+      },
+      "AppInfo": {
+        "type": "object",
+        "description": "A model containing information about the application.",
+        "additionalProperties": false,
+        "properties": {
+          "appName": {
+            "type": "string",
+            "description": "Gets the name of the application.",
+            "nullable": true
+          },
+          "appVersion": {
+            "type": "string",
+            "description": "Gets the application version.",
             "nullable": true
           }
         }

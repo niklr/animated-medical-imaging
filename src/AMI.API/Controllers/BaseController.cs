@@ -1,5 +1,7 @@
 ﻿using System.Threading;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AMI.API.Controllers
 {
@@ -9,6 +11,13 @@ namespace AMI.API.Controllers
     [ApiController]
     public abstract class BaseController : Controller
     {
+        private IMediator mediator;
+
+        /// <summary>
+        /// Gets the mediator.
+        /// </summary>
+        protected IMediator Mediator => mediator ?? (mediator = HttpContext.RequestServices.GetService<IMediator>());
+
         /// <summary>
         /// Gets the cancellation token.
         /// </summary>

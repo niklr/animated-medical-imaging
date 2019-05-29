@@ -1,13 +1,21 @@
 ﻿using System.Net;
+using System.Reflection;
 using AMI.API.Configuration;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Filters;
 using AMI.API.Handlers;
+using AMI.Core.Behaviors;
 using AMI.Core.Configuration;
+using AMI.Core.Entities.ApplicationInformation.Queries;
 using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Factories;
 using AMI.Core.Serializers;
 using AMI.Core.Strategies;
 using AMI.Core.Uploaders;
+using FluentValidation.AspNetCore;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -45,20 +53,27 @@ namespace AMI.API
         {
             var defaultSerializer = new DefaultJsonSerializer();
 
-            services.AddOptions()
-                .Configure<AppSettings>(Configuration.GetSection("AppSettings"))
-                .AddLogging(builder =>
-                {
-                    builder
-                        .AddConfiguration(Configuration.GetSection("Logging"))
-                        .AddConsole();
-                })
-                .AddScoped<IResumableUploader, ResumableUploader>()
-                .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
-                .AddSingleton<IApiConfiguration, ApiConfiguration>()
-                .AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>()
-                .AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>()
-                .AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
+            services.AddOptions();
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddLogging(builder =>
+            {
+                builder
+                    .AddConfiguration(Configuration.GetSection("Logging"))
+                    .AddConsole();
+            });
+            services.AddScoped<IResumableUploader, ResumableUploader>();
+            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
+            services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
+            services.AddSingleton<IApiConfiguration, ApiConfiguration>();
+            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
+            services.AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
+
+            // Add MediatR
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddMediatR(typeof(GetQueryHandler).GetTypeInfo().Assembly);
 
             services.AddMvc(options =>
                 {
@@ -71,10 +86,18 @@ namespace AMI.API
                     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.InternalServerError));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ExtractCommandValidator>())
                 .AddJsonOptions(options =>
                 {
                     defaultSerializer.OverrideJsonSerializerSettings(options.SerializerSettings);
                 });
+
+            // Customise default API behavour
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                // Otherwise the RequestValidationBehavior is never triggered
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         /// <summary>
@@ -86,7 +109,7 @@ namespace AMI.API
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                // app.UseDeveloperExceptionPage();
             }
             else
             {
