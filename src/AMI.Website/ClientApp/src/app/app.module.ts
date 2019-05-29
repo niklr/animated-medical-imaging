@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DatatransferModule } from './modules/datatransfer/datatransfer.module';
 import { HomeComponent } from './home/home.component';
 
 @NgModule({
@@ -12,7 +13,8 @@ import { HomeComponent } from './home/home.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    DatatransferModule
   ],
   providers: [],
   bootstrap: [AppComponent]
