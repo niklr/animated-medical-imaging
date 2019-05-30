@@ -6,13 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AmiApiClientModule } from './clients/ami-api-client.module';
 import { API_BASE_URL } from './clients/ami-api-client';
 import { AppComponent } from './app.component';
+import { AppProxy } from './proxies/app.proxy';
 import { ConfigService } from './services/config.service';
 
-export function initializeConfig(configService: ConfigService) {
+export function initConfig(configService: ConfigService) {
   return () => configService.load();
 }
 
-export function initializeBaseAmiApi() {
+export function initBaseAmiApi() {
   return ConfigService.settings.api.endpoint;
 }
 
@@ -27,15 +28,16 @@ export function initializeBaseAmiApi() {
     AppComponent
   ],
   providers: [
+    AppProxy,
     ConfigService,
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeConfig,
+      useFactory: initConfig,
       deps: [ConfigService], multi: true
     },
     {
       provide: API_BASE_URL,
-      useFactory: initializeBaseAmiApi,
+      useFactory: initBaseAmiApi,
       deps: [ConfigService], multi: true
     }
   ],

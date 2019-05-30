@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppProxy } from '../../../../proxies/app.proxy';
+import { ConfigService } from '../../../../services/config.service';
 
 @Component({
   selector: 'app-footer',
@@ -7,13 +7,13 @@ import { AppProxy } from '../../../../proxies/app.proxy';
 })
 export class FooterComponent implements OnInit {
 
-  constructor(private appProxy: AppProxy) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
   get appVersion(): string {
-    return this.appProxy.getAppVersion();
+    return ConfigService.settings.version;
   }
 
 }

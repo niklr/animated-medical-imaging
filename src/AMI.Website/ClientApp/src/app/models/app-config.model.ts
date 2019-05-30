@@ -1,9 +1,10 @@
 export interface IAppConfig {
-    isDevelopment: boolean;
-    logging: {
-        enableConsoleOutput: boolean;
-    };
-    api: {
-        endpoint: string;
-    };
+  isDevelopment: boolean;
+  version: string;
+  logging: {
+    enableConsoleOutput: boolean;
+  };
+  api: {
+    endpoint: string;
+  };
 }

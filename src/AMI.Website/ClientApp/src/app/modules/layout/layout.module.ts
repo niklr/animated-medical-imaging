@@ -5,7 +5,6 @@ import { TopnavComponent } from './components/topnav/topnav.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { LayoutRoutingModule } from './layout-routing.module';
 import { HomeModule } from './home/home.module';
-import { AppProxy } from '../../proxies/app.proxy';
 
 @NgModule({
   imports: [
@@ -19,7 +18,7 @@ import { AppProxy } from '../../proxies/app.proxy';
     FooterComponent
   ],
   providers: [
-    AppProxy
+
   ]
 })
 export class AppLayoutModule { }

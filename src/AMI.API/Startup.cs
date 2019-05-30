@@ -51,6 +51,15 @@ namespace AMI.API
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            var allowedCorsOrigins = Configuration["AllowedCorsOrigins"]?.Split(',') ?? new string[0];
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "AllowSpecificOrigins",
+                    builder => builder.WithOrigins(allowedCorsOrigins).AllowCredentials().AllowAnyMethod().AllowAnyHeader());
+            });
+
             var defaultSerializer = new DefaultJsonSerializer();
 
             services.AddOptions();
@@ -116,6 +125,8 @@ namespace AMI.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors("AllowSpecificOrigins");
 
             app.UseCustomExceptionMiddleware();
             app.UseHttpsRedirection();
