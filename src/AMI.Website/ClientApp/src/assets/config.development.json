@@ -1,0 +1,8 @@
+{
+  "logging": {
+    "enableConsoleOutput": true
+  },
+  "api": {
+    "endpoint": "https://localhost:5001"
+  }
+}
