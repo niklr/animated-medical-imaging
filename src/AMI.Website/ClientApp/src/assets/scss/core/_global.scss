@@ -1,43 +1,8 @@
-body, html {
-  height: 100%;
-}
-
-.wrapper {
-  position: relative;
-}
-
-.main-content {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-.main-inner-content {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.main-content-sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  /* Height of navbar */
-  height: calc(100vh - #{$topnav-height} - #{$footer-height} - 1px);
-  overflow-x: hidden;
-  overflow-y: auto;
-  /* Scrollable contents if viewport is shorter than content. */
-}
-
 .full-width {
   width: 100%;
   max-width: 100%;
 }
 
-.pull-right {
-  float: right;
-}
-
-.pull-left {
-  float: left;
-}
 
 /* wrap long words without spaces
 -------------------------------------------------- */
@@ -61,35 +26,4 @@ body, html {
 -------------------------------------------------- */
 .text-ellipsis {
   @include text-ellipsis($width: 100%);
-}
-
-.custom-primary-color {
-  color: mat-color($ami-theme-primary);
-}
-
-.custom-secondary-color {
-  color: mat-color($ami-theme-accent);
-}
-
-.custom-selectable {
-  cursor: pointer;
-}
-
-.custom-flex-row {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.custom-divider {
-  height: 1px;
-  margin: 9px 0;
-  overflow: hidden;
-  background-color: #e5e5e5;
-}
-
-.custom-section {
-  display: flex;
-  align-content: center;
-  align-items: center;
-  height: 60px;
 }
