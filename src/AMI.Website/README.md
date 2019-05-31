@@ -1,5 +1,14 @@
 ## AMI.Website
 
+### Docker build/run
+
+In a command prompt, make sure you are in the root directory containing the solution file AMI.sln
+
+* docker build --tag=ami-website:v0.0.3 -f AMI.Website\Dockerfile .
+* docker run -p 4000:80 ami-website:v0.0.3
+
+Now the website should be accessible on http://localhost:4000/ in your browser.
+
 ### Initialization
 
 * dotnet new angular -o AMI.Website
