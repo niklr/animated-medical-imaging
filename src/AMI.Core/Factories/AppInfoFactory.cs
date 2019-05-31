@@ -1,5 +1,6 @@
 ﻿using AMI.Core.Entities.Models;
 using AMI.Core.Helpers;
+using RNS.Framework.Semantic;
 
 namespace AMI.Core.Factories
 {
@@ -17,7 +18,8 @@ namespace AMI.Core.Factories
         /// </returns>
         public AppInfo Create()
         {
-            return new AppInfo(ReflectionHelper.GetAssemblyName(), ReflectionHelper.GetAssemblyVersion());
+            var semVer = new SemanticVersion(ReflectionHelper.GetAssemblyVersion());
+            return new AppInfo(ReflectionHelper.GetAssemblyName(), semVer.ToNormalizedString());
         }
     }
 }

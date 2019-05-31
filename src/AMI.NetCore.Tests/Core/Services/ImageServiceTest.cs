@@ -24,18 +24,8 @@ namespace AMI.NetCore.Tests.Core.Services
                 DestinationPath = GetTempPath()
             };
             command.AxisTypes.Add(AxisType.Z);
-
-            try
-            {
-                // Act
-                var result = service.ExtractAsync(command, ct).Result;
-                var json = File.ReadAllText(Path.Combine(command.DestinationPath, result.JsonFilename));
-
-                // Assert
-                Assert.AreEqual(command.AmountPerAxis, result.Images.Count);
-                Assert.AreEqual(5, result.LabelCount);
-                Assert.AreEqual(json, @"{
-  ""version"": ""0.0.3.0"",
+            var expected = @"{
+  ""version"": ""0.0.3"",
   ""labelCount"": 5,
   ""images"": [
     {
@@ -97,7 +87,18 @@ namespace AMI.NetCore.Tests.Core.Services
   ],
   ""combinedGif"": ""combined.gif"",
   ""jsonFilename"": ""output.json""
-}");
+}";
+
+            try
+            {
+                // Act
+                var result = service.ExtractAsync(command, ct).Result;
+                var json = File.ReadAllText(Path.Combine(command.DestinationPath, result.JsonFilename));
+
+                // Assert
+                Assert.AreEqual(command.AmountPerAxis, result.Images.Count);
+                Assert.AreEqual(5, result.LabelCount);
+                Assert.AreEqual(expected, json);
             }
             finally
             {
