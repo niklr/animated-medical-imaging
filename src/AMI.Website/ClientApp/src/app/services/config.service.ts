@@ -1,31 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { IAppConfig } from '../models/app-config.model';
+import { IClientSettings } from '../models/client-settings.model';
 
 @Injectable()
 export class ConfigService {
 
-  static settings: IAppConfig;
+  static settings: IClientSettings;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
 
   }
 
   public load() {
-    let jsonFilePath: string;
-    if (environment.production) {
-      jsonFilePath = 'assets/config.production.json';
-    } else {
-      jsonFilePath = 'assets/config.development.json';
-    }
     return new Promise<void>((resolve, reject) => {
-      this.http.get(jsonFilePath).subscribe((response: IAppConfig) => {
-        ConfigService.settings = response;
+      this.http.get<IClientSettings>(this.baseUrl + 'settings').subscribe(result => {
+        ConfigService.settings = result;
         ConfigService.settings.isDevelopment = !environment.production;
         resolve();
       }, error => {
-        reject(`Could not load file '${jsonFilePath}': ${JSON.stringify(error)}`);
+        reject(`Could not load settings: ${JSON.stringify(error)}`);
       });
     });
   }
