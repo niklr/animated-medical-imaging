@@ -129,7 +129,9 @@ namespace AMI.API
             app.UseCors("AllowSpecificOrigins");
 
             app.UseCustomExceptionMiddleware();
-            app.UseHttpsRedirection();
+
+            // TODO: make use of SSL in Docker
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             // Add OpenAPI/Swagger middlewares

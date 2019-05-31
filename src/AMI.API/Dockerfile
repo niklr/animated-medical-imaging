@@ -5,9 +5,8 @@ EXPOSE 443
 
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
-COPY ["AMI.API/AMI.API.csproj", "AMI.API/"]
-RUN dotnet restore "AMI.API/AMI.API.csproj"
 COPY . .
+RUN dotnet restore "AMI.API/AMI.API.csproj"
 WORKDIR "/src/AMI.API"
 RUN dotnet build "AMI.API.csproj" -c Release -o /app
 

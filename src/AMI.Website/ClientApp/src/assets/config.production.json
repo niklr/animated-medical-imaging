@@ -3,6 +3,6 @@
     "enableConsoleOutput": false
   },
   "api": {
-    "endpoint": "https://localhost:6001"
+    "endpoint": "https://localhost:23001"
   }
 }

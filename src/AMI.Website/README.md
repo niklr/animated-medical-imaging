@@ -4,10 +4,10 @@
 
 In a command prompt, make sure you are in the root directory containing the solution file AMI.sln
 
-* docker build --tag=ami-website:v0.0.3 -f AMI.Website\Dockerfile .
-* docker run -p 4000:80 ami-website:v0.0.3
+* docker build --tag=ami-website:v0.0.0 -f AMI.Website\Dockerfile .
+* docker run --name ami-website -p 23600:80 ami-website:v0.0.0
 
-Now the website should be accessible on http://localhost:4000/ in your browser.
+Now the website should be accessible on http://localhost:23600/ in your browser.
 
 ### Initialization
 
