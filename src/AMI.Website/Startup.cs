@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AMI.Website
 {
@@ -35,6 +36,12 @@ namespace AMI.Website
         {
             services.AddOptions();
             services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings"));
+            services.AddLogging(builder =>
+            {
+                builder
+                    .AddConfiguration(Configuration.GetSection("Logging"))
+                    .AddConsole();
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

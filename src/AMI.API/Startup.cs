@@ -130,8 +130,7 @@ namespace AMI.API
 
             app.UseCustomExceptionMiddleware();
 
-            // TODO: make use of SSL in Docker
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             // Add OpenAPI/Swagger middlewares
