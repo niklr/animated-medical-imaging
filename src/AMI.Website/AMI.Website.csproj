@@ -6,7 +6,7 @@
     <UserSecretsId>482bf474-a71f-4eab-a247-5a91e97c2373</UserSecretsId>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <CodeAnalysisRuleSet>RnsCodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\RnsCodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
@@ -17,6 +17,15 @@
     <BuildServerSideRenderer>false</BuildServerSideRenderer>	
   </PropertyGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="..\RnsCodeAnalysis.ruleset" Link="Properties\RnsCodeAnalysis.ruleset" />
+    <AdditionalFiles Include="..\StyleCop.json" Link="Properties\StyleCop.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />
+  </ItemGroup>    
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />

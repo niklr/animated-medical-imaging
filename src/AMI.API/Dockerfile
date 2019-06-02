@@ -7,7 +7,7 @@ FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY . .
 RUN dotnet restore "AMI.API/AMI.API.csproj"
-WORKDIR "/src/AMI.API"
+WORKDIR /src/AMI.API
 RUN dotnet build "AMI.API.csproj" -c Release -o /app
 
 FROM build AS publish
