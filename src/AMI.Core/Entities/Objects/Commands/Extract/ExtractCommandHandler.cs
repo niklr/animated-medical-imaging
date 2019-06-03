@@ -29,11 +29,11 @@ namespace AMI.Core.Entities.Objects.Commands.Extract
         }
 
         /// <summary>
-        /// Handles the extract command request called by the base class.
+        /// Handles the command request called by the base class.
         /// </summary>
         /// <param name="request">The command request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The result of the extract command request.</returns>
+        /// <returns>The result of the command request.</returns>
         protected override Task<ExtractResult> ProtectedHandle(ExtractObjectCommand request, CancellationToken cancellationToken)
         {
             return imageService.ExtractAsync(request, cancellationToken);

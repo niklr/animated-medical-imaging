@@ -45,7 +45,6 @@
   
   <ItemGroup>
     <Folder Include="ClientApp\src\app\modules\layout\components\footer\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>  
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

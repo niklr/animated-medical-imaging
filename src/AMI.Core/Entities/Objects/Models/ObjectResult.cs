@@ -31,6 +31,16 @@ namespace AMI.Core.Entities.Models
         public DateTime ModifiedDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the original filename.
+        /// </summary>
+        public string OriginalFilename { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filesystem path.
+        /// </summary>
+        public string FsPath { get; set; }
+
+        /// <summary>
         /// Gets or sets the status.
         /// </summary>
         public ObjectStatus Status { get; set; }

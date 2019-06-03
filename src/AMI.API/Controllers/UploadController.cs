@@ -30,37 +30,37 @@ namespace AMI.API.Controllers
         /// The resumable upload endpoint.
         /// </summary>
         /// <param name="file">The file.</param>
-        /// <param name="resumableChunkNumber">The resumable chunk number.</param>
-        /// <param name="resumableChunkSize">The size of the resumable chunk.</param>
-        /// <param name="resumableCurrentChunkSize">The size of the resumable current chunk.</param>
-        /// <param name="resumableTotalSize">The total size of the resumable upload.</param>
+        /// <param name="chunkNumber">The chunk number.</param>
+        /// <param name="chunkSize">The size of the chunk.</param>
+        /// <param name="currentChunkSize">The size of the current chunk.</param>
+        /// <param name="totalSize">The total size of the upload.</param>
         /// <param name="resumableType">The name of the file type.</param>
-        /// <param name="resumableIdentifier">The resumable identifier.</param>
-        /// <param name="resumableFilename">The resumable filename.</param>
-        /// <param name="resumableRelativePath">The resumable relative path.</param>
-        /// <param name="resumableTotalChunks">The resumable total chunks.</param>
+        /// <param name="uid">The unique identifier.</param>
+        /// <param name="filename">The filename.</param>
+        /// <param name="relativePath">The relative path.</param>
+        /// <param name="totalChunks">The total chunks.</param>
         /// <returns>The result of the resumable upload.</returns>
-        [HttpPost]
+        [HttpPost("resumable")]
         public async Task<IActionResult> ResumableUpload(
             IFormFile file,
-            int resumableChunkNumber,
-            int resumableChunkSize,
-            int resumableCurrentChunkSize,
-            int resumableTotalSize,
+            int chunkNumber,
+            int chunkSize,
+            int currentChunkSize,
+            int totalSize,
             string resumableType,
-            string resumableIdentifier,
-            string resumableFilename,
-            string resumableRelativePath,
-            int resumableTotalChunks)
+            string uid,
+            string filename,
+            string relativePath,
+            int totalChunks)
         {
             try
             {
-                uploader.Upload(resumableChunkNumber, resumableIdentifier, file.OpenReadStream());
+                uploader.Upload(chunkNumber, uid, file.OpenReadStream());
 
-                bool isFinalChunk = resumableChunkNumber == resumableTotalChunks;
+                bool isFinalChunk = chunkNumber == totalChunks;
                 if (isFinalChunk)
                 {
-                    await uploader.CommitAsync(resumableFilename, resumableRelativePath, resumableIdentifier, CancellationToken);
+                    await uploader.CommitAsync(filename, relativePath, uid, CancellationToken);
                 }
 
                 return Content(string.Empty);

@@ -122,7 +122,7 @@
         }
       }
     },
-    "/upload": {
+    "/upload/resumable": {
       "post": {
         "tags": [
           "Upload"
@@ -144,10 +144,10 @@
             "nullable": true
           },
           {
-            "name": "resumableChunkNumber",
+            "name": "chunkNumber",
             "in": "query",
             "required": true,
-            "description": "The resumable chunk number.",
+            "description": "The chunk number.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -155,10 +155,10 @@
             "x-position": 1
           },
           {
-            "name": "resumableChunkSize",
+            "name": "chunkSize",
             "in": "query",
             "required": true,
-            "description": "The size of the resumable chunk.",
+            "description": "The size of the chunk.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -166,10 +166,10 @@
             "x-position": 2
           },
           {
-            "name": "resumableCurrentChunkSize",
+            "name": "currentChunkSize",
             "in": "query",
             "required": true,
-            "description": "The size of the resumable current chunk.",
+            "description": "The size of the current chunk.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -177,10 +177,10 @@
             "x-position": 3
           },
           {
-            "name": "resumableTotalSize",
+            "name": "totalSize",
             "in": "query",
             "required": true,
-            "description": "The total size of the resumable upload.",
+            "description": "The total size of the upload.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -199,10 +199,10 @@
             "x-position": 5
           },
           {
-            "name": "resumableIdentifier",
+            "name": "uid",
             "in": "query",
             "required": true,
-            "description": "The resumable identifier.",
+            "description": "The unique identifier.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -210,10 +210,10 @@
             "x-position": 6
           },
           {
-            "name": "resumableFilename",
+            "name": "filename",
             "in": "query",
             "required": true,
-            "description": "The resumable filename.",
+            "description": "The filename.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -221,10 +221,10 @@
             "x-position": 7
           },
           {
-            "name": "resumableRelativePath",
+            "name": "relativePath",
             "in": "query",
             "required": true,
-            "description": "The resumable relative path.",
+            "description": "The relative path.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -232,10 +232,10 @@
             "x-position": 8
           },
           {
-            "name": "resumableTotalChunks",
+            "name": "totalChunks",
             "in": "query",
             "required": true,
-            "description": "The resumable total chunks.",
+            "description": "The total chunks.",
             "schema": {
               "type": "integer",
               "format": "int32"

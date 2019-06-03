@@ -132,17 +132,17 @@ export interface IUploadAmiApiClient {
     /**
      * The resumable upload endpoint.
      * @param file The file.
-     * @param resumableChunkNumber The resumable chunk number.
-     * @param resumableChunkSize The size of the resumable chunk.
-     * @param resumableCurrentChunkSize The size of the resumable current chunk.
-     * @param resumableTotalSize The total size of the resumable upload.
+     * @param chunkNumber The chunk number.
+     * @param chunkSize The size of the chunk.
+     * @param currentChunkSize The size of the current chunk.
+     * @param totalSize The total size of the upload.
      * @param resumableType The name of the file type.
-     * @param resumableIdentifier The resumable identifier.
-     * @param resumableFilename The resumable filename.
-     * @param resumableRelativePath The resumable relative path.
-     * @param resumableTotalChunks The resumable total chunks.
+     * @param uid The unique identifier.
+     * @param filename The filename.
+     * @param relativePath The relative path.
+     * @param totalChunks The total chunks.
      */
-    resumableUpload(file: FileParameter | null, resumableChunkNumber: number, resumableChunkSize: number, resumableCurrentChunkSize: number, resumableTotalSize: number, resumableType: string | null, resumableIdentifier: string | null, resumableFilename: string | null, resumableRelativePath: string | null, resumableTotalChunks: number): Observable<void>;
+    resumableUpload(file: FileParameter | null, chunkNumber: number, chunkSize: number, currentChunkSize: number, totalSize: number, resumableType: string | null, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<void>;
 }
 
 @Injectable()
@@ -159,54 +159,54 @@ export class UploadAmiApiClient implements IUploadAmiApiClient {
     /**
      * The resumable upload endpoint.
      * @param file The file.
-     * @param resumableChunkNumber The resumable chunk number.
-     * @param resumableChunkSize The size of the resumable chunk.
-     * @param resumableCurrentChunkSize The size of the resumable current chunk.
-     * @param resumableTotalSize The total size of the resumable upload.
+     * @param chunkNumber The chunk number.
+     * @param chunkSize The size of the chunk.
+     * @param currentChunkSize The size of the current chunk.
+     * @param totalSize The total size of the upload.
      * @param resumableType The name of the file type.
-     * @param resumableIdentifier The resumable identifier.
-     * @param resumableFilename The resumable filename.
-     * @param resumableRelativePath The resumable relative path.
-     * @param resumableTotalChunks The resumable total chunks.
+     * @param uid The unique identifier.
+     * @param filename The filename.
+     * @param relativePath The relative path.
+     * @param totalChunks The total chunks.
      */
-    resumableUpload(file: FileParameter | null, resumableChunkNumber: number, resumableChunkSize: number, resumableCurrentChunkSize: number, resumableTotalSize: number, resumableType: string | null, resumableIdentifier: string | null, resumableFilename: string | null, resumableRelativePath: string | null, resumableTotalChunks: number): Observable<void> {
-        let url_ = this.baseUrl + "/upload?";
-        if (resumableChunkNumber === undefined || resumableChunkNumber === null)
-            throw new Error("The parameter 'resumableChunkNumber' must be defined and cannot be null.");
+    resumableUpload(file: FileParameter | null, chunkNumber: number, chunkSize: number, currentChunkSize: number, totalSize: number, resumableType: string | null, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<void> {
+        let url_ = this.baseUrl + "/upload/resumable?";
+        if (chunkNumber === undefined || chunkNumber === null)
+            throw new Error("The parameter 'chunkNumber' must be defined and cannot be null.");
         else
-            url_ += "resumableChunkNumber=" + encodeURIComponent("" + resumableChunkNumber) + "&"; 
-        if (resumableChunkSize === undefined || resumableChunkSize === null)
-            throw new Error("The parameter 'resumableChunkSize' must be defined and cannot be null.");
+            url_ += "chunkNumber=" + encodeURIComponent("" + chunkNumber) + "&"; 
+        if (chunkSize === undefined || chunkSize === null)
+            throw new Error("The parameter 'chunkSize' must be defined and cannot be null.");
         else
-            url_ += "resumableChunkSize=" + encodeURIComponent("" + resumableChunkSize) + "&"; 
-        if (resumableCurrentChunkSize === undefined || resumableCurrentChunkSize === null)
-            throw new Error("The parameter 'resumableCurrentChunkSize' must be defined and cannot be null.");
+            url_ += "chunkSize=" + encodeURIComponent("" + chunkSize) + "&"; 
+        if (currentChunkSize === undefined || currentChunkSize === null)
+            throw new Error("The parameter 'currentChunkSize' must be defined and cannot be null.");
         else
-            url_ += "resumableCurrentChunkSize=" + encodeURIComponent("" + resumableCurrentChunkSize) + "&"; 
-        if (resumableTotalSize === undefined || resumableTotalSize === null)
-            throw new Error("The parameter 'resumableTotalSize' must be defined and cannot be null.");
+            url_ += "currentChunkSize=" + encodeURIComponent("" + currentChunkSize) + "&"; 
+        if (totalSize === undefined || totalSize === null)
+            throw new Error("The parameter 'totalSize' must be defined and cannot be null.");
         else
-            url_ += "resumableTotalSize=" + encodeURIComponent("" + resumableTotalSize) + "&"; 
+            url_ += "totalSize=" + encodeURIComponent("" + totalSize) + "&"; 
         if (resumableType === undefined)
             throw new Error("The parameter 'resumableType' must be defined.");
         else
             url_ += "resumableType=" + encodeURIComponent("" + resumableType) + "&"; 
-        if (resumableIdentifier === undefined)
-            throw new Error("The parameter 'resumableIdentifier' must be defined.");
+        if (uid === undefined)
+            throw new Error("The parameter 'uid' must be defined.");
         else
-            url_ += "resumableIdentifier=" + encodeURIComponent("" + resumableIdentifier) + "&"; 
-        if (resumableFilename === undefined)
-            throw new Error("The parameter 'resumableFilename' must be defined.");
+            url_ += "uid=" + encodeURIComponent("" + uid) + "&"; 
+        if (filename === undefined)
+            throw new Error("The parameter 'filename' must be defined.");
         else
-            url_ += "resumableFilename=" + encodeURIComponent("" + resumableFilename) + "&"; 
-        if (resumableRelativePath === undefined)
-            throw new Error("The parameter 'resumableRelativePath' must be defined.");
+            url_ += "filename=" + encodeURIComponent("" + filename) + "&"; 
+        if (relativePath === undefined)
+            throw new Error("The parameter 'relativePath' must be defined.");
         else
-            url_ += "resumableRelativePath=" + encodeURIComponent("" + resumableRelativePath) + "&"; 
-        if (resumableTotalChunks === undefined || resumableTotalChunks === null)
-            throw new Error("The parameter 'resumableTotalChunks' must be defined and cannot be null.");
+            url_ += "relativePath=" + encodeURIComponent("" + relativePath) + "&"; 
+        if (totalChunks === undefined || totalChunks === null)
+            throw new Error("The parameter 'totalChunks' must be defined and cannot be null.");
         else
-            url_ += "resumableTotalChunks=" + encodeURIComponent("" + resumableTotalChunks) + "&"; 
+            url_ += "totalChunks=" + encodeURIComponent("" + totalChunks) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = new FormData();
