@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Extensions.Drawing;
 using AMI.Core.Factories;
 using AMI.Core.Mappers;
@@ -68,12 +68,12 @@ namespace AMI.Core.Extractors
         }
 
         /// <summary>
-        /// Extracts the images asynchronous.
+        /// Processes the images asynchronous.
         /// </summary>
         /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// The result of the image extraction.
+        /// The result of the image processing.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// command
@@ -91,7 +91,7 @@ namespace AMI.Core.Extractors
         /// or
         /// Bitmap could not be centered.
         /// </exception>
-        public async Task<ImageExtractResult> ExtractAsync(ExtractObjectCommand command, CancellationToken ct)
+        public async Task<ImageProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
         {
             if (command == null)
             {
@@ -103,7 +103,7 @@ namespace AMI.Core.Extractors
                 throw new ArgumentNullException(nameof(ct));
             }
 
-            var result = new ImageExtractResult();
+            var result = new ImageProcessResult();
             var imageFormat = GetImageFormat(command.ImageFormat);
             var imageExtension = imageFormat.FileExtensionFromEncoder();
             if (string.IsNullOrWhiteSpace(imageExtension))

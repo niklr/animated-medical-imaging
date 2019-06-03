@@ -122,6 +122,146 @@
         }
       }
     },
+    "/objects/{id}/process": {
+      "put": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Processes an existing object.",
+        "operationId": "Objects_Process",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "description": "The command to process an existing object.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcessObjectCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResult"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The status of the processing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ObjectResult"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/upload/resumable": {
       "post": {
         "tags": [
@@ -948,6 +1088,183 @@
             "nullable": true
           }
         }
+      },
+      "ObjectResult": {
+        "type": "object",
+        "description": "A model representing an object result.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the identifier.",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the created date.",
+            "format": "date-time"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "Gets or sets the modified date.",
+            "format": "date-time"
+          },
+          "originalFilename": {
+            "type": "string",
+            "description": "Gets or sets the original filename.",
+            "nullable": true
+          },
+          "fsPath": {
+            "type": "string",
+            "description": "Gets or sets the filesystem path.",
+            "nullable": true
+          },
+          "status": {
+            "description": "Gets or sets the status.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ObjectStatus"
+              }
+            ]
+          }
+        }
+      },
+      "ObjectStatus": {
+        "type": "object",
+        "description": "A model representing an object status.",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Gets or sets the name.",
+            "nullable": true
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Gets or sets the progress.",
+            "format": "int32"
+          }
+        }
+      },
+      "ProcessObjectCommand": {
+        "type": "object",
+        "description": "A command containing information needed for processing.",
+        "additionalProperties": false,
+        "properties": {
+          "desiredSize": {
+            "type": "integer",
+            "description": "Gets or sets the desired size of the processed images.",
+            "nullable": true
+          },
+          "amountPerAxis": {
+            "type": "integer",
+            "description": "Gets or sets the amount of images per axis."
+          },
+          "sourcePath": {
+            "type": "string",
+            "description": "Gets or sets the source path.",
+            "nullable": true
+          },
+          "watermarkSourcePath": {
+            "type": "string",
+            "description": "Gets or sets the source path of the watermark.",
+            "nullable": true
+          },
+          "destinationPath": {
+            "type": "string",
+            "description": "Gets or sets the destination path.",
+            "nullable": true
+          },
+          "axisTypes": {
+            "type": "array",
+            "description": "Gets the axis types to be considered.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AxisType"
+            }
+          },
+          "imageFormat": {
+            "description": "Gets or sets the image format.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ImageFormat"
+              }
+            ]
+          },
+          "bezierEasingTypePerAxis": {
+            "description": "Gets or sets the Bézier easing type per axis used for the animated image.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BezierEasingType"
+              }
+            ]
+          },
+          "bezierEasingTypeCombined": {
+            "description": "Gets or sets the Bézier easing type used for the combined animated image.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BezierEasingType"
+              }
+            ]
+          },
+          "grayscale": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the images should be converted to grayscale."
+          },
+          "openCombinedGif": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the combined animated image should be opened after the processing."
+          }
+        }
+      },
+      "AxisType": {
+        "type": "integer",
+        "description": "The different axis types of the coordinate system.",
+        "x-enumNames": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "ImageFormat": {
+        "type": "integer",
+        "description": "A type to describe the image format.",
+        "x-enumNames": [
+          "Jpeg",
+          "Png"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "BezierEasingType": {
+        "type": "integer",
+        "description": "A type to describe the Bézier curve easing.",
+        "x-enumNames": [
+          "Linear",
+          "EaseInCubic",
+          "EaseOutCubic",
+          "EaseInOutCubic",
+          "EaseInQuart",
+          "EaseOutQuart",
+          "EaseInOutQuart"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
       }
     }
   }

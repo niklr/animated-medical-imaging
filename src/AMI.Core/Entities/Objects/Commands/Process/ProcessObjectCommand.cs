@@ -4,16 +4,16 @@ using AMI.Core.Entities.Models;
 using AMI.Domain.Enums;
 using MediatR;
 
-namespace AMI.Core.Entities.Objects.Commands.Extract
+namespace AMI.Core.Entities.Objects.Commands.Process
 {
     /// <summary>
-    /// A command containing information needed for extraction.
+    /// A command containing information needed for processing.
     /// </summary>
     [Serializable]
-    public class ExtractObjectCommand : IRequest<ExtractResult>
+    public class ProcessObjectCommand : IRequest<ProcessResult>
     {
         /// <summary>
-        /// Gets or sets the desired size of the extracted images.
+        /// Gets or sets the desired size of the processed images.
         /// </summary>
         public uint? DesiredSize { get; set; }
 
@@ -63,7 +63,7 @@ namespace AMI.Core.Entities.Objects.Commands.Extract
         public bool Grayscale { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the combined animated image should be opened after the extraction.
+        /// Gets or sets a value indicating whether the combined animated image should be opened after the processing.
         /// </summary>
         public bool OpenCombinedGif { get; set; } = false;
     }

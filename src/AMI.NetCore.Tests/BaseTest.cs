@@ -6,7 +6,7 @@ using AMI.Compress.Readers;
 using AMI.Core.Behaviors;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
@@ -62,10 +62,10 @@ namespace AMI.NetCore.Tests
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-            services.AddMediatR(typeof(ExtractCommandHandler).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(ProcessCommandHandler).GetTypeInfo().Assembly);
 
             // Add FluentValidation
-            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair =>
+            AssemblyScanner.FindValidatorsInAssemblyContaining<ProcessCommandValidator>().ForEach(pair =>
             {
                 // filter out validators that are not needed here
                 services.AddTransient(pair.InterfaceType, pair.ValidatorType);

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Services;
 using AMI.Domain.Enums;
 using NUnit.Framework;
@@ -11,12 +11,12 @@ namespace AMI.NetCore.Tests.Core.Services
     public class ImageServiceTest : BaseTest
     {
         [Test]
-        public void NetCore_ImageService_ExtractAsync()
+        public void NetCore_ImageService_ProcessAsync()
         {
             // Arrange
             var service = GetService<IImageService>();
             var ct = new CancellationToken();
-            var command = new ExtractObjectCommand()
+            var command = new ProcessObjectCommand()
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
@@ -92,7 +92,7 @@ namespace AMI.NetCore.Tests.Core.Services
             try
             {
                 // Act
-                var result = service.ExtractAsync(command, ct).Result;
+                var result = service.ProcessAsync(command, ct).Result;
                 var json = File.ReadAllText(Path.Combine(command.DestinationPath, result.JsonFilename));
 
                 // Assert

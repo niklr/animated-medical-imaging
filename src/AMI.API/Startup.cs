@@ -8,7 +8,7 @@ using AMI.Core.Behaviors;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.ApplicationInformation.Queries;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Factories;
 using AMI.Core.Serializers;
 using AMI.Core.Strategies;
@@ -95,7 +95,7 @@ namespace AMI.API
                     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResult), (int)HttpStatusCode.InternalServerError));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ExtractCommandValidator>())
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ProcessCommandValidator>())
                 .AddJsonOptions(options =>
                 {
                     defaultSerializer.OverrideJsonSerializerSettings(options.SerializerSettings);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AMI.Core.Behaviors;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Extensions.Time;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
@@ -70,10 +70,10 @@ namespace AMI.CLI
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-            services.AddMediatR(typeof(ExtractCommandHandler).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(ProcessCommandHandler).GetTypeInfo().Assembly);
 
             // Add FluentValidation
-            AssemblyScanner.FindValidatorsInAssemblyContaining<ExtractCommandValidator>().ForEach(pair =>
+            AssemblyScanner.FindValidatorsInAssemblyContaining<ProcessCommandValidator>().ForEach(pair =>
             {
                 // filter out validators that are not needed here
                 services.AddTransient(pair.InterfaceType, pair.ValidatorType);
@@ -163,7 +163,7 @@ namespace AMI.CLI
         /// </exception>
         public async Task ExecuteAsync(string[] args, CancellationToken ct)
         {
-            var command = new ExtractObjectCommand();
+            var command = new ProcessObjectCommand();
 
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed(o =>
@@ -181,7 +181,7 @@ namespace AMI.CLI
 
         private async Task ExecuteTestAsync(string[] args, CancellationToken ct)
         {
-            var command = new ExtractObjectCommand()
+            var command = new ProcessObjectCommand()
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
@@ -195,7 +195,7 @@ namespace AMI.CLI
             await ExecuteCommandAsync(command, ct);
         }
 
-        private async Task ExecuteCommandAsync(ExtractObjectCommand command, CancellationToken ct)
+        private async Task ExecuteCommandAsync(ProcessObjectCommand command, CancellationToken ct)
         {
             var watch = Stopwatch.StartNew();
             Logger.LogInformation($"{this.GetMethodName()} started");

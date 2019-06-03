@@ -147,7 +147,7 @@ NUnit failed to load ...\AMI.NetFramework.Tests\bin\Debug\AMI.NetFramework.Tests
 Each successful execution will generate an **output.json** file in addition to an optimal subset 
 representing a multi-dimensional medical image. This json file consists of models described below.
 
-#### ExtractResult
+#### ProcessResult
 
 * `version (string)` The version number of the application.
 * `labelCount (number)` The amount of labels in the image.

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Extractors
@@ -13,12 +13,12 @@ namespace AMI.Core.Extractors
     public interface IImageExtractor
     {
         /// <summary>
-        /// Extracts images asynchronous.
+        /// Processes images asynchronous.
         /// </summary>
         /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// The result of the image extraction.
+        /// The result of the image processing.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// command
@@ -36,6 +36,6 @@ namespace AMI.Core.Extractors
         /// or
         /// Bitmap could not be centered.
         /// </exception>
-        Task<ImageExtractResult> ExtractAsync(ExtractObjectCommand command, CancellationToken ct);
+        Task<ImageProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct);
     }
 }

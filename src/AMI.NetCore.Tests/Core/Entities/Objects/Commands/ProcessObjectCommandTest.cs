@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Domain.Exceptions;
 using MediatR;
 using NUnit.Framework;
@@ -7,15 +7,15 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
 {
     [TestFixture]
-    public class ExtractObjectCommandTest : BaseTest
+    public class ProcessObjectCommandTest : BaseTest
     {
         [Test]
-        public void NetCore_ExtractObjectCommand()
+        public void NetCore_ProcessObjectCommand()
         {
             // Arrange
             var mediator = GetService<IMediator>();
             var ct = new CancellationToken();
-            var command = new ExtractObjectCommand()
+            var command = new ProcessObjectCommand()
             {
                 SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
                 DestinationPath = GetTempPath(),
@@ -39,12 +39,12 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
         }
 
         [Test]
-        public void NetCore_ExtractObjectCommand_Validation_Failures()
+        public void NetCore_ProcessObjectCommand_Validation_Failures()
         {
             // Arrange
             var mediator = GetService<IMediator>();
             var ct = new CancellationToken();
-            var command = new ExtractObjectCommand();
+            var command = new ProcessObjectCommand();
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<ValidationException>(() => mediator.Send(command, ct));

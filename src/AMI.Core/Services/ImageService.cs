@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Extensions.FileSystemExtensions;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
@@ -107,7 +107,7 @@ namespace AMI.Core.Services
         }
 
         /// <summary>
-        /// Extracts images based on the provided command information asynchronous.
+        /// Processes images based on the provided command information asynchronous.
         /// </summary>
         /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
@@ -124,7 +124,7 @@ namespace AMI.Core.Services
         /// or
         /// Empty destination path.
         /// </exception>
-        public async Task<ExtractResult> ExtractAsync(ExtractObjectCommand command, CancellationToken ct)
+        public async Task<ProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
         {
             if (command == null)
             {
@@ -160,12 +160,12 @@ namespace AMI.Core.Services
             destFs.Directory.CreateDirectory(commandClone.DestinationPath);
 
             // TODO: support zip files
-            var imageResult = await imageExtractor.ExtractAsync(commandClone, ct);
+            var imageResult = await imageExtractor.ProcessAsync(commandClone, ct);
             var gifs = await gifImageWriter.WriteAsync(commandClone.DestinationPath, imageResult.Images, commandClone.BezierEasingTypePerAxis, ct);
             var combinedGifFilename = await gifImageWriter.WriteAsync(commandClone.DestinationPath, imageResult.Images, "combined", commandClone.BezierEasingTypeCombined, ct);
 
             var appInfo = appInfoFactory.Create();
-            var result = new ExtractResult()
+            var result = new ProcessResult()
             {
                 Version = appInfo.AppVersion,
                 LabelCount = Convert.ToInt32(imageResult.LabelCount),

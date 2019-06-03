@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Services
@@ -13,7 +13,7 @@ namespace AMI.Core.Services
     public interface IImageService
     {
         /// <summary>
-        /// Extracts images based on the provided command information asynchronous.
+        /// Processes an object based on the provided command information asynchronous.
         /// </summary>
         /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
@@ -30,6 +30,6 @@ namespace AMI.Core.Services
         /// or
         /// Empty destination path.
         /// </exception>
-        Task<ExtractResult> ExtractAsync(ExtractObjectCommand command, CancellationToken ct);
+        Task<ProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct);
     }
 }

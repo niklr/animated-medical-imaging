@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using AMI.Core.Entities.Objects.Commands.Extract;
+using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Extractors;
 using AMI.Core.Strategies;
 using AMI.Itk.Extractors;
@@ -14,13 +14,13 @@ namespace AMI.NetFramework.Tests.Core.Extractors
     public class ImageExtractorTest : BaseTest
     {
         [Test]
-        public void NetFramework_ImageExtractor_Extract()
+        public void NetFramework_ImageExtractor_ProcessAsync()
         {
             // Arrange
             var loggerFactory = base.GetService<ILoggerFactory>();
             var fileSystemStrategy = base.GetService<IFileSystemStrategy>();
             var factory = base.GetService<IItkImageReaderFactory>();
-            var command = new ExtractObjectCommand()
+            var command = new ProcessObjectCommand()
             {
                 SourcePath = GetDataPath("SMIR.Brain.XX.O.CT.339203.nii"),
                 DestinationPath = GetTempPath(),
@@ -33,7 +33,7 @@ namespace AMI.NetFramework.Tests.Core.Extractors
             try
             {
                 // Act
-                var result = extractor.ExtractAsync(command, ct).Result;
+                var result = extractor.ProcessAsync(command, ct).Result;
 
                 // Assert
                 Assert.AreEqual(3 * Convert.ToInt32(command.AmountPerAxis), result.Images.Count);

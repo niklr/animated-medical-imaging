@@ -3,9 +3,9 @@
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A model containing information about the ouput of the image extraction process.
+    /// A model containing information about the ouput of the image processing.
     /// </summary>
-    public class ImageExtractResult
+    public class ImageProcessResult
     {
         private IReadOnlyList<PositionAxisContainer<string>> images = new List<PositionAxisContainer<string>>();
 

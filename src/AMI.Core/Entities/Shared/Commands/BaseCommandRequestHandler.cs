@@ -54,7 +54,7 @@ namespace AMI.Core.Entities.Shared.Commands
         /// </summary>
         /// <param name="request">The command request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The result of the extract request.</returns>
+        /// <returns>The result of the command request.</returns>
         protected abstract Task<TResponse> ProtectedHandle(TRequest request, CancellationToken cancellationToken);
     }
 }

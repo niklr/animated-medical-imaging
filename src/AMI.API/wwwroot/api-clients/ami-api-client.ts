@@ -128,6 +128,129 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
     }
 }
 
+export interface IObjectsAmiApiClient {
+    /**
+     * Processes an existing object.
+     * @param command The command to process an existing object.
+     * @return The status of the processing.
+     */
+    process(id: string, command: ProcessObjectCommand): Observable<ObjectResult | null>;
+}
+
+@Injectable()
+export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Processes an existing object.
+     * @param command The command to process an existing object.
+     * @return The status of the processing.
+     */
+    process(id: string, command: ProcessObjectCommand): Observable<ObjectResult | null> {
+        let url_ = this.baseUrl + "/objects/{id}/process";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcess(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcess(<any>response_);
+                } catch (e) {
+                    return <Observable<ObjectResult | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ObjectResult | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processProcess(response: HttpResponseBase): Observable<ObjectResult | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? ObjectResult.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ObjectResult | null>(<any>null);
+    }
+}
+
 export interface IUploadAmiApiClient {
     /**
      * The resumable upload endpoint.
@@ -888,6 +1011,254 @@ export interface IAppInfo {
     appName?: string | undefined;
     /** Gets the application version. */
     appVersion?: string | undefined;
+}
+
+/** A model representing an object result. */
+export class ObjectResult implements IObjectResult {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the original filename. */
+    originalFilename?: string | undefined;
+    /** Gets or sets the filesystem path. */
+    fsPath?: string | undefined;
+    /** Gets or sets the status. */
+    status?: ObjectStatus | undefined;
+
+    constructor(data?: IObjectResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
+            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
+            this.originalFilename = data["originalFilename"];
+            this.fsPath = data["fsPath"];
+            this.status = data["status"] ? ObjectStatus.fromJS(data["status"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ObjectResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new ObjectResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["originalFilename"] = this.originalFilename;
+        data["fsPath"] = this.fsPath;
+        data["status"] = this.status ? this.status.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+/** A model representing an object result. */
+export interface IObjectResult {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the original filename. */
+    originalFilename?: string | undefined;
+    /** Gets or sets the filesystem path. */
+    fsPath?: string | undefined;
+    /** Gets or sets the status. */
+    status?: ObjectStatus | undefined;
+}
+
+/** A model representing an object status. */
+export class ObjectStatus implements IObjectStatus {
+    /** Gets or sets the name. */
+    name?: string | undefined;
+    /** Gets or sets the progress. */
+    progress?: number;
+
+    constructor(data?: IObjectStatus) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.name = data["name"];
+            this.progress = data["progress"];
+        }
+    }
+
+    static fromJS(data: any): ObjectStatus {
+        data = typeof data === 'object' ? data : {};
+        let result = new ObjectStatus();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["progress"] = this.progress;
+        return data; 
+    }
+}
+
+/** A model representing an object status. */
+export interface IObjectStatus {
+    /** Gets or sets the name. */
+    name?: string | undefined;
+    /** Gets or sets the progress. */
+    progress?: number;
+}
+
+/** A command containing information needed for processing. */
+export class ProcessObjectCommand implements IProcessObjectCommand {
+    /** Gets or sets the desired size of the processed images. */
+    desiredSize?: number | undefined;
+    /** Gets or sets the amount of images per axis. */
+    amountPerAxis?: number;
+    /** Gets or sets the source path. */
+    sourcePath?: string | undefined;
+    /** Gets or sets the source path of the watermark. */
+    watermarkSourcePath?: string | undefined;
+    /** Gets or sets the destination path. */
+    destinationPath?: string | undefined;
+    /** Gets the axis types to be considered. */
+    axisTypes?: AxisType[] | undefined;
+    /** Gets or sets the image format. */
+    imageFormat?: ImageFormat;
+    /** Gets or sets the Bézier easing type per axis used for the animated image. */
+    bezierEasingTypePerAxis?: BezierEasingType;
+    /** Gets or sets the Bézier easing type used for the combined animated image. */
+    bezierEasingTypeCombined?: BezierEasingType;
+    /** Gets or sets a value indicating whether the images should be converted to grayscale. */
+    grayscale?: boolean;
+    /** Gets or sets a value indicating whether the combined animated image should be opened after the processing. */
+    openCombinedGif?: boolean;
+
+    constructor(data?: IProcessObjectCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.desiredSize = data["desiredSize"];
+            this.amountPerAxis = data["amountPerAxis"];
+            this.sourcePath = data["sourcePath"];
+            this.watermarkSourcePath = data["watermarkSourcePath"];
+            this.destinationPath = data["destinationPath"];
+            if (data["axisTypes"] && data["axisTypes"].constructor === Array) {
+                this.axisTypes = [] as any;
+                for (let item of data["axisTypes"])
+                    this.axisTypes!.push(item);
+            }
+            this.imageFormat = data["imageFormat"];
+            this.bezierEasingTypePerAxis = data["bezierEasingTypePerAxis"];
+            this.bezierEasingTypeCombined = data["bezierEasingTypeCombined"];
+            this.grayscale = data["grayscale"];
+            this.openCombinedGif = data["openCombinedGif"];
+        }
+    }
+
+    static fromJS(data: any): ProcessObjectCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcessObjectCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["desiredSize"] = this.desiredSize;
+        data["amountPerAxis"] = this.amountPerAxis;
+        data["sourcePath"] = this.sourcePath;
+        data["watermarkSourcePath"] = this.watermarkSourcePath;
+        data["destinationPath"] = this.destinationPath;
+        if (this.axisTypes && this.axisTypes.constructor === Array) {
+            data["axisTypes"] = [];
+            for (let item of this.axisTypes)
+                data["axisTypes"].push(item);
+        }
+        data["imageFormat"] = this.imageFormat;
+        data["bezierEasingTypePerAxis"] = this.bezierEasingTypePerAxis;
+        data["bezierEasingTypeCombined"] = this.bezierEasingTypeCombined;
+        data["grayscale"] = this.grayscale;
+        data["openCombinedGif"] = this.openCombinedGif;
+        return data; 
+    }
+}
+
+/** A command containing information needed for processing. */
+export interface IProcessObjectCommand {
+    /** Gets or sets the desired size of the processed images. */
+    desiredSize?: number | undefined;
+    /** Gets or sets the amount of images per axis. */
+    amountPerAxis?: number;
+    /** Gets or sets the source path. */
+    sourcePath?: string | undefined;
+    /** Gets or sets the source path of the watermark. */
+    watermarkSourcePath?: string | undefined;
+    /** Gets or sets the destination path. */
+    destinationPath?: string | undefined;
+    /** Gets the axis types to be considered. */
+    axisTypes?: AxisType[] | undefined;
+    /** Gets or sets the image format. */
+    imageFormat?: ImageFormat;
+    /** Gets or sets the Bézier easing type per axis used for the animated image. */
+    bezierEasingTypePerAxis?: BezierEasingType;
+    /** Gets or sets the Bézier easing type used for the combined animated image. */
+    bezierEasingTypeCombined?: BezierEasingType;
+    /** Gets or sets a value indicating whether the images should be converted to grayscale. */
+    grayscale?: boolean;
+    /** Gets or sets a value indicating whether the combined animated image should be opened after the processing. */
+    openCombinedGif?: boolean;
+}
+
+/** The different axis types of the coordinate system. */
+export enum AxisType {
+    X = 0, 
+    Y = 1, 
+    Z = 2, 
+}
+
+/** A type to describe the image format. */
+export enum ImageFormat {
+    Jpeg = 0, 
+    Png = 1, 
+}
+
+/** A type to describe the Bézier curve easing. */
+export enum BezierEasingType {
+    Linear = 0, 
+    EaseInCubic = 1, 
+    EaseOutCubic = 2, 
+    EaseInOutCubic = 3, 
+    EaseInQuart = 4, 
+    EaseOutQuart = 5, 
+    EaseInOutQuart = 6, 
 }
 
 export interface FileParameter {
