@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LayoutComponent } from './layout.component';
+import { LayoutComponent } from '../shared/modules/layout/layout.component';
 import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
@@ -25,4 +25,4 @@ const routes: Routes = [
     RouterModule
   ]
 })
-export class LayoutRoutingModule { }
+export class MainRoutingModule { }
