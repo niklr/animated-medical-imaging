@@ -3,8 +3,40 @@
     <img class="responsive-img" src="assets/images/ami_logo_combined.png" width="600" />
   </div>
 </div>
-<div class="divider"></div>
-<div class="section">
-  <a class="waves-effect waves-light btn" tabindex="2">button</a>
+<div class="custom-section">
+  <ul class="collapsible expandable custom-collapsibles">
+    <li class="active">
+      <div class="collapsible-header">
+        <span>Settings</span>
+        <i class="material-icons caret right">keyboard_arrow_right</i>
+      </div>
+      <div class="collapsible-body">
+        <app-process-object-settings></app-process-object-settings>
+      </div>
+    </li>
+    <li>
+      <div class="collapsible-header">
+        <span>Objects</span>
+        <i class="material-icons caret right">keyboard_arrow_right</i>
+      </div>
+      <div class="collapsible-body">
+        <div class="row custom-row">
+          <div class="col s12 m6 offset-m3">
+            <button class="btn waves-effect waves-light full-width custom-fas-btn">
+              <i class="fas fa-rocket"></i> PROCESS
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="active">
+      <div class="collapsible-header">
+        <span>Upload/Download</span>
+        <i class="material-icons caret right">keyboard_arrow_right</i>
+      </div>
+      <div class="collapsible-body">
+        <app-datatransfer></app-datatransfer>
+      </div>
+    </li>
+  </ul>
 </div>
-<app-datatransfer></app-datatransfer>

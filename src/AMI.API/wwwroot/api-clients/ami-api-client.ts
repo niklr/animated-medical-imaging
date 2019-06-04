@@ -134,7 +134,7 @@ export interface IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The status of the processing.
      */
-    process(id: string, command: ProcessObjectCommand): Observable<ObjectResult | null>;
+    process(id: string, command: ProcessObjectCommand): Observable<ProcessResult | null>;
 }
 
 @Injectable()
@@ -153,7 +153,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The status of the processing.
      */
-    process(id: string, command: ProcessObjectCommand): Observable<ObjectResult | null> {
+    process(id: string, command: ProcessObjectCommand): Observable<ProcessResult | null> {
         let url_ = this.baseUrl + "/objects/{id}/process";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -179,14 +179,14 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
                 try {
                     return this.processProcess(<any>response_);
                 } catch (e) {
-                    return <Observable<ObjectResult | null>><any>_observableThrow(e);
+                    return <Observable<ProcessResult | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ObjectResult | null>><any>_observableThrow(response_);
+                return <Observable<ProcessResult | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcess(response: HttpResponseBase): Observable<ObjectResult | null> {
+    protected processProcess(response: HttpResponseBase): Observable<ProcessResult | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -239,7 +239,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? ObjectResult.fromJS(resultData200) : <any>null;
+            result200 = resultData200 ? ProcessResult.fromJS(resultData200) : <any>null;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -247,7 +247,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ObjectResult | null>(<any>null);
+        return _observableOf<ProcessResult | null>(<any>null);
     }
 }
 
@@ -1013,22 +1013,22 @@ export interface IAppInfo {
     appVersion?: string | undefined;
 }
 
-/** A model representing an object result. */
-export class ObjectResult implements IObjectResult {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
-    /** Gets or sets the created date. */
-    createdDate?: Date;
-    /** Gets or sets the modified date. */
-    modifiedDate?: Date;
-    /** Gets or sets the original filename. */
-    originalFilename?: string | undefined;
-    /** Gets or sets the filesystem path. */
-    fsPath?: string | undefined;
-    /** Gets or sets the status. */
-    status?: ObjectStatus | undefined;
+/** A model containing information about the result of the processing. */
+export class ProcessResult implements IProcessResult {
+    /** Gets or sets the application version. */
+    version?: string | undefined;
+    /** Gets or sets the label count. */
+    labelCount?: number;
+    /** Gets or sets the position axis containers of the images. */
+    images?: PositionAxisContainerOfString[] | undefined;
+    /** Gets or sets the axis containers of the GIF images. */
+    gifs?: AxisContainerOfString[] | undefined;
+    /** Gets or sets the combined GIF. */
+    combinedGif?: string | undefined;
+    /** Gets or sets the JSON filename. */
+    jsonFilename?: string | undefined;
 
-    constructor(data?: IObjectResult) {
+    constructor(data?: IProcessResult) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1039,58 +1039,71 @@ export class ObjectResult implements IObjectResult {
 
     init(data?: any) {
         if (data) {
-            this.id = data["id"];
-            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
-            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
-            this.originalFilename = data["originalFilename"];
-            this.fsPath = data["fsPath"];
-            this.status = data["status"] ? ObjectStatus.fromJS(data["status"]) : <any>undefined;
+            this.version = data["version"];
+            this.labelCount = data["labelCount"];
+            if (data["images"] && data["images"].constructor === Array) {
+                this.images = [] as any;
+                for (let item of data["images"])
+                    this.images!.push(PositionAxisContainerOfString.fromJS(item));
+            }
+            if (data["gifs"] && data["gifs"].constructor === Array) {
+                this.gifs = [] as any;
+                for (let item of data["gifs"])
+                    this.gifs!.push(AxisContainerOfString.fromJS(item));
+            }
+            this.combinedGif = data["combinedGif"];
+            this.jsonFilename = data["jsonFilename"];
         }
     }
 
-    static fromJS(data: any): ObjectResult {
+    static fromJS(data: any): ProcessResult {
         data = typeof data === 'object' ? data : {};
-        let result = new ObjectResult();
+        let result = new ProcessResult();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
-        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
-        data["originalFilename"] = this.originalFilename;
-        data["fsPath"] = this.fsPath;
-        data["status"] = this.status ? this.status.toJSON() : <any>undefined;
+        data["version"] = this.version;
+        data["labelCount"] = this.labelCount;
+        if (this.images && this.images.constructor === Array) {
+            data["images"] = [];
+            for (let item of this.images)
+                data["images"].push(item.toJSON());
+        }
+        if (this.gifs && this.gifs.constructor === Array) {
+            data["gifs"] = [];
+            for (let item of this.gifs)
+                data["gifs"].push(item.toJSON());
+        }
+        data["combinedGif"] = this.combinedGif;
+        data["jsonFilename"] = this.jsonFilename;
         return data; 
     }
 }
 
-/** A model representing an object result. */
-export interface IObjectResult {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
-    /** Gets or sets the created date. */
-    createdDate?: Date;
-    /** Gets or sets the modified date. */
-    modifiedDate?: Date;
-    /** Gets or sets the original filename. */
-    originalFilename?: string | undefined;
-    /** Gets or sets the filesystem path. */
-    fsPath?: string | undefined;
-    /** Gets or sets the status. */
-    status?: ObjectStatus | undefined;
+/** A model containing information about the result of the processing. */
+export interface IProcessResult {
+    /** Gets or sets the application version. */
+    version?: string | undefined;
+    /** Gets or sets the label count. */
+    labelCount?: number;
+    /** Gets or sets the position axis containers of the images. */
+    images?: PositionAxisContainerOfString[] | undefined;
+    /** Gets or sets the axis containers of the GIF images. */
+    gifs?: AxisContainerOfString[] | undefined;
+    /** Gets or sets the combined GIF. */
+    combinedGif?: string | undefined;
+    /** Gets or sets the JSON filename. */
+    jsonFilename?: string | undefined;
 }
 
-/** A model representing an object status. */
-export class ObjectStatus implements IObjectStatus {
-    /** Gets or sets the name. */
-    name?: string | undefined;
-    /** Gets or sets the progress. */
-    progress?: number;
+export class AxisContainerOfString implements IAxisContainerOfString {
+    axisType?: AxisType;
+    entity?: string | undefined;
 
-    constructor(data?: IObjectStatus) {
+    constructor(data?: IAxisContainerOfString) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1101,32 +1114,69 @@ export class ObjectStatus implements IObjectStatus {
 
     init(data?: any) {
         if (data) {
-            this.name = data["name"];
-            this.progress = data["progress"];
+            this.axisType = data["axisType"];
+            this.entity = data["entity"];
         }
     }
 
-    static fromJS(data: any): ObjectStatus {
+    static fromJS(data: any): AxisContainerOfString {
         data = typeof data === 'object' ? data : {};
-        let result = new ObjectStatus();
+        let result = new AxisContainerOfString();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["progress"] = this.progress;
+        data["axisType"] = this.axisType;
+        data["entity"] = this.entity;
         return data; 
     }
 }
 
-/** A model representing an object status. */
-export interface IObjectStatus {
-    /** Gets or sets the name. */
-    name?: string | undefined;
-    /** Gets or sets the progress. */
-    progress?: number;
+export interface IAxisContainerOfString {
+    axisType?: AxisType;
+    entity?: string | undefined;
+}
+
+export class PositionAxisContainerOfString extends AxisContainerOfString implements IPositionAxisContainerOfString {
+    position?: number;
+
+    constructor(data?: IPositionAxisContainerOfString) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.position = data["position"];
+        }
+    }
+
+    static fromJS(data: any): PositionAxisContainerOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new PositionAxisContainerOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["position"] = this.position;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPositionAxisContainerOfString extends IAxisContainerOfString {
+    position?: number;
+}
+
+/** The different axis types of the coordinate system. */
+export enum AxisType {
+    X = 0, 
+    Y = 1, 
+    Z = 2, 
 }
 
 /** A command containing information needed for processing. */
@@ -1235,13 +1285,6 @@ export interface IProcessObjectCommand {
     grayscale?: boolean;
     /** Gets or sets a value indicating whether the combined animated image should be opened after the processing. */
     openCombinedGif?: boolean;
-}
-
-/** The different axis types of the coordinate system. */
-export enum AxisType {
-    X = 0, 
-    Y = 1, 
-    Z = 2, 
 }
 
 /** A type to describe the image format. */

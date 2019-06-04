@@ -38,7 +38,7 @@ namespace AMI.Core.Entities.Models
         /// <summary>
         /// Gets or sets the filesystem path.
         /// </summary>
-        public string FsPath { get; set; }
+        public string FilesystemPath { get; set; }
 
         /// <summary>
         /// Gets or sets the status.

@@ -1,0 +1,13 @@
+.collapsible.custom-collapsibles .collapsible-header {
+  padding: 24px;
+  justify-content: space-between;
+  transition: border 0s linear .3s;
+}
+
+.custom-collapsibles .horizontal-label {
+  margin-right: 20px;
+}
+
+.custom-collapsibles .lever {
+  margin-left: 0 !important;
+}

@@ -27,3 +27,24 @@
 .text-ellipsis {
   @include text-ellipsis($width: 100%);
 }
+
+.custom-selectable {
+  cursor: pointer;
+}
+
+.custom-section {
+  padding-bottom: 1rem;
+}
+
+.custom-row {
+  margin-bottom: 0px;
+}
+
+.custom-fas-btn > i {
+  font-size: inherit;
+}
+
+.custom-input-field {
+  margin-top: 0 !important;
+}
+

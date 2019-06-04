@@ -20,7 +20,7 @@ namespace AMI.API.Controllers
         /// <param name="command">The command to process an existing object.</param>
         /// <returns>The status of the processing.</returns>
         [HttpPut("{id}/process")]
-        [ProducesResponseType(typeof(Models.ObjectResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Models.ProcessResult), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ProcessAsync([FromBody] ProcessObjectCommand command)
         {
             return Ok(null);

@@ -252,7 +252,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ObjectResult"
+                      "$ref": "#/components/schemas/ProcessResult"
                     }
                   ]
                 }
@@ -1089,63 +1089,91 @@
           }
         }
       },
-      "ObjectResult": {
+      "ProcessResult": {
         "type": "object",
-        "description": "A model representing an object result.",
+        "description": "A model containing information about the result of the processing.",
         "additionalProperties": false,
         "properties": {
-          "id": {
+          "version": {
             "type": "string",
-            "description": "Gets or sets the identifier.",
+            "description": "Gets or sets the application version.",
             "nullable": true
           },
-          "createdDate": {
-            "type": "string",
-            "description": "Gets or sets the created date.",
-            "format": "date-time"
+          "labelCount": {
+            "type": "integer",
+            "description": "Gets or sets the label count.",
+            "format": "int32"
           },
-          "modifiedDate": {
-            "type": "string",
-            "description": "Gets or sets the modified date.",
-            "format": "date-time"
-          },
-          "originalFilename": {
-            "type": "string",
-            "description": "Gets or sets the original filename.",
-            "nullable": true
-          },
-          "fsPath": {
-            "type": "string",
-            "description": "Gets or sets the filesystem path.",
-            "nullable": true
-          },
-          "status": {
-            "description": "Gets or sets the status.",
+          "images": {
+            "type": "array",
+            "description": "Gets or sets the position axis containers of the images.",
             "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ObjectStatus"
-              }
-            ]
+            "items": {
+              "$ref": "#/components/schemas/PositionAxisContainerOfString"
+            }
+          },
+          "gifs": {
+            "type": "array",
+            "description": "Gets or sets the axis containers of the GIF images.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AxisContainerOfString"
+            }
+          },
+          "combinedGif": {
+            "type": "string",
+            "description": "Gets or sets the combined GIF.",
+            "nullable": true
+          },
+          "jsonFilename": {
+            "type": "string",
+            "description": "Gets or sets the JSON filename.",
+            "nullable": true
           }
         }
       },
-      "ObjectStatus": {
+      "PositionAxisContainerOfString": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AxisContainerOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "position": {
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      },
+      "AxisContainerOfString": {
         "type": "object",
-        "description": "A model representing an object status.",
         "additionalProperties": false,
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "Gets or sets the name.",
-            "nullable": true
+          "axisType": {
+            "$ref": "#/components/schemas/AxisType"
           },
-          "progress": {
-            "type": "integer",
-            "description": "Gets or sets the progress.",
-            "format": "int32"
+          "entity": {
+            "type": "string",
+            "nullable": true
           }
         }
+      },
+      "AxisType": {
+        "type": "integer",
+        "description": "The different axis types of the coordinate system.",
+        "x-enumNames": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
       },
       "ProcessObjectCommand": {
         "type": "object",
@@ -1217,20 +1245,6 @@
             "description": "Gets or sets a value indicating whether the combined animated image should be opened after the processing."
           }
         }
-      },
-      "AxisType": {
-        "type": "integer",
-        "description": "The different axis types of the coordinate system.",
-        "x-enumNames": [
-          "X",
-          "Y",
-          "Z"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
       },
       "ImageFormat": {
         "type": "integer",
