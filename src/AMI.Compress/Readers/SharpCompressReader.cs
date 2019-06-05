@@ -29,19 +29,7 @@ namespace AMI.Compress.Readers
         {
         }
 
-        /// <summary>
-        /// Reads the specified compressed file asynchronous.
-        /// </summary>
-        /// <param name="path">The location of the compressed file.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// A list of compressed entries.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// path
-        /// or
-        /// ct
-        /// </exception>
+        /// <inheritdoc/>
         protected override async Task<IList<CompressedEntry>> AbstractReadAsync(string path, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(path))

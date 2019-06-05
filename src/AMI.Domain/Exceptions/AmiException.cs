@@ -17,9 +17,7 @@ namespace AMI.Domain.Exceptions
         {
         }
 
-        /// <summary>
-        /// Gets or sets the source of the exception.
-        /// </summary>
+        /// <inheritdoc/>
         public override string Source
         {
             get { return "AMI"; }

@@ -21,12 +21,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         {
         }
 
-        /// <summary>
-        /// Handles the command request called by the base class.
-        /// </summary>
-        /// <param name="request">The command request.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The result of the command request.</returns>
+        /// <inheritdoc/>
         protected override Task<ObjectResult> ProtectedHandle(CreateObjectCommand request, CancellationToken cancellationToken)
         {
             return null;

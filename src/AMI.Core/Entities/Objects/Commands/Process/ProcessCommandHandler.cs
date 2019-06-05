@@ -28,12 +28,7 @@ namespace AMI.Core.Entities.Objects.Commands.Process
             this.imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
         }
 
-        /// <summary>
-        /// Handles the command request called by the base class.
-        /// </summary>
-        /// <param name="request">The command request.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The result of the command request.</returns>
+        /// <inheritdoc/>
         protected override Task<ProcessResult> ProtectedHandle(ProcessObjectCommand request, CancellationToken cancellationToken)
         {
             return imageService.ProcessAsync(request, cancellationToken);

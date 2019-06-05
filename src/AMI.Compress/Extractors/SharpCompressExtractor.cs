@@ -31,22 +31,7 @@ namespace AMI.Compress.Extractors
         {
         }
 
-        /// <summary>
-        /// Extracts the compressed file asynchronous.
-        /// </summary>
-        /// <param name="sourcePath">The source path.</param>
-        /// <param name="destinationPath">The destination path.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// A list of compressed entries.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// sourcePath
-        /// or
-        /// destinationPath
-        /// or
-        /// ct
-        /// </exception>
+        /// <inheritdoc/>
         public override async Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(sourcePath))

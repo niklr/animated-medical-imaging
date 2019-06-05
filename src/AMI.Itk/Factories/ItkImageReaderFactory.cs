@@ -19,10 +19,7 @@ namespace AMI.Itk.Factories
         {
         }
 
-        /// <summary>
-        /// Creates a new instance of the ITK image reader.
-        /// </summary>
-        /// <returns>The ITK image reader.</returns>
+        /// <inheritdoc/>
         public override IItkImageReader Create()
         {
             return new ItkImageReader();

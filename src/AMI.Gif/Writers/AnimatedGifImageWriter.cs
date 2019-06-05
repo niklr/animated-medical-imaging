@@ -23,31 +23,7 @@ namespace AMI.Gif.Writers
         {
         }
 
-        /// <summary>
-        /// Writes the GIF images asynchronous.
-        /// </summary>
-        /// <param name="destinationPath">The destination path.</param>
-        /// <param name="destinationFilename">The destination filename.</param>
-        /// <param name="sourcePath">The source path.</param>
-        /// <param name="sourceFilenames">The source filenames.</param>
-        /// <param name="mapper">The position mapper.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// A <see cref="Task" /> representing the asynchronous operation.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// destinationPath
-        /// or
-        /// destinationFilename
-        /// or
-        /// sourcePath
-        /// or
-        /// sourceFilenames
-        /// or
-        /// mapper
-        /// or
-        /// ct
-        /// </exception>
+        /// <inheritdoc/>
         protected override async Task AbstractWriteAsync(
             string destinationPath,
             string destinationFilename,

@@ -26,11 +26,7 @@ namespace AMI.API.Filters
             this.handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
-        /// <summary>
-        /// OnException
-        /// </summary>
-        /// <param name="context">ExceptionContext</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public override async Task OnExceptionAsync(ExceptionContext context)
         {
             await handler.HandleException(context.HttpContext, context.Exception);
