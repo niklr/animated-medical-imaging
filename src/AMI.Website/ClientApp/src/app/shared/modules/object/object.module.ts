@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProcessResultComponent } from './process-result/process-result.component';
 import { ProcessSettingsComponent } from './process-settings/process-settings.component';
 
 @NgModule({
@@ -9,12 +10,14 @@ import { ProcessSettingsComponent } from './process-settings/process-settings.co
     FormsModule
   ],
   declarations: [
+    ProcessResultComponent,
     ProcessSettingsComponent
   ],
   providers: [
 
   ],
   exports: [
+    ProcessResultComponent,
     ProcessSettingsComponent
   ]
 })

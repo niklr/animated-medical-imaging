@@ -18,11 +18,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private initCollapsible(): void {
-    var options = {};
-    var elem = document.querySelector('.collapsible.expandable');
-    var instance = M.Collapsible.init(elem, {
+    var options = {
       accordion: false
-    });
+    };
+    var elem = document.querySelector('.collapsible.expandable');
+    var instance = M.Collapsible.init(elem, options);
   }
 
 }

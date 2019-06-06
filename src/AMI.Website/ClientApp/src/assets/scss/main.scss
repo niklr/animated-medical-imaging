@@ -2,8 +2,9 @@
 @import "~materialize-css/sass/materialize";
 
 // core components
+@import "core/variables";
 @import "core/mixins";
 @import "core/global";
 @import "core/banners";
+@import "core/collapsible";
 @import "core/footer";
-@import "core/collapsibles";
