@@ -3,17 +3,12 @@
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A model containing information about the result of the processing.
+    /// A model containing information about the result of the image processing.
     /// </summary>
-    public class ProcessResult
+    public class ProcessResultModel : ResultModel
     {
-        private IReadOnlyList<PositionAxisContainer<string>> images = new List<PositionAxisContainer<string>>();
-        private IReadOnlyList<AxisContainer<string>> gifs = new List<AxisContainer<string>>();
-
-        /// <summary>
-        /// Gets or sets the application version.
-        /// </summary>
-        public string Version { get; set; }
+        private IReadOnlyList<PositionAxisContainerModel<string>> images = new List<PositionAxisContainerModel<string>>();
+        private IReadOnlyList<AxisContainerModel<string>> gifs = new List<AxisContainerModel<string>>();
 
         /// <summary>
         /// Gets or sets the label count.
@@ -21,9 +16,9 @@ namespace AMI.Core.Entities.Models
         public int LabelCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the position axis containers of the images.
+        /// Gets or sets the images.
         /// </summary>
-        public IReadOnlyList<PositionAxisContainer<string>> Images
+        public IReadOnlyList<PositionAxisContainerModel<string>> Images
         {
             get
             {
@@ -42,7 +37,7 @@ namespace AMI.Core.Entities.Models
         /// <summary>
         /// Gets or sets the axis containers of the GIF images.
         /// </summary>
-        public IReadOnlyList<AxisContainer<string>> Gifs
+        public IReadOnlyList<AxisContainerModel<string>> Gifs
         {
             get
             {
@@ -62,10 +57,5 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the combined GIF.
         /// </summary>
         public string CombinedGif { get; set; }
-
-        /// <summary>
-        /// Gets or sets the JSON filename.
-        /// </summary>
-        public string JsonFilename { get; set; }
     }
 }

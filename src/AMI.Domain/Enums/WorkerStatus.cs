@@ -8,26 +8,31 @@
         /// <summary>
         /// The worker has been initialized.
         /// </summary>
-        Initialized,
+        Initialized = 0,
+
         /// <summary>
         /// The worker is currently processing a task.
         /// </summary>
-        Processing,
+        Processing = 1,
+
         /// <summary>
         /// The worker is currently idling.
         /// </summary>
-        Idling,
+        Idling = 2,
+
         /// <summary>
         /// The worker is currently retrying a failed task.
         /// </summary>
-        Retrying,
+        Retrying = 3,
+
         /// <summary>
         /// The worker exited with an unexpected exception.
         /// </summary>
-        Exception,
+        Exception = 4,
+
         /// <summary>
         /// The worker has been terminated.
         /// </summary>
-        Terminated
+        Terminated = 5
     }
 }

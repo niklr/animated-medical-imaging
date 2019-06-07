@@ -30,6 +30,6 @@ namespace AMI.Core.Services
         /// or
         /// Empty destination path.
         /// </exception>
-        Task<ProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct);
+        Task<ProcessResultModel> ProcessAsync(ProcessObjectCommand command, CancellationToken ct);
     }
 }

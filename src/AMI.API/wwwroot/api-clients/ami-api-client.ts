@@ -74,42 +74,42 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status === 200) {
@@ -132,9 +132,9 @@ export interface IObjectsAmiApiClient {
     /**
      * Processes an existing object.
      * @param command The command to process an existing object.
-     * @return The status of the processing.
+     * @return The created task.
      */
-    process(id: string, command: ProcessObjectCommand): Observable<ProcessResult | null>;
+    process(id: string, command: ProcessObjectCommand): Observable<TaskModel | null>;
 }
 
 @Injectable()
@@ -151,9 +151,9 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     /**
      * Processes an existing object.
      * @param command The command to process an existing object.
-     * @return The status of the processing.
+     * @return The created task.
      */
-    process(id: string, command: ProcessObjectCommand): Observable<ProcessResult | null> {
+    process(id: string, command: ProcessObjectCommand): Observable<TaskModel | null> {
         let url_ = this.baseUrl + "/objects/{id}/process";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -179,14 +179,14 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
                 try {
                     return this.processProcess(<any>response_);
                 } catch (e) {
-                    return <Observable<ProcessResult | null>><any>_observableThrow(e);
+                    return <Observable<TaskModel | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ProcessResult | null>><any>_observableThrow(response_);
+                return <Observable<TaskModel | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcess(response: HttpResponseBase): Observable<ProcessResult | null> {
+    protected processProcess(response: HttpResponseBase): Observable<TaskModel | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -197,49 +197,49 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? ProcessResult.fromJS(resultData200) : <any>null;
+            result200 = resultData200 ? TaskModel.fromJS(resultData200) : <any>null;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -247,7 +247,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ProcessResult | null>(<any>null);
+        return _observableOf<TaskModel | null>(<any>null);
     }
 }
 
@@ -369,42 +369,42 @@ export class UploadAmiApiClient implements IUploadAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -494,42 +494,42 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -584,42 +584,42 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -673,42 +673,42 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -767,42 +767,42 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -856,42 +856,42 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result400: any = null;
             let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = resultData400 ? ErrorResult.fromJS(resultData400) : <any>null;
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result400);
             }));
         } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = resultData401 ? ErrorResult.fromJS(resultData401) : <any>null;
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
             }));
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result403: any = null;
             let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = resultData403 ? ErrorResult.fromJS(resultData403) : <any>null;
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result403);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = resultData404 ? ErrorResult.fromJS(resultData404) : <any>null;
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = resultData409 ? ErrorResult.fromJS(resultData409) : <any>null;
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = resultData500 ? ErrorResult.fromJS(resultData500) : <any>null;
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -903,8 +903,8 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
     }
 }
 
-/** A model representing an error result. */
-export class ErrorResult implements IErrorResult {
+/** A model representing an error. */
+export class ErrorModel implements IErrorModel {
     /** Gets or sets the error. */
     error?: string | undefined;
     /** Gets or sets the validation errors. */
@@ -912,7 +912,7 @@ export class ErrorResult implements IErrorResult {
     /** Gets or sets the stack trace. */
     stackTrace?: string | undefined;
 
-    constructor(data?: IErrorResult) {
+    constructor(data?: IErrorModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -935,9 +935,9 @@ export class ErrorResult implements IErrorResult {
         }
     }
 
-    static fromJS(data: any): ErrorResult {
+    static fromJS(data: any): ErrorModel {
         data = typeof data === 'object' ? data : {};
-        let result = new ErrorResult();
+        let result = new ErrorModel();
         result.init(data);
         return result;
     }
@@ -957,8 +957,8 @@ export class ErrorResult implements IErrorResult {
     }
 }
 
-/** A model representing an error result. */
-export interface IErrorResult {
+/** A model representing an error. */
+export interface IErrorModel {
     /** Gets or sets the error. */
     error?: string | undefined;
     /** Gets or sets the validation errors. */
@@ -1013,170 +1013,96 @@ export interface IAppInfo {
     appVersion?: string | undefined;
 }
 
-/** A model containing information about the result of the processing. */
-export class ProcessResult implements IProcessResult {
-    /** Gets or sets the application version. */
-    version?: string | undefined;
-    /** Gets or sets the label count. */
-    labelCount?: number;
-    /** Gets or sets the position axis containers of the images. */
-    images?: PositionAxisContainerOfString[] | undefined;
-    /** Gets or sets the axis containers of the GIF images. */
-    gifs?: AxisContainerOfString[] | undefined;
-    /** Gets or sets the combined GIF. */
-    combinedGif?: string | undefined;
-    /** Gets or sets the JSON filename. */
-    jsonFilename?: string | undefined;
-
-    constructor(data?: IProcessResult) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.version = data["version"];
-            this.labelCount = data["labelCount"];
-            if (data["images"] && data["images"].constructor === Array) {
-                this.images = [] as any;
-                for (let item of data["images"])
-                    this.images!.push(PositionAxisContainerOfString.fromJS(item));
-            }
-            if (data["gifs"] && data["gifs"].constructor === Array) {
-                this.gifs = [] as any;
-                for (let item of data["gifs"])
-                    this.gifs!.push(AxisContainerOfString.fromJS(item));
-            }
-            this.combinedGif = data["combinedGif"];
-            this.jsonFilename = data["jsonFilename"];
-        }
-    }
-
-    static fromJS(data: any): ProcessResult {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProcessResult();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["version"] = this.version;
-        data["labelCount"] = this.labelCount;
-        if (this.images && this.images.constructor === Array) {
-            data["images"] = [];
-            for (let item of this.images)
-                data["images"].push(item.toJSON());
-        }
-        if (this.gifs && this.gifs.constructor === Array) {
-            data["gifs"] = [];
-            for (let item of this.gifs)
-                data["gifs"].push(item.toJSON());
-        }
-        data["combinedGif"] = this.combinedGif;
-        data["jsonFilename"] = this.jsonFilename;
-        return data; 
-    }
-}
-
-/** A model containing information about the result of the processing. */
-export interface IProcessResult {
-    /** Gets or sets the application version. */
-    version?: string | undefined;
-    /** Gets or sets the label count. */
-    labelCount?: number;
-    /** Gets or sets the position axis containers of the images. */
-    images?: PositionAxisContainerOfString[] | undefined;
-    /** Gets or sets the axis containers of the GIF images. */
-    gifs?: AxisContainerOfString[] | undefined;
-    /** Gets or sets the combined GIF. */
-    combinedGif?: string | undefined;
-    /** Gets or sets the JSON filename. */
-    jsonFilename?: string | undefined;
-}
-
-export class AxisContainerOfString implements IAxisContainerOfString {
-    axisType?: AxisType;
-    entity?: string | undefined;
-
-    constructor(data?: IAxisContainerOfString) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.axisType = data["axisType"];
-            this.entity = data["entity"];
-        }
-    }
-
-    static fromJS(data: any): AxisContainerOfString {
-        data = typeof data === 'object' ? data : {};
-        let result = new AxisContainerOfString();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["axisType"] = this.axisType;
-        data["entity"] = this.entity;
-        return data; 
-    }
-}
-
-export interface IAxisContainerOfString {
-    axisType?: AxisType;
-    entity?: string | undefined;
-}
-
-export class PositionAxisContainerOfString extends AxisContainerOfString implements IPositionAxisContainerOfString {
+/** A model containing information about the task. */
+export class TaskModel implements ITaskModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the status. */
+    status?: TaskStatus;
+    /** Gets or sets the position in queue. */
     position?: number;
+    /** Gets or sets the progress (0-100). */
+    progress?: number;
+    /** Gets or sets the identifier of the object. */
+    objectId?: string | undefined;
+    /** Gets or sets the identifier of the result. */
+    resultId?: string | undefined;
 
-    constructor(data?: IPositionAxisContainerOfString) {
-        super(data);
+    constructor(data?: ITaskModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
 
     init(data?: any) {
-        super.init(data);
         if (data) {
+            this.id = data["id"];
+            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
+            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
+            this.status = data["status"];
             this.position = data["position"];
+            this.progress = data["progress"];
+            this.objectId = data["objectId"];
+            this.resultId = data["resultId"];
         }
     }
 
-    static fromJS(data: any): PositionAxisContainerOfString {
+    static fromJS(data: any): TaskModel {
         data = typeof data === 'object' ? data : {};
-        let result = new PositionAxisContainerOfString();
+        let result = new TaskModel();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["status"] = this.status;
         data["position"] = this.position;
-        super.toJSON(data);
+        data["progress"] = this.progress;
+        data["objectId"] = this.objectId;
+        data["resultId"] = this.resultId;
         return data; 
     }
 }
 
-export interface IPositionAxisContainerOfString extends IAxisContainerOfString {
+/** A model containing information about the task. */
+export interface ITaskModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the status. */
+    status?: TaskStatus;
+    /** Gets or sets the position in queue. */
     position?: number;
+    /** Gets or sets the progress (0-100). */
+    progress?: number;
+    /** Gets or sets the identifier of the object. */
+    objectId?: string | undefined;
+    /** Gets or sets the identifier of the result. */
+    resultId?: string | undefined;
 }
 
-/** The different axis types of the coordinate system. */
-export enum AxisType {
-    X = 0, 
-    Y = 1, 
-    Z = 2, 
+/** The different states of a task. */
+export enum TaskStatus {
+    Created = 0, 
+    Queued = 1, 
+    Processing = 2, 
+    Canceled = 3, 
+    Failed = 4, 
+    Finished = 5, 
 }
 
 /** A command containing information needed for processing. */
@@ -1287,21 +1213,30 @@ export interface IProcessObjectCommand {
     openCombinedGif?: boolean;
 }
 
+/** The different axis types of the coordinate system. */
+export enum AxisType {
+    X = 0, 
+    Y = 1, 
+    Z = 2, 
+}
+
 /** A type to describe the image format. */
 export enum ImageFormat {
-    Jpeg = 0, 
-    Png = 1, 
+    None = 0, 
+    Jpeg = 1, 
+    Png = 2, 
 }
 
 /** A type to describe the Bézier curve easing. */
 export enum BezierEasingType {
-    Linear = 0, 
-    EaseInCubic = 1, 
-    EaseOutCubic = 2, 
-    EaseInOutCubic = 3, 
-    EaseInQuart = 4, 
-    EaseOutQuart = 5, 
-    EaseInOutQuart = 6, 
+    None = 0, 
+    Linear = 1, 
+    EaseInCubic = 2, 
+    EaseOutCubic = 3, 
+    EaseInOutCubic = 4, 
+    EaseInQuart = 5, 
+    EaseOutQuart = 6, 
+    EaseInOutQuart = 7, 
 }
 
 export interface FileParameter {

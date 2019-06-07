@@ -27,9 +27,9 @@ namespace AMI.Core.Writers
         /// or
         /// The GIF could not be written.
         /// </exception>
-        Task<IReadOnlyList<AxisContainer<string>>> WriteAsync(
+        Task<IReadOnlyList<AxisContainerModel<string>>> WriteAsync(
             string destinationPath,
-            IReadOnlyList<PositionAxisContainer<string>> images,
+            IReadOnlyList<PositionAxisContainerModel<string>> images,
             BezierEasingType bezierEasingType,
             CancellationToken ct);
 
@@ -51,7 +51,7 @@ namespace AMI.Core.Writers
         /// </exception>
         Task<string> WriteAsync(
             string destinationPath,
-            IReadOnlyList<PositionAxisContainer<string>> images,
+            IReadOnlyList<PositionAxisContainerModel<string>> images,
             string name,
             BezierEasingType bezierEasingType,
             CancellationToken ct);

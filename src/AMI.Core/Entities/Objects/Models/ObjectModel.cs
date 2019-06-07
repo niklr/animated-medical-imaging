@@ -3,16 +3,15 @@
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A model representing an object result.
+    /// A model representing an object.
     /// </summary>
-    public class ObjectResult
+    public class ObjectModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectResult"/> class.
+        /// Initializes a new instance of the <see cref="ObjectModel"/> class.
         /// </summary>
-        public ObjectResult()
+        public ObjectModel()
         {
-            Status = new ObjectStatus();
         }
 
         /// <summary>
@@ -26,11 +25,6 @@ namespace AMI.Core.Entities.Models
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the modified date.
-        /// </summary>
-        public DateTime ModifiedDate { get; set; }
-
-        /// <summary>
         /// Gets or sets the original filename.
         /// </summary>
         public string OriginalFilename { get; set; }
@@ -39,10 +33,5 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the filesystem path.
         /// </summary>
         public string FilesystemPath { get; set; }
-
-        /// <summary>
-        /// Gets or sets the status.
-        /// </summary>
-        public ObjectStatus Status { get; set; }
     }
 }

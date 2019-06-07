@@ -36,6 +36,6 @@ namespace AMI.Core.Extractors
         /// or
         /// Bitmap could not be centered.
         /// </exception>
-        Task<ImageProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct);
+        Task<ProcessResultModel> ProcessAsync(ProcessObjectCommand command, CancellationToken ct);
     }
 }

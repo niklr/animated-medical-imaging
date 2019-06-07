@@ -6,38 +6,43 @@
     public enum BezierEasingType
     {
         /// <summary>
+        /// The default type.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// The linear Bézier curve type.
         /// </summary>
-        Linear,
+        Linear = 1,
 
         /// <summary>
         /// The ease-in cubic Bézier curve type.
         /// </summary>
-        EaseInCubic,
+        EaseInCubic = 2,
 
         /// <summary>
         /// The ease-out cubic Bézier curve type.
         /// </summary>
-        EaseOutCubic,
+        EaseOutCubic = 3,
 
         /// <summary>
         /// The ease-in-out cubic Bézier curve type.
         /// </summary>
-        EaseInOutCubic,
+        EaseInOutCubic = 4,
 
         /// <summary>
         /// The ease-in quartic Bézier curve type.
         /// </summary>
-        EaseInQuart,
+        EaseInQuart = 5,
 
         /// <summary>
         /// The ease-out quartic Bézier curve type.
         /// </summary>
-        EaseOutQuart,
+        EaseOutQuart = 6,
 
         /// <summary>
         /// The ease-in-out quartic Bézier curve type.
         /// </summary>
-        EaseInOutQuart
+        EaseInOutQuart = 7
     }
 }

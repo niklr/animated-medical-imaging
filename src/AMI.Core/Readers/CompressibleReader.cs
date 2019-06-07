@@ -47,7 +47,7 @@ namespace AMI.Core.Readers
         /// or
         /// The compressed file could not be read.
         /// </exception>
-        public Task<IList<CompressedEntry>> ReadAsync(string path, CancellationToken ct)
+        public Task<IList<CompressedEntryModel>> ReadAsync(string path, CancellationToken ct)
         {
             try
             {
@@ -81,6 +81,6 @@ namespace AMI.Core.Readers
         /// or
         /// ct
         /// </exception>
-        protected abstract Task<IList<CompressedEntry>> AbstractReadAsync(string path, CancellationToken ct);
+        protected abstract Task<IList<CompressedEntryModel>> AbstractReadAsync(string path, CancellationToken ct);
     }
 }

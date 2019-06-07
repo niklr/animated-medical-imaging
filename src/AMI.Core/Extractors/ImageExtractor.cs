@@ -46,7 +46,10 @@ namespace AMI.Core.Extractors
         /// or
         /// readerFactory
         /// </exception>
-        public ImageExtractor(ILoggerFactory loggerFactory, IFileSystemStrategy fileSystemStrategy, IImageReaderFactory<T1, T2> readerFactory)
+        public ImageExtractor(
+            ILoggerFactory loggerFactory,
+            IFileSystemStrategy fileSystemStrategy,
+            IImageReaderFactory<T1, T2> readerFactory)
         {
             logger = loggerFactory?.CreateLogger<ImageExtractor<T1, T2>>();
             if (logger == null)
@@ -91,7 +94,7 @@ namespace AMI.Core.Extractors
         /// or
         /// Bitmap could not be centered.
         /// </exception>
-        public async Task<ImageProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
+        public async Task<ProcessResultModel> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
         {
             if (command == null)
             {
@@ -103,7 +106,7 @@ namespace AMI.Core.Extractors
                 throw new ArgumentNullException(nameof(ct));
             }
 
-            var result = new ImageProcessResult();
+            var result = new ProcessResultModel();
             var imageFormat = GetImageFormat(command.ImageFormat);
             var imageExtension = imageFormat.FileExtensionFromEncoder();
             if (string.IsNullOrWhiteSpace(imageExtension))
@@ -129,7 +132,7 @@ namespace AMI.Core.Extractors
 
             PreProcess(reader, imageFormat, command.AmountPerAxis, command.DesiredSize);
 
-            result.LabelCount = reader.GetLabelCount();
+            result.LabelCount = Convert.ToInt32(reader.GetLabelCount());
 
             ISet<AxisType> axisTypes = new HashSet<AxisType>(command.AxisTypes);
 
@@ -151,7 +154,7 @@ namespace AMI.Core.Extractors
                 watermark = new BitmapWrapper(watermarkBitmap);
             }
 
-            var images = new List<PositionAxisContainer<string>>();
+            var images = new List<PositionAxisContainerModel<string>>();
 
             foreach (AxisType axisType in axisTypes)
             {
@@ -179,7 +182,7 @@ namespace AMI.Core.Extractors
                         }
 
                         fs.File.WriteAllBytes(fs.Path.Combine(command.DestinationPath, filename), bitmap.ToByteArray(imageFormat));
-                        images.Add(new PositionAxisContainer<string>(Convert.ToUInt32(i), axisType, filename));
+                        images.Add(new PositionAxisContainerModel<string>(Convert.ToUInt32(i), axisType, filename));
                     }
                 }
             }
@@ -199,7 +202,7 @@ namespace AMI.Core.Extractors
             if (amount > 1)
             {
                 // calculate hashes of images for the defined amount for each axis
-                IList<PositionAxisContainer<string>> hashes = new List<PositionAxisContainer<string>>();
+                IList<PositionAxisContainerModel<string>> hashes = new List<PositionAxisContainerModel<string>>();
                 IDictionary<AxisType, uint[]> newMap = new Dictionary<AxisType, uint[]>();
 
                 IAxisPositionMapper mapper = reader.Mapper;
@@ -222,7 +225,7 @@ namespace AMI.Core.Extractors
                             if (bitmap != null)
                             {
                                 string hash = Cryptography.CalculateSHA1Hash(bitmap.ToByteArray(imageFormat));
-                                hashes.Add(new PositionAxisContainer<string>(i, axisType, hash));
+                                hashes.Add(new PositionAxisContainerModel<string>(i, axisType, hash));
                             }
                         }
                     }

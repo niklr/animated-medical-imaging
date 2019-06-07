@@ -19,7 +19,10 @@ namespace AMI.Itk.Extractors
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         /// <param name="readerFactory">The image reader factory.</param>
-        public ItkImageExtractor(ILoggerFactory loggerFactory, IFileSystemStrategy fileSystemStrategy, IItkImageReaderFactory readerFactory)
+        public ItkImageExtractor(
+            ILoggerFactory loggerFactory,
+            IFileSystemStrategy fileSystemStrategy,
+            IItkImageReaderFactory readerFactory)
             : base(loggerFactory, fileSystemStrategy, readerFactory)
         {
         }

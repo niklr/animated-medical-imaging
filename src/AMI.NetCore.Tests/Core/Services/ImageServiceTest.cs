@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
+using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Services;
 using AMI.Domain.Enums;
@@ -25,7 +26,6 @@ namespace AMI.NetCore.Tests.Core.Services
             };
             command.AxisTypes.Add(AxisType.Z);
             var expected = @"{
-  ""version"": ""0.0.3"",
   ""labelCount"": 5,
   ""images"": [
     {
@@ -86,6 +86,7 @@ namespace AMI.NetCore.Tests.Core.Services
     }
   ],
   ""combinedGif"": ""combined.gif"",
+  ""version"": ""0.0.3"",
   ""jsonFilename"": ""output.json""
 }";
 

@@ -42,15 +42,15 @@ namespace AMI.Core.Writers
         /// or
         /// The GIF could not be written.
         /// </exception>
-        public async Task<IReadOnlyList<AxisContainer<string>>> WriteAsync(
+        public async Task<IReadOnlyList<AxisContainerModel<string>>> WriteAsync(
             string destinationPath,
-            IReadOnlyList<PositionAxisContainer<string>> images,
+            IReadOnlyList<PositionAxisContainerModel<string>> images,
             BezierEasingType bezierEasingType,
             CancellationToken ct)
         {
             try
             {
-                var result = new List<AxisContainer<string>>();
+                var result = new List<AxisContainerModel<string>>();
 
                 foreach (var axisImages in images.GroupBy(e => e.AxisType))
                 {
@@ -61,7 +61,7 @@ namespace AMI.Core.Writers
                         axisImages.Key.ToString(),
                         bezierEasingType,
                         ct);
-                    result.Add(new AxisContainer<string>(axisImages.Key, filename));
+                    result.Add(new AxisContainerModel<string>(axisImages.Key, filename));
                 }
 
                 return result;
@@ -94,7 +94,7 @@ namespace AMI.Core.Writers
         /// </exception>
         public async Task<string> WriteAsync(
             string destinationPath,
-            IReadOnlyList<PositionAxisContainer<string>> images,
+            IReadOnlyList<PositionAxisContainerModel<string>> images,
             string name,
             BezierEasingType bezierEasingType,
             CancellationToken ct)

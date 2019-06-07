@@ -8,16 +8,16 @@
         /// <summary>
         /// The x-axis of the coordinate system.
         /// </summary>
-        X,
+        X = 0,
 
         /// <summary>
         /// The y-axis of the coordinate system.
         /// </summary>
-        Y,
+        Y = 1,
 
         /// <summary>
         /// The z-axis of the coordinate system.
         /// </summary>
-        Z
+        Z = 2
     }
 }

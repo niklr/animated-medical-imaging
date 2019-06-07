@@ -2,6 +2,8 @@
 using System.IO;
 using AMI.Core.Helpers;
 using AMI.Core.Strategies;
+using AMI.Core.Writers;
+using AMI.Gif.Writers;
 using AMI.Itk.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,6 +21,7 @@ namespace AMI.NetFramework.Tests
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
                 .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
+                .AddSingleton<IGifImageWriter, AnimatedGifImageWriter>()
                 .BuildServiceProvider();
         }
 

@@ -147,21 +147,22 @@ NUnit failed to load ...\AMI.NetFramework.Tests\bin\Debug\AMI.NetFramework.Tests
 Each successful execution will generate an **output.json** file in addition to an optimal subset 
 representing a multi-dimensional medical image. This json file consists of models described below.
 
-#### ProcessResult
+#### ProcessResultModel
 
-* `version (string)` The version number of the application.
 * `labelCount (number)` The amount of labels in the image.
-* `images (array of PositionAxisContainer)` A list of extracted images.
-* `gifs (array of AxisContainer)` A list of created GIFs.
+* `images (array of PositionAxisContainerModel)` A list of extracted images.
+* `gifs (array of AxisContainerModel)` A list of created GIFs.
 * `combinedGif (string)` The filename of the combined GIF (contains all requested axis types).
+* `version (string)` The version number of the application.
+* `jsonFilename (string)` The name of the JSON file.
 
-#### PositionAxisContainer
+#### PositionAxisContainerModel
 
 * `position (number)` The position of the extracted image on the respective axis.
 * `axisType (string / enum)` The respective axis of the coordinate system.
 * `entity (string)` The filename of the extracted image.
 
-#### AxisContainer
+#### AxisContainerModel
 
 * `axisType (string / enum)` The respective axis of the coordinate system.
 * `entity (string)` The filename of the extracted image.

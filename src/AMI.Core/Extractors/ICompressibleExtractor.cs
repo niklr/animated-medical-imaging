@@ -27,6 +27,6 @@ namespace AMI.Core.Extractors
         /// or
         /// ct
         /// </exception>
-        Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct);
+        Task<IList<CompressedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct);
     }
 }

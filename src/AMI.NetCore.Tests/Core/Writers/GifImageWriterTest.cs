@@ -20,9 +20,9 @@ namespace AMI.NetCore.Tests.Core.Writers
             string filename = $"combined_{Guid.NewGuid().ToString("N")}";
             string sourcePath = GetDataPath("watermark.png");
             string destinationPath = GetTempPath();
-            var images = new List<PositionAxisContainer<string>>()
+            var images = new List<PositionAxisContainerModel<string>>()
             {
-                new PositionAxisContainer<string>(0, AxisType.X, sourcePath)
+                new PositionAxisContainerModel<string>(0, AxisType.X, sourcePath)
             };
 
             try

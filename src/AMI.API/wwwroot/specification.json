@@ -22,7 +22,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -37,7 +37,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -52,7 +52,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -67,7 +67,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -82,7 +82,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -97,7 +97,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -162,7 +162,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -177,7 +177,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -192,7 +192,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -207,7 +207,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -222,7 +222,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -237,7 +237,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -245,14 +245,14 @@
             }
           },
           "200": {
-            "description": "The status of the processing.",
+            "description": "The created task.",
             "content": {
               "application/json": {
                 "schema": {
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ProcessResult"
+                      "$ref": "#/components/schemas/TaskModel"
                     }
                   ]
                 }
@@ -392,7 +392,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -407,7 +407,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -422,7 +422,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -437,7 +437,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -452,7 +452,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -467,7 +467,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -493,7 +493,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -508,7 +508,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -523,7 +523,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -538,7 +538,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -553,7 +553,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -568,7 +568,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -605,7 +605,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -620,7 +620,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -635,7 +635,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -650,7 +650,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -665,7 +665,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -680,7 +680,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -719,7 +719,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -734,7 +734,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -749,7 +749,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -764,7 +764,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -779,7 +779,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -794,7 +794,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -844,7 +844,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -859,7 +859,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -874,7 +874,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -889,7 +889,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -904,7 +904,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -919,7 +919,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -956,7 +956,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -971,7 +971,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -986,7 +986,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -1001,7 +1001,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -1016,7 +1016,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -1031,7 +1031,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ErrorResult"
+                      "$ref": "#/components/schemas/ErrorModel"
                     }
                   ]
                 }
@@ -1044,9 +1044,9 @@
   },
   "components": {
     "schemas": {
-      "ErrorResult": {
+      "ErrorModel": {
         "type": "object",
-        "description": "A model representing an error result.",
+        "description": "A model representing an error.",
         "additionalProperties": false,
         "properties": {
           "error": {
@@ -1089,90 +1089,74 @@
           }
         }
       },
-      "ProcessResult": {
+      "TaskModel": {
         "type": "object",
-        "description": "A model containing information about the result of the processing.",
+        "description": "A model containing information about the task.",
         "additionalProperties": false,
         "properties": {
-          "version": {
+          "id": {
             "type": "string",
-            "description": "Gets or sets the application version.",
+            "description": "Gets or sets the identifier.",
             "nullable": true
           },
-          "labelCount": {
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the created date.",
+            "format": "date-time"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "Gets or sets the modified date.",
+            "format": "date-time"
+          },
+          "status": {
+            "description": "Gets or sets the status.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
+              }
+            ]
+          },
+          "position": {
             "type": "integer",
-            "description": "Gets or sets the label count.",
+            "description": "Gets or sets the position in queue.",
             "format": "int32"
           },
-          "images": {
-            "type": "array",
-            "description": "Gets or sets the position axis containers of the images.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/PositionAxisContainerOfString"
-            }
+          "progress": {
+            "type": "integer",
+            "description": "Gets or sets the progress (0-100).",
+            "format": "int32"
           },
-          "gifs": {
-            "type": "array",
-            "description": "Gets or sets the axis containers of the GIF images.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/AxisContainerOfString"
-            }
-          },
-          "combinedGif": {
+          "objectId": {
             "type": "string",
-            "description": "Gets or sets the combined GIF.",
+            "description": "Gets or sets the identifier of the object.",
             "nullable": true
           },
-          "jsonFilename": {
+          "resultId": {
             "type": "string",
-            "description": "Gets or sets the JSON filename.",
+            "description": "Gets or sets the identifier of the result.",
             "nullable": true
           }
         }
       },
-      "PositionAxisContainerOfString": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AxisContainerOfString"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "position": {
-                "type": "integer"
-              }
-            }
-          }
-        ]
-      },
-      "AxisContainerOfString": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "axisType": {
-            "$ref": "#/components/schemas/AxisType"
-          },
-          "entity": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "AxisType": {
+      "TaskStatus": {
         "type": "integer",
-        "description": "The different axis types of the coordinate system.",
+        "description": "The different states of a task.",
         "x-enumNames": [
-          "X",
-          "Y",
-          "Z"
+          "Created",
+          "Queued",
+          "Processing",
+          "Canceled",
+          "Failed",
+          "Finished"
         ],
         "enum": [
           0,
           1,
-          2
+          2,
+          3,
+          4,
+          5
         ]
       },
       "ProcessObjectCommand": {
@@ -1246,22 +1230,39 @@
           }
         }
       },
+      "AxisType": {
+        "type": "integer",
+        "description": "The different axis types of the coordinate system.",
+        "x-enumNames": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
       "ImageFormat": {
         "type": "integer",
         "description": "A type to describe the image format.",
         "x-enumNames": [
+          "None",
           "Jpeg",
           "Png"
         ],
         "enum": [
           0,
-          1
+          1,
+          2
         ]
       },
       "BezierEasingType": {
         "type": "integer",
         "description": "A type to describe the Bézier curve easing.",
         "x-enumNames": [
+          "None",
           "Linear",
           "EaseInCubic",
           "EaseOutCubic",
@@ -1277,7 +1278,8 @@
           3,
           4,
           5,
-          6
+          6,
+          7
         ]
       }
     }

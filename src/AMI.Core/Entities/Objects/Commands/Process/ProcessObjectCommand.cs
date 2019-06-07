@@ -10,7 +10,7 @@ namespace AMI.Core.Entities.Objects.Commands.Process
     /// A command containing information needed for processing.
     /// </summary>
     [Serializable]
-    public class ProcessObjectCommand : IRequest<ProcessResult>
+    public class ProcessObjectCommand : IRequest<ProcessResultModel>
     {
         /// <summary>
         /// Gets or sets the desired size of the processed images.

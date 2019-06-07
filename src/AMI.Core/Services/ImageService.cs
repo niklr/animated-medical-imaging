@@ -124,7 +124,7 @@ namespace AMI.Core.Services
         /// or
         /// Empty destination path.
         /// </exception>
-        public async Task<ProcessResult> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
+        public async Task<ProcessResultModel> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
         {
             if (command == null)
             {
@@ -160,20 +160,19 @@ namespace AMI.Core.Services
             destFs.Directory.CreateDirectory(commandClone.DestinationPath);
 
             // TODO: support zip files
-            var imageResult = await imageExtractor.ProcessAsync(commandClone, ct);
-            var gifs = await gifImageWriter.WriteAsync(commandClone.DestinationPath, imageResult.Images, commandClone.BezierEasingTypePerAxis, ct);
-            var combinedGifFilename = await gifImageWriter.WriteAsync(commandClone.DestinationPath, imageResult.Images, "combined", commandClone.BezierEasingTypeCombined, ct);
+            var result = await imageExtractor.ProcessAsync(commandClone, ct);
 
+            // Set GIFs
+            result.Gifs = await gifImageWriter.WriteAsync(
+                command.DestinationPath, result.Images, command.BezierEasingTypePerAxis, ct);
+            result.CombinedGif = await gifImageWriter.WriteAsync(
+                command.DestinationPath, result.Images, "combined", command.BezierEasingTypeCombined, ct);
+
+            // Set application version
             var appInfo = appInfoFactory.Create();
-            var result = new ProcessResult()
-            {
-                Version = appInfo.AppVersion,
-                LabelCount = Convert.ToInt32(imageResult.LabelCount),
-                Images = imageResult.Images,
-                Gifs = gifs,
-                CombinedGif = combinedGifFilename
-            };
+            result.Version = appInfo.AppVersion;
 
+            // Write JSON and set filename
             await jsonWriter.WriteAsync(commandClone.DestinationPath, "output", result, (filename) => { result.JsonFilename = filename; });
 
             return result;

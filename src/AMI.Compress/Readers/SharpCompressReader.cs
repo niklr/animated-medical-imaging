@@ -30,7 +30,7 @@ namespace AMI.Compress.Readers
         }
 
         /// <inheritdoc/>
-        protected override async Task<IList<CompressedEntry>> AbstractReadAsync(string path, CancellationToken ct)
+        protected override async Task<IList<CompressedEntryModel>> AbstractReadAsync(string path, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -45,7 +45,7 @@ namespace AMI.Compress.Readers
             return await Task.Run(
                 () =>
                 {
-                    IList<CompressedEntry> entries = new List<CompressedEntry>();
+                    IList<CompressedEntryModel> entries = new List<CompressedEntryModel>();
 
                     // TODO: add options as parameters
                     var options = new ReaderOptions()

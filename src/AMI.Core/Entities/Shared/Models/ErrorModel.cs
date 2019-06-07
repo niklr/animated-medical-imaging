@@ -3,9 +3,9 @@
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A model representing an error result.
+    /// A model representing an error.
     /// </summary>
-    public class ErrorResult
+    public class ErrorModel
     {
         /// <summary>
         /// Gets or sets the error.

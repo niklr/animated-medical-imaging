@@ -54,7 +54,7 @@ namespace AMI.API.Handlers
 
                 var code = HttpStatusCode.InternalServerError;
 
-                var result = new ErrorResult()
+                var result = new ErrorModel()
                 {
                     Error = exception.Message,
                     StackTrace = configuration.IsDevelopment ? exception.StackTrace : string.Empty

@@ -32,7 +32,7 @@ namespace AMI.Compress.Extractors
         }
 
         /// <inheritdoc/>
-        public override async Task<IList<CompressedEntry>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct)
+        public override async Task<IList<CompressedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(sourcePath))
             {
@@ -52,7 +52,7 @@ namespace AMI.Compress.Extractors
             return await Task.Run(
                 () =>
                 {
-                    IList<CompressedEntry> entries = new List<CompressedEntry>();
+                    IList<CompressedEntryModel> entries = new List<CompressedEntryModel>();
 
                     // TODO: add options as parameters
                     var options = new ReaderOptions()

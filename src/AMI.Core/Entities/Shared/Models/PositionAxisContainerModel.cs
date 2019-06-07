@@ -6,16 +6,16 @@ namespace AMI.Core.Entities.Models
     /// A model containing information about the position.
     /// </summary>
     /// <typeparam name="T">The type of the entity associated with the axis.</typeparam>
-    /// <seealso cref="AxisContainer{T}" />
-    public class PositionAxisContainer<T> : AxisContainer<T>
+    /// <seealso cref="AxisContainerModel{T}" />
+    public class PositionAxisContainerModel<T> : AxisContainerModel<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PositionAxisContainer{T}"/> class.
+        /// Initializes a new instance of the <see cref="PositionAxisContainerModel{T}"/> class.
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <param name="entity">The entity to associate with the axis.</param>
-        public PositionAxisContainer(uint position, AxisType axisType, T entity)
+        public PositionAxisContainerModel(uint position, AxisType axisType, T entity)
             : base(axisType, entity)
         {
             Position = position;

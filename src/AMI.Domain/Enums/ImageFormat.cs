@@ -6,13 +6,18 @@
     public enum ImageFormat
     {
         /// <summary>
+        /// The image format is not known.
+        /// </summary>
+        Unknown = 0,
+
+        /// <summary>
         /// The JPEG image format.
         /// </summary>
-        Jpeg,
+        Jpeg = 1,
 
         /// <summary>
         /// The PNG image format.
         /// </summary>
-        Png
+        Png = 2
     }
 }

@@ -6,8 +6,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     /// <summary>
     /// A command containing information needed for object creation.
     /// </summary>
-    /// <seealso cref="IRequest{ObjectResult}" />
-    public class CreateObjectCommand : IRequest<ObjectResult>
+    /// <seealso cref="IRequest{ObjectModel}" />
+    public class CreateObjectCommand : IRequest<ObjectModel>
     {
         /// <summary>
         /// Gets or sets the original filename.

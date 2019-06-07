@@ -5,7 +5,7 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model containing information about the compressed entry.
     /// </summary>
-    public class CompressedEntry
+    public class CompressedEntryModel
     {
         /// <summary>
         /// Gets or sets the archived time.

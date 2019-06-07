@@ -11,8 +11,8 @@ namespace AMI.Core.Entities.Objects.Commands.Process
     /// <summary>
     /// A handler for process command requests.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{ProcessObjectCommand, ProcessResult}" />
-    public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectCommand, ProcessResult>
+    /// <seealso cref="BaseCommandRequestHandler{ProcessObjectCommand, ProcessResultModel}" />
+    public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectCommand, ProcessResultModel>
     {
         private readonly IImageService imageService;
 
@@ -29,7 +29,7 @@ namespace AMI.Core.Entities.Objects.Commands.Process
         }
 
         /// <inheritdoc/>
-        protected override Task<ProcessResult> ProtectedHandle(ProcessObjectCommand request, CancellationToken cancellationToken)
+        protected override Task<ProcessResultModel> ProtectedHandle(ProcessObjectCommand request, CancellationToken cancellationToken)
         {
             return imageService.ProcessAsync(request, cancellationToken);
         }

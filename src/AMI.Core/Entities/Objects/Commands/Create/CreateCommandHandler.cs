@@ -9,8 +9,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     /// <summary>
     /// A handler for create command requests.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{CreateObjectCommand, ObjectResult}" />
-    public class CreateCommandHandler : BaseCommandRequestHandler<CreateObjectCommand, ObjectResult>
+    /// <seealso cref="BaseCommandRequestHandler{CreateObjectCommand, ObjectModel}" />
+    public class CreateCommandHandler : BaseCommandRequestHandler<CreateObjectCommand, ObjectModel>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
@@ -22,7 +22,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         }
 
         /// <inheritdoc/>
-        protected override Task<ObjectResult> ProtectedHandle(CreateObjectCommand request, CancellationToken cancellationToken)
+        protected override Task<ObjectModel> ProtectedHandle(CreateObjectCommand request, CancellationToken cancellationToken)
         {
             return null;
         }
