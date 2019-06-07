@@ -23,6 +23,7 @@
     "angular-material-datatransfer": "^3.0.0",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
+    "datatables.net-dt": "^1.10.19",
     "jquery": "3.4.1",
     "material-design-icons": "^3.0.1",
     "materialize-css": "^1.0.0",

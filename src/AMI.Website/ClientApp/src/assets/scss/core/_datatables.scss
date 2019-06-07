@@ -1,0 +1,136 @@
+.dataTables_wrapper {
+  /*border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12)*/
+}
+
+.dataTables_wrapper .dataTables_filter {
+  padding-right: 18px
+}
+
+.dataTables_wrapper table.dataTable tr {
+  border-color: rgba(0, 0, 0, 0.12);
+  background-color: transparent
+}
+
+.dataTables_wrapper table.dataTable tr.selected {
+  background-color: #7af
+}
+
+.dataTables_wrapper .dataTables-checkbox-column {
+  width: 40px;
+  text-align: center
+}
+
+.dataTables_wrapper .dataTables-checkbox-column label > span {
+  padding-left: 24px;
+  transform: translateY(4px)
+}
+
+.dataTables_wrapper .dataTables-checkbox-column [type="checkbox"].filled-in:checked + span:not(.lever):before {
+  width: 6px
+}
+
+.dataTables_wrapper table.dataTable thead th,
+.dataTables_wrapper table.dataTable thead td {
+  border-color: rgba(0, 0, 0, 0.12);
+  padding: 8px 10px
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollHead .dataTables_scrollHeadInner table.dataTable {
+  border-top: 1px solid rgba(0, 0, 0, 0.12)
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border-color: rgba(0, 0, 0, 0.12)
+}
+
+.dataTables_wrapper .footer-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px
+}
+
+.dataTables_wrapper .dataTables_length .select-wrapper {
+  display: inline-block;
+  margin: 0 8px;
+  width: 60px
+}
+
+.dataTables_wrapper .dataTables_info {
+  line-height: 48px;
+  padding: 0
+}
+
+.dataTables_wrapper .dataTables_paginate {
+  padding: 4px
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.first::before {
+  content: 'first_page'
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous::before {
+  content: 'chevron_left'
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.next::before {
+  content: 'chevron_right'
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.last::before {
+  content: 'last_page'
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.first,
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next,
+.dataTables_wrapper .dataTables_paginate .paginate_button.last {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-family: "Material Icons";
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0 2px;
+  box-shadow: none;
+  border: 0;
+  border-radius: 50%;
+  background: transparent
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.first::before,
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous::before,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next::before,
+.dataTables_wrapper .dataTables_paginate .paginate_button.last::before {
+  display: block;
+  padding: 8px;
+  line-height: 24px;
+  font-size: 24px
+}
+
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.first,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.previous,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.next,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.last,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.first:hover,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.previous:hover,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.next:hover,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button.last:hover {
+  color: rgba(0, 0, 0, 0.26) !important;
+  border: 0
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.first:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.last:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.first:active,
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous:active,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next:active,
+.dataTables_wrapper .dataTables_paginate .paginate_button.last:active {
+  color: rgba(0, 0, 0, 0.87) !important;
+  background: rgba(0, 0, 0, 0.05);
+  border: 0;
+  box-shadow: none
+}

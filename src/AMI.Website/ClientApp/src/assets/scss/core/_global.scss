@@ -3,6 +3,9 @@
   max-width: 100%;
 }
 
+.no-padding {
+  padding: 0 !important;
+}
 
 /* wrap long words without spaces
 -------------------------------------------------- */
@@ -15,10 +18,6 @@
   word-wrap: break-word; /* Internet Explorer 5.5+ */
   word-break: break-all;
   white-space: normal;
-}
-
-.text-center {
-  text-align: center;
 }
 
 /* render an ellipsis ("...") to represent clipped text
@@ -36,14 +35,6 @@
   padding-bottom: 1rem;
 }
 
-.custom-row {
-  margin-bottom: 0px;
-}
-
 .custom-fas-btn > i {
   font-size: inherit;
-}
-
-.custom-input-field {
-  margin-top: 0 !important;
 }
