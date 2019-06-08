@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using AMI.Core.Uploaders;
+using AMI.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,13 +15,13 @@ namespace AMI.API.Controllers
     [Route("upload")]
     public class UploadController : BaseController
     {
-        private readonly IResumableUploader uploader;
+        private readonly IResumableUploadService uploader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UploadController"/> class.
         /// </summary>
         /// <param name="uploader">The resumable uploader.</param>
-        public UploadController(IResumableUploader uploader)
+        public UploadController(IResumableUploadService uploader)
         {
             this.uploader = uploader;
         }

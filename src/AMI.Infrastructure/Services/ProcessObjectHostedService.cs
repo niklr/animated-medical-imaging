@@ -5,7 +5,7 @@ using AMI.Core.Workers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace AMI.Core.Services
+namespace AMI.Infrastructure.Services
 {
     /// <summary>
     /// A hosted service to process objects.

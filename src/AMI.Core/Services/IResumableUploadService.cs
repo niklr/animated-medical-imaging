@@ -3,12 +3,12 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AMI.Core.Uploaders
+namespace AMI.Core.Services
 {
     /// <summary>
-    /// This interfaces represents a resumable uploader.
+    /// This interfaces represents a resumable upload service.
     /// </summary>
-    public interface IResumableUploader
+    public interface IResumableUploadService
     {
         /// <summary>
         /// Uploads the specified chunk number.

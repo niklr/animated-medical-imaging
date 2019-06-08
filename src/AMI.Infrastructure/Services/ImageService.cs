@@ -9,13 +9,14 @@ using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Extensions.FileSystemExtensions;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
+using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Core.Writers;
 using AMI.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Extensions.ObjectExtensions;
 
-namespace AMI.Core.Services
+namespace AMI.Infrastructure.Services
 {
     /// <summary>
     /// A service for imaging purposes.

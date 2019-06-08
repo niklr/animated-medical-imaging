@@ -11,8 +11,10 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Factories;
 using AMI.Core.Serializers;
+using AMI.Core.Services;
 using AMI.Core.Strategies;
-using AMI.Core.Uploaders;
+using AMI.Infrastructure.Services;
+using AMI.Infrastructure.Strategies;
 using FluentValidation.AspNetCore;
 using MediatR;
 using MediatR.Pipeline;
@@ -70,7 +72,7 @@ namespace AMI.API
                     .AddConfiguration(Configuration.GetSection("Logging"))
                     .AddConsole();
             });
-            services.AddScoped<IResumableUploader, ResumableUploader>();
+            services.AddScoped<IResumableUploadService, ResumableUploadService>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();

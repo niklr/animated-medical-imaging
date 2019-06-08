@@ -4,21 +4,22 @@ using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configuration;
+using AMI.Core.Services;
 using AMI.Core.Strategies;
 
-namespace AMI.Core.Uploaders
+namespace AMI.Infrastructure.Services
 {
     /// <summary>
-    /// A resumable uploader.
+    /// A resumable upload service.
     /// </summary>
-    /// <seealso cref="IResumableUploader" />
-    public class ResumableUploader : IResumableUploader
+    /// <seealso cref="IResumableUploadService" />
+    public class ResumableUploadService : IResumableUploadService
     {
         private readonly string baseUploadPath;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResumableUploader" /> class.
+        /// Initializes a new instance of the <see cref="ResumableUploadService" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
@@ -27,7 +28,7 @@ namespace AMI.Core.Uploaders
         /// or
         /// fileSystemStrategy
         /// </exception>
-        public ResumableUploader(IAmiConfigurationManager configuration, IFileSystemStrategy fileSystemStrategy)
+        public ResumableUploadService(IAmiConfigurationManager configuration, IFileSystemStrategy fileSystemStrategy)
         {
             if (configuration == null)
             {

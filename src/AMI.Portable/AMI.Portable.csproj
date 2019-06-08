@@ -239,6 +239,10 @@
       <Project>{466966CC-A948-4097-9849-42F8778E581E}</Project>
       <Name>AMI.Gif</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AMI.Infrastructure\AMI.Infrastructure.csproj">
+      <Project>{BCA16653-BFCD-4CDB-8CCD-BB4DC219BEFE}</Project>
+      <Name>AMI.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AMI.Itk\AMI.Itk.csproj">
       <Project>{4287B16B-2328-4D48-849D-6BEC0D8C8667}</Project>
       <Name>AMI.Itk</Name>

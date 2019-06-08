@@ -2,9 +2,10 @@
 using System.IO.Abstractions;
 using System.Linq;
 using AMI.Core.Factories;
+using AMI.Core.Strategies;
 using AMI.Domain.Exceptions;
 
-namespace AMI.Core.Strategies
+namespace AMI.Infrastructure.Strategies
 {
     /// <summary>
     /// A strategy for file system purposes.
