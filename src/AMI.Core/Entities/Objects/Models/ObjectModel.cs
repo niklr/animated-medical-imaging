@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq.Expressions;
+using AMI.Core.Entities.Shared.Models;
+using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 
 namespace AMI.Core.Entities.Models
@@ -6,13 +9,27 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model representing an object.
     /// </summary>
-    public class ObjectModel
+    public class ObjectModel : IEntity
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectModel"/> class.
         /// </summary>
         public ObjectModel()
         {
+        }
+
+        /// <summary>
+        /// Gets the projection of the domain entity.
+        /// </summary>
+        public static Expression<Func<ObjectVersion, ObjectModel>> Projection
+        {
+            get
+            {
+                return e => new ObjectModel
+                {
+                    Id = e.Id.ToString()
+                };
+            }
         }
 
         /// <summary>

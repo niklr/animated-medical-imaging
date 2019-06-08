@@ -5,7 +5,7 @@ using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Filters;
 using AMI.API.Handlers;
 using AMI.Core.Behaviors;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.ApplicationInformation.Queries;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Process;

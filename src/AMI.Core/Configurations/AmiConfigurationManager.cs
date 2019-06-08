@@ -3,7 +3,7 @@ using AMI.Core.Entities.Models;
 using AMI.Domain.Exceptions;
 using Microsoft.Extensions.Options;
 
-namespace AMI.Core.Configuration
+namespace AMI.Core.Configurations
 {
     /// <summary>
     /// A manager for the application configuration.

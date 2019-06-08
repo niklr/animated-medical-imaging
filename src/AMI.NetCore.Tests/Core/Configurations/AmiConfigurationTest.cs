@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AMI.Core.Configuration;
+﻿using AMI.Core.Configurations;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Configuration
+namespace AMI.NetCore.Tests.Core.Configurations
 {
     [TestFixture]
     public class AmiConfigurationTest : BaseTest

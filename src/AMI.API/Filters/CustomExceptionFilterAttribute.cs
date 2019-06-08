@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AMI.API.Handlers;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AMI.API.Filters

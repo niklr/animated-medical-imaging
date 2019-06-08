@@ -4,7 +4,7 @@ using System.Reflection;
 using AMI.Compress.Extractors;
 using AMI.Compress.Readers;
 using AMI.Core.Behaviors;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Extractors;

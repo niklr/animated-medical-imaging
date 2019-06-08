@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 
 namespace AMI.Core.Extractors

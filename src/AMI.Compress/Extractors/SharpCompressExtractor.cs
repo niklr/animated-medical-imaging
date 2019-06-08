@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Compress.Mappers;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Extractors;
 using RNS.Framework.Comparers;

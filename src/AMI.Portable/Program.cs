@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Behaviors;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Paths.Commands.Process;
 using AMI.Core.Extensions.Time;

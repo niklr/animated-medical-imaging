@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using AMI.Core.Readers;
 using NUnit.Framework;
 

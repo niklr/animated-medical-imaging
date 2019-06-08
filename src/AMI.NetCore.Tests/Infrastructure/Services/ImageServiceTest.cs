@@ -5,7 +5,7 @@ using AMI.Core.Services;
 using AMI.Domain.Enums;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Services
+namespace AMI.NetCore.Tests.Infrastructure.Services
 {
     [TestFixture]
     public class ImageServiceTest : BaseTest

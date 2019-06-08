@@ -1,4 +1,4 @@
-﻿namespace AMI.Core.Configuration
+﻿namespace AMI.Core.Configurations
 {
     /// <summary>
     /// A manager for the application configuration.

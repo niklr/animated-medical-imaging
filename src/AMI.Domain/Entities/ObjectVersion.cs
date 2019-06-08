@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AMI.Domain.Entities
 {
@@ -12,7 +10,7 @@ namespace AMI.Domain.Entities
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets the created date.

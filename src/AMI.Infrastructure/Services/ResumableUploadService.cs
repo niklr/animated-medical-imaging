@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Configuration;
+using AMI.Core.Configurations;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 
