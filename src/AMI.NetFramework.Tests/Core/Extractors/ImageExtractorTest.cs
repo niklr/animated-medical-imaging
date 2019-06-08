@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Paths.Commands.Process;
 using AMI.Core.Extractors;
 using AMI.Core.Strategies;
 using AMI.Itk.Extractors;
@@ -20,7 +20,7 @@ namespace AMI.NetFramework.Tests.Core.Extractors
             var loggerFactory = base.GetService<ILoggerFactory>();
             var fileSystemStrategy = base.GetService<IFileSystemStrategy>();
             var factory = base.GetService<IItkImageReaderFactory>();
-            var command = new ProcessObjectCommand()
+            var command = new ProcessPathCommand()
             {
                 SourcePath = GetDataPath("SMIR.Brain.XX.O.CT.339203.nii"),
                 DestinationPath = GetTempPath(),

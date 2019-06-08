@@ -1,21 +1,21 @@
 ﻿using System.Threading;
-using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Paths.Commands.Process;
 using AMI.Domain.Exceptions;
 using MediatR;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
+namespace AMI.NetCore.Tests.Core.Entities.Paths.Commands
 {
     [TestFixture]
-    public class ProcessObjectCommandTest : BaseTest
+    public class ProcessPathCommandTest : BaseTest
     {
         [Test]
-        public void NetCore_ProcessObjectCommand()
+        public void NetCore_ProcessPathCommand()
         {
             // Arrange
             var mediator = GetService<IMediator>();
             var ct = new CancellationToken();
-            var command = new ProcessObjectCommand()
+            var command = new ProcessPathCommand()
             {
                 SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
                 DestinationPath = GetTempPath(),
@@ -39,12 +39,12 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
         }
 
         [Test]
-        public void NetCore_ProcessObjectCommand_Validation_Failures()
+        public void NetCore_ProcessPathCommand_Validation_Failures()
         {
             // Arrange
             var mediator = GetService<IMediator>();
             var ct = new CancellationToken();
-            var command = new ProcessObjectCommand();
+            var command = new ProcessPathCommand();
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<ValidationException>(() => mediator.Send(command, ct));

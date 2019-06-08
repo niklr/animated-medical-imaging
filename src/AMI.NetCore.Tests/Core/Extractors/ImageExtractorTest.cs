@@ -1,5 +1,5 @@
 using System.Threading;
-using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Paths.Commands.Process;
 using AMI.Core.Extractors;
 using NUnit.Framework;
 
@@ -14,7 +14,7 @@ namespace AMI.NetCore.Tests.Core.Extractors
             // Arrange
             var extractor = GetService<IImageExtractor>();
             var ct = new CancellationToken();
-            var command = new ProcessObjectCommand()
+            var command = new ProcessPathCommand()
             {
                 SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
                 DestinationPath = GetTempPath(),

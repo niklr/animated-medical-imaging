@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using AMI.Core.Configuration;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Paths.Commands.Process;
+using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Extensions.FileSystemExtensions;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
@@ -106,25 +108,8 @@ namespace AMI.Core.Services
             }
         }
 
-        /// <summary>
-        /// Processes images based on the provided command information asynchronous.
-        /// </summary>
-        /// <param name="command">The command information.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// The result information.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// command
-        /// or
-        /// ct
-        /// </exception>
-        /// <exception cref="UnexpectedNullException">
-        /// Empty source path.
-        /// or
-        /// Empty destination path.
-        /// </exception>
-        public async Task<ProcessResultModel> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
+        /// <inheritdoc/>
+        public async Task<ProcessResultModel> ProcessAsync(BaseProcessCommand command, CancellationToken ct)
         {
             if (command == null)
             {
@@ -136,6 +121,19 @@ namespace AMI.Core.Services
                 throw new ArgumentNullException(nameof(ct));
             }
 
+            switch (command)
+            {
+                case ProcessPathCommand pathCommand:
+                    return await ProcessPathAsync(pathCommand, ct);
+                case ProcessObjectCommand objectCommand:
+                    return await ProcessObjectAsync(objectCommand, ct);
+                default:
+                    throw new NotSupportedException("Process command type is not supported.");
+            }
+        }
+
+        private async Task<ProcessResultModel> ProcessPathAsync(ProcessPathCommand command, CancellationToken ct)
+        {
             if (string.IsNullOrWhiteSpace(command.SourcePath))
             {
                 throw new UnexpectedNullException("Empty source path.");
@@ -176,6 +174,16 @@ namespace AMI.Core.Services
             await jsonWriter.WriteAsync(commandClone.DestinationPath, "output", result, (filename) => { result.JsonFilename = filename; });
 
             return result;
+        }
+
+        private async Task<ProcessResultModel> ProcessObjectAsync(ProcessObjectCommand command, CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(command.Id))
+            {
+                throw new UnexpectedNullException("Empty identifier.");
+            }
+
+            return null;
         }
     }
 }

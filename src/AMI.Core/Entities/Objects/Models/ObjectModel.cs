@@ -1,4 +1,5 @@
 ﻿using System;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.Entities.Models
 {
@@ -25,13 +26,33 @@ namespace AMI.Core.Entities.Models
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the modified date.
+        /// </summary>
+        public DateTime ModifiedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the data.
+        /// </summary>
+        public DataType DataType { get; set; } = DataType.Unknown;
+
+        /// <summary>
+        /// Gets or sets the file format.
+        /// </summary>
+        public FileFormat FileFormat { get; set; } = FileFormat.Unknown;
+
+        /// <summary>
         /// Gets or sets the original filename.
         /// </summary>
         public string OriginalFilename { get; set; }
 
         /// <summary>
-        /// Gets or sets the filesystem path.
+        /// Gets or sets the source path (directory, file, url, etc.).
         /// </summary>
-        public string FilesystemPath { get; set; }
+        public string SourcePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the uncompressed filesystem path (directory).
+        /// </summary>
+        public string UncompressedFilesystemPath { get; set; }
     }
 }

@@ -1160,8 +1160,28 @@
         ]
       },
       "ProcessObjectCommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseProcessCommand"
+          },
+          {
+            "type": "object",
+            "description": "A command containing information needed to process objects.",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Gets or sets the identifier of the object.",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "BaseProcessCommand": {
         "type": "object",
         "description": "A command containing information needed for processing.",
+        "x-abstract": true,
         "additionalProperties": false,
         "properties": {
           "desiredSize": {
@@ -1172,21 +1192,6 @@
           "amountPerAxis": {
             "type": "integer",
             "description": "Gets or sets the amount of images per axis."
-          },
-          "sourcePath": {
-            "type": "string",
-            "description": "Gets or sets the source path.",
-            "nullable": true
-          },
-          "watermarkSourcePath": {
-            "type": "string",
-            "description": "Gets or sets the source path of the watermark.",
-            "nullable": true
-          },
-          "destinationPath": {
-            "type": "string",
-            "description": "Gets or sets the destination path.",
-            "nullable": true
           },
           "axisTypes": {
             "type": "array",
@@ -1223,10 +1228,6 @@
           "grayscale": {
             "type": "boolean",
             "description": "Gets or sets a value indicating whether the images should be converted to grayscale."
-          },
-          "openCombinedGif": {
-            "type": "boolean",
-            "description": "Gets or sets a value indicating whether the combined animated image should be opened after the processing."
           }
         }
       },
@@ -1248,7 +1249,7 @@
         "type": "integer",
         "description": "A type to describe the image format.",
         "x-enumNames": [
-          "None",
+          "Unknown",
           "Jpeg",
           "Png"
         ],

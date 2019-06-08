@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Paths.Commands.Process;
 using AMI.Core.Extensions.Drawing;
 using AMI.Core.Factories;
 using AMI.Core.Mappers;
@@ -94,7 +94,7 @@ namespace AMI.Core.Extractors
         /// or
         /// Bitmap could not be centered.
         /// </exception>
-        public async Task<ProcessResultModel> ProcessAsync(ProcessObjectCommand command, CancellationToken ct)
+        public async Task<ProcessResultModel> ProcessAsync(ProcessPathCommand command, CancellationToken ct)
         {
             if (command == null)
             {

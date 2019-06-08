@@ -42,6 +42,12 @@ namespace AMI.Itk.Utils
             return await Task.Run(
                 () =>
                 {
+                    // TODO:
+                    // - check if path is a directory
+                    // - check if path contains multiple files
+                    // - determine file format
+                    // read DICOM image series
+                    // https://simpleitk.readthedocs.io/en/master/Examples/DicomSeriesReader/Documentation.html
                     using (ImageFileReader reader = new ImageFileReader())
                     {
                         try

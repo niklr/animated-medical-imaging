@@ -6,8 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Behaviors;
 using AMI.Core.Configuration;
+using AMI.Core.Entities.Paths.Commands.Process;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Process;
 using AMI.Core.Extensions.Time;
 using AMI.Core.Extractors;
 using AMI.Core.Factories;
@@ -131,7 +131,8 @@ namespace AMI.Portable
 
         public async Task ExecuteAsync(string[] args, CancellationToken ct)
         {
-            var command = new ProcessObjectCommand();
+            var command = new ProcessPathCommand();
+            bool openCombinedGif = false;
 
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed(o =>
@@ -141,37 +142,36 @@ namespace AMI.Portable
                        command.SourcePath = o.SourcePath;
                        command.DestinationPath = o.DestinationPath;
                        command.Grayscale = Convert.ToBoolean(o.Grayscale);
-                       command.OpenCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
+                       openCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
                    });
 
-            await ExecuteCommandAsync(command, ct);
+            await ExecuteCommandAsync(command, ct, openCombinedGif);
         }
 
         public async Task ExecuteTestAsync(string[] args, CancellationToken ct)
         {
-            var command = new ProcessObjectCommand()
+            var command = new ProcessPathCommand()
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
                 SourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "SMIR.Brain.XX.O.MR_Flair.36620.mha"),
                 DestinationPath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "temp", Guid.NewGuid().ToString("N")),
-                // WatermarkSourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "watermark.png"),
-                OpenCombinedGif = true
+                // WatermarkSourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "watermark.png")
             };
 
             command.AxisTypes.Add(AxisType.Z);
 
-            await ExecuteCommandAsync(command, ct);
+            await ExecuteCommandAsync(command, ct, true);
         }
 
-        private async Task ExecuteCommandAsync(ProcessObjectCommand command, CancellationToken ct)
+        private async Task ExecuteCommandAsync(ProcessPathCommand command, CancellationToken ct, bool openCombinedGif = false)
         {
             var watch = Stopwatch.StartNew();
             Logger.LogInformation($"{this.GetMethodName()} started");
 
             var result = await Mediator.Send(command, ct);
 
-            if (command.OpenCombinedGif)
+            if (openCombinedGif)
             {
                 var p = new Process
                 {

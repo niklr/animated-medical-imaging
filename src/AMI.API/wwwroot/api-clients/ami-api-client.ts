@@ -1106,17 +1106,11 @@ export enum TaskStatus {
 }
 
 /** A command containing information needed for processing. */
-export class ProcessObjectCommand implements IProcessObjectCommand {
+export abstract class BaseProcessCommand implements IBaseProcessCommand {
     /** Gets or sets the desired size of the processed images. */
     desiredSize?: number | undefined;
     /** Gets or sets the amount of images per axis. */
     amountPerAxis?: number;
-    /** Gets or sets the source path. */
-    sourcePath?: string | undefined;
-    /** Gets or sets the source path of the watermark. */
-    watermarkSourcePath?: string | undefined;
-    /** Gets or sets the destination path. */
-    destinationPath?: string | undefined;
     /** Gets the axis types to be considered. */
     axisTypes?: AxisType[] | undefined;
     /** Gets or sets the image format. */
@@ -1127,10 +1121,8 @@ export class ProcessObjectCommand implements IProcessObjectCommand {
     bezierEasingTypeCombined?: BezierEasingType;
     /** Gets or sets a value indicating whether the images should be converted to grayscale. */
     grayscale?: boolean;
-    /** Gets or sets a value indicating whether the combined animated image should be opened after the processing. */
-    openCombinedGif?: boolean;
 
-    constructor(data?: IProcessObjectCommand) {
+    constructor(data?: IBaseProcessCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1143,9 +1135,6 @@ export class ProcessObjectCommand implements IProcessObjectCommand {
         if (data) {
             this.desiredSize = data["desiredSize"];
             this.amountPerAxis = data["amountPerAxis"];
-            this.sourcePath = data["sourcePath"];
-            this.watermarkSourcePath = data["watermarkSourcePath"];
-            this.destinationPath = data["destinationPath"];
             if (data["axisTypes"] && data["axisTypes"].constructor === Array) {
                 this.axisTypes = [] as any;
                 for (let item of data["axisTypes"])
@@ -1155,7 +1144,62 @@ export class ProcessObjectCommand implements IProcessObjectCommand {
             this.bezierEasingTypePerAxis = data["bezierEasingTypePerAxis"];
             this.bezierEasingTypeCombined = data["bezierEasingTypeCombined"];
             this.grayscale = data["grayscale"];
-            this.openCombinedGif = data["openCombinedGif"];
+        }
+    }
+
+    static fromJS(data: any): BaseProcessCommand {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'BaseProcessCommand' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["desiredSize"] = this.desiredSize;
+        data["amountPerAxis"] = this.amountPerAxis;
+        if (this.axisTypes && this.axisTypes.constructor === Array) {
+            data["axisTypes"] = [];
+            for (let item of this.axisTypes)
+                data["axisTypes"].push(item);
+        }
+        data["imageFormat"] = this.imageFormat;
+        data["bezierEasingTypePerAxis"] = this.bezierEasingTypePerAxis;
+        data["bezierEasingTypeCombined"] = this.bezierEasingTypeCombined;
+        data["grayscale"] = this.grayscale;
+        return data; 
+    }
+}
+
+/** A command containing information needed for processing. */
+export interface IBaseProcessCommand {
+    /** Gets or sets the desired size of the processed images. */
+    desiredSize?: number | undefined;
+    /** Gets or sets the amount of images per axis. */
+    amountPerAxis?: number;
+    /** Gets the axis types to be considered. */
+    axisTypes?: AxisType[] | undefined;
+    /** Gets or sets the image format. */
+    imageFormat?: ImageFormat;
+    /** Gets or sets the Bézier easing type per axis used for the animated image. */
+    bezierEasingTypePerAxis?: BezierEasingType;
+    /** Gets or sets the Bézier easing type used for the combined animated image. */
+    bezierEasingTypeCombined?: BezierEasingType;
+    /** Gets or sets a value indicating whether the images should be converted to grayscale. */
+    grayscale?: boolean;
+}
+
+/** A command containing information needed to process objects. */
+export class ProcessObjectCommand extends BaseProcessCommand implements IProcessObjectCommand {
+    /** Gets or sets the identifier of the object. */
+    id?: string | undefined;
+
+    constructor(data?: IProcessObjectCommand) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.id = data["id"];
         }
     }
 
@@ -1168,49 +1212,16 @@ export class ProcessObjectCommand implements IProcessObjectCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["desiredSize"] = this.desiredSize;
-        data["amountPerAxis"] = this.amountPerAxis;
-        data["sourcePath"] = this.sourcePath;
-        data["watermarkSourcePath"] = this.watermarkSourcePath;
-        data["destinationPath"] = this.destinationPath;
-        if (this.axisTypes && this.axisTypes.constructor === Array) {
-            data["axisTypes"] = [];
-            for (let item of this.axisTypes)
-                data["axisTypes"].push(item);
-        }
-        data["imageFormat"] = this.imageFormat;
-        data["bezierEasingTypePerAxis"] = this.bezierEasingTypePerAxis;
-        data["bezierEasingTypeCombined"] = this.bezierEasingTypeCombined;
-        data["grayscale"] = this.grayscale;
-        data["openCombinedGif"] = this.openCombinedGif;
+        data["id"] = this.id;
+        super.toJSON(data);
         return data; 
     }
 }
 
-/** A command containing information needed for processing. */
-export interface IProcessObjectCommand {
-    /** Gets or sets the desired size of the processed images. */
-    desiredSize?: number | undefined;
-    /** Gets or sets the amount of images per axis. */
-    amountPerAxis?: number;
-    /** Gets or sets the source path. */
-    sourcePath?: string | undefined;
-    /** Gets or sets the source path of the watermark. */
-    watermarkSourcePath?: string | undefined;
-    /** Gets or sets the destination path. */
-    destinationPath?: string | undefined;
-    /** Gets the axis types to be considered. */
-    axisTypes?: AxisType[] | undefined;
-    /** Gets or sets the image format. */
-    imageFormat?: ImageFormat;
-    /** Gets or sets the Bézier easing type per axis used for the animated image. */
-    bezierEasingTypePerAxis?: BezierEasingType;
-    /** Gets or sets the Bézier easing type used for the combined animated image. */
-    bezierEasingTypeCombined?: BezierEasingType;
-    /** Gets or sets a value indicating whether the images should be converted to grayscale. */
-    grayscale?: boolean;
-    /** Gets or sets a value indicating whether the combined animated image should be opened after the processing. */
-    openCombinedGif?: boolean;
+/** A command containing information needed to process objects. */
+export interface IProcessObjectCommand extends IBaseProcessCommand {
+    /** Gets or sets the identifier of the object. */
+    id?: string | undefined;
 }
 
 /** The different axis types of the coordinate system. */
@@ -1222,7 +1233,7 @@ export enum AxisType {
 
 /** A type to describe the image format. */
 export enum ImageFormat {
-    None = 0, 
+    Unknown = 0, 
     Jpeg = 1, 
     Png = 2, 
 }

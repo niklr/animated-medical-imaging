@@ -13,8 +13,8 @@ namespace AMI.Core.Entities.Objects.Commands.Process
         /// </summary>
         public ProcessCommandValidator()
         {
-            RuleFor(x => x.SourcePath).NotEmpty().MaximumLength(1024);
-            RuleFor(x => x.DestinationPath).NotEmpty().MaximumLength(1024);
+            // Length of a Guid = 36
+            RuleFor(x => x.Id).NotEmpty().MaximumLength(36);
         }
     }
 }

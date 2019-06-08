@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
-using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Paths.Commands.Process;
 using AMI.Core.Services;
 using AMI.Domain.Enums;
 using NUnit.Framework;
@@ -17,7 +16,7 @@ namespace AMI.NetCore.Tests.Core.Services
             // Arrange
             var service = GetService<IImageService>();
             var ct = new CancellationToken();
-            var command = new ProcessObjectCommand()
+            var command = new ProcessPathCommand()
             {
                 AmountPerAxis = 10,
                 DesiredSize = 250,
