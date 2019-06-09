@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Readers
 {
     [TestFixture]
-    public class CompressibleReaderTest : BaseTest
+    public class CompressibleReaderTests : BaseTest
     {
         [Test]
-        public void NetCore_CompressibleReader_ReadAsync()
+        public void CompressibleReader_ReadAsync()
         {
             // Arrange
             var reader = GetService<ICompressibleReader>();

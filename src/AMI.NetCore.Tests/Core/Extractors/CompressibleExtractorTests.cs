@@ -8,10 +8,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Extractors
 {
     [TestFixture]
-    public class CompressibleExtractorTest : BaseTest
+    public class CompressibleExtractorTests : BaseTest
     {
         [Test]
-        public void NetCore_CompressibleExtractor_ExtractAsync()
+        public void CompressibleExtractor_ExtractAsync()
         {
             // Arrange
             var extractor = GetService<ICompressibleExtractor>();

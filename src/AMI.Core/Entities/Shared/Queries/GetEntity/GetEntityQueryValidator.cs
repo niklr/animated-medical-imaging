@@ -1,4 +1,5 @@
-﻿using AMI.Core.Entities.Shared.Models;
+﻿using System;
+using AMI.Core.Entities.Shared.Models;
 using FluentValidation;
 
 namespace AMI.Core.Entities.Shared.Queries.GetEntity
@@ -17,11 +18,7 @@ namespace AMI.Core.Entities.Shared.Queries.GetEntity
         {
             RuleFor(x => x.Id).NotEmpty().NotNull().Must(x =>
             {
-                if (long.TryParse(x, out long result))
-                {
-                    return result > 0;
-                }
-                return false;
+                return Guid.TryParse(x, out Guid result);
             });
         }
     }

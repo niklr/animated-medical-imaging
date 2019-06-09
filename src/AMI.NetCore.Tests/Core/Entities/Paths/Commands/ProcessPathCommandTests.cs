@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Entities.Paths.Commands
 {
     [TestFixture]
-    public class ProcessPathCommandTest : BaseTest
+    public class ProcessPathCommandTests : BaseTest
     {
         [Test]
-        public void NetCore_ProcessPathCommand()
+        public void ProcessPathCommand()
         {
             // Arrange
             var mediator = GetService<IMediator>();
@@ -39,7 +39,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Paths.Commands
         }
 
         [Test]
-        public void NetCore_ProcessPathCommand_Validation_Failures()
+        public void ProcessPathCommand_Validation_Failures()
         {
             // Arrange
             var mediator = GetService<IMediator>();

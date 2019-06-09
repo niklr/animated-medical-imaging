@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace AMI.NetFramework.Tests.Core.Mappers
 {
     [TestFixture]
-    public class BezierPositionMapperTest
+    public class BezierPositionMapperTests
     {
         [Test]
         public void BezierPositionMapper_GetPointOnBezierCurve()

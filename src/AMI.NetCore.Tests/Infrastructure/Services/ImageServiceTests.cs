@@ -8,10 +8,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Infrastructure.Services
 {
     [TestFixture]
-    public class ImageServiceTest : BaseTest
+    public class ImageServiceTests : BaseTest
     {
         [Test]
-        public void NetCore_ImageService_ProcessAsync()
+        public void ImageService_ProcessAsync()
         {
             // Arrange
             var service = GetService<IImageService>();

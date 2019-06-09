@@ -11,10 +11,10 @@ using NUnit.Framework;
 namespace AMI.NetFramework.Tests.Core.Extractors
 {
     [TestFixture]
-    public class ImageExtractorTest : BaseTest
+    public class ImageExtractorTests : BaseTest
     {
         [Test]
-        public void NetFramework_ImageExtractor_ProcessAsync()
+        public void ImageExtractor_ProcessAsync()
         {
             // Arrange
             var loggerFactory = base.GetService<ILoggerFactory>();

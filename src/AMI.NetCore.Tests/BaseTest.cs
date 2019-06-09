@@ -11,6 +11,7 @@ using AMI.Core.Extractors;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.Readers;
+using AMI.Core.Repositories;
 using AMI.Core.Serializers;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -22,9 +23,11 @@ using AMI.Infrastructure.Writers;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using AMI.NetCore.Tests.Mocks.Core.Factories;
+using AMI.Persistence.EntityFramework.InMemory;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -48,6 +51,7 @@ namespace AMI.NetCore.Tests
             services.AddOptions();
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
             services.AddLogging();
+            services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();            
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
@@ -74,6 +78,9 @@ namespace AMI.NetCore.Tests
                 // filter out validators that are not needed here
                 services.AddTransient(pair.InterfaceType, pair.ValidatorType);
             });
+
+            // Add DbContext
+            services.AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             serviceProvider = services.BuildServiceProvider();
         }

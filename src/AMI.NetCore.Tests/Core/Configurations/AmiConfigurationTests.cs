@@ -4,10 +4,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Configurations
 {
     [TestFixture]
-    public class AmiConfigurationTest : BaseTest
+    public class AmiConfigurationTests : BaseTest
     {
         [Test]
-        public void NetCore_AmiConfiguration()
+        public void AmiConfiguration()
         {
             // Arrange
             var configuration = GetService<IAmiConfigurationManager>();

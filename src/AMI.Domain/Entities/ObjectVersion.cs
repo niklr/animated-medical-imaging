@@ -23,13 +23,28 @@ namespace AMI.Domain.Entities
         public DateTime ModifiedDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the type of the data.
+        /// </summary>
+        public int DataType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the file format.
+        /// </summary>
+        public int FileFormat { get; set; }
+
+        /// <summary>
         /// Gets or sets the original filename.
         /// </summary>
         public string OriginalFilename { get; set; }
 
         /// <summary>
-        /// Gets or sets the source path.
+        /// Gets or sets the source path (directory, file, url, etc.).
         /// </summary>
         public string SourcePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the uncompressed filesystem path (directory).
+        /// </summary>
+        public string UncompressedFilesystemPath { get; set; }
     }
 }

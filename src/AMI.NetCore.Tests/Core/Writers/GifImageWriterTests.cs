@@ -10,10 +10,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Writers
 {
     [TestFixture]
-    public class GifImageWriterTest : BaseTest
+    public class GifImageWriterTests : BaseTest
     {
         [Test]
-        public void NetCore_GifImageWriter_WriteAsync()
+        public void GifImageWriter_WriteAsync()
         {
             // Arrange
             var writer = GetService<IGifImageWriter>();

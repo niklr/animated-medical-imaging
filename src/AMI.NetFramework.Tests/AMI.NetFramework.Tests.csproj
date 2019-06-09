@@ -160,9 +160,9 @@
       <Link>SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BaseTest.cs" />
-    <Compile Include="Core\Mappers\AxisPositionMapperTest.cs" />
-    <Compile Include="Core\Mappers\BezierPositionMapperTest.cs" />
-    <Compile Include="Core\Extractors\ImageExtractorTest.cs" />
+    <Compile Include="Core\Mappers\AxisPositionMapperTests.cs" />
+    <Compile Include="Core\Mappers\BezierPositionMapperTests.cs" />
+    <Compile Include="Core\Extractors\ImageExtractorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

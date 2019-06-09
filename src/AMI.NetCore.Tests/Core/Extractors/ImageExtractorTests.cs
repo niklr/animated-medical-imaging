@@ -6,10 +6,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Extractors
 {
     [TestFixture]
-    public class ImageExtractorTest : BaseTest
+    public class ImageExtractorTests : BaseTest
     {
         [Test]
-        public void NetCore_ImageExtractor_ProcessAsync()
+        public void ImageExtractor_ProcessAsync()
         {
             // Arrange
             var extractor = GetService<IImageExtractor>();

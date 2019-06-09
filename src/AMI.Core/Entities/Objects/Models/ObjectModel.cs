@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using AMI.Core.Entities.Shared.Models;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
@@ -16,20 +15,6 @@ namespace AMI.Core.Entities.Models
         /// </summary>
         public ObjectModel()
         {
-        }
-
-        /// <summary>
-        /// Gets the projection of the domain entity.
-        /// </summary>
-        public static Expression<Func<ObjectVersion, ObjectModel>> Projection
-        {
-            get
-            {
-                return e => new ObjectModel
-                {
-                    Id = e.Id.ToString()
-                };
-            }
         }
 
         /// <summary>
@@ -84,7 +69,17 @@ namespace AMI.Core.Entities.Models
                 return null;
             }
 
-            return Projection.Compile().Invoke(entity);
+            return new ObjectModel
+            {
+                Id = entity.Id.ToString(),
+                CreatedDate = entity.CreatedDate,
+                ModifiedDate = entity.ModifiedDate,
+                DataType = Enum.TryParse(entity.DataType.ToString(), out DataType dataType) ? dataType : DataType.Unknown,
+                FileFormat = Enum.TryParse(entity.FileFormat.ToString(), out FileFormat fileFormat) ? fileFormat : FileFormat.Unknown,
+                OriginalFilename = entity.OriginalFilename,
+                SourcePath = entity.SourcePath,
+                UncompressedFilesystemPath = entity.UncompressedFilesystemPath
+            };
         }
     }
 }

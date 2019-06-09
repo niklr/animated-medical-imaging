@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace AMI.NetFramework.Tests.Core.Mappers
 {
     [TestFixture]
-    public class AxisPositionMapperTest
+    public class AxisPositionMapperTests
     {
         [Test]
         public void AxisPositionMapper_Map_1()
