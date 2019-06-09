@@ -1,8 +1,8 @@
-<div *ngIf="results.length <= 0; else showObjectResultsBlock">
+<div *ngIf="objects.length <= 0; else showObjectResultsBlock">
   <div class="card">
     <div class="card-content">
       <p class="caption wrapword">
-        <i class="fas fa-info-circle"></i> No objects/results found. Start by uploading files.
+        <i class="fas fa-info-circle"></i> No results found. Start by uploading files.
       </p>
     </div>
   </div>
@@ -18,53 +18,24 @@
           </label>
         </th>
         <th class="column-main">
-          <button class="custom-fas-btn dropdown-trigger btn grey lighten-1" data-target="dropdown1">
+          <button id="objectActionsDropdownButton"
+                  class="custom-fas-btn dropdown-trigger btn grey lighten-1"
+                  data-target="objectActionsDropdownTarget">
             Actions <i class="fas fa-caret-down"></i>
           </button>
+          <!-- Dropdown Structure -->
+          <ul id="objectActionsDropdownTarget" class="dropdown-content">
+            <li><a href="javascript:void(0)"><i class="fas fa-file-download"></i> Download selected</a></li>
+            <li class="divider" tabindex="-1"></li>
+            <li><a href="javascript:void(0)"><i class="far fa-trash-alt"></i> Delete selectd</a></li>
+          </ul>
         </th>
         <th class="column-meta"></th>
         <th class="column-last"></th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>
-          <label>
-            <input type="checkbox" class="filled-in" checked="checked" />
-            <span></span>
-          </label>
-        </td>
-        <td>
-          Eclair
-          <p>
-            <app-processing-object></app-processing-object>
-          </p>
-        </td>
-        <td>2019-05-17T07:52:41.4700000Z</td>
-        <td><i class="fas fa-bars"></i></td>
-      </tr>
-      <tr>
-        <td>
-          <label>
-            <input type="checkbox" class="filled-in" checked="checked" />
-            <span></span>
-          </label>
-        </td>
-        <td>Eclair</td>
-        <td>$0.87</td>
-        <td><i class="fas fa-bars"></i></td>
-      </tr>
-      <tr>
-        <td>
-          <label>
-            <input type="checkbox" class="filled-in" checked="checked" />
-            <span></span>
-          </label>
-        </td>
-        <td>Eclair</td>
-        <td>$0.87</td>
-        <td><i class="fas fa-bars"></i></td>
-      </tr>
+      <tr *ngFor="let object of objects" [object]="object" app-processing-object></tr>
     </tbody>
   </table>
   <div class="row mt-2 mb-0">

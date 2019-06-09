@@ -2,3 +2,11 @@
 
 $primary-color: #71b2eb !default;
 $secondary-color: #71b2eb !default;
+
+.dropdown-content {
+  width: auto !important;
+}
+
+.dropdown-content li > a > i {
+  margin-right: 0px !important;
+}
