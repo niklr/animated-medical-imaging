@@ -71,5 +71,20 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the uncompressed filesystem path (directory).
         /// </summary>
         public string UncompressedFilesystemPath { get; set; }
+
+        /// <summary>
+        /// Creates a model based on the given domain entity.
+        /// </summary>
+        /// <param name="entity">The domain entity.</param>
+        /// <returns>The domain entity as a model.</returns>
+        public static ObjectModel Create(ObjectVersion entity)
+        {
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return Projection.Compile().Invoke(entity);
+        }
     }
 }

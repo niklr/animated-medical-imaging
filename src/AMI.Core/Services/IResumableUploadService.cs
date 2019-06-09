@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace AMI.Core.Services
 {
     /// <summary>
-    /// This interfaces represents a resumable upload service.
+    /// A service for resumable uploads.
     /// </summary>
     public interface IResumableUploadService
     {

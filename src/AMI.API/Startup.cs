@@ -72,6 +72,7 @@ namespace AMI.API
                     .AddConfiguration(Configuration.GetSection("Logging"))
                     .AddConsole();
             });
+            services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IResumableUploadService, ResumableUploadService>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();

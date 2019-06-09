@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using AMI.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using RNS.Framework.Collections;
@@ -87,6 +89,12 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         public T GetFirstOrDefault(Expression<Func<T, bool>> predicate)
         {
             return GetQuery(predicate).FirstOrDefault();
+        }
+
+        /// <inheritdoc/>
+        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await GetQuery(predicate).SingleOrDefaultAsync(cancellationToken);
         }
 
         /// <inheritdoc/>

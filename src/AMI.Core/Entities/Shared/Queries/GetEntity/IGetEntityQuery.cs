@@ -1,7 +1,7 @@
 ﻿namespace AMI.Core.Entities.Shared.Queries.GetEntity
 {
     /// <summary>
-    /// An interface for a query to get an entity.
+    /// An interface for queries to get an entity.
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     public interface IGetEntityQuery<T>

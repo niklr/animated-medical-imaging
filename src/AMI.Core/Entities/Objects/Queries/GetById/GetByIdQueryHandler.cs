@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
@@ -11,7 +10,7 @@ using MediatR;
 namespace AMI.Core.Entities.Objects.Queries.GetById
 {
     /// <summary>
-    /// A handler for a query to get an object by it's identifier.
+    /// A handler for queries to get an object by its identifier.
     /// </summary>
     public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, ObjectModel>
     {
@@ -29,19 +28,15 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
         /// <inheritdoc/>
         public async Task<ObjectModel> Handle(GetByIdQuery request, CancellationToken cancellationToken)
         {
-            // TODO: Implement async
-            // .SingleOrDefaultAsync(cancellationToken);
-            var result = uow.ObjectRepository
-                .GetQuery(e => e.Id == Guid.Parse(request.Id))
-                .Select(ObjectModel.Projection)
-                .FirstOrDefault();
+            var result = await uow.ObjectRepository
+                .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
 
             if (result == null)
             {
                 throw new NotFoundException(nameof(ObjectVersion), request.Id);
             }
 
-            return result;
+            return ObjectModel.Create(result);
         }
     }
 }

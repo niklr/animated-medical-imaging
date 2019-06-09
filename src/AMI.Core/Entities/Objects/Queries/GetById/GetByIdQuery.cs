@@ -5,7 +5,7 @@ using AMI.Core.Entities.Shared.Queries.GetEntity;
 namespace AMI.Core.Entities.Objects.Queries.GetById
 {
     /// <summary>
-    /// An implementation of a query to get an entity by it's identifier.
+    /// An implementation of a query to get an entity by its identifier.
     /// </summary>
     public class GetByIdQuery : GetEntityQuery<ObjectModel>, IGetEntityQuery<IEntity>
     {

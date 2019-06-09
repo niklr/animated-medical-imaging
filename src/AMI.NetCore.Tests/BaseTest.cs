@@ -48,18 +48,19 @@ namespace AMI.NetCore.Tests
             services.AddOptions();
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
             services.AddLogging();
+            services.AddScoped<IIdGenService, IdGenService>();
+            services.AddScoped<IImageService, ImageService>();            
+            services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+            services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
+            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
+            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddTransient<ICompressibleReader, SharpCompressReader>();
             services.AddTransient<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<IDefaultJsonWriter, DefaultJsonWriter>();
             services.AddTransient<IImageExtractor, ItkImageExtractor>();
             services.AddTransient<ICompressibleExtractor, SharpCompressExtractor>();
-            services.AddTransient<IImageService, ImageService>();
-            services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
-            services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
-            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
-            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
-            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
 
             // Add MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));

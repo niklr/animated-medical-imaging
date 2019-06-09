@@ -10,7 +10,7 @@ using AMI.Core.Strategies;
 namespace AMI.Infrastructure.Services
 {
     /// <summary>
-    /// A resumable upload service.
+    /// A service for resumable uploads.
     /// </summary>
     /// <seealso cref="IResumableUploadService" />
     public class ResumableUploadService : IResumableUploadService

@@ -28,8 +28,8 @@ namespace AMI.Domain.Entities
         public string OriginalFilename { get; set; }
 
         /// <summary>
-        /// Gets or sets the filesystem path.
+        /// Gets or sets the source path.
         /// </summary>
-        public string FsPath { get; set; }
+        public string SourcePath { get; set; }
     }
 }

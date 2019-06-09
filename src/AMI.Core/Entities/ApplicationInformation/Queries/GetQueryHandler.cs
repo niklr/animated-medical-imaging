@@ -30,7 +30,8 @@ namespace AMI.Core.Entities.ApplicationInformation.Queries
         /// </summary>
         /// <param name="request">The query request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The application information.</returns>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains the application information.</returns>
         public Task<AppInfo> Handle(GetQuery request, CancellationToken cancellationToken)
         {
             return Task.FromResult(factory.Create());

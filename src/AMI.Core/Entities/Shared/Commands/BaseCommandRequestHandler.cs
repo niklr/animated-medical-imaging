@@ -17,30 +17,23 @@ namespace AMI.Core.Entities.Shared.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommandRequestHandler{TRequest, TResponse}"/> class.
         /// </summary>
-        /// <param name="mediator">The mediator.</param>
-        /// <exception cref="ArgumentNullException">mediator</exception>
-        public BaseCommandRequestHandler(IMediator mediator)
+        public BaseCommandRequestHandler()
         {
-            Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         /// <summary>
-        /// Gets the mediator.
-        /// </summary>
-        protected IMediator Mediator { get; private set; }
-
-        /// <summary>
-        /// Handles the command request.
+        /// Asynchronously handles the command request.
         /// </summary>
         /// <param name="request">The command request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The result of the command request.</returns>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains the result of the command request.</returns>
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
         {
             try
             {
                 // TODO: audit response
-                var response = await ProtectedHandle(request, cancellationToken);
+                var response = await ProtectedHandleAsync(request, cancellationToken);
                 return response;
             }
             catch (Exception)
@@ -50,11 +43,12 @@ namespace AMI.Core.Entities.Shared.Commands
         }
 
         /// <summary>
-        /// Handles the command request called by the base class.
+        /// Asynchronously handles the command request called by the base class.
         /// </summary>
         /// <param name="request">The command request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The result of the command request.</returns>
-        protected abstract Task<TResponse> ProtectedHandle(TRequest request, CancellationToken cancellationToken);
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains the result of the command request.</returns>
+        protected abstract Task<TResponse> ProtectedHandleAsync(TRequest request, CancellationToken cancellationToken);
     }
 }

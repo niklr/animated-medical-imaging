@@ -3,7 +3,7 @@
 namespace AMI.Core.Entities.Objects.Queries.GetById
 {
     /// <summary>
-    /// A validator for queries to get an entity by it's identifier.
+    /// A validator for queries to get an entity by its identifier.
     /// </summary>
     public class GetByIdQueryValidator : GetEntityQueryValidator<GetByIdQuery>
     {

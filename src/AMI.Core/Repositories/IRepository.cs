@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using RNS.Framework.Collections;
 
 namespace AMI.Core.Repositories
@@ -19,6 +21,14 @@ namespace AMI.Core.Repositories
         /// <param name="predicate">A function to test each entity for a condition.</param>
         /// <returns>A default value if source is empty; otherwise, the first entity in source.</returns>
         TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Gets the first entity of a sequence, or a default value if the sequence contains no entities asynchronous.
+        /// </summary>
+        /// <param name="predicate">A function to test each entity for a condition.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A default value if source is empty; otherwise, the first entity in source.</returns>
+        Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets entities filtered based on a predicate.

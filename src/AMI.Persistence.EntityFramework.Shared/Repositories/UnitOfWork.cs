@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using AMI.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -9,7 +11,7 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
     /// An implementation of the Unit of Work pattern.
     /// </summary>
     /// <seealso cref="IUnitOfWork" />
-    public class UnitOfWork : IUnitOfWork
+    public abstract class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext context;
         private IDbContextTransaction transaction;
@@ -81,9 +83,15 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
-        public void SaveChanges()
+        public int SaveChanges()
         {
-            context.SaveChanges();
+            return context.SaveChanges();
+        }
+
+        /// <inheritdoc/>
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return context.SaveChangesAsync(cancellationToken);
         }
 
         private void ReleaseCurrentTransaction()
