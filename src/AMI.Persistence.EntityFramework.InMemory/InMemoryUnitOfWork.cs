@@ -24,11 +24,11 @@ namespace AMI.Persistence.EntityFramework.InMemory
         }
 
         /// <inheritdoc/>
-        public IRepository<ObjectVersion> ObjectRepository
+        public IRepository<ObjectEntity> ObjectRepository
         {
             get
             {
-                return new DbSetRepository<ObjectVersion>(context.ObjectVersions);
+                return new DbSetRepository<ObjectEntity>(context.Objects);
             }
         }
     }

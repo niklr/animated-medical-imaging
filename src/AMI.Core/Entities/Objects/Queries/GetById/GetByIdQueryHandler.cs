@@ -33,7 +33,7 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
 
             if (result == null)
             {
-                throw new NotFoundException(nameof(ObjectVersion), request.Id);
+                throw new NotFoundException(nameof(ObjectEntity), request.Id);
             }
 
             return ObjectModel.Create(result);

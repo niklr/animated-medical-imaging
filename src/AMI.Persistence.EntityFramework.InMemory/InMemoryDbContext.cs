@@ -19,9 +19,9 @@ namespace AMI.Persistence.EntityFramework.InMemory
         }
 
         /// <summary>
-        /// Gets or sets the object versions.
+        /// Gets or sets the object entities.
         /// </summary>
-        public DbSet<ObjectVersion> ObjectVersions { get; set; }
+        public DbSet<ObjectEntity> Objects { get; set; }
 
         /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)

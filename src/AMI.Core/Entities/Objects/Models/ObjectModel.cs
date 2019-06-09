@@ -62,7 +62,7 @@ namespace AMI.Core.Entities.Models
         /// </summary>
         /// <param name="entity">The domain entity.</param>
         /// <returns>The domain entity as a model.</returns>
-        public static ObjectModel Create(ObjectVersion entity)
+        public static ObjectModel Create(ObjectEntity entity)
         {
             if (entity == null)
             {

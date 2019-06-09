@@ -11,6 +11,6 @@ namespace AMI.Core.Repositories
         /// <summary>
         /// Gets the object repository.
         /// </summary>
-        IRepository<ObjectVersion> ObjectRepository { get; }
+        IRepository<ObjectEntity> ObjectRepository { get; }
     }
 }

@@ -33,7 +33,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// <inheritdoc/>
         protected override async Task<ObjectModel> ProtectedHandleAsync(CreateObjectCommand request, CancellationToken cancellationToken)
         {
-            var entity = new ObjectVersion()
+            var entity = new ObjectEntity()
             {
                 Id = idGenService.CreateId(),
                 CreatedDate = DateTime.UtcNow,

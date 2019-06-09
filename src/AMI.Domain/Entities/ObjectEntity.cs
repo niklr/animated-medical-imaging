@@ -5,7 +5,7 @@ namespace AMI.Domain.Entities
     /// <summary>
     /// An entity representing an object.
     /// </summary>
-    public class ObjectVersion
+    public class ObjectEntity
     {
         /// <summary>
         /// Gets or sets the identifier.
