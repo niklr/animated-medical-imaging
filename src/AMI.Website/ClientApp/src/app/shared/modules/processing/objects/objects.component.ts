@@ -6,10 +6,10 @@ import 'datatables.net';
 import M from 'materialize-css';
 
 @Component({
-  selector: 'app-object-results',
-  templateUrl: './object-results.component.html'
+  selector: 'app-processing-objects',
+  templateUrl: './objects.component.html'
 })
-export class ObjectResultsComponent implements OnInit, AfterViewInit {
+export class ObjectsComponent implements OnInit, AfterViewInit {
 
   @Input() tableId: string;
 

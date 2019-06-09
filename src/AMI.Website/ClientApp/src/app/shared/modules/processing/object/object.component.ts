@@ -3,10 +3,10 @@ import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import M from 'materialize-css';
 
 @Component({
-  selector: 'app-object-result',
-  templateUrl: './object-result.component.html'
+  selector: 'app-processing-object',
+  templateUrl: './object.component.html'
 })
-export class ObjectResultComponent implements OnInit, AfterViewInit {
+export class ObjectComponent implements OnInit, AfterViewInit {
 
   @Input() result: any;
 

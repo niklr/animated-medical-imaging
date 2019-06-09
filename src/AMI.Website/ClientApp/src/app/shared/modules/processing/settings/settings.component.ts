@@ -4,10 +4,10 @@ import { AxisType, ProcessObjectCommand } from '../../../../clients/ami-api-clie
 import M from 'materialize-css';
 
 @Component({
-  selector: 'app-process-object-settings',
-  templateUrl: './process-settings.component.html'
+  selector: 'app-processing-settings',
+  templateUrl: './settings.component.html'
 })
-export class ProcessSettingsComponent implements OnInit, AfterViewInit {
+export class SettingsComponent implements OnInit, AfterViewInit {
 
   settings: ProcessObjectCommand = new ProcessObjectCommand(); 
 

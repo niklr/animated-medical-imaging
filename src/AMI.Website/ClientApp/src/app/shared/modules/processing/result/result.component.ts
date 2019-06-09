@@ -4,10 +4,10 @@ import { ProcessResult, AxisContainerOfString, AxisType, PositionAxisContainerOf
 import M from 'materialize-css';
 
 @Component({
-  selector: 'app-process-result',
-  templateUrl: './process-result.component.html'
+  selector: 'app-processing-result',
+  templateUrl: './result.component.html'
 })
-export class ProcessResultComponent implements OnInit, AfterViewInit {
+export class ResultComponent implements OnInit, AfterViewInit {
 
   result: ProcessResult = new ProcessResult();
   extendedResult: any = {};

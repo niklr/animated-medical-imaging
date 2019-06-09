@@ -1,0 +1,25 @@
+.object-table {
+  table-layout: fixed;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.object-table .column-first {
+  width: 50px;
+}
+
+.object-table .column-main {
+  width: 60%;
+}
+
+.object-table .column-meta {
+  width: 40%;
+}
+
+.object-table .column-last {
+  width: 50px;
+}
+
+.object-table td {
+  vertical-align: top !important;
+}

@@ -1,0 +1,77 @@
+<div *ngIf="results.length <= 0; else showObjectResultsBlock">
+  <div class="card">
+    <div class="card-content">
+      <p class="caption wrapword">
+        <i class="fas fa-info-circle"></i> No objects/results found. Start by uploading files.
+      </p>
+    </div>
+  </div>
+</div>
+<ng-template #showObjectResultsBlock>
+  <table class="highlight object-table">
+    <thead>
+      <tr>
+        <th class="column-first">
+          <label>
+            <input type="checkbox" class="filled-in" checked="checked" />
+            <span></span>
+          </label>
+        </th>
+        <th class="column-main">
+          <button class="custom-fas-btn dropdown-trigger btn grey lighten-1" data-target="dropdown1">
+            Actions <i class="fas fa-caret-down"></i>
+          </button>
+        </th>
+        <th class="column-meta"></th>
+        <th class="column-last"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <label>
+            <input type="checkbox" class="filled-in" checked="checked" />
+            <span></span>
+          </label>
+        </td>
+        <td>
+          Eclair
+          <p>
+            <app-processing-object></app-processing-object>
+          </p>
+        </td>
+        <td>2019-05-17T07:52:41.4700000Z</td>
+        <td><i class="fas fa-bars"></i></td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <input type="checkbox" class="filled-in" checked="checked" />
+            <span></span>
+          </label>
+        </td>
+        <td>Eclair</td>
+        <td>$0.87</td>
+        <td><i class="fas fa-bars"></i></td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <input type="checkbox" class="filled-in" checked="checked" />
+            <span></span>
+          </label>
+        </td>
+        <td>Eclair</td>
+        <td>$0.87</td>
+        <td><i class="fas fa-bars"></i></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="row mt-2 mb-0">
+    <div class="col s12 m6 offset-m3">
+      <button class="btn waves-effect waves-light full-width custom-fas-btn">
+        <i class="fas fa-rocket"></i> PROCESS
+      </button>
+    </div>
+  </div>
+</ng-template>
