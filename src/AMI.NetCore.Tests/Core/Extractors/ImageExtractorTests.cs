@@ -1,5 +1,5 @@
 using System.Threading;
-using AMI.Core.Entities.Paths.Commands.Process;
+using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Extractors;
 using NUnit.Framework;
 

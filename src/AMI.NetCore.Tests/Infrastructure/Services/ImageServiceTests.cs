@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
-using AMI.Core.Entities.Paths.Commands.Process;
+using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Services;
 using AMI.Domain.Enums;
 using NUnit.Framework;

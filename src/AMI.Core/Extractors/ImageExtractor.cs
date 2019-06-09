@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Paths.Commands.Process;
+using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Extensions.Drawing;
 using AMI.Core.Factories;
 using AMI.Core.Mappers;

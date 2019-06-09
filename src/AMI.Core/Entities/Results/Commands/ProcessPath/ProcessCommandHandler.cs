@@ -5,7 +5,7 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Services;
 
-namespace AMI.Core.Entities.Paths.Commands.Process
+namespace AMI.Core.Entities.Results.Commands.ProcessPath
 {
     /// <summary>
     /// A handler for process command requests.

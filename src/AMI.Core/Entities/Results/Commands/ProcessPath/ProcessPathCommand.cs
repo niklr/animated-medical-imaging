@@ -1,7 +1,7 @@
 ﻿using System;
 using AMI.Core.Entities.Shared.Commands;
 
-namespace AMI.Core.Entities.Paths.Commands.Process
+namespace AMI.Core.Entities.Results.Commands.ProcessPath
 {
     /// <summary>
     /// A command containing information needed to process paths (directory, file, url, etc.).

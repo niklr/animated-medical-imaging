@@ -1,10 +1,10 @@
 ﻿using System.Threading;
-using AMI.Core.Entities.Paths.Commands.Process;
+using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Domain.Exceptions;
 using MediatR;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Entities.Paths.Commands
+namespace AMI.NetCore.Tests.Core.Entities.Results.Commands
 {
     [TestFixture]
     public class ProcessPathCommandTests : BaseTest

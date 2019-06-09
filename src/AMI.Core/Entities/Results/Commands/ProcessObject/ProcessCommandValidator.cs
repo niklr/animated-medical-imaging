@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace AMI.Core.Entities.Objects.Commands.Process
+namespace AMI.Core.Entities.Results.Commands.ProcessObjects
 {
     /// <summary>
     /// A validator for process command requests.

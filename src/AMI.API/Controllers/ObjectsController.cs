@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
-using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Results.Commands.ProcessObjects;
 using Microsoft.AspNetCore.Mvc;
 using Models = AMI.Core.Entities.Models;
 

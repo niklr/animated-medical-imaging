@@ -1,7 +1,7 @@
 ﻿using System;
 using AMI.Core.Entities.Shared.Commands;
 
-namespace AMI.Core.Entities.Objects.Commands.Process
+namespace AMI.Core.Entities.Results.Commands.ProcessObjects
 {
     /// <summary>
     /// A command containing information needed to process objects.

@@ -8,7 +8,7 @@ using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.ApplicationInformation.Queries;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Objects.Commands.Process;
+using AMI.Core.Entities.Results.Commands.ProcessObjects;
 using AMI.Core.Factories;
 using AMI.Core.Serializers;
 using AMI.Core.Services;
