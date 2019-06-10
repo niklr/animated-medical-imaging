@@ -6,7 +6,7 @@
 </td>
 <td>
   <div class="row">
-    <div class="col s8">
+    <div class="col s8 no-padding">
       <span class="wrapword">
         <span class="new badge grey lighten-1 {{tooltipGuid}}"
               data-badge-caption=""
@@ -20,15 +20,13 @@
     </div>
     <div class="col s4">
       <span class="wrapword">
-        <i class="far fa-calendar-alt"></i> {{momentUtil.getLocalDate(object.createdDate)}}
-        <i class="far fa-clock"></i> {{momentUtil.getLocalTime(object.createdDate)}}
+        <i class="far fa-calendar-alt"></i> {{momentUtil.getLocalDate(object.modifiedDate)}}
+        <i class="far fa-clock"></i> {{momentUtil.getLocalTime(object.modifiedDate)}}
       </span>
     </div>
   </div>
-  <div class="row">
-    <div class="col s12">
-
-    </div>
+  <div *ngIf="object.latestTask">
+    <app-processing-task [task]="object.latestTask"></app-processing-task>
   </div>
 </td>
 <td>

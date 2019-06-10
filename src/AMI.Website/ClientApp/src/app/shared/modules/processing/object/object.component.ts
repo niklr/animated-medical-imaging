@@ -13,7 +13,6 @@ export class ObjectComponent implements OnInit, AfterViewInit {
   @Input() object: any;
 
   private tooltipGuid: string;
-  private objectIdInputGuid: string;
   private dropdownButtonGuid: string;
   private dropdownTargetGuid: string;
 
@@ -21,7 +20,6 @@ export class ObjectComponent implements OnInit, AfterViewInit {
 
   constructor(private clipboardUtil: ClipboardUtil, private guidUtil: GuidUtil, private momentUtil: MomentUtil) {
     this.tooltipGuid = this.guidUtil.createGuid();
-    this.objectIdInputGuid = this.guidUtil.createGuid();
     this.dropdownButtonGuid = this.guidUtil.createGuid();
     this.dropdownTargetGuid = this.guidUtil.createGuid();
   }
