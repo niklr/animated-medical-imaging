@@ -5,7 +5,7 @@ import { ObjectComponent } from './object/object.component';
 import { ObjectsComponent } from './objects/objects.component';
 import { ResultComponent } from './result/result.component';
 import { SettingsComponent } from './settings/settings.component';
-import { GuidUtil, MomentUtil } from '../../../utils';
+import { ClipboardUtil, GuidUtil, MomentUtil } from '../../../utils';
 
 @NgModule({
   imports: [
@@ -19,6 +19,7 @@ import { GuidUtil, MomentUtil } from '../../../utils';
     SettingsComponent
   ],
   providers: [
+    ClipboardUtil,
     GuidUtil,
     MomentUtil
   ],

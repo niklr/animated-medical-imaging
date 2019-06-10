@@ -5,12 +5,32 @@
   </label>
 </td>
 <td>
-  {{object.originalFilename}}
-  <p>
+  <div class="row">
+    <div class="col s8">
+      <span class="wrapword">
+        <span class="new badge grey lighten-1 {{tooltipGuid}}"
+              data-badge-caption=""
+              data-position="bottom"
+              [attr.data-tooltip]="object.id"
+              (click)="copyObjectId()">
+          {{objectIdShort}}
+        </span>
+        {{object.originalFilename}}
+      </span>
+    </div>
+    <div class="col s4">
+      <span class="wrapword">
+        <i class="far fa-calendar-alt"></i> {{momentUtil.getLocalDate(object.createdDate)}}
+        <i class="far fa-clock"></i> {{momentUtil.getLocalTime(object.createdDate)}}
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
 
-  </p>
+    </div>
+  </div>
 </td>
-<td>2019-05-17T07:52:41.4700000Z</td>
 <td>
   <button [id]="dropdownButtonGuid" class="custom-fas-btn dropdown-trigger btn-flat" [attr.data-target]="dropdownTargetGuid">
     <i class="fas fa-bars"></i>

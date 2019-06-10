@@ -33,7 +33,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     var object1 = {
       id: '19f06aa9-1856-4cc9-ba30-1ea0483fc154',
       originalFilename: 'SMIR.Brain.XX.O.MR_Flair.36620.mha',
-      createdDate: '2019-05-17T07:52:41.4700000Z'
+      createdDate: '2019-05-21T14:05:25.3100000Z'
     };
 
     var object2 = {

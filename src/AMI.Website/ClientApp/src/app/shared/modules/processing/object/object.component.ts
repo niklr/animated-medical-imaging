@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { GuidUtil } from '../../../../utils';
+import { ClipboardUtil, GuidUtil, MomentUtil } from '../../../../utils';
 
 import M from 'materialize-css';
 import * as $ from 'jquery';
@@ -12,24 +12,36 @@ export class ObjectComponent implements OnInit, AfterViewInit {
 
   @Input() object: any;
 
+  private tooltipGuid: string;
+  private objectIdInputGuid: string;
   private dropdownButtonGuid: string;
   private dropdownTargetGuid: string;
 
-  constructor(private guidUtil: GuidUtil) {
+  private objectIdShort: string;
+
+  constructor(private clipboardUtil: ClipboardUtil, private guidUtil: GuidUtil, private momentUtil: MomentUtil) {
+    this.tooltipGuid = this.guidUtil.createGuid();
+    this.objectIdInputGuid = this.guidUtil.createGuid();
     this.dropdownButtonGuid = this.guidUtil.createGuid();
     this.dropdownTargetGuid = this.guidUtil.createGuid();
   }
 
   ngOnInit() {
+    this.objectIdShort = this.object.id.slice(0, 8);
   }
 
   ngAfterViewInit(): void {
-    this.initDropdown();
+    this.initMaterialize();
   }
 
-  private initDropdown(): void {
-    var options = {};
-    var instance = M.Dropdown.init($('#' + this.dropdownButtonGuid), options);
+  private initMaterialize(): void {
+    M.Dropdown.init($('#' + this.dropdownButtonGuid), {});
+    M.Tooltip.init($('.' + this.tooltipGuid), {});
+  }
+
+  public copyObjectId(): void {
+    this.clipboardUtil.copy(this.object.id);
+    M.toast({ html: this.object.id + ' copied to clipboard.', classes: 'rounded' });
   }
 
   public download(): void {
