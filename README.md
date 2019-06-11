@@ -169,9 +169,9 @@ representing a multi-dimensional medical image. This json file consists of model
 
 #### AxisType (enum)
 
-* `x` The x-axis of the coordinate system.
-* `y` The y-axis of the coordinate system.
-* `z` The z-axis of the coordinate system.
+* `X` The x-axis of the coordinate system.
+* `Y` The y-axis of the coordinate system.
+* `Z` The z-axis of the coordinate system.
 
 ### Debug <a name="debug"></a>
 

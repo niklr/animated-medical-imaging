@@ -68,6 +68,10 @@ namespace AMI.API.Handlers
                     case nameof(ForbiddenException):
                         code = HttpStatusCode.Forbidden;
                         break;
+                    case nameof(ArgumentException):
+                    case nameof(ArgumentNullException):
+                        code = HttpStatusCode.BadRequest;
+                        break;
                     case nameof(ValidationException):
                         code = HttpStatusCode.BadRequest;
                         result.ValidationErrors = ((ValidationException)exception).Failures;

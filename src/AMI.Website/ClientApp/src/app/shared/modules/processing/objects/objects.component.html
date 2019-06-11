@@ -13,7 +13,7 @@
       <tr>
         <th class="column-first">
           <label>
-            <input type="checkbox" class="filled-in" checked="checked" />
+            <input type="checkbox" class="filled-in" [(ngModel)]="isChecked" (click)="toggleCheckbox()" />
             <span></span>
           </label>
         </th>

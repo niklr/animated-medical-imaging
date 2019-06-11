@@ -29,58 +29,58 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
   ""images"": [
     {
       ""position"": 0,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_0.png""
     },
     {
       ""position"": 1,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_1.png""
     },
     {
       ""position"": 2,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_2.png""
     },
     {
       ""position"": 3,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_3.png""
     },
     {
       ""position"": 4,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_4.png""
     },
     {
       ""position"": 5,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_5.png""
     },
     {
       ""position"": 6,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_6.png""
     },
     {
       ""position"": 7,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_7.png""
     },
     {
       ""position"": 8,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_8.png""
     },
     {
       ""position"": 9,
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z_9.png""
     }
   ],
   ""gifs"": [
     {
-      ""axisType"": ""z"",
+      ""axisType"": ""Z"",
       ""entity"": ""Z.gif""
     }
   ],

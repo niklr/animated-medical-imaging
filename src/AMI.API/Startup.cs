@@ -73,7 +73,7 @@ namespace AMI.API
                     .AddConsole();
             });
             services.AddScoped<IIdGenService, IdGenService>();
-            services.AddScoped<IResumableUploadService, ResumableUploadService>();
+            services.AddScoped<IUploadObjectService, UploadObjectService>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();

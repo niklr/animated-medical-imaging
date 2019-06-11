@@ -2,26 +2,32 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Models;
 
 namespace AMI.Core.Services
 {
     /// <summary>
-    /// A service for resumable uploads.
+    /// A service to upload objects.
     /// </summary>
-    public interface IResumableUploadService
+    public interface IUploadObjectService
     {
         /// <summary>
         /// Uploads the specified chunk number.
         /// </summary>
+        /// <param name="totalChunks">The total chunks.</param>
         /// <param name="chunkNumber">The chunk number.</param>
         /// <param name="uid">The unique identifier.</param>
         /// <param name="input">The input stream.</param>
+        /// <param name="ct">The cancellation token.</param>
         /// <exception cref="ArgumentNullException">
         /// uid
         /// or
         /// input
         /// </exception>
-        void Upload(int chunkNumber, string uid, Stream input);
+        /// <returns>
+        /// A <see cref="Task"/> representing the asynchronous operation.
+        /// </returns>
+        Task<UploadChunkResultModel> UploadAsync(int totalChunks, int chunkNumber, string uid, Stream input, CancellationToken ct);
 
         /// <summary>
         /// Commits the file to the desired storage location.
@@ -33,6 +39,6 @@ namespace AMI.Core.Services
         /// <returns>
         /// A <see cref="Task" /> representing the asynchronous operation.
         /// </returns>
-        Task CommitAsync(string filename, string fullDestPath, string uid, CancellationToken ct);
+        Task<ObjectModel> CommitAsync(string filename, string fullDestPath, string uid, CancellationToken ct);
     }
 }

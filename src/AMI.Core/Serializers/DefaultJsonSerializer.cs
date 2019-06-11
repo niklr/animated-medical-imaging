@@ -36,10 +36,7 @@ namespace AMI.Core.Serializers
 
             settings.Formatting = Formatting.Indented;
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            settings.Converters.Add(new StringEnumConverter
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            });
+            settings.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>

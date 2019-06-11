@@ -10,7 +10,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
   @Input() tableId: string;
 
-  objects = [];
+  private isChecked: boolean = false;
+  private objects = [];
 
   constructor() {
     this.initDemoObjects();
@@ -50,6 +51,16 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     };
 
     this.objects = [object1, object2];
+  }
+
+  private toggleCheckbox(): void {
+    this.isChecked = !this.isChecked;
+    if (this.objects) {
+      this.objects.forEach(function (value, index, array) {
+        let that = this as ObjectsComponent;
+        value.isChecked = that.isChecked;
+      }.bind(this));
+    }
   }
 }
 

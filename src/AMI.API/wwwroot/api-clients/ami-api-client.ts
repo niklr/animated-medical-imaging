@@ -130,11 +130,30 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
 
 export interface IObjectsAmiApiClient {
     /**
+     * Gets the information of the object with the specified identifier.
+     * @param id The identifier of the object.
+     * @return The information of the object.
+     */
+    getById(id: string | null): Observable<ObjectModel | null>;
+    /**
      * Processes an existing object.
+     * @param id The identifier of the object.
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string, command: ProcessObjectCommand): Observable<TaskModel | null>;
+    process(id: string | null, command: ProcessObjectCommand): Observable<TaskModel | null>;
+    /**
+     * Uploads an object.
+     * @param file The file.
+     * @param chunkNumber The chunk number.
+     * @param totalSize The total size of the upload.
+     * @param uid The unique identifier.
+     * @param filename The filename.
+     * @param relativePath The relative path.
+     * @param totalChunks The total chunks.
+     * @return The result of the resumable upload.
+     */
+    upload(file: FileParameter | null, chunkNumber: number, totalSize: number, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<ObjectModel | null>;
 }
 
 @Injectable()
@@ -149,11 +168,110 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     }
 
     /**
+     * Gets the information of the object with the specified identifier.
+     * @param id The identifier of the object.
+     * @return The information of the object.
+     */
+    getById(id: string | null): Observable<ObjectModel | null> {
+        let url_ = this.baseUrl + "/objects/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetById(<any>response_);
+                } catch (e) {
+                    return <Observable<ObjectModel | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ObjectModel | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetById(response: HttpResponseBase): Observable<ObjectModel | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? ObjectModel.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ObjectModel | null>(<any>null);
+    }
+
+    /**
      * Processes an existing object.
+     * @param id The identifier of the object.
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string, command: ProcessObjectCommand): Observable<TaskModel | null> {
+    process(id: string | null, command: ProcessObjectCommand): Observable<TaskModel | null> {
         let url_ = this.baseUrl + "/objects/{id}/process";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -249,71 +367,28 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
         }
         return _observableOf<TaskModel | null>(<any>null);
     }
-}
 
-export interface IUploadAmiApiClient {
     /**
-     * The resumable upload endpoint.
+     * Uploads an object.
      * @param file The file.
      * @param chunkNumber The chunk number.
-     * @param chunkSize The size of the chunk.
-     * @param currentChunkSize The size of the current chunk.
      * @param totalSize The total size of the upload.
-     * @param resumableType The name of the file type.
      * @param uid The unique identifier.
      * @param filename The filename.
      * @param relativePath The relative path.
      * @param totalChunks The total chunks.
+     * @return The result of the resumable upload.
      */
-    resumableUpload(file: FileParameter | null, chunkNumber: number, chunkSize: number, currentChunkSize: number, totalSize: number, resumableType: string | null, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<void>;
-}
-
-@Injectable()
-export class UploadAmiApiClient implements IUploadAmiApiClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
-    }
-
-    /**
-     * The resumable upload endpoint.
-     * @param file The file.
-     * @param chunkNumber The chunk number.
-     * @param chunkSize The size of the chunk.
-     * @param currentChunkSize The size of the current chunk.
-     * @param totalSize The total size of the upload.
-     * @param resumableType The name of the file type.
-     * @param uid The unique identifier.
-     * @param filename The filename.
-     * @param relativePath The relative path.
-     * @param totalChunks The total chunks.
-     */
-    resumableUpload(file: FileParameter | null, chunkNumber: number, chunkSize: number, currentChunkSize: number, totalSize: number, resumableType: string | null, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<void> {
-        let url_ = this.baseUrl + "/upload/resumable?";
+    upload(file: FileParameter | null, chunkNumber: number, totalSize: number, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<ObjectModel | null> {
+        let url_ = this.baseUrl + "/objects/upload?";
         if (chunkNumber === undefined || chunkNumber === null)
             throw new Error("The parameter 'chunkNumber' must be defined and cannot be null.");
         else
             url_ += "chunkNumber=" + encodeURIComponent("" + chunkNumber) + "&"; 
-        if (chunkSize === undefined || chunkSize === null)
-            throw new Error("The parameter 'chunkSize' must be defined and cannot be null.");
-        else
-            url_ += "chunkSize=" + encodeURIComponent("" + chunkSize) + "&"; 
-        if (currentChunkSize === undefined || currentChunkSize === null)
-            throw new Error("The parameter 'currentChunkSize' must be defined and cannot be null.");
-        else
-            url_ += "currentChunkSize=" + encodeURIComponent("" + currentChunkSize) + "&"; 
         if (totalSize === undefined || totalSize === null)
             throw new Error("The parameter 'totalSize' must be defined and cannot be null.");
         else
             url_ += "totalSize=" + encodeURIComponent("" + totalSize) + "&"; 
-        if (resumableType === undefined)
-            throw new Error("The parameter 'resumableType' must be defined.");
-        else
-            url_ += "resumableType=" + encodeURIComponent("" + resumableType) + "&"; 
         if (uid === undefined)
             throw new Error("The parameter 'uid' must be defined.");
         else
@@ -341,24 +416,25 @@ export class UploadAmiApiClient implements IUploadAmiApiClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processResumableUpload(response_);
+            return this.processUpload(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processResumableUpload(<any>response_);
+                    return this.processUpload(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<ObjectModel | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<ObjectModel | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processResumableUpload(response: HttpResponseBase): Observable<void> {
+    protected processUpload(response: HttpResponseBase): Observable<ObjectModel | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -407,12 +483,19 @@ export class UploadAmiApiClient implements IUploadAmiApiClient {
             result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? ObjectModel.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<ObjectModel | null>(<any>null);
     }
 }
 
@@ -1011,6 +1094,105 @@ export interface IAppInfo {
     appName?: string | undefined;
     /** Gets the application version. */
     appVersion?: string | undefined;
+}
+
+/** A model representing an object. */
+export class ObjectModel implements IObjectModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the type of the data. */
+    dataType?: DataType;
+    /** Gets or sets the file format. */
+    fileFormat?: FileFormat;
+    /** Gets or sets the original filename. */
+    originalFilename?: string | undefined;
+    /** Gets or sets the source path (directory, file, url, etc.). */
+    sourcePath?: string | undefined;
+    /** Gets or sets the uncompressed filesystem path (directory). */
+    uncompressedFilesystemPath?: string | undefined;
+
+    constructor(data?: IObjectModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
+            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
+            this.dataType = data["dataType"];
+            this.fileFormat = data["fileFormat"];
+            this.originalFilename = data["originalFilename"];
+            this.sourcePath = data["sourcePath"];
+            this.uncompressedFilesystemPath = data["uncompressedFilesystemPath"];
+        }
+    }
+
+    static fromJS(data: any): ObjectModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ObjectModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["dataType"] = this.dataType;
+        data["fileFormat"] = this.fileFormat;
+        data["originalFilename"] = this.originalFilename;
+        data["sourcePath"] = this.sourcePath;
+        data["uncompressedFilesystemPath"] = this.uncompressedFilesystemPath;
+        return data; 
+    }
+}
+
+/** A model representing an object. */
+export interface IObjectModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the type of the data. */
+    dataType?: DataType;
+    /** Gets or sets the file format. */
+    fileFormat?: FileFormat;
+    /** Gets or sets the original filename. */
+    originalFilename?: string | undefined;
+    /** Gets or sets the source path (directory, file, url, etc.). */
+    sourcePath?: string | undefined;
+    /** Gets or sets the uncompressed filesystem path (directory). */
+    uncompressedFilesystemPath?: string | undefined;
+}
+
+/** A type to describe the data. */
+export enum DataType {
+    Unknown = 0, 
+    RawImage = 1, 
+    SegmentationImage = 2, 
+}
+
+/** A type to describe the file format. */
+export enum FileFormat {
+    Unknown = 0, 
+    Dicom = 1, 
+    DicomMultiframe = 2, 
+    Analyze = 3, 
+    MetaImage = 4, 
+    Nifti = 5, 
 }
 
 /** A model containing information about the task. */

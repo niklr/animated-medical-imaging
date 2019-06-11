@@ -122,6 +122,135 @@
         }
       }
     },
+    "/objects/{id}": {
+      "put": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Gets the information of the object with the specified identifier.",
+        "operationId": "Objects_GetById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The identifier of the object.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorModel"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorModel"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorModel"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorModel"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorModel"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorModel"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The information of the object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ObjectModel"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/objects/{id}/process": {
       "put": {
         "tags": [
@@ -134,10 +263,12 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "The identifier of the object.",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
-            "x-position": 2
+            "x-position": 1
           }
         ],
         "requestBody": {
@@ -151,7 +282,7 @@
             }
           },
           "required": true,
-          "x-position": 1
+          "x-position": 2
         },
         "responses": {
           "400": {
@@ -262,13 +393,13 @@
         }
       }
     },
-    "/upload/resumable": {
+    "/objects/upload": {
       "post": {
         "tags": [
-          "Upload"
+          "Objects"
         ],
-        "summary": "The resumable upload endpoint.",
-        "operationId": "Upload_ResumableUpload",
+        "summary": "Uploads an object.",
+        "operationId": "Objects_Upload",
         "parameters": [
           {
             "type": "file",
@@ -295,28 +426,6 @@
             "x-position": 1
           },
           {
-            "name": "chunkSize",
-            "in": "query",
-            "required": true,
-            "description": "The size of the chunk.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "currentChunkSize",
-            "in": "query",
-            "required": true,
-            "description": "The size of the current chunk.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 3
-          },
-          {
             "name": "totalSize",
             "in": "query",
             "required": true,
@@ -325,18 +434,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 4
-          },
-          {
-            "name": "resumableType",
-            "in": "query",
-            "required": true,
-            "description": "The name of the file type.",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 5
+            "x-position": 2
           },
           {
             "name": "uid",
@@ -347,7 +445,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 6
+            "x-position": 3
           },
           {
             "name": "filename",
@@ -358,7 +456,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 7
+            "x-position": 4
           },
           {
             "name": "relativePath",
@@ -369,7 +467,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 8
+            "x-position": 5
           },
           {
             "name": "totalChunks",
@@ -380,7 +478,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 9
+            "x-position": 6
           }
         ],
         "responses": {
@@ -468,6 +566,21 @@
                   "oneOf": [
                     {
                       "$ref": "#/components/schemas/ErrorModel"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The result of the resumable upload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ObjectModel"
                     }
                   ]
                 }
@@ -1088,6 +1201,93 @@
             "nullable": true
           }
         }
+      },
+      "ObjectModel": {
+        "type": "object",
+        "description": "A model representing an object.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the identifier.",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the created date.",
+            "format": "date-time"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "Gets or sets the modified date.",
+            "format": "date-time"
+          },
+          "dataType": {
+            "description": "Gets or sets the type of the data.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DataType"
+              }
+            ]
+          },
+          "fileFormat": {
+            "description": "Gets or sets the file format.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileFormat"
+              }
+            ]
+          },
+          "originalFilename": {
+            "type": "string",
+            "description": "Gets or sets the original filename.",
+            "nullable": true
+          },
+          "sourcePath": {
+            "type": "string",
+            "description": "Gets or sets the source path (directory, file, url, etc.).",
+            "nullable": true
+          },
+          "uncompressedFilesystemPath": {
+            "type": "string",
+            "description": "Gets or sets the uncompressed filesystem path (directory).",
+            "nullable": true
+          }
+        }
+      },
+      "DataType": {
+        "type": "integer",
+        "description": "A type to describe the data.",
+        "x-enumNames": [
+          "Unknown",
+          "RawImage",
+          "SegmentationImage"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "FileFormat": {
+        "type": "integer",
+        "description": "A type to describe the file format.",
+        "x-enumNames": [
+          "Unknown",
+          "Dicom",
+          "DicomMultiframe",
+          "Analyze",
+          "MetaImage",
+          "Nifti"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
       },
       "TaskModel": {
         "type": "object",

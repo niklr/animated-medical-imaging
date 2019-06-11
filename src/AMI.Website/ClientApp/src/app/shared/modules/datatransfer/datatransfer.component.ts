@@ -19,7 +19,7 @@ export class DatatransferComponent implements OnInit {
         preprocessHashChecked: false
       },
       resumablejs: {
-        target: ConfigService.settings.apiEndpoint + '/upload/resumable',
+        target: ConfigService.settings.apiEndpoint + '/objects/upload',
         testChunks: false,
         simultaneousUploads: 1,
         maxChunkRetries: 6,
@@ -37,6 +37,12 @@ export class DatatransferComponent implements OnInit {
     };
     var event = new CustomEvent('github:niklr/angular-material-datatransfer.create', { 'detail': config });
     document.dispatchEvent(event);
+
+    document.addEventListener('github:niklr/angular-material-datatransfer.upload-completed', this.onUploadCompleted);
+  }
+
+  private onUploadCompleted(item): void {
+    console.log(item);
   }
 
 }

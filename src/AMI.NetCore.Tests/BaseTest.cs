@@ -53,7 +53,8 @@ namespace AMI.NetCore.Tests
             services.AddLogging();
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();
-            services.AddScoped<IImageService, ImageService>();            
+            services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IUploadObjectService, UploadObjectService>();
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
