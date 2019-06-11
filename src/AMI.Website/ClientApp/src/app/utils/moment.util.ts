@@ -17,7 +17,7 @@ export class MomentUtil {
   }
 
   public getLocalTime(date) {
-    return this.getLocal(date).format('LT');
+    return this.getLocal(date).format('LTS');
   }
 
   public getLocalDate(date) {

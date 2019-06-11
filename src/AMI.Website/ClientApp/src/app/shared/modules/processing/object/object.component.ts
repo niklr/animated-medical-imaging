@@ -12,14 +12,12 @@ export class ObjectComponent implements OnInit, AfterViewInit {
 
   @Input() object: any;
 
-  private tooltipGuid: string;
   private dropdownButtonGuid: string;
   private dropdownTargetGuid: string;
 
   private objectIdShort: string;
 
   constructor(private clipboardUtil: ClipboardUtil, private guidUtil: GuidUtil, private momentUtil: MomentUtil) {
-    this.tooltipGuid = this.guidUtil.createGuid();
     this.dropdownButtonGuid = this.guidUtil.createGuid();
     this.dropdownTargetGuid = this.guidUtil.createGuid();
   }
@@ -34,7 +32,6 @@ export class ObjectComponent implements OnInit, AfterViewInit {
 
   private initMaterialize(): void {
     M.Dropdown.init($('#' + this.dropdownButtonGuid), {});
-    M.Tooltip.init($('.' + this.tooltipGuid), {});
   }
 
   public copyObjectId(): void {

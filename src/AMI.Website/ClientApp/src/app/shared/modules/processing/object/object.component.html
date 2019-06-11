@@ -8,13 +8,7 @@
   <div class="row">
     <div class="col s8 no-padding">
       <span class="wrapword">
-        <span class="new badge grey lighten-1 {{tooltipGuid}}"
-              data-badge-caption=""
-              data-position="bottom"
-              [attr.data-tooltip]="object.id"
-              (click)="copyObjectId()">
-          {{objectIdShort}}
-        </span>
+        <app-common-guid-badge [guid]="object.id"></app-common-guid-badge>
         {{object.originalFilename}}
       </span>
     </div>

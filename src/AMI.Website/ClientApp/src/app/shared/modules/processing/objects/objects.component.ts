@@ -35,7 +35,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
       originalFilename: 'SMIR.Brain.XX.O.MR_Flair.36620.mha',
       modifiedDate: '2019-05-21T14:05:25.3100000Z',
       latestTask: {
-
+        id: '87619062-ec17-4e4a-ab08-4f87aeea4249',
+        createdDate: '2019-05-21T14:05:26.1100000Z',
+        modifiedDate: '2019-05-21T14:05:27.1900000Z',
+        status: 'Queued',
+        position: 12
       }
     };
 
