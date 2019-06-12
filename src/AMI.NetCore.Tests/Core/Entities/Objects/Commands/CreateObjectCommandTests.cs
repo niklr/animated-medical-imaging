@@ -42,11 +42,13 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
                 Assert.IsTrue(File.Exists(result.SourcePath));
                 Assert.IsFalse(File.Exists(command.SourcePath));
                 Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
+
+                DeleteObject(result.Id);
+                Assert.IsFalse(File.Exists(result.SourcePath));
             }
             finally
             {
                 DeleteDirectory(Path.GetDirectoryName(command.SourcePath));
-                // TODO: delete object
             }
         }
 

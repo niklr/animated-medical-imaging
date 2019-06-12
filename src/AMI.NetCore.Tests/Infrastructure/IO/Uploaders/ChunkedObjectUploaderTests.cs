@@ -36,6 +36,9 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
             Assert.IsTrue(File.Exists(dataPath));
             Assert.IsTrue(File.Exists(result.SourcePath));
             Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
+
+            DeleteObject(result.Id);
+            Assert.IsFalse(File.Exists(result.SourcePath));
         }
 
         [Test]
@@ -56,6 +59,9 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
             Assert.IsTrue(File.Exists(dataPath));
             Assert.IsTrue(File.Exists(result.SourcePath));
             Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
+
+            DeleteObject(result.Id);
+            Assert.IsFalse(File.Exists(result.SourcePath));
         }
 
         private async Task<ObjectModel> UploadAsync(string dataPath, CancellationToken ct)

@@ -58,6 +58,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// <inheritdoc/>
         protected override async Task<ObjectModel> ProtectedHandleAsync(CreateObjectCommand request, CancellationToken cancellationToken)
         {
+            context.BeginTransaction();
+
             Guid guid = idGenService.CreateId();
             string localPath = CreateLocalObjectPath(guid);
             string destFilename = string.Concat(guid.ToString(), ApplicationConstants.DefaultFileExtension);
@@ -77,6 +79,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             context.ObjectRepository.Add(entity);
 
             await context.SaveChangesAsync(cancellationToken);
+
+            context.CommitTransaction();
 
             return ObjectModel.Create(entity);
         }

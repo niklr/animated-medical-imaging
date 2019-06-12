@@ -46,11 +46,13 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Queries
                 Assert.IsTrue(File.Exists(dataPath));
                 Assert.IsTrue(File.Exists(result.SourcePath));
                 Assert.IsFalse(File.Exists(command.SourcePath));
+
+                DeleteObject(result.Id);
+                Assert.IsFalse(File.Exists(result.SourcePath));
             }
             finally
             {
                 DeleteDirectory(Path.GetDirectoryName(command.SourcePath));
-                // TODO: delete object
             }
         }
 

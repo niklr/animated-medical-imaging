@@ -5,7 +5,9 @@ using AMI.Compress.Extractors;
 using AMI.Compress.Readers;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
+using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Results.Commands.ProcessObjects;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
@@ -30,6 +32,7 @@ using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -83,7 +86,11 @@ namespace AMI.NetCore.Tests
             });
 
             // Add DbContext
-            services.AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            services.AddDbContext<InMemoryDbContext>(options =>
+            {
+                options.UseInMemoryDatabase(Guid.NewGuid().ToString());
+                options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+            });
 
             serviceProvider = services.BuildServiceProvider();
         }
@@ -107,7 +114,8 @@ namespace AMI.NetCore.Tests
 
         public string CreateTempFile(string sourcePath)
         {
-            string path = Path.Combine(GetTempPath(), string.Concat(Guid.NewGuid().ToString("N"), ".ami"));
+            string filename = string.Concat(Guid.NewGuid().ToString("N"), ApplicationConstants.DefaultFileExtension);
+            string path = Path.Combine(GetTempPath(), filename);
             File.Copy(sourcePath, path);
             return path;
         }
@@ -120,6 +128,16 @@ namespace AMI.NetCore.Tests
         public void DeleteDirectory(string path)
         {
             Directory.Delete(path, true);
+        }
+
+        public void DeleteObject(string id)
+        {
+            var mediator = GetService<IMediator>();
+            var command = new DeleteObjectCommand()
+            {
+                Id = id
+            };
+            mediator.Send(command);
         }
     }
 }

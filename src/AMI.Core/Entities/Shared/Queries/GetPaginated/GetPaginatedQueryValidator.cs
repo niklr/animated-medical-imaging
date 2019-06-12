@@ -14,8 +14,8 @@ namespace AMI.Core.Entities.Shared.Queries.GetPaginated
         /// </summary>
         public GetPaginatedQueryValidator()
         {
-            RuleFor(x => x.Page).NotEmpty().NotNull().GreaterThan(0);
-            RuleFor(x => x.Limit).NotEmpty().NotNull().GreaterThan(0);
+            RuleFor(x => x.Page).NotEmpty().GreaterThan(0);
+            RuleFor(x => x.Limit).NotEmpty().GreaterThan(0);
         }
     }
 }

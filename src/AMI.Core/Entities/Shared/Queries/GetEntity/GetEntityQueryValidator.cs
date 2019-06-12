@@ -16,7 +16,7 @@ namespace AMI.Core.Entities.Shared.Queries.GetEntity
         /// </summary>
         public GetEntityQueryValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().NotNull().Must(x =>
+            RuleFor(x => x.Id).NotEmpty().Must(x =>
             {
                 return Guid.TryParse(x, out Guid result);
             });
