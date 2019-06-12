@@ -105,6 +105,13 @@ namespace AMI.NetCore.Tests
             return path;
         }
 
+        public string CreateTempFile(string sourcePath)
+        {
+            string path = Path.Combine(GetTempPath(), string.Concat(Guid.NewGuid().ToString("N"), ".ami"));
+            File.Copy(sourcePath, path);
+            return path;
+        }
+
         public void DeleteFile(string path)
         {
             File.Delete(path);

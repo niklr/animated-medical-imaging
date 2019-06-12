@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Objects.Commands.Create;
@@ -19,26 +20,38 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Queries
             // Arrange
             var mediator = GetService<IMediator>();
             var ct = new CancellationToken();
+            string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
+            string dataPath = GetDataPath(filename);
             var command = new CreateObjectCommand()
             {
-                OriginalFilename = "SMIR.Brain_3more.XX.XX.OT.6560.mha",
-                SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha")
+                OriginalFilename = filename,
+                SourcePath = CreateTempFile(dataPath)
             };
             var commandResult = mediator.Send(command, ct).Result;
             var query = new GetByIdQuery { Id = commandResult.Id };
 
-            // Act
-            var result = mediator.Send(query, ct).Result;
+            try
+            {
+                // Act
+                var result = mediator.Send(query, ct).Result;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Id);
-            Assert.IsNotNull(result.CreatedDate);
-            Assert.IsNotNull(result.ModifiedDate);
-            Assert.AreEqual(DataType.Unknown, result.DataType);
-            Assert.AreEqual(FileFormat.Unknown, result.FileFormat);
-            Assert.AreEqual(command.OriginalFilename, result.OriginalFilename);
-            Assert.AreEqual(command.SourcePath, result.SourcePath);
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.IsNotNull(result.Id);
+                Assert.IsNotNull(result.CreatedDate);
+                Assert.IsNotNull(result.ModifiedDate);
+                Assert.AreEqual(DataType.Unknown, result.DataType);
+                Assert.AreEqual(FileFormat.Unknown, result.FileFormat);
+                Assert.AreEqual(command.OriginalFilename, result.OriginalFilename);
+                Assert.IsTrue(File.Exists(dataPath));
+                Assert.IsTrue(File.Exists(result.SourcePath));
+                Assert.IsFalse(File.Exists(command.SourcePath));
+            }
+            finally
+            {
+                DeleteDirectory(Path.GetDirectoryName(command.SourcePath));
+                // TODO: delete object
+            }
         }
 
         [Test]

@@ -4,9 +4,12 @@ using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
+using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Objects.Commands.Create;
 using AMI.Core.IO.Uploaders;
 using AMI.Core.Strategies;
+using MediatR;
 
 namespace AMI.Infrastructure.IO.Uploaders
 {
@@ -18,18 +21,25 @@ namespace AMI.Infrastructure.IO.Uploaders
     {
         private readonly string baseUploadPath;
         private readonly IFileSystem fileSystem;
+        private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChunkedObjectUploader" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="mediator">The mediator.</param>
         /// <exception cref="ArgumentNullException">
         /// configuration
         /// or
         /// fileSystemStrategy
+        /// or
+        /// objectService
         /// </exception>
-        public ChunkedObjectUploader(IAmiConfigurationManager configuration, IFileSystemStrategy fileSystemStrategy)
+        public ChunkedObjectUploader(
+            IAmiConfigurationManager configuration,
+            IFileSystemStrategy fileSystemStrategy,
+            IMediator mediator)
         {
             if (configuration == null)
             {
@@ -43,6 +53,8 @@ namespace AMI.Infrastructure.IO.Uploaders
 
             fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
             baseUploadPath = fileSystem.Path.Combine(configuration.WorkingDirectory, "Upload", "Objects");
+
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -82,12 +94,13 @@ namespace AMI.Infrastructure.IO.Uploaders
         public async Task<ObjectModel> CommitAsync(string filename, string fullDestPath, string uid, CancellationToken ct)
         {
             string localPath = CreateLocalUploadPath(uid);
-            string finalFilePath = fileSystem.Path.Combine(localPath, string.Concat(uid, ".ami"));
+            string destFilename = string.Concat(uid, ApplicationConstants.DefaultFileExtension);
+            string destFilePath = fileSystem.Path.Combine(localPath, destFilename);
 
             try
             {
                 int chunkCount = fileSystem.Directory.GetFiles(localPath).Length;
-                using (Stream outputStream = File.Create(finalFilePath))
+                using (Stream outputStream = File.Create(destFilePath))
                 {
                     byte[] buffer = new byte[8 * 1024];
 
@@ -115,14 +128,13 @@ namespace AMI.Infrastructure.IO.Uploaders
                     }
                 }
 
-                // TODO: move file to binary folder
-                var result = new ObjectModel()
+                var command = new CreateObjectCommand()
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    OriginalFilename = filename
+                    OriginalFilename = filename,
+                    SourcePath = destFilePath
                 };
 
-                return await Task.FromResult(result);
+                return await mediator.Send(command, ct);
             }
             finally
             {

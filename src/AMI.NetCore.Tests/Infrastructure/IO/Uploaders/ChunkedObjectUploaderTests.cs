@@ -19,7 +19,7 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
         }
 
         [Test]
-        public void ChunkedObjectUploader_UploadAsync()
+        public void ChunkedObjectUploader_UploadAsync_1()
         {
             // Arrange
             var ct = new CancellationToken();
@@ -33,6 +33,29 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Id);
             Assert.AreEqual(filename, result.OriginalFilename);
+            Assert.IsTrue(File.Exists(dataPath));
+            Assert.IsTrue(File.Exists(result.SourcePath));
+            Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
+        }
+
+        [Test]
+        public void ChunkedObjectUploader_UploadAsync_2()
+        {
+            // Arrange
+            var ct = new CancellationToken();
+            string filename = "SMIR.Brain.XX.O.CT.346124.nii";
+            var dataPath = GetDataPath(filename);
+
+            // Act
+            var result = UploadAsync(dataPath, ct).Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Id);
+            Assert.AreEqual(filename, result.OriginalFilename);
+            Assert.IsTrue(File.Exists(dataPath));
+            Assert.IsTrue(File.Exists(result.SourcePath));
+            Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
         }
 
         private async Task<ObjectModel> UploadAsync(string dataPath, CancellationToken ct)
@@ -53,7 +76,10 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
                 int maximumNumberOfBytesToRead = chunk.Length;
                 while (stream.Read(chunk, 0, maximumNumberOfBytesToRead) > 0)
                 {
-                    await uploader.UploadAsync(Convert.ToInt32(totalChunks), chunkNumber, uid, stream, ct);
+                    using (MemoryStream chunkStream = new MemoryStream(chunk))
+                    {
+                        await uploader.UploadAsync(Convert.ToInt32(totalChunks), chunkNumber, uid, chunkStream, ct);
+                    }
 
                     long numberOfBytesToReadLeft = stream.Length - stream.Position;
                     if (numberOfBytesToReadLeft < maximumNumberOfBytesToRead)
