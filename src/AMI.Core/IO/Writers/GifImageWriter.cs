@@ -10,7 +10,7 @@ using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
-namespace AMI.Core.Writers
+namespace AMI.Core.IO.Writers
 {
     /// <summary>
     /// A writer for GIF images.

@@ -8,8 +8,8 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Extensions.Drawing;
 using AMI.Core.Factories;
+using AMI.Core.IO.Readers;
 using AMI.Core.Mappers;
-using AMI.Core.Readers;
 using AMI.Core.Strategies;
 using AMI.Core.Wrappers;
 using AMI.Domain.Enums;
@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 using RNS.Framework.Security;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
-namespace AMI.Core.Extractors
+namespace AMI.Core.IO.Extractors
 {
     /// <summary>
     /// An extractor for images.

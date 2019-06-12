@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
-using AMI.Core.Extractors;
+using AMI.Core.IO.Extractors;
 using AMI.Core.Strategies;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
-namespace AMI.NetFramework.Tests.Core.Extractors
+namespace AMI.NetFramework.Tests.Core.IO.Extractors
 {
     [TestFixture]
     public class ImageExtractorTests : BaseTest

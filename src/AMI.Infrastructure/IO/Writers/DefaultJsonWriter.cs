@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using AMI.Core.Serializers;
+using AMI.Core.IO.Serializers;
+using AMI.Core.IO.Writers;
 using AMI.Core.Strategies;
-using AMI.Core.Writers;
 using AMI.Domain.Exceptions;
 
-namespace AMI.Infrastructure.Writers
+namespace AMI.Infrastructure.IO.Writers
 {
     /// <summary>
     /// A writer for JSON data.

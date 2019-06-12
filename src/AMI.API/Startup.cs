@@ -10,7 +10,7 @@ using AMI.Core.Entities.ApplicationInformation.Queries;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObjects;
 using AMI.Core.Factories;
-using AMI.Core.Serializers;
+using AMI.Core.IO.Serializers;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Infrastructure.Services;

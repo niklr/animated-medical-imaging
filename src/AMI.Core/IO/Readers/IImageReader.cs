@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AMI.Core.Mappers;
 using AMI.Domain.Enums;
 
-namespace AMI.Core.Readers
+namespace AMI.Core.IO.Readers
 {
     /// <summary>
     /// A reader for images.

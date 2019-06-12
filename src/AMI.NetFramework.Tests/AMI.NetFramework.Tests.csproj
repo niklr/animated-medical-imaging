@@ -162,7 +162,7 @@
     <Compile Include="BaseTest.cs" />
     <Compile Include="Core\Mappers\AxisPositionMapperTests.cs" />
     <Compile Include="Core\Mappers\BezierPositionMapperTests.cs" />
-    <Compile Include="Core\Extractors\ImageExtractorTests.cs" />
+    <Compile Include="Core\IO\Extractors\ImageExtractorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

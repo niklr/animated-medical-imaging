@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using AMI.Core.Entities.Models;
-using AMI.Core.Writers;
+using AMI.Core.IO.Writers;
 using AMI.Domain.Enums;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Writers
+namespace AMI.NetCore.Tests.Core.IO.Writers
 {
     [TestFixture]
     public class GifImageWriterTests : BaseTest

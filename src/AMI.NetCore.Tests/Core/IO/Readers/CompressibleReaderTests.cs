@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading;
 using AMI.Core.Configurations;
-using AMI.Core.Readers;
+using AMI.Core.IO.Readers;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Readers
+namespace AMI.NetCore.Tests.Core.IO.Readers
 {
     [TestFixture]
     public class CompressibleReaderTests : BaseTest

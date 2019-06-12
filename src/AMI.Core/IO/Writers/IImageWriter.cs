@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Readers;
+using AMI.Core.IO.Readers;
 
-namespace AMI.Core.Writers
+namespace AMI.Core.IO.Writers
 {
     /// <summary>
     /// A writer for imaging purposes.

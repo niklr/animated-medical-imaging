@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AMI.Compress.Mappers;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
-using AMI.Core.Readers;
+using AMI.Core.IO.Readers;
 using RNS.Framework.Comparers;
 using RNS.Framework.Extensions.EnumerableExtensions;
 using SharpCompress.Archives;

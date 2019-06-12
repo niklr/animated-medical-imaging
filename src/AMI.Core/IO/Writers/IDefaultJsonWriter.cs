@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace AMI.Core.Writers
+namespace AMI.Core.IO.Writers
 {
     /// <summary>
     /// A writer for JSON data.

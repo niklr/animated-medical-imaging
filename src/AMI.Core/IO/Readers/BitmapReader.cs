@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AMI.Core.Extensions.Drawing;
 using AMI.Domain.Exceptions;
 
-namespace AMI.Core.Readers
+namespace AMI.Core.IO.Readers
 {
     /// <summary>
     /// A reader for bitmaps.

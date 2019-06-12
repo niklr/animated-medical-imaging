@@ -1,4 +1,4 @@
-﻿using AMI.Core.Extractors;
+﻿using AMI.Core.IO.Extractors;
 using AMI.Core.Strategies;
 using AMI.Itk.Factories;
 using AMI.Itk.Readers;

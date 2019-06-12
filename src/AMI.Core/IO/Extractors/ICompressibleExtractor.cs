@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 
-namespace AMI.Core.Extractors
+namespace AMI.Core.IO.Extractors
 {
     /// <summary>
     /// An extractor for compressed files.

@@ -1,4 +1,4 @@
-﻿using AMI.Core.Writers;
+﻿using AMI.Core.IO.Writers;
 using AMI.Itk.Readers;
 using itk.simple;
 

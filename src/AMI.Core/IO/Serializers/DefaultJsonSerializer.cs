@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace AMI.Core.Serializers
+namespace AMI.Core.IO.Serializers
 {
     /// <summary>
     /// A serializer for JSON data.

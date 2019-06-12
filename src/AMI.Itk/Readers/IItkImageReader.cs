@@ -1,4 +1,4 @@
-﻿using AMI.Core.Readers;
+﻿using AMI.Core.IO.Readers;
 using itk.simple;
 
 namespace AMI.Itk.Readers

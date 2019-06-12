@@ -6,7 +6,7 @@ using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Domain.Exceptions;
 
-namespace AMI.Core.Readers
+namespace AMI.Core.IO.Readers
 {
     /// <summary>
     /// A reader for compressed files.

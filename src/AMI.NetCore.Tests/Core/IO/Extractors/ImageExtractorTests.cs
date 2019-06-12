@@ -1,9 +1,9 @@
 using System.Threading;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
-using AMI.Core.Extractors;
+using AMI.Core.IO.Extractors;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Extractors
+namespace AMI.NetCore.Tests.Core.IO.Extractors
 {
     [TestFixture]
     public class ImageExtractorTests : BaseTest

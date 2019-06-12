@@ -3,8 +3,8 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
-using AMI.Core.Writers;
 using AnimatedGif;
 
 namespace AMI.Gif.Writers

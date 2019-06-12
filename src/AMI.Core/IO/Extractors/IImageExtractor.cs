@@ -5,7 +5,7 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Domain.Exceptions;
 
-namespace AMI.Core.Extractors
+namespace AMI.Core.IO.Extractors
 {
     /// <summary>
     /// An extractor for imaging purposes.

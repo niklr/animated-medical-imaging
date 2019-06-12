@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading;
 using AMI.Core.Configurations;
-using AMI.Core.Extractors;
+using AMI.Core.IO.Extractors;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Core.Extractors
+namespace AMI.NetCore.Tests.Core.IO.Extractors
 {
     [TestFixture]
     public class CompressibleExtractorTests : BaseTest

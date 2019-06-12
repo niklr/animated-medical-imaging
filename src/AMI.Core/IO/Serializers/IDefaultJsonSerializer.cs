@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace AMI.Core.Serializers
+namespace AMI.Core.IO.Serializers
 {
     /// <summary>
     /// A serializer for JSON data.
