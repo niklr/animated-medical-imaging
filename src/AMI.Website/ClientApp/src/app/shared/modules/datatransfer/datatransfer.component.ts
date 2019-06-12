@@ -16,7 +16,15 @@ export class DatatransferComponent implements OnInit {
         showUploadDropzone: true,
         paginationRppOptions: [5, 10, 25],
         preprocessHashEnabled: false,
-        preprocessHashChecked: false
+        preprocessHashChecked: false,
+        parseMessageCallback: function (message) {
+          try {
+            var result = JSON.parse(message);
+            return result.id;
+          } catch (e) {
+            return message;
+          }
+        }
       },
       resumablejs: {
         target: ConfigService.settings.apiEndpoint + '/objects/upload',
@@ -38,10 +46,10 @@ export class DatatransferComponent implements OnInit {
     var event = new CustomEvent('github:niklr/angular-material-datatransfer.create', { 'detail': config });
     document.dispatchEvent(event);
 
-    document.addEventListener('github:niklr/angular-material-datatransfer.upload-completed', this.onUploadCompleted);
+    document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', this.onItemCompleted);
   }
 
-  private onUploadCompleted(item): void {
+  private onItemCompleted(item): void {
     console.log(item);
   }
 
