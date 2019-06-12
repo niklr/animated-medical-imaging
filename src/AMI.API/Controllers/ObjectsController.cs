@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Results.Commands.ProcessObjects;
-using AMI.Core.Services;
+using AMI.Core.IO.Uploaders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models = AMI.Core.Entities.Models;
@@ -17,13 +17,13 @@ namespace AMI.API.Controllers
     [Route("objects")]
     public class ObjectsController : BaseController
     {
-        private readonly IUploadObjectService uploader;
+        private readonly IChunkedObjectUploader uploader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectsController"/> class.
         /// </summary>
         /// <param name="uploader">The resumable uploader.</param>
-        public ObjectsController(IUploadObjectService uploader)
+        public ObjectsController(IChunkedObjectUploader uploader)
         {
             this.uploader = uploader;
         }

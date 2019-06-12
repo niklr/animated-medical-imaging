@@ -3,23 +3,23 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Services;
+using AMI.Core.IO.Uploaders;
 using NUnit.Framework;
 
-namespace AMI.NetCore.Tests.Infrastructure.Services
+namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
 {
     [TestFixture]
-    public class UploadObjectServiceTests : BaseTest
+    public class ChunkedObjectUploaderTests : BaseTest
     {
-        private readonly IUploadObjectService service;
+        private readonly IChunkedObjectUploader uploader;
 
-        public UploadObjectServiceTests()
+        public ChunkedObjectUploaderTests()
         {
-            service = GetService<IUploadObjectService>();
+            uploader = GetService<IChunkedObjectUploader>();
         }
 
         [Test]
-        public void UploadObjectService_Upload()
+        public void ChunkedObjectUploader_UploadAsync()
         {
             // Arrange
             var ct = new CancellationToken();
@@ -53,7 +53,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
                 int maximumNumberOfBytesToRead = chunk.Length;
                 while (stream.Read(chunk, 0, maximumNumberOfBytesToRead) > 0)
                 {
-                    await service.UploadAsync(Convert.ToInt32(totalChunks), chunkNumber, uid, stream, ct);
+                    await uploader.UploadAsync(Convert.ToInt32(totalChunks), chunkNumber, uid, stream, ct);
 
                     long numberOfBytesToReadLeft = stream.Length - stream.Position;
                     if (numberOfBytesToReadLeft < maximumNumberOfBytesToRead)
@@ -64,7 +64,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
                     chunkNumber++;
                 }
             }
-            return await service.CommitAsync(filename, filename, uid, ct);
+            return await uploader.CommitAsync(filename, filename, uid, ct);
         }
     }
 }

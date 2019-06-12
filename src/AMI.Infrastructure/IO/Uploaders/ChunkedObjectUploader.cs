@@ -5,22 +5,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
-using AMI.Core.Services;
+using AMI.Core.IO.Uploaders;
 using AMI.Core.Strategies;
 
-namespace AMI.Infrastructure.Services
+namespace AMI.Infrastructure.IO.Uploaders
 {
     /// <summary>
-    /// A service to upload objects.
+    /// A chunked uploader for objects.
     /// </summary>
-    /// <seealso cref="IUploadObjectService" />
-    public class UploadObjectService : IUploadObjectService
+    /// <seealso cref="IChunkedObjectUploader" />
+    public class ChunkedObjectUploader : IChunkedObjectUploader
     {
         private readonly string baseUploadPath;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UploadObjectService" /> class.
+        /// Initializes a new instance of the <see cref="ChunkedObjectUploader" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
@@ -29,7 +29,7 @@ namespace AMI.Infrastructure.Services
         /// or
         /// fileSystemStrategy
         /// </exception>
-        public UploadObjectService(IAmiConfigurationManager configuration, IFileSystemStrategy fileSystemStrategy)
+        public ChunkedObjectUploader(IAmiConfigurationManager configuration, IFileSystemStrategy fileSystemStrategy)
         {
             if (configuration == null)
             {

@@ -4,12 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 
-namespace AMI.Core.Services
+namespace AMI.Core.IO.Uploaders
 {
     /// <summary>
-    /// A service to upload objects.
+    /// A chunked uploader for objects.
     /// </summary>
-    public interface IUploadObjectService
+    public interface IChunkedObjectUploader
     {
         /// <summary>
         /// Uploads the specified chunk number.
