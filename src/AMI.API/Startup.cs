@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Reflection;
 using AMI.API.Configuration;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
@@ -13,17 +14,21 @@ using AMI.Core.Entities.Results.Commands.ProcessObjects;
 using AMI.Core.Factories;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Uploaders;
+using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Infrastructure.IO.Uploaders;
 using AMI.Infrastructure.Services;
 using AMI.Infrastructure.Strategies;
+using AMI.Persistence.EntityFramework.InMemory;
 using FluentValidation.AspNetCore;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -75,8 +80,12 @@ namespace AMI.API
                     .AddConfiguration(Configuration.GetSection("Logging"))
                     .AddConsole();
             });
+
+            // TODO: replace InMemoryUnitOfWork with SQLite
+            // services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
+            services.AddSingleton<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
@@ -90,6 +99,13 @@ namespace AMI.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
             services.AddMediatR(typeof(GetQueryHandler).GetTypeInfo().Assembly);
+
+            // Add DbContext
+            services.AddDbContext<InMemoryDbContext>(options =>
+            {
+                options.UseInMemoryDatabase(Guid.NewGuid().ToString());
+                options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)); // remove when not using InMemory context
+            });
 
             services.AddMvc(options =>
                 {
