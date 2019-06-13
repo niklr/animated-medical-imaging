@@ -3,11 +3,12 @@
     /// <summary>
     /// Constants of the application.
     /// </summary>
-    public class ApplicationConstants
+    public class ApplicationConstants : IApplicationConstants
     {
-        /// <summary>
-        /// The default file extension.
-        /// </summary>
-        public const string DefaultFileExtension = ".ami";
+        /// <inheritdoc/>
+        public string DefaultFileExtension => ".ami";
+
+        /// <inheritdoc/>
+        public int[] AllowedPaginationLimitValues => new int[] { 10, 25, 50 };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentValidation;
 using FluentValidation.Results;
 
 namespace AMI.Core.Extensions.FluentValidationExtensions
@@ -46,6 +47,37 @@ namespace AMI.Core.Extensions.FluentValidationExtensions
             {
                 return dictionary;
             }
+        }
+
+        /// <summary>
+        /// The value of the property must be one of the provided options.
+        /// </summary>
+        /// <typeparam name="T">The type of object being validated.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
+        /// <param name="ruleBuilder">The rule builder.</param>
+        /// <param name="validOptions">The valid options.</param>
+        /// <returns>The rule builder options.</returns>
+        /// <exception cref="ArgumentException">At least one valid option is expected - validOptions</exception>
+        public static IRuleBuilderOptions<T, TProperty> In<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, params TProperty[] validOptions)
+        {
+            string formatted;
+            if (validOptions == null || validOptions.Length == 0)
+            {
+                throw new ArgumentException("At least one valid option is expected", nameof(validOptions));
+            }
+            else if (validOptions.Length == 1)
+            {
+                formatted = validOptions[0].ToString();
+            }
+            else
+            {
+                // format like: option1, option2 or option3
+                formatted = $"{string.Join(", ", validOptions.Select(vo => vo.ToString()).ToArray(), 0, validOptions.Length - 1)} or {validOptions.Last()}";
+            }
+
+            return ruleBuilder
+                .Must(validOptions.Contains)
+                .WithMessage($"'{{PropertyName}}' must be one of these values: {formatted}");
         }
     }
 }

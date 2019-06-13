@@ -21,6 +21,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     {
         private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
+        private readonly IApplicationConstants constants;
         private readonly IFileSystem fileSystem;
         private readonly string basePath;
 
@@ -29,17 +30,20 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="idGenService">The service to generate unique identifiers.</param>
+        /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public CreateCommandHandler(
             IAmiUnitOfWork context,
             IIdGenService idGenService,
+            IApplicationConstants constants,
             IAmiConfigurationManager configuration,
             IFileSystemStrategy fileSystemStrategy)
             : base()
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
+            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
 
             if (configuration == null)
             {
@@ -62,7 +66,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
 
             Guid guid = idGenService.CreateId();
             string localPath = CreateLocalObjectPath(guid);
-            string destFilename = string.Concat(guid.ToString(), ApplicationConstants.DefaultFileExtension);
+            string destFilename = string.Concat(guid.ToString(), constants.DefaultFileExtension);
             string destPath = fileSystem.Path.Combine(localPath, destFilename);
 
             fileSystem.File.Move(request.SourcePath, destPath);

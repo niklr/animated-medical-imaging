@@ -6,6 +6,7 @@ using AMI.API.Filters;
 using AMI.API.Handlers;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
+using AMI.Core.Constants;
 using AMI.Core.Entities.ApplicationInformation.Queries;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObjects;
@@ -76,6 +77,7 @@ namespace AMI.API
             });
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
+            services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();

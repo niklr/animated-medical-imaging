@@ -60,6 +60,7 @@ namespace AMI.NetCore.Tests
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
+            services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
@@ -114,7 +115,8 @@ namespace AMI.NetCore.Tests
 
         public string CreateTempFile(string sourcePath)
         {
-            string filename = string.Concat(Guid.NewGuid().ToString("N"), ApplicationConstants.DefaultFileExtension);
+            var constants = GetService<IApplicationConstants>();
+            string filename = string.Concat(Guid.NewGuid().ToString("N"), constants.DefaultFileExtension);
             string path = Path.Combine(GetTempPath(), filename);
             File.Copy(sourcePath, path);
             return path;

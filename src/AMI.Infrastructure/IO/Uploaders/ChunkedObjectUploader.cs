@@ -21,6 +21,7 @@ namespace AMI.Infrastructure.IO.Uploaders
     {
         private readonly string baseUploadPath;
         private readonly IFileSystem fileSystem;
+        private readonly IApplicationConstants constants;
         private readonly IMediator mediator;
 
         /// <summary>
@@ -28,6 +29,7 @@ namespace AMI.Infrastructure.IO.Uploaders
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="constants">The application constants.</param>
         /// <param name="mediator">The mediator.</param>
         /// <exception cref="ArgumentNullException">
         /// configuration
@@ -39,6 +41,7 @@ namespace AMI.Infrastructure.IO.Uploaders
         public ChunkedObjectUploader(
             IAmiConfigurationManager configuration,
             IFileSystemStrategy fileSystemStrategy,
+            IApplicationConstants constants,
             IMediator mediator)
         {
             if (configuration == null)
@@ -54,6 +57,7 @@ namespace AMI.Infrastructure.IO.Uploaders
             fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
             baseUploadPath = fileSystem.Path.Combine(configuration.WorkingDirectory, "Upload", "Objects");
 
+            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -94,7 +98,7 @@ namespace AMI.Infrastructure.IO.Uploaders
         public async Task<ObjectModel> CommitAsync(string filename, string fullDestPath, string uid, CancellationToken ct)
         {
             string localPath = CreateLocalUploadPath(uid);
-            string destFilename = string.Concat(uid, ApplicationConstants.DefaultFileExtension);
+            string destFilename = string.Concat(uid, constants.DefaultFileExtension);
             string destFilePath = fileSystem.Path.Combine(localPath, destFilename);
 
             try

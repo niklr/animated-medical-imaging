@@ -114,5 +114,29 @@ namespace AMI.Core.Repositories
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>The amount of entities matching the given criteria.</returns>
         int Count(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Counts entities in the repository asynchronous.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The amount of entities.</returns>
+        Task<int> CountAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Counts entities in the repository matching the given criteria asynchronous.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The amount of entities matching the given criteria.</returns>
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Creates a list from a queryalbe by enumerating it asynchronously.
+        /// </summary>
+        /// <param name="queryable">The queryable to create a list from.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains a list that contains elements from the input sequence.</returns>
+        Task<List<TEntity>> ToListAsync(IQueryable<TEntity> queryable, CancellationToken cancellationToken = default);
     }
 }

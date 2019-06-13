@@ -54,6 +54,18 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await dbSet.CountAsync(cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await dbSet.CountAsync(predicate, cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
@@ -113,6 +125,17 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         public void Update(T entity)
         {
             dbSet.Update(entity);
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<T>> ToListAsync(IQueryable<T> queryable, CancellationToken cancellationToken = default)
+        {
+            if (queryable == null)
+            {
+                return null;
+            }
+
+            return await queryable.ToListAsync(cancellationToken);
         }
     }
 }

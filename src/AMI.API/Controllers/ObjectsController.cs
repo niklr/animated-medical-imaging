@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Objects.Queries.GetById;
+using AMI.Core.Entities.Objects.Queries.GetObjects;
 using AMI.Core.Entities.Results.Commands.ProcessObjects;
 using AMI.Core.IO.Uploaders;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +31,19 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
+        /// Gets a paginated list of objects.
+        /// </summary>
+        /// <param name="page">The current page</param>
+        /// <param name="limit">The limit to constrain the number of items.</param>
+        /// <returns>The list of paginated objects.</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(Models.PaginationResultModel<Models.ObjectModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetPaginatedAsync(int page, int limit)
+        {
+            return Ok(await Mediator.Send(new GetObjectsQuery { Page = page, Limit = limit }, CancellationToken));
+        }
+
+        /// <summary>
         /// Gets the information of the object with the specified identifier.
         /// </summary>
         /// <param name="id">The identifier of the object.</param>
@@ -37,7 +52,7 @@ namespace AMI.API.Controllers
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
         {
-            return Ok(null);
+            return Ok(await Mediator.Send(new GetByIdQuery { Id = id }, CancellationToken));
         }
 
         /// <summary>

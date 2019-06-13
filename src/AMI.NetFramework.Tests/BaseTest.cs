@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using AMI.Core.Constants;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Writers;
 using AMI.Core.Strategies;
@@ -19,6 +20,7 @@ namespace AMI.NetFramework.Tests
         public BaseTest()
         {
             _serviceProvider = new ServiceCollection()
+                .AddSingleton<IApplicationConstants, ApplicationConstants>()
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
                 .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()

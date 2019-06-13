@@ -130,6 +130,13 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
 
 export interface IObjectsAmiApiClient {
     /**
+     * Gets a paginated list of objects.
+     * @param page The current page
+     * @param limit The limit to constrain the number of items.
+     * @return The list of paginated objects.
+     */
+    getPaginated(page: number, limit: number): Observable<PaginationResultModelOfObjectModel | null>;
+    /**
      * Gets the information of the object with the specified identifier.
      * @param id The identifier of the object.
      * @return The information of the object.
@@ -165,6 +172,110 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Gets a paginated list of objects.
+     * @param page The current page
+     * @param limit The limit to constrain the number of items.
+     * @return The list of paginated objects.
+     */
+    getPaginated(page: number, limit: number): Observable<PaginationResultModelOfObjectModel | null> {
+        let url_ = this.baseUrl + "/objects?";
+        if (page === undefined || page === null)
+            throw new Error("The parameter 'page' must be defined and cannot be null.");
+        else
+            url_ += "page=" + encodeURIComponent("" + page) + "&"; 
+        if (limit === undefined || limit === null)
+            throw new Error("The parameter 'limit' must be defined and cannot be null.");
+        else
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaginated(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaginated(<any>response_);
+                } catch (e) {
+                    return <Observable<PaginationResultModelOfObjectModel | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PaginationResultModelOfObjectModel | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPaginated(response: HttpResponseBase): Observable<PaginationResultModelOfObjectModel | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 ? ErrorModel.fromJS(resultData400) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = resultData401 ? ErrorModel.fromJS(resultData401) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = resultData403 ? ErrorModel.fromJS(resultData403) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = resultData404 ? ErrorModel.fromJS(resultData404) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = resultData409 ? ErrorModel.fromJS(resultData409) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = resultData500 ? ErrorModel.fromJS(resultData500) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? PaginationResultModelOfObjectModel.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PaginationResultModelOfObjectModel | null>(<any>null);
     }
 
     /**
@@ -1096,6 +1207,54 @@ export interface IAppInfo {
     appVersion?: string | undefined;
 }
 
+export class PaginationResultModelOfObjectModel implements IPaginationResultModelOfObjectModel {
+    items?: ObjectModel[] | undefined;
+    pagination?: PaginationModel | undefined;
+
+    constructor(data?: IPaginationResultModelOfObjectModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (data["items"] && data["items"].constructor === Array) {
+                this.items = [] as any;
+                for (let item of data["items"])
+                    this.items!.push(ObjectModel.fromJS(item));
+            }
+            this.pagination = data["pagination"] ? PaginationModel.fromJS(data["pagination"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PaginationResultModelOfObjectModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginationResultModelOfObjectModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.items && this.items.constructor === Array) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pagination"] = this.pagination ? this.pagination.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IPaginationResultModelOfObjectModel {
+    items?: ObjectModel[] | undefined;
+    pagination?: PaginationModel | undefined;
+}
+
 /** A model representing an object. */
 export class ObjectModel implements IObjectModel {
     /** Gets or sets the identifier. */
@@ -1193,6 +1352,58 @@ export enum FileFormat {
     Analyze = 3, 
     MetaImage = 4, 
     Nifti = 5, 
+}
+
+/** A model containing information about the pagination. */
+export class PaginationModel implements IPaginationModel {
+    /** Gets or sets the limit to constrain the number of items. */
+    limit?: number;
+    /** Gets or sets the total amount of items. */
+    total?: number;
+    /** Gets or sets the current page number. */
+    page?: number;
+
+    constructor(data?: IPaginationModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.limit = data["limit"];
+            this.total = data["total"];
+            this.page = data["page"];
+        }
+    }
+
+    static fromJS(data: any): PaginationModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginationModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["limit"] = this.limit;
+        data["total"] = this.total;
+        data["page"] = this.page;
+        return data; 
+    }
+}
+
+/** A model containing information about the pagination. */
+export interface IPaginationModel {
+    /** Gets or sets the limit to constrain the number of items. */
+    limit?: number;
+    /** Gets or sets the total amount of items. */
+    total?: number;
+    /** Gets or sets the current page number. */
+    page?: number;
 }
 
 /** A model containing information about the task. */
