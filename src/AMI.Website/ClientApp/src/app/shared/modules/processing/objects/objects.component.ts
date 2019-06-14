@@ -11,7 +11,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   @Input() tableId: string;
 
   private isChecked: boolean = false;
-  private objects = [];
+  public objects = [];
 
   constructor() {
     this.initDemoObjects();

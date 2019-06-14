@@ -2,20 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainRoutingModule } from './main-routing.module';
 import { HomeModule } from './home/home.module';
-import { LayoutComponent } from '../shared/modules/layout/layout.component';
-import { TopnavComponent } from '../shared/modules/layout/components/topnav/topnav.component';
-import { FooterComponent } from '../shared/modules/layout/components/footer/footer.component';
+import { AppLayoutModule } from '../shared/modules/layout/layout.module';
 
 @NgModule({
   imports: [
     CommonModule,
     MainRoutingModule,
-    HomeModule
+    HomeModule,
+    AppLayoutModule
   ],
   declarations: [
-    LayoutComponent,
-    TopnavComponent,
-    FooterComponent
+
   ],
   providers: [
 

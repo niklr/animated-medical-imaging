@@ -12,9 +12,9 @@ export class GuidBadgeComponent implements OnInit, AfterViewInit {
 
   @Input() guid: any;
 
-  private tooltipGuid: string;
+  public tooltipGuid: string;
 
-  private guidShortened: string;
+  public guidShortened: string;
 
   constructor(private clipboardUtil: ClipboardUtil, private guidUtil: GuidUtil) {
     this.tooltipGuid = this.guidUtil.createGuid();

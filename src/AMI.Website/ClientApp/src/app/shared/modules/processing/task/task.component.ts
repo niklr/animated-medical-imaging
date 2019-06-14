@@ -12,7 +12,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
 
   @Input() task: any;
 
-  constructor(private guidUtil: GuidUtil, private momentUtil: MomentUtil) {
+  constructor(private guidUtil: GuidUtil, public momentUtil: MomentUtil) {
 
   }
 
