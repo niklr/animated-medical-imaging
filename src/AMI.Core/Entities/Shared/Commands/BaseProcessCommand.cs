@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AMI.Core.Entities.Models;
 using AMI.Domain.Enums;
 using MediatR;
 
@@ -25,9 +24,9 @@ namespace AMI.Core.Entities.Shared.Commands
         public uint AmountPerAxis { get; set; }
 
         /// <summary>
-        /// Gets the axis types to be considered.
+        /// Gets or sets the axis types to be considered.
         /// </summary>
-        public ISet<AxisType> AxisTypes { get; } = new HashSet<AxisType>();
+        public ISet<AxisType> AxisTypes { get; set; } = new HashSet<AxisType>();
 
         /// <summary>
         /// Gets or sets the image format.

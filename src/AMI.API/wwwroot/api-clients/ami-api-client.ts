@@ -148,7 +148,7 @@ export interface IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel | null>;
+    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<ProcessObjectTaskModel | null>;
     /**
      * Uploads an object.
      * @param file The file.
@@ -382,7 +382,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel | null> {
+    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<ProcessObjectTaskModel | null> {
         let url_ = this.baseUrl + "/objects/{id}/process";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -408,14 +408,14 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
                 try {
                     return this.processProcess(<any>response_);
                 } catch (e) {
-                    return <Observable<TaskModel | null>><any>_observableThrow(e);
+                    return <Observable<ProcessObjectTaskModel | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<TaskModel | null>><any>_observableThrow(response_);
+                return <Observable<ProcessObjectTaskModel | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcess(response: HttpResponseBase): Observable<TaskModel | null> {
+    protected processProcess(response: HttpResponseBase): Observable<ProcessObjectTaskModel | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -468,7 +468,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? TaskModel.fromJS(resultData200) : <any>null;
+            result200 = resultData200 ? ProcessObjectTaskModel.fromJS(resultData200) : <any>null;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -476,7 +476,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<TaskModel | null>(<any>null);
+        return _observableOf<ProcessObjectTaskModel | null>(<any>null);
     }
 
     /**
@@ -1407,7 +1407,7 @@ export interface IPaginationModel {
 }
 
 /** A model containing information about the task. */
-export class TaskModel implements ITaskModel {
+export abstract class TaskModel implements ITaskModel {
     /** Gets or sets the identifier. */
     id?: string | undefined;
     /** Gets or sets the created date. */
@@ -1420,8 +1420,6 @@ export class TaskModel implements ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
-    /** Gets or sets the identifier of the object. */
-    objectId?: string | undefined;
     /** Gets or sets the identifier of the result. */
     resultId?: string | undefined;
 
@@ -1442,16 +1440,13 @@ export class TaskModel implements ITaskModel {
             this.status = data["status"];
             this.position = data["position"];
             this.progress = data["progress"];
-            this.objectId = data["objectId"];
             this.resultId = data["resultId"];
         }
     }
 
     static fromJS(data: any): TaskModel {
         data = typeof data === 'object' ? data : {};
-        let result = new TaskModel();
-        result.init(data);
-        return result;
+        throw new Error("The abstract class 'TaskModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -1462,7 +1457,6 @@ export class TaskModel implements ITaskModel {
         data["status"] = this.status;
         data["position"] = this.position;
         data["progress"] = this.progress;
-        data["objectId"] = this.objectId;
         data["resultId"] = this.resultId;
         return data; 
     }
@@ -1482,23 +1476,54 @@ export interface ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
-    /** Gets or sets the identifier of the object. */
-    objectId?: string | undefined;
     /** Gets or sets the identifier of the result. */
     resultId?: string | undefined;
 }
 
-/** The different states of a task. */
-export enum TaskStatus {
-    Created = 0, 
-    Queued = 1, 
-    Processing = 2, 
-    Canceled = 3, 
-    Failed = 4, 
-    Finished = 5, 
+/** A model containing information about the task to process an object. */
+export class ProcessObjectTaskModel extends TaskModel implements IProcessObjectTaskModel {
+    /** Gets or sets the command used to create this task. */
+    command?: ProcessObjectAsyncCommand | undefined;
+    /** Gets or sets the identifier of the object. */
+    objectId?: string | undefined;
+
+    constructor(data?: IProcessObjectTaskModel) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.command = data["command"] ? ProcessObjectAsyncCommand.fromJS(data["command"]) : <any>undefined;
+            this.objectId = data["objectId"];
+        }
+    }
+
+    static fromJS(data: any): ProcessObjectTaskModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcessObjectTaskModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["command"] = this.command ? this.command.toJSON() : <any>undefined;
+        data["objectId"] = this.objectId;
+        super.toJSON(data);
+        return data; 
+    }
 }
 
-export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessCommandOfTaskModel {
+/** A model containing information about the task to process an object. */
+export interface IProcessObjectTaskModel extends ITaskModel {
+    /** Gets or sets the command used to create this task. */
+    command?: ProcessObjectAsyncCommand | undefined;
+    /** Gets or sets the identifier of the object. */
+    objectId?: string | undefined;
+}
+
+export abstract class BaseProcessCommandOfProcessObjectTaskModel implements IBaseProcessCommandOfProcessObjectTaskModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1507,7 +1532,7 @@ export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessComma
     bezierEasingTypeCombined?: BezierEasingType;
     grayscale?: boolean;
 
-    constructor(data?: IBaseProcessCommandOfTaskModel) {
+    constructor(data?: IBaseProcessCommandOfProcessObjectTaskModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1532,9 +1557,9 @@ export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessComma
         }
     }
 
-    static fromJS(data: any): BaseProcessCommandOfTaskModel {
+    static fromJS(data: any): BaseProcessCommandOfProcessObjectTaskModel {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
+        throw new Error("The abstract class 'BaseProcessCommandOfProcessObjectTaskModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -1554,7 +1579,7 @@ export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessComma
     }
 }
 
-export interface IBaseProcessCommandOfTaskModel {
+export interface IBaseProcessCommandOfProcessObjectTaskModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1565,7 +1590,7 @@ export interface IBaseProcessCommandOfTaskModel {
 }
 
 /** A command containing information needed to process objects. */
-export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel implements IProcessObjectAsyncCommand {
+export class ProcessObjectAsyncCommand extends BaseProcessCommandOfProcessObjectTaskModel implements IProcessObjectAsyncCommand {
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 
@@ -1596,7 +1621,7 @@ export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel imp
 }
 
 /** A command containing information needed to process objects. */
-export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfTaskModel {
+export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfProcessObjectTaskModel {
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 }
@@ -1625,6 +1650,16 @@ export enum BezierEasingType {
     EaseInQuart = 5, 
     EaseOutQuart = 6, 
     EaseInOutQuart = 7, 
+}
+
+/** The different states of a task. */
+export enum TaskStatus {
+    Created = 0, 
+    Queued = 1, 
+    Processing = 2, 
+    Canceled = 3, 
+    Failed = 4, 
+    Finished = 5, 
 }
 
 export interface FileParameter {

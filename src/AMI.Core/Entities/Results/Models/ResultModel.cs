@@ -3,7 +3,7 @@
     /// <summary>
     /// A model containing information about the result of the processing.
     /// </summary>
-    public class ResultModel
+    public abstract class ResultModel
     {
         /// <summary>
         /// Gets or sets the application version.

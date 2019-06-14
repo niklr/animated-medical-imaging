@@ -6,7 +6,7 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model containing information about the task.
     /// </summary>
-    public class TaskModel
+    public abstract class TaskModel
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -37,11 +37,6 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the progress (0-100).
         /// </summary>
         public int Progress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the identifier of the object.
-        /// </summary>
-        public string ObjectId { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier of the result.

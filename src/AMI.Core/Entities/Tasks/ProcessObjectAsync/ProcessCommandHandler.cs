@@ -3,33 +3,68 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.Queues;
+using AMI.Core.Repositories;
 using AMI.Core.Services;
+using AMI.Domain.Entities;
 
 namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
 {
     /// <summary>
     /// A handler for process command requests.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{ProcessObjectCommand, ProcessResultModel}" />
-    public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectAsyncCommand, TaskModel>
+    /// <seealso cref="BaseCommandRequestHandler{ProcessObjectCommand, ProcessObjectTaskModel}" />
+    public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectAsyncCommand, ProcessObjectTaskModel>
     {
-        private readonly IImageService imageService;
+        private readonly IAmiUnitOfWork context;
+        private readonly IIdGenService idGenService;
+        private readonly ITaskQueue queue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessCommandHandler"/> class.
         /// </summary>
-        /// <param name="imageService">The image service.</param>
-        /// <exception cref="ArgumentNullException">imageService</exception>
-        public ProcessCommandHandler(IImageService imageService)
+        /// <param name="context">The context.</param>
+        /// <param name="idGenService">The service to generate unique identifiers.</param>
+        /// <param name="queue">The task queue.</param>
+        public ProcessCommandHandler(
+            IAmiUnitOfWork context,
+            IIdGenService idGenService,
+            ITaskQueue queue)
             : base()
         {
-            this.imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
+            this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
         }
 
         /// <inheritdoc/>
-        protected override Task<TaskModel> ProtectedHandleAsync(ProcessObjectAsyncCommand request, CancellationToken cancellationToken)
+        protected override async Task<ProcessObjectTaskModel> ProtectedHandleAsync(ProcessObjectAsyncCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.BeginTransaction();
+
+            var entity = new TaskEntity()
+            {
+                Id = idGenService.CreateId(),
+                CreatedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.UtcNow,
+                Status = (int)Domain.Enums.TaskStatus.Queued,
+                Progress = 0,
+                Position = queue.Count,
+                CommandType = request.GetType().ToString(),
+                CommandSerialized = request.ToString(),
+                ObjectId = Guid.Parse(request.Id)
+            };
+
+            context.TaskRepository.Add(entity);
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            var result = ProcessObjectTaskModel.Create(entity);
+            queue.Add(result);
+
+            context.CommitTransaction();
+
+            return result;
         }
     }
 }

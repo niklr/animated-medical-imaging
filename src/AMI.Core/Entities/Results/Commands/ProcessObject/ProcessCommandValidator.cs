@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessObject
 {
@@ -13,8 +14,10 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// </summary>
         public ProcessCommandValidator()
         {
-            // Length of a Guid = 36
-            RuleFor(x => x.Id).NotEmpty().MaximumLength(36);
+            RuleFor(x => x.Id).NotEmpty().Must(x =>
+            {
+                return Guid.TryParse(x, out Guid result);
+            });
         }
     }
 }

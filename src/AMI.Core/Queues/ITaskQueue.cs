@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using AMI.Core.Entities.Results.Commands.ProcessObject;
+using AMI.Core.Entities.Models;
 
 namespace AMI.Core.Queues
 {
     /// <summary>
-    /// A queue to process objects.
+    /// A queue for tasks.
     /// </summary>
-    public interface IProcessObjectQueue : IDisposable
+    public interface ITaskQueue : IDisposable
     {
         /// <summary>
         /// Gets the number of items contained in the queue.
@@ -16,10 +16,16 @@ namespace AMI.Core.Queues
         int Count { get; }
 
         /// <summary>
+        /// Adds the specified task to the queue.
+        /// </summary>
+        /// <param name="task">The task.</param>
+        void Add(TaskModel task);
+
+        /// <summary>
         /// Gets a consuming enumerable for the items in the queue.
         /// </summary>
         /// <param name="token">The cancellation token.</param>
         /// <returns>An enumerable that removes and returns items from the queue.</returns>
-        IEnumerable<ProcessObjectCommand> GetConsumingEnumerable(CancellationToken token);
+        IEnumerable<TaskModel> GetConsumingEnumerable(CancellationToken token);
     }
 }

@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace AMI.Persistence.InMemory.Configurations
 {
     /// <summary>
-    /// A configuration for the <see cref="ObjectEntity"/>.
+    /// A configuration for the <see cref="ResultEntity"/>.
     /// </summary>
-    public class ObjectConfiguration : IEntityTypeConfiguration<ObjectEntity>
+    public class ResultConfiguration : IEntityTypeConfiguration<ResultEntity>
     {
         /// <inheritdoc/>
-        public void Configure(EntityTypeBuilder<ObjectEntity> builder)
+        public void Configure(EntityTypeBuilder<ResultEntity> builder)
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id)
                 .ValueGeneratedNever();
 
-            builder.ToTable("Objects");
+            builder.ToTable("Results");
 
             builder.Property(e => e.CreatedDate)
                 .IsRequired();

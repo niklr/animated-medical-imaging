@@ -14,14 +14,14 @@ namespace AMI.Infrastructure.Services
     public class ProcessObjectHostedService : BackgroundService
     {
         private readonly ILogger logger;
-        private readonly IProcessObjectWorker worker;
+        private readonly ITaskWorker worker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessObjectHostedService"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="worker">The worker to process objects.</param>
-        public ProcessObjectHostedService(ILoggerFactory loggerFactory, IProcessObjectWorker worker)
+        public ProcessObjectHostedService(ILoggerFactory loggerFactory, ITaskWorker worker)
         {
             logger = loggerFactory.CreateLogger<ProcessObjectHostedService>();
             this.worker = worker;

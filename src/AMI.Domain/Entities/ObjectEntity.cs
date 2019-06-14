@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AMI.Domain.Entities
 {
@@ -7,6 +8,14 @@ namespace AMI.Domain.Entities
     /// </summary>
     public class ObjectEntity
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectEntity"/> class.
+        /// </summary>
+        public ObjectEntity()
+        {
+            Tasks = new HashSet<TaskEntity>();
+        }
+
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
@@ -46,5 +55,10 @@ namespace AMI.Domain.Entities
         /// Gets or sets the uncompressed filesystem path (directory).
         /// </summary>
         public string UncompressedFilesystemPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tasks.
+        /// </summary>
+        public ICollection<TaskEntity> Tasks { get; set; }
     }
 }

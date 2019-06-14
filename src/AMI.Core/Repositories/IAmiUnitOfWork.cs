@@ -12,5 +12,15 @@ namespace AMI.Core.Repositories
         /// Gets the object repository.
         /// </summary>
         IRepository<ObjectEntity> ObjectRepository { get; }
+
+        /// <summary>
+        /// Gets the result repository.
+        /// </summary>
+        IRepository<ResultEntity> ResultRepository { get; }
+
+        /// <summary>
+        /// Gets the task repository.
+        /// </summary>
+        IRepository<TaskEntity> TaskRepository { get; }
     }
 }

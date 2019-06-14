@@ -31,5 +31,23 @@ namespace AMI.Persistence.EntityFramework.InMemory
                 return new DbSetRepository<ObjectEntity>(context.Objects);
             }
         }
+
+        /// <inheritdoc/>
+        public IRepository<ResultEntity> ResultRepository
+        {
+            get
+            {
+                return new DbSetRepository<ResultEntity>(context.Results);
+            }
+        }
+
+        /// <inheritdoc/>
+        public IRepository<TaskEntity> TaskRepository
+        {
+            get
+            {
+                return new DbSetRepository<TaskEntity>(context.Tasks);
+            }
+        }
     }
 }

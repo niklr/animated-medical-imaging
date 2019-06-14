@@ -14,6 +14,7 @@ using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Factories;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Uploaders;
+using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -81,6 +82,9 @@ namespace AMI.API
                     .AddConsole();
             });
 
+            // Add hosted services
+            services.AddHostedService<ProcessObjectHostedService>();
+
             // TODO: replace InMemoryUnitOfWork with SQLite
             // services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();
@@ -91,6 +95,7 @@ namespace AMI.API
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
             services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddSingleton<ITaskQueue, TaskQueue>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
 
