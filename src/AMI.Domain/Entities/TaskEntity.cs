@@ -28,6 +28,11 @@ namespace AMI.Domain.Entities
         public int Status { get; set; }
 
         /// <summary>
+        /// Gets or sets the message describing the error.
+        /// </summary>
+        public string Message { get; set; }
+
+        /// <summary>
         /// Gets or sets the position in queue.
         /// </summary>
         public int Position { get; set; }
@@ -40,7 +45,7 @@ namespace AMI.Domain.Entities
         /// <summary>
         /// Gets or sets the type of the command.
         /// </summary>
-        public string CommandType { get; set; }
+        public int CommandType { get; set; }
 
         /// <summary>
         /// Gets or sets the serialized command.

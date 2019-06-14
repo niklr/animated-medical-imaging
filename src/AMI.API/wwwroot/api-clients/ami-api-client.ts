@@ -148,7 +148,7 @@ export interface IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<ProcessObjectTaskModel | null>;
+    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel | null>;
     /**
      * Uploads an object.
      * @param file The file.
@@ -382,7 +382,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<ProcessObjectTaskModel | null> {
+    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel | null> {
         let url_ = this.baseUrl + "/objects/{id}/process";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -408,14 +408,14 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
                 try {
                     return this.processProcess(<any>response_);
                 } catch (e) {
-                    return <Observable<ProcessObjectTaskModel | null>><any>_observableThrow(e);
+                    return <Observable<TaskModel | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ProcessObjectTaskModel | null>><any>_observableThrow(response_);
+                return <Observable<TaskModel | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processProcess(response: HttpResponseBase): Observable<ProcessObjectTaskModel | null> {
+    protected processProcess(response: HttpResponseBase): Observable<TaskModel | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -468,7 +468,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 ? ProcessObjectTaskModel.fromJS(resultData200) : <any>null;
+            result200 = resultData200 ? TaskModel.fromJS(resultData200) : <any>null;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -476,7 +476,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ProcessObjectTaskModel | null>(<any>null);
+        return _observableOf<TaskModel | null>(<any>null);
     }
 
     /**
@@ -1272,7 +1272,7 @@ export class ObjectModel implements IObjectModel {
     /** Gets or sets the source path (directory, file, url, etc.). */
     sourcePath?: string | undefined;
     /** Gets or sets the uncompressed filesystem path (directory). */
-    uncompressedFilesystemPath?: string | undefined;
+    uncompressedFsPath?: string | undefined;
 
     constructor(data?: IObjectModel) {
         if (data) {
@@ -1292,7 +1292,7 @@ export class ObjectModel implements IObjectModel {
             this.fileFormat = data["fileFormat"];
             this.originalFilename = data["originalFilename"];
             this.sourcePath = data["sourcePath"];
-            this.uncompressedFilesystemPath = data["uncompressedFilesystemPath"];
+            this.uncompressedFsPath = data["uncompressedFsPath"];
         }
     }
 
@@ -1312,7 +1312,7 @@ export class ObjectModel implements IObjectModel {
         data["fileFormat"] = this.fileFormat;
         data["originalFilename"] = this.originalFilename;
         data["sourcePath"] = this.sourcePath;
-        data["uncompressedFilesystemPath"] = this.uncompressedFilesystemPath;
+        data["uncompressedFsPath"] = this.uncompressedFsPath;
         return data; 
     }
 }
@@ -1334,7 +1334,7 @@ export interface IObjectModel {
     /** Gets or sets the source path (directory, file, url, etc.). */
     sourcePath?: string | undefined;
     /** Gets or sets the uncompressed filesystem path (directory). */
-    uncompressedFilesystemPath?: string | undefined;
+    uncompressedFsPath?: string | undefined;
 }
 
 /** A type to describe the data. */
@@ -1407,7 +1407,7 @@ export interface IPaginationModel {
 }
 
 /** A model containing information about the task. */
-export abstract class TaskModel implements ITaskModel {
+export class TaskModel implements ITaskModel {
     /** Gets or sets the identifier. */
     id?: string | undefined;
     /** Gets or sets the created date. */
@@ -1416,12 +1416,20 @@ export abstract class TaskModel implements ITaskModel {
     modifiedDate?: Date;
     /** Gets or sets the status. */
     status?: TaskStatus;
+    /** Gets or sets the message describing the error. */
+    message?: string | undefined;
     /** Gets or sets the position in queue. */
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
     /** Gets or sets the identifier of the result. */
     resultId?: string | undefined;
+    /** Gets or sets the identifier of the object. */
+    objectId?: string | undefined;
+    /** Gets or sets the type of the command used to create this task. */
+    commandType?: CommandType;
+    /** Gets or sets the command used to create this task. */
+    command?: any | undefined;
 
     constructor(data?: ITaskModel) {
         if (data) {
@@ -1438,15 +1446,21 @@ export abstract class TaskModel implements ITaskModel {
             this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
             this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
             this.status = data["status"];
+            this.message = data["message"];
             this.position = data["position"];
             this.progress = data["progress"];
             this.resultId = data["resultId"];
+            this.objectId = data["objectId"];
+            this.commandType = data["commandType"];
+            this.command = data["command"];
         }
     }
 
     static fromJS(data: any): TaskModel {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'TaskModel' cannot be instantiated.");
+        let result = new TaskModel();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
@@ -1455,9 +1469,13 @@ export abstract class TaskModel implements ITaskModel {
         data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
         data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
         data["status"] = this.status;
+        data["message"] = this.message;
         data["position"] = this.position;
         data["progress"] = this.progress;
         data["resultId"] = this.resultId;
+        data["objectId"] = this.objectId;
+        data["commandType"] = this.commandType;
+        data["command"] = this.command;
         return data; 
     }
 }
@@ -1472,58 +1490,39 @@ export interface ITaskModel {
     modifiedDate?: Date;
     /** Gets or sets the status. */
     status?: TaskStatus;
+    /** Gets or sets the message describing the error. */
+    message?: string | undefined;
     /** Gets or sets the position in queue. */
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
     /** Gets or sets the identifier of the result. */
     resultId?: string | undefined;
-}
-
-/** A model containing information about the task to process an object. */
-export class ProcessObjectTaskModel extends TaskModel implements IProcessObjectTaskModel {
-    /** Gets or sets the command used to create this task. */
-    command?: ProcessObjectAsyncCommand | undefined;
     /** Gets or sets the identifier of the object. */
     objectId?: string | undefined;
-
-    constructor(data?: IProcessObjectTaskModel) {
-        super(data);
-    }
-
-    init(data?: any) {
-        super.init(data);
-        if (data) {
-            this.command = data["command"] ? ProcessObjectAsyncCommand.fromJS(data["command"]) : <any>undefined;
-            this.objectId = data["objectId"];
-        }
-    }
-
-    static fromJS(data: any): ProcessObjectTaskModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProcessObjectTaskModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["command"] = this.command ? this.command.toJSON() : <any>undefined;
-        data["objectId"] = this.objectId;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-/** A model containing information about the task to process an object. */
-export interface IProcessObjectTaskModel extends ITaskModel {
+    /** Gets or sets the type of the command used to create this task. */
+    commandType?: CommandType;
     /** Gets or sets the command used to create this task. */
-    command?: ProcessObjectAsyncCommand | undefined;
-    /** Gets or sets the identifier of the object. */
-    objectId?: string | undefined;
+    command?: any | undefined;
 }
 
-export abstract class BaseProcessCommandOfProcessObjectTaskModel implements IBaseProcessCommandOfProcessObjectTaskModel {
+/** The different states of a task. */
+export enum TaskStatus {
+    Created = 0, 
+    Queued = 1, 
+    Processing = 2, 
+    Canceled = 3, 
+    Failed = 4, 
+    Finished = 5, 
+}
+
+/** A type to describe the command. */
+export enum CommandType {
+    Unknown = 0, 
+    ProcessObjectAsyncCommand = 1, 
+}
+
+export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessCommandOfTaskModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1532,7 +1531,7 @@ export abstract class BaseProcessCommandOfProcessObjectTaskModel implements IBas
     bezierEasingTypeCombined?: BezierEasingType;
     grayscale?: boolean;
 
-    constructor(data?: IBaseProcessCommandOfProcessObjectTaskModel) {
+    constructor(data?: IBaseProcessCommandOfTaskModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1557,9 +1556,9 @@ export abstract class BaseProcessCommandOfProcessObjectTaskModel implements IBas
         }
     }
 
-    static fromJS(data: any): BaseProcessCommandOfProcessObjectTaskModel {
+    static fromJS(data: any): BaseProcessCommandOfTaskModel {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseProcessCommandOfProcessObjectTaskModel' cannot be instantiated.");
+        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -1579,7 +1578,7 @@ export abstract class BaseProcessCommandOfProcessObjectTaskModel implements IBas
     }
 }
 
-export interface IBaseProcessCommandOfProcessObjectTaskModel {
+export interface IBaseProcessCommandOfTaskModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1590,7 +1589,7 @@ export interface IBaseProcessCommandOfProcessObjectTaskModel {
 }
 
 /** A command containing information needed to process objects. */
-export class ProcessObjectAsyncCommand extends BaseProcessCommandOfProcessObjectTaskModel implements IProcessObjectAsyncCommand {
+export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel implements IProcessObjectAsyncCommand {
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 
@@ -1621,7 +1620,7 @@ export class ProcessObjectAsyncCommand extends BaseProcessCommandOfProcessObject
 }
 
 /** A command containing information needed to process objects. */
-export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfProcessObjectTaskModel {
+export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfTaskModel {
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 }
@@ -1650,16 +1649,6 @@ export enum BezierEasingType {
     EaseInQuart = 5, 
     EaseOutQuart = 6, 
     EaseInOutQuart = 7, 
-}
-
-/** The different states of a task. */
-export enum TaskStatus {
-    Created = 0, 
-    Queued = 1, 
-    Processing = 2, 
-    Canceled = 3, 
-    Failed = 4, 
-    Finished = 5, 
 }
 
 export interface FileParameter {

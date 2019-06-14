@@ -8,7 +8,7 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
     /// A command containing information needed to process objects.
     /// </summary>
     [Serializable]
-    public class ProcessObjectAsyncCommand : BaseProcessCommand<ProcessObjectTaskModel>
+    public class ProcessObjectAsyncCommand : BaseProcessCommand<TaskModel>
     {
         /// <summary>
         /// Gets or sets the identifier of the object.

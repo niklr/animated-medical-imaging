@@ -4,71 +4,68 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Repositories;
-using Microsoft.EntityFrameworkCore;
 using RNS.Framework.Collections;
 
-namespace AMI.Persistence.EntityFramework.Shared.Repositories
+namespace AMI.Core.Repositories
 {
     /// <summary>
-    /// An implementation of the repository using DbSet.
+    /// The mock implementation of the repository.
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     /// <seealso cref="IRepository{T}" />
-    public class DbSetRepository<T> : IRepository<T>
+    public class MockRepository<T> : IRepository<T>
         where T : class
     {
-        private readonly DbSet<T> dbSet;
+        private readonly IList<T> entities;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbSetRepository{T}"/> class.
+        /// Initializes a new instance of the <see cref="MockRepository{T}"/> class.
         /// </summary>
-        /// <param name="dbSet">The database set.</param>
-        public DbSetRepository(DbSet<T> dbSet)
+        /// <param name="entities">The entities list.</param>
+        public MockRepository(IList<T> entities)
         {
-            this.dbSet = dbSet ?? throw new ArgumentNullException(nameof(dbSet));
+            this.entities = entities ?? throw new ArgumentNullException(nameof(entities));
         }
 
         /// <inheritdoc/>
         public void Add(T entity)
         {
-            dbSet.Add(entity);
+            entities.Add(entity);
         }
 
         /// <inheritdoc/>
         public void Attach(T entity)
         {
-            dbSet.Attach(entity);
         }
 
         /// <inheritdoc/>
         public int Count()
         {
-            return dbSet.Count();
+            return entities.Count;
         }
 
         /// <inheritdoc/>
         public int Count(Expression<Func<T, bool>> predicate)
         {
-            return dbSet.Count(predicate);
+            return GetQuery(predicate).Count();
         }
 
         /// <inheritdoc/>
         public async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await dbSet.CountAsync(cancellationToken);
+            return await Task.Run(() => { return Count(); });
         }
 
         /// <inheritdoc/>
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await dbSet.CountAsync(predicate, cancellationToken);
+            return await Task.Run(() => { return Count(predicate); });
         }
 
         /// <inheritdoc/>
         public IEnumerable<T> Get(Expression<Func<T, bool>> predicate)
         {
-            return GetQuery(predicate).ToList();
+            return GetQuery(predicate).AsEnumerable();
         }
 
         /// <inheritdoc/>
@@ -94,13 +91,13 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         /// <inheritdoc/>
         public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await GetQuery(predicate).SingleOrDefaultAsync(cancellationToken);
+            return await Task.Run(() => { return GetQuery(predicate).FirstOrDefault(); });
         }
 
         /// <inheritdoc/>
         public IQueryable<T> GetQuery()
         {
-            return dbSet;
+            return entities.AsQueryable();
         }
 
         /// <inheritdoc/>
@@ -112,30 +109,28 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         /// <inheritdoc/>
         public void Remove(T entity)
         {
-            dbSet.Remove(entity);
+            entities.Remove(entity);
         }
 
         /// <inheritdoc/>
         public void RemoveRange(Expression<Func<T, bool>> predicate)
         {
-            dbSet.RemoveRange(Get(predicate));
+            List<T> entities = GetQuery(predicate).ToList();
+            foreach (T entity in entities)
+            {
+                Remove(entity);
+            }
         }
 
         /// <inheritdoc/>
         public async Task<List<T>> ToListAsync(IQueryable<T> queryable, CancellationToken cancellationToken = default)
         {
-            if (queryable == null)
-            {
-                return null;
-            }
-
-            return await queryable.ToListAsync(cancellationToken);
+            return await Task.Run(() => { return queryable.ToList(); });
         }
 
         /// <inheritdoc/>
         public void Update(T entity)
         {
-            dbSet.Update(entity);
         }
     }
 }

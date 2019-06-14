@@ -24,6 +24,26 @@ namespace AMI.Domain.Entities
         public DateTime ModifiedDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the application version.
+        /// </summary>
+        public string Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the JSON filesystem path.
+        /// </summary>
+        public string JsonFsPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the result.
+        /// </summary>
+        public int ResultType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the serialized result.
+        /// </summary>
+        public string ResultSerialized { get; set; }
+
+        /// <summary>
         /// Gets or sets the tasks.
         /// </summary>
         public ICollection<TaskEntity> Tasks { get; set; }

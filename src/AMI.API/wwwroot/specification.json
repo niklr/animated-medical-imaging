@@ -523,7 +523,7 @@
                   "nullable": true,
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ProcessObjectTaskModel"
+                      "$ref": "#/components/schemas/TaskModel"
                     }
                   ]
                 }
@@ -1409,7 +1409,7 @@
             "description": "Gets or sets the source path (directory, file, url, etc.).",
             "nullable": true
           },
-          "uncompressedFilesystemPath": {
+          "uncompressedFsPath": {
             "type": "string",
             "description": "Gets or sets the uncompressed filesystem path (directory).",
             "nullable": true
@@ -1472,38 +1472,109 @@
           }
         }
       },
-      "ProcessObjectTaskModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/TaskModel"
+      "TaskModel": {
+        "type": "object",
+        "description": "A model containing information about the task.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the identifier.",
+            "nullable": true
           },
-          {
-            "type": "object",
-            "description": "A model containing information about the task to process an object.",
-            "additionalProperties": false,
-            "properties": {
-              "command": {
-                "description": "Gets or sets the command used to create this task.",
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ProcessObjectAsyncCommand"
-                  }
-                ]
-              },
-              "objectId": {
-                "type": "string",
-                "description": "Gets or sets the identifier of the object.",
-                "nullable": true
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the created date.",
+            "format": "date-time"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "Gets or sets the modified date.",
+            "format": "date-time"
+          },
+          "status": {
+            "description": "Gets or sets the status.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TaskStatus"
               }
-            }
+            ]
+          },
+          "message": {
+            "type": "string",
+            "description": "Gets or sets the message describing the error.",
+            "nullable": true
+          },
+          "position": {
+            "type": "integer",
+            "description": "Gets or sets the position in queue.",
+            "format": "int32"
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Gets or sets the progress (0-100).",
+            "format": "int32"
+          },
+          "resultId": {
+            "type": "string",
+            "description": "Gets or sets the identifier of the result.",
+            "nullable": true
+          },
+          "objectId": {
+            "type": "string",
+            "description": "Gets or sets the identifier of the object.",
+            "nullable": true
+          },
+          "commandType": {
+            "description": "Gets or sets the type of the command used to create this task.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CommandType"
+              }
+            ]
+          },
+          "command": {
+            "description": "Gets or sets the command used to create this task.",
+            "nullable": true
           }
+        }
+      },
+      "TaskStatus": {
+        "type": "integer",
+        "description": "The different states of a task.",
+        "x-enumNames": [
+          "Created",
+          "Queued",
+          "Processing",
+          "Canceled",
+          "Failed",
+          "Finished"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "CommandType": {
+        "type": "integer",
+        "description": "A type to describe the command.",
+        "x-enumNames": [
+          "Unknown",
+          "ProcessObjectAsyncCommand"
+        ],
+        "enum": [
+          0,
+          1
         ]
       },
       "ProcessObjectAsyncCommand": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/BaseProcessCommandOfProcessObjectTaskModel"
+            "$ref": "#/components/schemas/BaseProcessCommandOfTaskModel"
           },
           {
             "type": "object",
@@ -1519,7 +1590,7 @@
           }
         ]
       },
-      "BaseProcessCommandOfProcessObjectTaskModel": {
+      "BaseProcessCommandOfTaskModel": {
         "type": "object",
         "x-abstract": true,
         "additionalProperties": false,
@@ -1602,72 +1673,6 @@
           5,
           6,
           7
-        ]
-      },
-      "TaskModel": {
-        "type": "object",
-        "description": "A model containing information about the task.",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Gets or sets the identifier.",
-            "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "description": "Gets or sets the created date.",
-            "format": "date-time"
-          },
-          "modifiedDate": {
-            "type": "string",
-            "description": "Gets or sets the modified date.",
-            "format": "date-time"
-          },
-          "status": {
-            "description": "Gets or sets the status.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TaskStatus"
-              }
-            ]
-          },
-          "position": {
-            "type": "integer",
-            "description": "Gets or sets the position in queue.",
-            "format": "int32"
-          },
-          "progress": {
-            "type": "integer",
-            "description": "Gets or sets the progress (0-100).",
-            "format": "int32"
-          },
-          "resultId": {
-            "type": "string",
-            "description": "Gets or sets the identifier of the result.",
-            "nullable": true
-          }
-        }
-      },
-      "TaskStatus": {
-        "type": "integer",
-        "description": "The different states of a task.",
-        "x-enumNames": [
-          "Created",
-          "Queued",
-          "Processing",
-          "Canceled",
-          "Failed",
-          "Finished"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
         ]
       }
     }

@@ -54,7 +54,7 @@ namespace AMI.Domain.Entities
         /// <summary>
         /// Gets or sets the uncompressed filesystem path (directory).
         /// </summary>
-        public string UncompressedFilesystemPath { get; set; }
+        public string UncompressedFsPath { get; set; }
 
         /// <summary>
         /// Gets or sets the tasks.

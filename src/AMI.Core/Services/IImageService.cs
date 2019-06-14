@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.Entities.Results.Commands.ProcessPath;
 
 namespace AMI.Core.Services
 {
@@ -12,7 +12,7 @@ namespace AMI.Core.Services
     public interface IImageService
     {
         /// <summary>
-        /// Processes images based on the provided command information asynchronous.
+        /// Processes images based on the provided path command information asynchronous.
         /// </summary>
         /// <param name="command">The command information.</param>
         /// <param name="ct">The cancellation token.</param>
@@ -24,7 +24,6 @@ namespace AMI.Core.Services
         /// or
         /// ct
         /// </exception>
-        /// <exception cref="NotSupportedException">Process command type is not supported.</exception>
-        Task<ProcessResultModel> ProcessAsync(BaseProcessCommand<ProcessResultModel> command, CancellationToken ct);
+        Task<ProcessResultModel> ProcessAsync(ProcessPathCommand command, CancellationToken ct);
     }
 }

@@ -110,30 +110,7 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ProcessResultModel> ProcessAsync(BaseProcessCommand<ProcessResultModel> command, CancellationToken ct)
-        {
-            if (command == null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
-
-            switch (command)
-            {
-                case ProcessPathCommand pathCommand:
-                    return await ProcessPathAsync(pathCommand, ct);
-                case ProcessObjectCommand objectCommand:
-                    return await ProcessObjectAsync(objectCommand, ct);
-                default:
-                    throw new NotSupportedException("Process command type is not supported.");
-            }
-        }
-
-        private async Task<ProcessResultModel> ProcessPathAsync(ProcessPathCommand command, CancellationToken ct)
+        public async Task<ProcessResultModel> ProcessAsync(ProcessPathCommand command, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(command.SourcePath))
             {
@@ -175,16 +152,6 @@ namespace AMI.Infrastructure.Services
             await jsonWriter.WriteAsync(commandClone.DestinationPath, "output", result, (filename) => { result.JsonFilename = filename; });
 
             return result;
-        }
-
-        private async Task<ProcessResultModel> ProcessObjectAsync(ProcessObjectCommand command, CancellationToken ct)
-        {
-            if (string.IsNullOrWhiteSpace(command.Id))
-            {
-                throw new UnexpectedNullException("Empty identifier.");
-            }
-
-            return null;
         }
     }
 }

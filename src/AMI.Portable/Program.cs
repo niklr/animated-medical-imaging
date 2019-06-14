@@ -15,6 +15,7 @@ using AMI.Core.Helpers;
 using AMI.Core.IO.Extractors;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Writers;
+using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Enums;
@@ -54,11 +55,13 @@ namespace AMI.Portable
                         .AddConfiguration(configuration.GetSection("Logging"))
                         .AddConsole();
                 });
+            services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
             services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
+            services.AddSingleton<IAmiUnitOfWork, MockUnitOfWork>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();

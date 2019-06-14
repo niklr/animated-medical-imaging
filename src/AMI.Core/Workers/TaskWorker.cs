@@ -3,7 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
+using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
 using AMI.Core.Queues;
+using AMI.Domain.Enums;
+using AMI.Domain.Exceptions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -39,36 +42,56 @@ namespace AMI.Core.Workers
             {
                 StartWatch();
 
-                switch (item)
+                switch (item.CommandType)
                 {
-                    case ProcessObjectTaskModel processObject:
-                        await ProcessObjectTaskAsync(processObject, cancellationToken);
+                    case CommandType.ProcessObjectAsyncCommand:
+                        await ProcessObjectAsync(item, cancellationToken);
                         break;
                     default:
-                        throw new NotSupportedException("Process command type is not supported.");
+                        // TODO: implement default behavior
+                        break;
                 }
 
                 StopWatch();
             }
         }
 
-        private async Task ProcessObjectTaskAsync(ProcessObjectTaskModel item, CancellationToken cancellationToken)
+        private async Task ProcessObjectAsync(TaskModel item, CancellationToken cancellationToken)
         {
-            var command = new ProcessObjectCommand()
+            try
             {
-                Id = item.Id,
-                DesiredSize = item.Command.DesiredSize,
-                AmountPerAxis = item.Command.AmountPerAxis,
-                AxisTypes = item.Command.AxisTypes,
-                ImageFormat = item.Command.ImageFormat,
-                BezierEasingTypePerAxis = item.Command.BezierEasingTypePerAxis,
-                BezierEasingTypeCombined = item.Command.BezierEasingTypeCombined,
-                Grayscale = item.Command.Grayscale
-            };
+                if (item.Command == null)
+                {
+                    throw new UnexpectedNullException($"The command of task {item.Id} is null.");
+                }
 
-            await mediator.Send(command, cancellationToken);
+                if (item.Command.GetType() != typeof(ProcessObjectAsyncCommand))
+                {
+                    throw new AmiException($"Task {item.Id} has an unexpected command type.");
+                }
 
-            // TODO: store result or error
+                var castedCommand = (ProcessObjectAsyncCommand)item.Command;
+
+                var command = new ProcessObjectCommand()
+                {
+                    Id = item.Id,
+                    DesiredSize = castedCommand.DesiredSize,
+                    AmountPerAxis = castedCommand.AmountPerAxis,
+                    AxisTypes = castedCommand.AxisTypes,
+                    ImageFormat = castedCommand.ImageFormat,
+                    BezierEasingTypePerAxis = castedCommand.BezierEasingTypePerAxis,
+                    BezierEasingTypeCombined = castedCommand.BezierEasingTypeCombined,
+                    Grayscale = castedCommand.Grayscale
+                };
+
+                var result = await mediator.Send(command, cancellationToken);
+
+                // TODO: update task
+            }
+            catch (Exception)
+            {
+                // TODO: log exception and update task
+            }
         }
     }
 }
