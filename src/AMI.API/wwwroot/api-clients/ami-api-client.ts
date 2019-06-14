@@ -148,7 +148,7 @@ export interface IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string | null, command: ProcessObjectCommand): Observable<TaskModel | null>;
+    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel | null>;
     /**
      * Uploads an object.
      * @param file The file.
@@ -382,7 +382,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
      * @param command The command to process an existing object.
      * @return The created task.
      */
-    process(id: string | null, command: ProcessObjectCommand): Observable<TaskModel | null> {
+    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel | null> {
         let url_ = this.baseUrl + "/objects/{id}/process";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1498,24 +1498,16 @@ export enum TaskStatus {
     Finished = 5, 
 }
 
-/** A command containing information needed for processing. */
-export abstract class BaseProcessCommand implements IBaseProcessCommand {
-    /** Gets or sets the desired size of the processed images. */
+export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessCommandOfTaskModel {
     desiredSize?: number | undefined;
-    /** Gets or sets the amount of images per axis. */
     amountPerAxis?: number;
-    /** Gets the axis types to be considered. */
     axisTypes?: AxisType[] | undefined;
-    /** Gets or sets the image format. */
     imageFormat?: ImageFormat;
-    /** Gets or sets the Bézier easing type per axis used for the animated image. */
     bezierEasingTypePerAxis?: BezierEasingType;
-    /** Gets or sets the Bézier easing type used for the combined animated image. */
     bezierEasingTypeCombined?: BezierEasingType;
-    /** Gets or sets a value indicating whether the images should be converted to grayscale. */
     grayscale?: boolean;
 
-    constructor(data?: IBaseProcessCommand) {
+    constructor(data?: IBaseProcessCommandOfTaskModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1540,9 +1532,9 @@ export abstract class BaseProcessCommand implements IBaseProcessCommand {
         }
     }
 
-    static fromJS(data: any): BaseProcessCommand {
+    static fromJS(data: any): BaseProcessCommandOfTaskModel {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseProcessCommand' cannot be instantiated.");
+        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -1562,30 +1554,22 @@ export abstract class BaseProcessCommand implements IBaseProcessCommand {
     }
 }
 
-/** A command containing information needed for processing. */
-export interface IBaseProcessCommand {
-    /** Gets or sets the desired size of the processed images. */
+export interface IBaseProcessCommandOfTaskModel {
     desiredSize?: number | undefined;
-    /** Gets or sets the amount of images per axis. */
     amountPerAxis?: number;
-    /** Gets the axis types to be considered. */
     axisTypes?: AxisType[] | undefined;
-    /** Gets or sets the image format. */
     imageFormat?: ImageFormat;
-    /** Gets or sets the Bézier easing type per axis used for the animated image. */
     bezierEasingTypePerAxis?: BezierEasingType;
-    /** Gets or sets the Bézier easing type used for the combined animated image. */
     bezierEasingTypeCombined?: BezierEasingType;
-    /** Gets or sets a value indicating whether the images should be converted to grayscale. */
     grayscale?: boolean;
 }
 
 /** A command containing information needed to process objects. */
-export class ProcessObjectCommand extends BaseProcessCommand implements IProcessObjectCommand {
+export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel implements IProcessObjectAsyncCommand {
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 
-    constructor(data?: IProcessObjectCommand) {
+    constructor(data?: IProcessObjectAsyncCommand) {
         super(data);
     }
 
@@ -1596,9 +1580,9 @@ export class ProcessObjectCommand extends BaseProcessCommand implements IProcess
         }
     }
 
-    static fromJS(data: any): ProcessObjectCommand {
+    static fromJS(data: any): ProcessObjectAsyncCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new ProcessObjectCommand();
+        let result = new ProcessObjectAsyncCommand();
         result.init(data);
         return result;
     }
@@ -1612,7 +1596,7 @@ export class ProcessObjectCommand extends BaseProcessCommand implements IProcess
 }
 
 /** A command containing information needed to process objects. */
-export interface IProcessObjectCommand extends IBaseProcessCommand {
+export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfTaskModel {
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 }

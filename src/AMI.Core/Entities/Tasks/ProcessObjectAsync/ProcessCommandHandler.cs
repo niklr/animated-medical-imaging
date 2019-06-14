@@ -5,13 +5,13 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Services;
 
-namespace AMI.Core.Entities.Results.Commands.ProcessObject
+namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
 {
     /// <summary>
     /// A handler for process command requests.
     /// </summary>
     /// <seealso cref="BaseCommandRequestHandler{ProcessObjectCommand, ProcessResultModel}" />
-    public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectCommand, ProcessResultModel>
+    public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectAsyncCommand, TaskModel>
     {
         private readonly IImageService imageService;
 
@@ -27,9 +27,9 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         }
 
         /// <inheritdoc/>
-        protected override Task<ProcessResultModel> ProtectedHandleAsync(ProcessObjectCommand request, CancellationToken cancellationToken)
+        protected override Task<TaskModel> ProtectedHandleAsync(ProcessObjectAsyncCommand request, CancellationToken cancellationToken)
         {
-            return imageService.ProcessAsync(request, cancellationToken);
+            throw new NotImplementedException();
         }
     }
 }

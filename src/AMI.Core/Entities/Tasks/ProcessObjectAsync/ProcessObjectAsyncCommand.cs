@@ -2,13 +2,13 @@
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 
-namespace AMI.Core.Entities.Results.Commands.ProcessObject
+namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
 {
     /// <summary>
     /// A command containing information needed to process objects.
     /// </summary>
     [Serializable]
-    public class ProcessObjectCommand : BaseProcessCommand<ProcessResultModel>
+    public class ProcessObjectAsyncCommand : BaseProcessCommand<TaskModel>
     {
         /// <summary>
         /// Gets or sets the identifier of the object.

@@ -25,6 +25,6 @@ namespace AMI.Core.Services
         /// ct
         /// </exception>
         /// <exception cref="NotSupportedException">Process command type is not supported.</exception>
-        Task<ProcessResultModel> ProcessAsync(BaseProcessCommand command, CancellationToken ct);
+        Task<ProcessResultModel> ProcessAsync(BaseProcessCommand<ProcessResultModel> command, CancellationToken ct);
     }
 }

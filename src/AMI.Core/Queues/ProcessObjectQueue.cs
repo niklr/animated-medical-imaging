@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using AMI.Core.Entities.Results.Commands.ProcessObjects;
+using AMI.Core.Entities.Results.Commands.ProcessObject;
 
 namespace AMI.Core.Queues
 {

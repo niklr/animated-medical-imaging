@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Results.Commands.ProcessObjects;
+using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Extensions.FileSystemExtensions;
@@ -110,7 +110,7 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task<ProcessResultModel> ProcessAsync(BaseProcessCommand command, CancellationToken ct)
+        public async Task<ProcessResultModel> ProcessAsync(BaseProcessCommand<ProcessResultModel> command, CancellationToken ct)
         {
             if (command == null)
             {

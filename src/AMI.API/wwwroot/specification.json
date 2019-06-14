@@ -417,7 +417,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProcessObjectCommand"
+                "$ref": "#/components/schemas/ProcessObjectAsyncCommand"
               }
             }
           },
@@ -1542,10 +1542,10 @@
           5
         ]
       },
-      "ProcessObjectCommand": {
+      "ProcessObjectAsyncCommand": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/BaseProcessCommand"
+            "$ref": "#/components/schemas/BaseProcessCommandOfTaskModel"
           },
           {
             "type": "object",
@@ -1561,56 +1561,36 @@
           }
         ]
       },
-      "BaseProcessCommand": {
+      "BaseProcessCommandOfTaskModel": {
         "type": "object",
-        "description": "A command containing information needed for processing.",
         "x-abstract": true,
         "additionalProperties": false,
         "properties": {
           "desiredSize": {
             "type": "integer",
-            "description": "Gets or sets the desired size of the processed images.",
             "nullable": true
           },
           "amountPerAxis": {
-            "type": "integer",
-            "description": "Gets or sets the amount of images per axis."
+            "type": "integer"
           },
           "axisTypes": {
             "type": "array",
-            "description": "Gets the axis types to be considered.",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/AxisType"
             }
           },
           "imageFormat": {
-            "description": "Gets or sets the image format.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ImageFormat"
-              }
-            ]
+            "$ref": "#/components/schemas/ImageFormat"
           },
           "bezierEasingTypePerAxis": {
-            "description": "Gets or sets the Bézier easing type per axis used for the animated image.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/BezierEasingType"
-              }
-            ]
+            "$ref": "#/components/schemas/BezierEasingType"
           },
           "bezierEasingTypeCombined": {
-            "description": "Gets or sets the Bézier easing type used for the combined animated image.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/BezierEasingType"
-              }
-            ]
+            "$ref": "#/components/schemas/BezierEasingType"
           },
           "grayscale": {
-            "type": "boolean",
-            "description": "Gets or sets a value indicating whether the images should be converted to grayscale."
+            "type": "boolean"
           }
         }
       },

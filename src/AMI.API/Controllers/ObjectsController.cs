@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Objects.Queries.GetById;
 using AMI.Core.Entities.Objects.Queries.GetObjects;
-using AMI.Core.Entities.Results.Commands.ProcessObjects;
+using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
 using AMI.Core.IO.Uploaders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace AMI.API.Controllers
     /// <summary>
     /// The endpoints related to objects.
     /// </summary>
-    /// <seealso cref="AMI.API.Controllers.BaseController" />
+    /// <seealso cref="BaseController" />
     [ApiController]
     [Route("objects")]
     public class ObjectsController : BaseController
@@ -63,9 +63,10 @@ namespace AMI.API.Controllers
         /// <returns>The created task.</returns>
         [HttpPut("{id}/process")]
         [ProducesResponseType(typeof(Models.TaskModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> ProcessAsync(string id, [FromBody] ProcessObjectCommand command)
+        public async Task<IActionResult> ProcessAsync(string id, [FromBody] ProcessObjectAsyncCommand command)
         {
-            return Ok(null);
+            command.Id = id;
+            return Ok(await Mediator.Send(command, CancellationToken));
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using AMI.Core.Configurations;
 using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Delete;
-using AMI.Core.Entities.Results.Commands.ProcessObjects;
+using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Extractors;

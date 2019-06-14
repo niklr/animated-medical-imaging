@@ -1,4 +1,5 @@
 ﻿using System;
+using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessPath
@@ -7,7 +8,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
     /// A command containing information needed to process paths (directory, file, url, etc.).
     /// </summary>
     [Serializable]
-    public class ProcessPathCommand : BaseProcessCommand
+    public class ProcessPathCommand : BaseProcessCommand<ProcessResultModel>
     {
         /// <summary>
         /// Gets or sets the source path.
