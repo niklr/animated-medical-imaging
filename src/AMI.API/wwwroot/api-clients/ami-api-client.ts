@@ -1273,6 +1273,8 @@ export class ObjectModel implements IObjectModel {
     sourcePath?: string | undefined;
     /** Gets or sets the uncompressed filesystem path (directory). */
     uncompressedFsPath?: string | undefined;
+    /** Gets or sets the latest task. */
+    latestTask?: TaskModel | undefined;
 
     constructor(data?: IObjectModel) {
         if (data) {
@@ -1293,6 +1295,7 @@ export class ObjectModel implements IObjectModel {
             this.originalFilename = data["originalFilename"];
             this.sourcePath = data["sourcePath"];
             this.uncompressedFsPath = data["uncompressedFsPath"];
+            this.latestTask = data["latestTask"] ? TaskModel.fromJS(data["latestTask"]) : <any>undefined;
         }
     }
 
@@ -1313,6 +1316,7 @@ export class ObjectModel implements IObjectModel {
         data["originalFilename"] = this.originalFilename;
         data["sourcePath"] = this.sourcePath;
         data["uncompressedFsPath"] = this.uncompressedFsPath;
+        data["latestTask"] = this.latestTask ? this.latestTask.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -1335,6 +1339,8 @@ export interface IObjectModel {
     sourcePath?: string | undefined;
     /** Gets or sets the uncompressed filesystem path (directory). */
     uncompressedFsPath?: string | undefined;
+    /** Gets or sets the latest task. */
+    latestTask?: TaskModel | undefined;
 }
 
 /** A type to describe the data. */
@@ -1352,6 +1358,196 @@ export enum FileFormat {
     Analyze = 3, 
     MetaImage = 4, 
     Nifti = 5, 
+}
+
+/** A model containing information about the task. */
+export class TaskModel implements ITaskModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the status. */
+    status?: TaskStatus;
+    /** Gets or sets the message describing the error. */
+    message?: string | undefined;
+    /** Gets or sets the position in queue. */
+    position?: number;
+    /** Gets or sets the progress (0-100). */
+    progress?: number;
+    /** Gets or sets the type of the command used to create this task. */
+    commandType?: CommandType;
+    /** Gets or sets the command used to create this task. */
+    command?: any | undefined;
+    /** Gets or sets the result associated with this task. */
+    result?: ResultModel | undefined;
+    /** Gets or sets the object associated with this task. */
+    object?: ObjectModel | undefined;
+
+    constructor(data?: ITaskModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
+            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
+            this.status = data["status"];
+            this.message = data["message"];
+            this.position = data["position"];
+            this.progress = data["progress"];
+            this.commandType = data["commandType"];
+            this.command = data["command"];
+            this.result = data["result"] ? ResultModel.fromJS(data["result"]) : <any>undefined;
+            this.object = data["object"] ? ObjectModel.fromJS(data["object"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): TaskModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new TaskModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["status"] = this.status;
+        data["message"] = this.message;
+        data["position"] = this.position;
+        data["progress"] = this.progress;
+        data["commandType"] = this.commandType;
+        data["command"] = this.command;
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["object"] = this.object ? this.object.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+/** A model containing information about the task. */
+export interface ITaskModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the status. */
+    status?: TaskStatus;
+    /** Gets or sets the message describing the error. */
+    message?: string | undefined;
+    /** Gets or sets the position in queue. */
+    position?: number;
+    /** Gets or sets the progress (0-100). */
+    progress?: number;
+    /** Gets or sets the type of the command used to create this task. */
+    commandType?: CommandType;
+    /** Gets or sets the command used to create this task. */
+    command?: any | undefined;
+    /** Gets or sets the result associated with this task. */
+    result?: ResultModel | undefined;
+    /** Gets or sets the object associated with this task. */
+    object?: ObjectModel | undefined;
+}
+
+/** The different states of a task. */
+export enum TaskStatus {
+    Created = 0, 
+    Queued = 1, 
+    Processing = 2, 
+    Canceled = 3, 
+    Failed = 4, 
+    Finished = 5, 
+}
+
+/** A type to describe the command. */
+export enum CommandType {
+    Unknown = 0, 
+    ProcessObjectAsyncCommand = 1, 
+}
+
+/** A model containing information about the result of the processing. */
+export abstract class ResultModel implements IResultModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets the type of the result. */
+    resultType?: ResultType;
+    /** Gets or sets the application version. */
+    version?: string | undefined;
+    /** Gets or sets the JSON filename. */
+    jsonFilename?: string | undefined;
+
+    constructor(data?: IResultModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
+            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
+            this.resultType = data["resultType"];
+            this.version = data["version"];
+            this.jsonFilename = data["jsonFilename"];
+        }
+    }
+
+    static fromJS(data: any): ResultModel {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'ResultModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["resultType"] = this.resultType;
+        data["version"] = this.version;
+        data["jsonFilename"] = this.jsonFilename;
+        return data; 
+    }
+}
+
+/** A model containing information about the result of the processing. */
+export interface IResultModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets the type of the result. */
+    resultType?: ResultType;
+    /** Gets or sets the application version. */
+    version?: string | undefined;
+    /** Gets or sets the JSON filename. */
+    jsonFilename?: string | undefined;
+}
+
+/** A type to describe the command. */
+export enum ResultType {
+    Unknown = 0, 
+    ProcessResult = 1, 
 }
 
 /** A model containing information about the pagination. */
@@ -1404,122 +1600,6 @@ export interface IPaginationModel {
     total?: number;
     /** Gets or sets the current page number. */
     page?: number;
-}
-
-/** A model containing information about the task. */
-export class TaskModel implements ITaskModel {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
-    /** Gets or sets the created date. */
-    createdDate?: Date;
-    /** Gets or sets the modified date. */
-    modifiedDate?: Date;
-    /** Gets or sets the status. */
-    status?: TaskStatus;
-    /** Gets or sets the message describing the error. */
-    message?: string | undefined;
-    /** Gets or sets the position in queue. */
-    position?: number;
-    /** Gets or sets the progress (0-100). */
-    progress?: number;
-    /** Gets or sets the identifier of the result. */
-    resultId?: string | undefined;
-    /** Gets or sets the identifier of the object. */
-    objectId?: string | undefined;
-    /** Gets or sets the type of the command used to create this task. */
-    commandType?: CommandType;
-    /** Gets or sets the command used to create this task. */
-    command?: any | undefined;
-
-    constructor(data?: ITaskModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.id = data["id"];
-            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
-            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
-            this.status = data["status"];
-            this.message = data["message"];
-            this.position = data["position"];
-            this.progress = data["progress"];
-            this.resultId = data["resultId"];
-            this.objectId = data["objectId"];
-            this.commandType = data["commandType"];
-            this.command = data["command"];
-        }
-    }
-
-    static fromJS(data: any): TaskModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new TaskModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
-        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
-        data["status"] = this.status;
-        data["message"] = this.message;
-        data["position"] = this.position;
-        data["progress"] = this.progress;
-        data["resultId"] = this.resultId;
-        data["objectId"] = this.objectId;
-        data["commandType"] = this.commandType;
-        data["command"] = this.command;
-        return data; 
-    }
-}
-
-/** A model containing information about the task. */
-export interface ITaskModel {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
-    /** Gets or sets the created date. */
-    createdDate?: Date;
-    /** Gets or sets the modified date. */
-    modifiedDate?: Date;
-    /** Gets or sets the status. */
-    status?: TaskStatus;
-    /** Gets or sets the message describing the error. */
-    message?: string | undefined;
-    /** Gets or sets the position in queue. */
-    position?: number;
-    /** Gets or sets the progress (0-100). */
-    progress?: number;
-    /** Gets or sets the identifier of the result. */
-    resultId?: string | undefined;
-    /** Gets or sets the identifier of the object. */
-    objectId?: string | undefined;
-    /** Gets or sets the type of the command used to create this task. */
-    commandType?: CommandType;
-    /** Gets or sets the command used to create this task. */
-    command?: any | undefined;
-}
-
-/** The different states of a task. */
-export enum TaskStatus {
-    Created = 0, 
-    Queued = 1, 
-    Processing = 2, 
-    Canceled = 3, 
-    Failed = 4, 
-    Finished = 5, 
-}
-
-/** A type to describe the command. */
-export enum CommandType {
-    Unknown = 0, 
-    ProcessObjectAsyncCommand = 1, 
 }
 
 export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessCommandOfTaskModel {

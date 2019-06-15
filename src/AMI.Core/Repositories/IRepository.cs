@@ -16,19 +16,44 @@ namespace AMI.Core.Repositories
         where TEntity : class
     {
         /// <summary>
-        /// Gets the first entity of a sequence, or a default value if the sequence contains no entities.
+        /// Adds the given entity to the repository.
         /// </summary>
-        /// <param name="predicate">A function to test each entity for a condition.</param>
-        /// <returns>A default value if source is empty; otherwise, the first entity in source.</returns>
-        TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate);
+        /// <param name="entity">The entity to add.</param>
+        void Add(TEntity entity);
 
         /// <summary>
-        /// Gets the first entity of a sequence, or a default value if the sequence contains no entities asynchronous.
+        /// Attaches the given entity to the repository.
         /// </summary>
-        /// <param name="predicate">A function to test each entity for a condition.</param>
+        /// <param name="entity">The entity to attach.</param>
+        void Attach(TEntity entity);
+
+        /// <summary>
+        /// Counts entities in the repository.
+        /// </summary>
+        /// <returns>The amount of entities.</returns>
+        int Count();
+
+        /// <summary>
+        /// Counts entities in the repository matching the given criteria.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns>The amount of entities matching the given criteria.</returns>
+        int Count(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Counts entities in the repository asynchronous.
+        /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A default value if source is empty; otherwise, the first entity in source.</returns>
-        Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        /// <returns>The amount of entities.</returns>
+        Task<int> CountAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Counts entities in the repository matching the given criteria asynchronous.
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The amount of entities matching the given criteria.</returns>
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets entities filtered based on a predicate.
@@ -60,6 +85,21 @@ namespace AMI.Core.Repositories
         IPaginateEnumerable<TEntity> Get<TKey>(Expression<Func<TEntity, TKey>> keySelector, int pageIndex, int pageSize);
 
         /// <summary>
+        /// Gets the first entity of a sequence, or a default value if the sequence contains no entities.
+        /// </summary>
+        /// <param name="predicate">A function to test each entity for a condition.</param>
+        /// <returns>A default value if source is empty; otherwise, the first entity in source.</returns>
+        TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Gets the first entity of a sequence, or a default value if the sequence contains no entities asynchronous.
+        /// </summary>
+        /// <param name="predicate">A function to test each entity for a condition.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A default value if source is empty; otherwise, the first entity in source.</returns>
+        Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Gets a queryable set for the given entity type.
         /// </summary>
         /// <returns>A queryable set for the given entity type.</returns>
@@ -73,16 +113,12 @@ namespace AMI.Core.Repositories
         IQueryable<TEntity> GetQuery(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
-        /// Adds the given entity to the repository.
+        /// Specifies related entities to include in the query results.
         /// </summary>
-        /// <param name="entity">The entity to add.</param>
-        void Add(TEntity entity);
-
-        /// <summary>
-        /// Attaches the given entity to the repository.
-        /// </summary>
-        /// <param name="entity">The entity to attach.</param>
-        void Attach(TEntity entity);
+        /// <param name="queryable">The source query.</param>
+        /// <param name="navigationPropertyPath">A lambda expression representing the navigation property to be included.</param>
+        /// <returns>A new query with the related data included.</returns>
+        IQueryable<TEntity> Include(IQueryable<TEntity> queryable, Expression<Func<TEntity, bool>> navigationPropertyPath);
 
         /// <summary>
         /// Removes the given entity from the repository.
@@ -97,40 +133,6 @@ namespace AMI.Core.Repositories
         void RemoveRange(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
-        /// Updates changes of the existing entity.
-        /// </summary>
-        /// <param name="entity">The entity to update.</param>
-        void Update(TEntity entity);
-
-        /// <summary>
-        /// Counts entities in the repository.
-        /// </summary>
-        /// <returns>The amount of entities.</returns>
-        int Count();
-
-        /// <summary>
-        /// Counts entities in the repository matching the given criteria.
-        /// </summary>
-        /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <returns>The amount of entities matching the given criteria.</returns>
-        int Count(Expression<Func<TEntity, bool>> predicate);
-
-        /// <summary>
-        /// Counts entities in the repository asynchronous.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The amount of entities.</returns>
-        Task<int> CountAsync(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Counts entities in the repository matching the given criteria asynchronous.
-        /// </summary>
-        /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The amount of entities matching the given criteria.</returns>
-        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
-
-        /// <summary>
         /// Creates a list from a queryalbe by enumerating it asynchronously.
         /// </summary>
         /// <param name="queryable">The queryable to create a list from.</param>
@@ -138,5 +140,11 @@ namespace AMI.Core.Repositories
         /// <returns>A task that represents the asynchronous operation.
         /// The task result contains a list that contains elements from the input sequence.</returns>
         Task<List<TEntity>> ToListAsync(IQueryable<TEntity> queryable, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Updates changes of the existing entity.
+        /// </summary>
+        /// <param name="entity">The entity to update.</param>
+        void Update(TEntity entity);
     }
 }

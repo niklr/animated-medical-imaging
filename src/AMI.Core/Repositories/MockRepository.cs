@@ -107,6 +107,12 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public IQueryable<T> Include(IQueryable<T> queryable, Expression<Func<T, bool>> navigationPropertyPath)
+        {
+            return queryable;
+        }
+
+        /// <inheritdoc/>
         public void Remove(T entity)
         {
             entities.Remove(entity);

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AMI.Core.Entities.Shared.Models;
+using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 
@@ -58,6 +61,11 @@ namespace AMI.Core.Entities.Models
         public string UncompressedFsPath { get; set; }
 
         /// <summary>
+        /// Gets or sets the latest task.
+        /// </summary>
+        public TaskModel LatestTask { get; set; }
+
+        /// <summary>
         /// Creates a model based on the given domain entity.
         /// </summary>
         /// <param name="entity">The domain entity.</param>
@@ -80,6 +88,42 @@ namespace AMI.Core.Entities.Models
                 SourcePath = entity.SourcePath,
                 UncompressedFsPath = entity.UncompressedFsPath
             };
+        }
+
+        /// <summary>
+        /// Creates a model based on the given domain entities.
+        /// </summary>
+        /// <param name="entity">The domain entity.</param>
+        /// <param name="tasks">The domain task entities.</param>
+        /// <param name="results">The domain result entities.</param>
+        /// <param name="serializer">The JSON serializer.</param>
+        /// <returns>The domain entity as a model.</returns>
+        public static ObjectModel Create(
+            ObjectEntity entity,
+            IEnumerable<TaskEntity> tasks,
+            IEnumerable<ResultEntity> results,
+            IDefaultJsonSerializer serializer)
+        {
+            var model = Create(entity);
+
+            if (model == null)
+            {
+                return null;
+            }
+
+            if (tasks == null || results == null)
+            {
+                return model;
+            }
+
+            var latestTask = tasks.FirstOrDefault();
+            if (latestTask != null)
+            {
+                var result = results.Where(e => e.Id == latestTask.ResultId).FirstOrDefault();
+                model.LatestTask = TaskModel.Create(latestTask, entity, result, serializer);
+            }
+
+            return model;
         }
     }
 }

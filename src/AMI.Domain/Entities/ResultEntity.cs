@@ -29,9 +29,14 @@ namespace AMI.Domain.Entities
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the JSON filesystem path.
+        /// Gets or sets the base filesystem path.
         /// </summary>
-        public string JsonFsPath { get; set; }
+        public string BaseFsPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the JSON filename.
+        /// </summary>
+        public string JsonFilename { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the result.

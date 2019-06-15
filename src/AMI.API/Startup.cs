@@ -18,6 +18,7 @@ using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
+using AMI.Core.Workers;
 using AMI.Infrastructure.IO.Uploaders;
 using AMI.Infrastructure.Services;
 using AMI.Infrastructure.Strategies;
@@ -96,6 +97,7 @@ namespace AMI.API
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
             services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
+            services.AddSingleton<ITaskWorker, TaskWorker>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
 

@@ -109,8 +109,8 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
                 throw new UnexpectedNullException("ResultEntity not found.");
             }
 
-            // Update JsonFsPath of ResultEntity
-            resultEntity.JsonFsPath = fileSystem.Path.Combine(baseDestPath, result.JsonFilename);
+            // Update BaseFsPath of ResultEntity
+            resultEntity.BaseFsPath = baseDestPath;
             resultEntity.ModifiedDate = DateTime.UtcNow;
             context.ResultRepository.Update(resultEntity);
 

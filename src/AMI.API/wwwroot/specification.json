@@ -1413,6 +1413,15 @@
             "type": "string",
             "description": "Gets or sets the uncompressed filesystem path (directory).",
             "nullable": true
+          },
+          "latestTask": {
+            "description": "Gets or sets the latest task.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TaskModel"
+              }
+            ]
           }
         }
       },
@@ -1449,28 +1458,6 @@
           4,
           5
         ]
-      },
-      "PaginationModel": {
-        "type": "object",
-        "description": "A model containing information about the pagination.",
-        "additionalProperties": false,
-        "properties": {
-          "limit": {
-            "type": "integer",
-            "description": "Gets or sets the limit to constrain the number of items.",
-            "format": "int32"
-          },
-          "total": {
-            "type": "integer",
-            "description": "Gets or sets the total amount of items.",
-            "format": "int32"
-          },
-          "page": {
-            "type": "integer",
-            "description": "Gets or sets the current page number.",
-            "format": "int32"
-          }
-        }
       },
       "TaskModel": {
         "type": "object",
@@ -1515,16 +1502,6 @@
             "description": "Gets or sets the progress (0-100).",
             "format": "int32"
           },
-          "resultId": {
-            "type": "string",
-            "description": "Gets or sets the identifier of the result.",
-            "nullable": true
-          },
-          "objectId": {
-            "type": "string",
-            "description": "Gets or sets the identifier of the object.",
-            "nullable": true
-          },
           "commandType": {
             "description": "Gets or sets the type of the command used to create this task.",
             "oneOf": [
@@ -1536,6 +1513,24 @@
           "command": {
             "description": "Gets or sets the command used to create this task.",
             "nullable": true
+          },
+          "result": {
+            "description": "Gets or sets the result associated with this task.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ResultModel"
+              }
+            ]
+          },
+          "object": {
+            "description": "Gets or sets the object associated with this task.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ObjectModel"
+              }
+            ]
           }
         }
       },
@@ -1570,6 +1565,81 @@
           0,
           1
         ]
+      },
+      "ResultModel": {
+        "type": "object",
+        "description": "A model containing information about the result of the processing.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the identifier.",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the created date.",
+            "format": "date-time"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "Gets or sets the modified date.",
+            "format": "date-time"
+          },
+          "resultType": {
+            "description": "Gets the type of the result.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ResultType"
+              }
+            ]
+          },
+          "version": {
+            "type": "string",
+            "description": "Gets or sets the application version.",
+            "nullable": true
+          },
+          "jsonFilename": {
+            "type": "string",
+            "description": "Gets or sets the JSON filename.",
+            "nullable": true
+          }
+        }
+      },
+      "ResultType": {
+        "type": "integer",
+        "description": "A type to describe the command.",
+        "x-enumNames": [
+          "Unknown",
+          "ProcessResult"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "PaginationModel": {
+        "type": "object",
+        "description": "A model containing information about the pagination.",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Gets or sets the limit to constrain the number of items.",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "description": "Gets or sets the total amount of items.",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "description": "Gets or sets the current page number.",
+            "format": "int32"
+          }
+        }
       },
       "ProcessObjectAsyncCommand": {
         "allOf": [

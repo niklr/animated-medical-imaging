@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
@@ -28,15 +29,24 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
         /// <inheritdoc/>
         public async Task<ObjectModel> Handle(GetByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await uow.ObjectRepository
-                .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
+            var limit = 25;
+            var result = uow.ObjectRepository
+                .GetQuery()
+                .Where(e => e.Id == Guid.Parse(request.Id))
+                .Select(e => new
+                {
+                    Object = e,
+                    Tasks = e.Tasks.OrderByDescending(e1 => e1.CreatedDate).Take(limit),
+                    Results = e.Tasks.OrderByDescending(e1 => e1.CreatedDate).Select(e1 => e1.Result).Take(limit)
+                })
+                .FirstOrDefault();
 
             if (result == null)
             {
                 throw new NotFoundException(nameof(ObjectEntity), request.Id);
             }
 
-            return ObjectModel.Create(result);
+            return await Task.Run(() => { return ObjectModel.Create(result.Object); });
         }
     }
 }

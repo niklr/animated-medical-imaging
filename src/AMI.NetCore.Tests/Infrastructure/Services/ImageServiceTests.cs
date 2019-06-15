@@ -25,6 +25,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             };
             command.AxisTypes.Add(AxisType.Z);
             var expected = @"{
+  ""resultType"": ""ProcessResult"",
   ""labelCount"": 5,
   ""images"": [
     {

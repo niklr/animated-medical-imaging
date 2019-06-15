@@ -110,6 +110,12 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
+        public IQueryable<T> Include(IQueryable<T> queryable, Expression<Func<T, bool>> navigationPropertyPath)
+        {
+            return queryable.Include(navigationPropertyPath);
+        }
+
+        /// <inheritdoc/>
         public void Remove(T entity)
         {
             dbSet.Remove(entity);

@@ -47,16 +47,6 @@ namespace AMI.Core.Entities.Models
         public int Progress { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier of the result.
-        /// </summary>
-        public string ResultId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the identifier of the object.
-        /// </summary>
-        public string ObjectId { get; set; }
-
-        /// <summary>
         /// Gets or sets the type of the command used to create this task.
         /// </summary>
         public CommandType CommandType { get; set; }
@@ -65,6 +55,16 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the command used to create this task.
         /// </summary>
         public object Command { get; set; }
+
+        /// <summary>
+        /// Gets or sets the result associated with this task.
+        /// </summary>
+        public ResultModel Result { get; set; }
+
+        /// <summary>
+        /// Gets or sets the object associated with this task.
+        /// </summary>
+        public ObjectModel Object { get; set; }
 
         /// <summary>
         /// Creates a model based on the given domain entity.
@@ -88,8 +88,6 @@ namespace AMI.Core.Entities.Models
                 Message = entity.Message,
                 Position = entity.Position,
                 Progress = entity.Progress,
-                ObjectId = entity.ObjectId.ToString(),
-                ResultId = entity.ResultId.ToString(),
                 CommandType = Enum.TryParse(entity.CommandType.ToString(), out CommandType commandType) ? commandType : CommandType.Unknown
             };
 
@@ -100,6 +98,36 @@ namespace AMI.Core.Entities.Models
                     break;
                 default:
                     break;
+            }
+
+            return model;
+        }
+
+        /// <summary>
+        /// Creates a model based on the given domain entities.
+        /// </summary>
+        /// <param name="entity">The domain entity.</param>
+        /// <param name="objectEntity">The domain object entity.</param>
+        /// <param name="resultEntity">The domain result entity.</param>
+        /// <param name="serializer">The JSON serializer.</param>
+        /// <returns>The domain entity as a model.</returns>
+        public static TaskModel Create(TaskEntity entity, ObjectEntity objectEntity, ResultEntity resultEntity, IDefaultJsonSerializer serializer)
+        {
+            var model = Create(entity, serializer);
+
+            if (model == null)
+            {
+                return null;
+            }
+
+            if (objectEntity != null)
+            {
+                model.Object = ObjectModel.Create(objectEntity);
+            }
+
+            if (resultEntity != null)
+            {
+                model.Result = ResultModel.Create(resultEntity, serializer);
             }
 
             return model;

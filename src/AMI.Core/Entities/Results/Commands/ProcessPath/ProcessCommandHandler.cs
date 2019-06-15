@@ -52,7 +52,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow,
                 Version = result.Version,
-                JsonFsPath = result.JsonFilename,
+                JsonFilename = result.JsonFilename,
                 ResultType = (int)ResultType.ProcessResult,
                 ResultSerialized = serializer.Serialize(result)
             };

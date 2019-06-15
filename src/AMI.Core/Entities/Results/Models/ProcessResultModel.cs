@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.Entities.Models
 {
@@ -11,6 +13,15 @@ namespace AMI.Core.Entities.Models
     {
         private IReadOnlyList<PositionAxisContainerModel<string>> images = new List<PositionAxisContainerModel<string>>();
         private IReadOnlyList<AxisContainerModel<string>> gifs = new List<AxisContainerModel<string>>();
+
+        /// <inheritdoc/>
+        public override ResultType ResultType
+        {
+            get
+            {
+                return ResultType.ProcessResult;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the label count.
@@ -66,7 +77,7 @@ namespace AMI.Core.Entities.Models
         /// <param name="entity">The domain entity.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <returns>The domain entity as a model.</returns>
-        public static ProcessResultModel Create(ResultEntity entity, IDefaultJsonSerializer serializer)
+        public static new ProcessResultModel Create(ResultEntity entity, IDefaultJsonSerializer serializer)
         {
             if (entity == null)
             {
@@ -77,7 +88,9 @@ namespace AMI.Core.Entities.Models
             {
                 Id = entity.Id.ToString(),
                 CreatedDate = entity.CreatedDate,
-                ModifiedDate = entity.ModifiedDate
+                ModifiedDate = entity.ModifiedDate,
+                Version = entity.Version,
+                JsonFilename = entity.JsonFilename
             };
 
             var deserialized = serializer.Deserialize<ProcessResultModel>(entity.ResultSerialized);

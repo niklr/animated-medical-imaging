@@ -65,7 +65,7 @@ namespace AMI.Domain.Entities
         /// <summary>
         /// Gets or sets the result identifier.
         /// </summary>
-        public Guid ResultId { get; set; }
+        public Guid? ResultId { get; set; }
 
         /// <summary>
         /// Gets or sets the result.
