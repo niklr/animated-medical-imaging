@@ -28,17 +28,18 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
 
             // Act
             var result = UploadAsync(dataPath, ct).Result;
+            var fullSourcePath = GetWorkingDirectoryPath(result.SourcePath);
 
             // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Id);
             Assert.AreEqual(filename, result.OriginalFilename);
             Assert.IsTrue(File.Exists(dataPath));
-            Assert.IsTrue(File.Exists(result.SourcePath));
-            Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
+            Assert.IsTrue(File.Exists(fullSourcePath));
+            Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(fullSourcePath).Length);
 
             DeleteObject(result.Id);
-            Assert.IsFalse(File.Exists(result.SourcePath));
+            Assert.IsFalse(File.Exists(fullSourcePath));
         }
 
         [Test]
@@ -51,17 +52,18 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
 
             // Act
             var result = UploadAsync(dataPath, ct).Result;
+            var fullSourcePath = GetWorkingDirectoryPath(result.SourcePath);
 
             // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Id);
             Assert.AreEqual(filename, result.OriginalFilename);
             Assert.IsTrue(File.Exists(dataPath));
-            Assert.IsTrue(File.Exists(result.SourcePath));
-            Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
+            Assert.IsTrue(File.Exists(fullSourcePath));
+            Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(fullSourcePath).Length);
 
             DeleteObject(result.Id);
-            Assert.IsFalse(File.Exists(result.SourcePath));
+            Assert.IsFalse(File.Exists(fullSourcePath));
         }
 
         private async Task<ObjectModel> UploadAsync(string dataPath, CancellationToken ct)

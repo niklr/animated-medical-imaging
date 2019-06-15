@@ -29,6 +29,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
             {
                 // Act
                 var result = mediator.Send(command, ct).Result;
+                var fullSourcePath = GetWorkingDirectoryPath(result.SourcePath);
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -39,12 +40,12 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
                 Assert.AreEqual(FileFormat.Unknown, result.FileFormat);
                 Assert.AreEqual(command.OriginalFilename, result.OriginalFilename);
                 Assert.IsTrue(File.Exists(dataPath));
-                Assert.IsTrue(File.Exists(result.SourcePath));
+                Assert.IsTrue(File.Exists(fullSourcePath));
                 Assert.IsFalse(File.Exists(command.SourcePath));
-                Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(result.SourcePath).Length);
+                Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(fullSourcePath).Length);
 
                 DeleteObject(result.Id);
-                Assert.IsFalse(File.Exists(result.SourcePath));
+                Assert.IsFalse(File.Exists(fullSourcePath));
             }
             finally
             {

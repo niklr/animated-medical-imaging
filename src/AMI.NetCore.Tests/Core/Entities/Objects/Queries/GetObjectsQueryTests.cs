@@ -1,11 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using AMI.Core.Entities.Objects.Commands.Create;
-using AMI.Core.Entities.Objects.Queries.GetById;
 using AMI.Core.Entities.Objects.Queries.GetObjects;
-using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using MediatR;
 using NUnit.Framework;
@@ -43,7 +39,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Queries
                 Assert.AreEqual(1, result.Pagination.Page);
 
                 DeleteObject(commandResult.Id);
-                Assert.IsFalse(File.Exists(commandResult.SourcePath));
+                Assert.IsFalse(File.Exists(GetWorkingDirectoryPath(commandResult.SourcePath)));
             }
             finally
             {

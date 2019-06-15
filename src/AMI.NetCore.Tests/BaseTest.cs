@@ -106,6 +106,12 @@ namespace AMI.NetCore.Tests
             return Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", filename);
         }
 
+        public string GetWorkingDirectoryPath(string path)
+        {
+            var configuration = GetService<IAmiConfigurationManager>();
+            return Path.Combine(configuration.WorkingDirectory, path);
+        }
+
         public string GetTempPath()
         {
             string path = Path.Combine(FileSystemHelper.BuildCurrentPath(), "temp", Guid.NewGuid().ToString("N"));

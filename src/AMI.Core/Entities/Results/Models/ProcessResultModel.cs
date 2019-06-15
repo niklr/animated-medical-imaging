@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using AMI.Core.IO.Serializers;
+using AMI.Domain.Entities;
 
 namespace AMI.Core.Entities.Models
 {
@@ -57,5 +59,39 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the combined GIF.
         /// </summary>
         public string CombinedGif { get; set; }
+
+        /// <summary>
+        /// Creates a model based on the given domain entity.
+        /// </summary>
+        /// <param name="entity">The domain entity.</param>
+        /// <param name="serializer">The JSON serializer.</param>
+        /// <returns>The domain entity as a model.</returns>
+        public static ProcessResultModel Create(ResultEntity entity, IDefaultJsonSerializer serializer)
+        {
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var model = new ProcessResultModel
+            {
+                Id = entity.Id.ToString(),
+                CreatedDate = entity.CreatedDate,
+                ModifiedDate = entity.ModifiedDate
+            };
+
+            var deserialized = serializer.Deserialize<ProcessResultModel>(entity.ResultSerialized);
+            if (deserialized != null)
+            {
+                model.Version = deserialized.Version;
+                model.JsonFilename = deserialized.JsonFilename;
+                model.LabelCount = deserialized.LabelCount;
+                model.Images = deserialized.Images;
+                model.Gifs = deserialized.Gifs;
+                model.CombinedGif = deserialized.CombinedGif;
+            }
+
+            return model;
+        }
     }
 }

@@ -22,8 +22,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
         private readonly IApplicationConstants constants;
+        private readonly IAmiConfigurationManager configuration;
         private readonly IFileSystem fileSystem;
-        private readonly string basePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
@@ -44,11 +44,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
-
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             if (fileSystemStrategy == null)
             {
@@ -56,7 +52,6 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             }
 
             fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
-            basePath = fileSystem.Path.Combine(configuration.WorkingDirectory, "Binary", "Objects");
         }
 
         /// <inheritdoc/>
@@ -65,11 +60,12 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             context.BeginTransaction();
 
             Guid guid = idGenService.CreateId();
-            string localPath = CreateLocalObjectPath(guid);
+            string path = fileSystem.Path.Combine("Binary", "Objects", guid.ToString());
             string destFilename = string.Concat(guid.ToString(), constants.DefaultFileExtension);
-            string destPath = fileSystem.Path.Combine(localPath, destFilename);
+            string destPath = fileSystem.Path.Combine(path, destFilename);
 
-            fileSystem.File.Move(request.SourcePath, destPath);
+            fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(configuration.WorkingDirectory, path));
+            fileSystem.File.Move(request.SourcePath, fileSystem.Path.Combine(configuration.WorkingDirectory, destPath));
 
             var entity = new ObjectEntity()
             {
@@ -87,19 +83,6 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             context.CommitTransaction();
 
             return ObjectModel.Create(entity);
-        }
-
-        private string CreateLocalObjectPath(Guid guid)
-        {
-            if (guid == null)
-            {
-                throw new ArgumentNullException(nameof(guid));
-            }
-
-            string path = fileSystem.Path.Combine(basePath, guid.ToString());
-            fileSystem.Directory.CreateDirectory(path);
-
-            return path;
         }
     }
 }

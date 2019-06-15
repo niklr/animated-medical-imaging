@@ -61,7 +61,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return result;
+            return ProcessResultModel.Create(entity, serializer);
         }
     }
 }
