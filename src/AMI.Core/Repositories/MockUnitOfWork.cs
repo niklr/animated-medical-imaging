@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Domain.Entities;
@@ -56,6 +59,13 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public IQueryable<T> Include<T>(IQueryable<T> source, Expression<Func<T, bool>> navigationPropertyPath)
+            where T : class
+        {
+            return source;
+        }
+
+        /// <inheritdoc/>
         public void RollBackTransaction()
         {
         }
@@ -72,6 +82,20 @@ namespace AMI.Core.Repositories
             return await Task.Run(() =>
             {
                 return 0;
+            });
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<T>> ToListAsync<T>(IQueryable<T> source, CancellationToken cancellationToken = default)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            return await Task.Run(() =>
+            {
+                return source.ToList();
             });
         }
     }

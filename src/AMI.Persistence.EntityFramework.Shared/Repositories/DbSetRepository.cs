@@ -110,12 +110,6 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
-        public IQueryable<T> Include(IQueryable<T> queryable, Expression<Func<T, bool>> navigationPropertyPath)
-        {
-            return queryable.Include(navigationPropertyPath);
-        }
-
-        /// <inheritdoc/>
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
@@ -125,17 +119,6 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         public void RemoveRange(Expression<Func<T, bool>> predicate)
         {
             dbSet.RemoveRange(Get(predicate));
-        }
-
-        /// <inheritdoc/>
-        public async Task<List<T>> ToListAsync(IQueryable<T> queryable, CancellationToken cancellationToken = default)
-        {
-            if (queryable == null)
-            {
-                return null;
-            }
-
-            return await queryable.ToListAsync(cancellationToken);
         }
 
         /// <inheritdoc/>

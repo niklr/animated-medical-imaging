@@ -33,7 +33,7 @@ namespace AMI.Core.Entities.Objects.Queries.GetObjects
         {
             int total = await context.ObjectRepository.CountAsync(cancellationToken);
 
-            var entities = context.ObjectRepository
+            var query = context.ObjectRepository
                 .GetQuery()
                 .Select(e => new
                 {
@@ -43,11 +43,12 @@ namespace AMI.Core.Entities.Objects.Queries.GetObjects
                 })
                 .OrderByDescending(e => e.Object.CreatedDate)
                 .Skip((request.Page - 1) * request.Limit)
-                .Take(request.Limit)
-                .ToList()
-                .Select(e => ObjectModel.Create(e.Object, e.Tasks, e.Results, serializer));
+                .Take(request.Limit);
 
-            return PaginationResultModel<ObjectModel>.Create(entities, request.Page, request.Limit, total);
+            var entities = await context.ToListAsync(query, cancellationToken);
+            var models = entities.Select(e => ObjectModel.Create(e.Object, e.Tasks, e.Results, serializer));
+
+            return PaginationResultModel<ObjectModel>.Create(models, request.Page, request.Limit, total);
         }
     }
 }

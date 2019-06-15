@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Repositories;
@@ -68,6 +71,13 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
+        public IQueryable<T> Include<T>(IQueryable<T> source, Expression<Func<T, bool>> navigationPropertyPath)
+            where T : class
+        {
+            return source.Include(navigationPropertyPath);
+        }
+
+        /// <inheritdoc/>
         public void RollBackTransaction()
         {
             if (transaction == null)
@@ -92,6 +102,17 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return context.SaveChangesAsync(cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<T>> ToListAsync<T>(IQueryable<T> source, CancellationToken cancellationToken = default)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            return await source.ToListAsync(cancellationToken);
         }
 
         private void ReleaseCurrentTransaction()

@@ -113,14 +113,6 @@ namespace AMI.Core.Repositories
         IQueryable<TEntity> GetQuery(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
-        /// Specifies related entities to include in the query results.
-        /// </summary>
-        /// <param name="queryable">The source query.</param>
-        /// <param name="navigationPropertyPath">A lambda expression representing the navigation property to be included.</param>
-        /// <returns>A new query with the related data included.</returns>
-        IQueryable<TEntity> Include(IQueryable<TEntity> queryable, Expression<Func<TEntity, bool>> navigationPropertyPath);
-
-        /// <summary>
         /// Removes the given entity from the repository.
         /// </summary>
         /// <param name="entity">The entity.</param>
@@ -131,15 +123,6 @@ namespace AMI.Core.Repositories
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         void RemoveRange(Expression<Func<TEntity, bool>> predicate);
-
-        /// <summary>
-        /// Creates a list from a queryalbe by enumerating it asynchronously.
-        /// </summary>
-        /// <param name="queryable">The queryable to create a list from.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A task that represents the asynchronous operation.
-        /// The task result contains a list that contains elements from the input sequence.</returns>
-        Task<List<TEntity>> ToListAsync(IQueryable<TEntity> queryable, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Updates changes of the existing entity.

@@ -11,6 +11,11 @@
         string DefaultFileExtension { get; }
 
         /// <summary>
+        /// Gets the default pagination limit.
+        /// </summary>
+        int DefaultPaginationLimit { get; }
+
+        /// <summary>
         /// Gets the allowed values of the limit pagination parameter.
         /// </summary>
         int[] AllowedPaginationLimitValues { get; }
