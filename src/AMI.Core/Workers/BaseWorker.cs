@@ -21,6 +21,11 @@ namespace AMI.Core.Workers
         /// <param name="loggerFactory">The logger factory.</param>
         public BaseWorker(ILoggerFactory loggerFactory)
         {
+            if (loggerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(loggerFactory));
+            }
+
             logger = loggerFactory.CreateLogger<BaseWorker>();
             Id = Guid.NewGuid();
         }

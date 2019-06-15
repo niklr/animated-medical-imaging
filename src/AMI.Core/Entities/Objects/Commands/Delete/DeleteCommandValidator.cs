@@ -4,7 +4,7 @@ using FluentValidation;
 namespace AMI.Core.Entities.Objects.Commands.Delete
 {
     /// <summary>
-    /// A validator for delect command requests.
+    /// A validator for delete command requests.
     /// </summary>
     /// <seealso cref="AbstractValidator{DeleteObjectCommand}" />
     public class DeleteCommandValidator : AbstractValidator<DeleteObjectCommand>

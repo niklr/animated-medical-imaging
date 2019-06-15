@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
+using AMI.Core.Entities.Tasks.Commands.UpdateStatus;
 using AMI.Core.Queues;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
@@ -19,6 +20,7 @@ namespace AMI.Core.Workers
     /// <seealso cref="ITaskWorker" />
     public class TaskWorker : BaseWorker, ITaskWorker
     {
+        private readonly ILogger logger;
         private readonly ITaskQueue queue;
         private readonly IMediator mediator;
 
@@ -31,32 +33,45 @@ namespace AMI.Core.Workers
         public TaskWorker(ILoggerFactory loggerFactory, ITaskQueue queue, IMediator mediator)
             : base(loggerFactory)
         {
-            this.queue = queue;
-            this.mediator = mediator;
+            if (loggerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(loggerFactory));
+            }
+
+            logger = loggerFactory.CreateLogger<TaskWorker>();
+
+            this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         /// <inheritdoc/>
-        protected override async Task DoWorkAsync(CancellationToken cancellationToken)
+        protected override async Task DoWorkAsync(CancellationToken ct)
         {
-            foreach (var item in queue.GetConsumingEnumerable(cancellationToken))
+            foreach (var item in queue.GetConsumingEnumerable(ct))
             {
+                ct.ThrowIfCancellationRequested();
+
                 StartWatch();
+
+                await UpdateStatus(item, Domain.Enums.TaskStatus.Processing, string.Empty, ct);
+                await UpdatePositionsAsync();
 
                 switch (item.CommandType)
                 {
                     case CommandType.ProcessObjectAsyncCommand:
-                        await ProcessObjectAsync(item, cancellationToken);
+                        await ProcessObjectAsync(item, ct);
                         break;
                     default:
-                        // TODO: implement default behavior
                         break;
                 }
+
+                await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
 
                 StopWatch();
             }
         }
 
-        private async Task ProcessObjectAsync(TaskModel item, CancellationToken cancellationToken)
+        private async Task ProcessObjectAsync(TaskModel item, CancellationToken ct)
         {
             try
             {
@@ -84,14 +99,35 @@ namespace AMI.Core.Workers
                     Grayscale = castedCommand.Grayscale
                 };
 
-                var result = await mediator.Send(command, cancellationToken);
-
-                // TODO: update task
+                var result = await mediator.Send(command, ct);
             }
-            catch (Exception)
+            catch (OperationCanceledException)
             {
-                // TODO: log exception and update task
+                logger.LogInformation($"Processing of task {item.Id} canceled.");
+                await UpdateStatus(item, Domain.Enums.TaskStatus.Canceled, string.Empty, ct);
             }
+            catch (Exception e)
+            {
+                logger.LogInformation($"Processing of task {item.Id} failed. {e.Message}");
+                await UpdateStatus(item, Domain.Enums.TaskStatus.Failed, e.Message, ct);
+            }
+        }
+
+        private async Task UpdateStatus(TaskModel task, Domain.Enums.TaskStatus status, string message, CancellationToken ct)
+        {
+            var command = new UpdateTaskStatusCommand()
+            {
+                Id = task.Id,
+                Status = status,
+                Message = message
+            };
+
+            await mediator.Send(command, ct);
+        }
+
+        private async Task UpdatePositionsAsync()
+        {
+            // TODO: Decrease all positions by 1
         }
     }
 }
