@@ -11,7 +11,7 @@
         <dt>Date modified</dt>
         <dd>{{momentUtil.getLocalDate(task.modifiedDate)}} {{momentUtil.getLocalTime(task.modifiedDate)}}</dd>
         <dt>Status</dt>
-        <dd>{{task.status}}</dd>
+        <dd>{{displayTaskStatus(task.status)}}</dd>
         <dt>Position</dt>
         <dd>{{task.position}}</dd>
       </dl>

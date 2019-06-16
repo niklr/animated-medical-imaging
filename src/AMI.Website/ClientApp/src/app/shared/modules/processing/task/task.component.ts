@@ -1,8 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { GuidUtil, MomentUtil } from '../../../../utils';
-
-import M from 'materialize-css';
-import * as $ from 'jquery';
+import { TaskStatus } from '../../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-task',
@@ -25,5 +23,9 @@ export class TaskComponent implements OnInit, AfterViewInit {
 
   private initMaterialize(): void {
 
+  }
+
+  public displayTaskStatus(status: TaskStatus): string {
+    return TaskStatus[status];
   }
 }

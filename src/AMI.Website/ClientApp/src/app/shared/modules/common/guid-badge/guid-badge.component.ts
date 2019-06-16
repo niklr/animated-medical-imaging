@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { ClipboardUtil, GuidUtil } from '../../../../utils';
+import { NotificationService } from '../../../../services/notification.service';
 
 import M from 'materialize-css';
 import * as $ from 'jquery';
@@ -16,7 +17,7 @@ export class GuidBadgeComponent implements OnInit, AfterViewInit {
 
   public guidShortened: string;
 
-  constructor(private clipboardUtil: ClipboardUtil, private guidUtil: GuidUtil) {
+  constructor(private notificationService: NotificationService, private clipboardUtil: ClipboardUtil, private guidUtil: GuidUtil) {
     this.tooltipGuid = this.guidUtil.createGuid();
   }
 
@@ -34,6 +35,6 @@ export class GuidBadgeComponent implements OnInit, AfterViewInit {
 
   public copyToClipboard(): void {
     this.clipboardUtil.copy(this.guid);
-    M.toast({ html: this.guid + ' copied to clipboard.', classes: 'rounded' });
+    this.notificationService.raiseMessage(this.guid + ' copied to clipboard.');
   }
 }

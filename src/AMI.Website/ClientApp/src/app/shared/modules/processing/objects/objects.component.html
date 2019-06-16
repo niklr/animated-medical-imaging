@@ -1,8 +1,11 @@
 <div *ngIf="objects.length <= 0; else showObjectResultsBlock">
   <div class="card">
     <div class="card-content">
-      <p class="caption wrapword">
+      <p class="caption wrapword full-width" style="line-height: 36px;">
         <i class="fas fa-info-circle"></i> No results found. Start by uploading files.
+        <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
+          <i class="fas fa-redo-alt"></i>
+        </button>
       </p>
     </div>
   </div>
@@ -30,7 +33,11 @@
             <li><a href="javascript:void(0)"><i class="far fa-trash-alt"></i> Delete selectd</a></li>
           </ul>
         </th>
-        <th class="column-last"></th>
+        <th class="column-last">
+          <button class="custom-fas-btn waves-effect waves-light btn-flat" (click)="refresh()">
+            <i class="fas fa-redo-alt"></i>
+          </button>
+        </th>
       </tr>
     </thead>
     <tbody>
