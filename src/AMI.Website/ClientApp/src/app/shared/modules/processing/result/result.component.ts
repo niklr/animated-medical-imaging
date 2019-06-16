@@ -1,5 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ProcessResult, AxisContainerOfString, AxisType, PositionAxisContainerOfString } from '../../../../clients/ami-api-client';
+import {
+  AxisType,
+  AxisContainerModelOfString,
+  ProcessResultModel,
+  PositionAxisContainerModelOfString
+} from '../../../../clients/ami-api-client';
 
 import M from 'materialize-css';
 
@@ -9,7 +14,7 @@ import M from 'materialize-css';
 })
 export class ResultComponent implements OnInit, AfterViewInit {
 
-  result: ProcessResult = new ProcessResult();
+  result: ProcessResultModel = new ProcessResultModel();
   extendedResult: any = {};
 
   constructor() {
@@ -65,58 +70,58 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.result.labelCount = 4;
     this.result.combinedGif = example1 + 'Z.gif';
     this.result.gifs = [
-      new AxisContainerOfString({
+      new AxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z.gif'
       })
     ];
     this.result.images = [
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_0.png',
         position: 0
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_1.png',
         position: 1
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_2.png',
         position: 2
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_3.png',
         position: 3
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_4.png',
         position: 4
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_5.png',
         position: 5
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_6.png',
         position: 6
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_7.png',
         position: 7
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_8.png',
         position: 8
       }),
-      new PositionAxisContainerOfString({
+      new PositionAxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z_9.png',
         position: 9

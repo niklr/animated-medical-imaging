@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
@@ -8,6 +9,7 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model containing information about the result of the processing.
     /// </summary>
+    [KnownType(typeof(ProcessResultModel))]
     public abstract class ResultModel
     {
         /// <summary>

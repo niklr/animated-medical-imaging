@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using AMI.Domain.Enums;
 using MediatR;
 
@@ -9,9 +10,8 @@ namespace AMI.Core.Entities.Shared.Commands
     /// A command containing information needed for processing.
     /// </summary>
     /// <typeparam name="T">The type of the response.</typeparam>
-    /// <seealso cref="IRequest{T}" />
     [Serializable]
-    public abstract class BaseProcessCommand<T> : IRequest<T>
+    public abstract class BaseProcessCommand<T> : BaseTaskCommand, IRequest<T>
     {
         /// <summary>
         /// Gets or sets the desired size of the processed images.

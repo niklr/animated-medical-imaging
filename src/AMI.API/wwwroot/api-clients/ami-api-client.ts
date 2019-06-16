@@ -1379,7 +1379,7 @@ export class TaskModel implements ITaskModel {
     /** Gets or sets the type of the command used to create this task. */
     commandType?: CommandType;
     /** Gets or sets the command used to create this task. */
-    command?: any | undefined;
+    command?: BaseTaskCommand | undefined;
     /** Gets or sets the result associated with this task. */
     result?: ResultModel | undefined;
     /** Gets or sets the object associated with this task. */
@@ -1404,7 +1404,7 @@ export class TaskModel implements ITaskModel {
             this.position = data["position"];
             this.progress = data["progress"];
             this.commandType = data["commandType"];
-            this.command = data["command"];
+            this.command = data["command"] ? BaseTaskCommand.fromJS(data["command"]) : <any>undefined;
             this.result = data["result"] ? ResultModel.fromJS(data["result"]) : <any>undefined;
             this.object = data["object"] ? ObjectModel.fromJS(data["object"]) : <any>undefined;
         }
@@ -1427,7 +1427,7 @@ export class TaskModel implements ITaskModel {
         data["position"] = this.position;
         data["progress"] = this.progress;
         data["commandType"] = this.commandType;
-        data["command"] = this.command;
+        data["command"] = this.command ? this.command.toJSON() : <any>undefined;
         data["result"] = this.result ? this.result.toJSON() : <any>undefined;
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
         return data; 
@@ -1453,7 +1453,7 @@ export interface ITaskModel {
     /** Gets or sets the type of the command used to create this task. */
     commandType?: CommandType;
     /** Gets or sets the command used to create this task. */
-    command?: any | undefined;
+    command?: BaseTaskCommand | undefined;
     /** Gets or sets the result associated with this task. */
     result?: ResultModel | undefined;
     /** Gets or sets the object associated with this task. */
@@ -1474,6 +1474,311 @@ export enum TaskStatus {
 export enum CommandType {
     Unknown = 0, 
     ProcessObjectAsyncCommand = 1, 
+}
+
+/** A command containing information used to create a task. */
+export abstract class BaseTaskCommand implements IBaseTaskCommand {
+
+    constructor(data?: IBaseTaskCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+    }
+
+    static fromJS(data: any): BaseTaskCommand {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'BaseTaskCommand' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data; 
+    }
+}
+
+/** A command containing information used to create a task. */
+export interface IBaseTaskCommand {
+}
+
+export abstract class BaseProcessCommandOfProcessResultModel extends BaseTaskCommand implements IBaseProcessCommandOfProcessResultModel {
+    desiredSize?: number | undefined;
+    amountPerAxis?: number;
+    axisTypes?: AxisType[] | undefined;
+    imageFormat?: ImageFormat;
+    bezierEasingTypePerAxis?: BezierEasingType;
+    bezierEasingTypeCombined?: BezierEasingType;
+    grayscale?: boolean;
+
+    constructor(data?: IBaseProcessCommandOfProcessResultModel) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.desiredSize = data["desiredSize"];
+            this.amountPerAxis = data["amountPerAxis"];
+            if (data["axisTypes"] && data["axisTypes"].constructor === Array) {
+                this.axisTypes = [] as any;
+                for (let item of data["axisTypes"])
+                    this.axisTypes!.push(item);
+            }
+            this.imageFormat = data["imageFormat"];
+            this.bezierEasingTypePerAxis = data["bezierEasingTypePerAxis"];
+            this.bezierEasingTypeCombined = data["bezierEasingTypeCombined"];
+            this.grayscale = data["grayscale"];
+        }
+    }
+
+    static fromJS(data: any): BaseProcessCommandOfProcessResultModel {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'BaseProcessCommandOfProcessResultModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["desiredSize"] = this.desiredSize;
+        data["amountPerAxis"] = this.amountPerAxis;
+        if (this.axisTypes && this.axisTypes.constructor === Array) {
+            data["axisTypes"] = [];
+            for (let item of this.axisTypes)
+                data["axisTypes"].push(item);
+        }
+        data["imageFormat"] = this.imageFormat;
+        data["bezierEasingTypePerAxis"] = this.bezierEasingTypePerAxis;
+        data["bezierEasingTypeCombined"] = this.bezierEasingTypeCombined;
+        data["grayscale"] = this.grayscale;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IBaseProcessCommandOfProcessResultModel extends IBaseTaskCommand {
+    desiredSize?: number | undefined;
+    amountPerAxis?: number;
+    axisTypes?: AxisType[] | undefined;
+    imageFormat?: ImageFormat;
+    bezierEasingTypePerAxis?: BezierEasingType;
+    bezierEasingTypeCombined?: BezierEasingType;
+    grayscale?: boolean;
+}
+
+/** A command containing information needed to process objects. */
+export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel implements IProcessObjectCommand {
+    /** Gets or sets the identifier of the object. */
+    id?: string | undefined;
+
+    constructor(data?: IProcessObjectCommand) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): ProcessObjectCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcessObjectCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A command containing information needed to process objects. */
+export interface IProcessObjectCommand extends IBaseProcessCommandOfProcessResultModel {
+    /** Gets or sets the identifier of the object. */
+    id?: string | undefined;
+}
+
+/** The different axis types of the coordinate system. */
+export enum AxisType {
+    X = 0, 
+    Y = 1, 
+    Z = 2, 
+}
+
+/** A type to describe the image format. */
+export enum ImageFormat {
+    Unknown = 0, 
+    Jpeg = 1, 
+    Png = 2, 
+}
+
+/** A type to describe the Bézier curve easing. */
+export enum BezierEasingType {
+    None = 0, 
+    Linear = 1, 
+    EaseInCubic = 2, 
+    EaseOutCubic = 3, 
+    EaseInOutCubic = 4, 
+    EaseInQuart = 5, 
+    EaseOutQuart = 6, 
+    EaseInOutQuart = 7, 
+}
+
+export abstract class BaseProcessCommandOfTaskModel extends BaseTaskCommand implements IBaseProcessCommandOfTaskModel {
+    desiredSize?: number | undefined;
+    amountPerAxis?: number;
+    axisTypes?: AxisType[] | undefined;
+    imageFormat?: ImageFormat;
+    bezierEasingTypePerAxis?: BezierEasingType;
+    bezierEasingTypeCombined?: BezierEasingType;
+    grayscale?: boolean;
+
+    constructor(data?: IBaseProcessCommandOfTaskModel) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.desiredSize = data["desiredSize"];
+            this.amountPerAxis = data["amountPerAxis"];
+            if (data["axisTypes"] && data["axisTypes"].constructor === Array) {
+                this.axisTypes = [] as any;
+                for (let item of data["axisTypes"])
+                    this.axisTypes!.push(item);
+            }
+            this.imageFormat = data["imageFormat"];
+            this.bezierEasingTypePerAxis = data["bezierEasingTypePerAxis"];
+            this.bezierEasingTypeCombined = data["bezierEasingTypeCombined"];
+            this.grayscale = data["grayscale"];
+        }
+    }
+
+    static fromJS(data: any): BaseProcessCommandOfTaskModel {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["desiredSize"] = this.desiredSize;
+        data["amountPerAxis"] = this.amountPerAxis;
+        if (this.axisTypes && this.axisTypes.constructor === Array) {
+            data["axisTypes"] = [];
+            for (let item of this.axisTypes)
+                data["axisTypes"].push(item);
+        }
+        data["imageFormat"] = this.imageFormat;
+        data["bezierEasingTypePerAxis"] = this.bezierEasingTypePerAxis;
+        data["bezierEasingTypeCombined"] = this.bezierEasingTypeCombined;
+        data["grayscale"] = this.grayscale;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IBaseProcessCommandOfTaskModel extends IBaseTaskCommand {
+    desiredSize?: number | undefined;
+    amountPerAxis?: number;
+    axisTypes?: AxisType[] | undefined;
+    imageFormat?: ImageFormat;
+    bezierEasingTypePerAxis?: BezierEasingType;
+    bezierEasingTypeCombined?: BezierEasingType;
+    grayscale?: boolean;
+}
+
+/** A command containing information needed to process objects. */
+export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel implements IProcessObjectAsyncCommand {
+    /** Gets or sets the identifier of the object. */
+    id?: string | undefined;
+
+    constructor(data?: IProcessObjectAsyncCommand) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): ProcessObjectAsyncCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcessObjectAsyncCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A command containing information needed to process objects. */
+export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfTaskModel {
+    /** Gets or sets the identifier of the object. */
+    id?: string | undefined;
+}
+
+/** A command containing information needed to process paths (directory, file, url, etc.). */
+export class ProcessPathCommand extends BaseProcessCommandOfProcessResultModel implements IProcessPathCommand {
+    /** Gets or sets the source path. */
+    sourcePath?: string | undefined;
+    /** Gets or sets the source path of the watermark. */
+    watermarkSourcePath?: string | undefined;
+    /** Gets or sets the destination path. */
+    destinationPath?: string | undefined;
+
+    constructor(data?: IProcessPathCommand) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.sourcePath = data["sourcePath"];
+            this.watermarkSourcePath = data["watermarkSourcePath"];
+            this.destinationPath = data["destinationPath"];
+        }
+    }
+
+    static fromJS(data: any): ProcessPathCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcessPathCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sourcePath"] = this.sourcePath;
+        data["watermarkSourcePath"] = this.watermarkSourcePath;
+        data["destinationPath"] = this.destinationPath;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A command containing information needed to process paths (directory, file, url, etc.). */
+export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultModel {
+    /** Gets or sets the source path. */
+    sourcePath?: string | undefined;
+    /** Gets or sets the source path of the watermark. */
+    watermarkSourcePath?: string | undefined;
+    /** Gets or sets the destination path. */
+    destinationPath?: string | undefined;
 }
 
 /** A model containing information about the result of the processing. */
@@ -1550,6 +1855,156 @@ export enum ResultType {
     ProcessResult = 1, 
 }
 
+/** A model containing information about the result of the image processing. */
+export class ProcessResultModel extends ResultModel implements IProcessResultModel {
+    /** Gets the type of the result. */
+    resultType?: ResultType;
+    /** Gets or sets the label count. */
+    labelCount?: number;
+    /** Gets or sets the images. */
+    images?: PositionAxisContainerModelOfString[] | undefined;
+    /** Gets or sets the axis containers of the GIF images. */
+    gifs?: AxisContainerModelOfString[] | undefined;
+    /** Gets or sets the combined GIF. */
+    combinedGif?: string | undefined;
+
+    constructor(data?: IProcessResultModel) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.resultType = data["resultType"];
+            this.labelCount = data["labelCount"];
+            if (data["images"] && data["images"].constructor === Array) {
+                this.images = [] as any;
+                for (let item of data["images"])
+                    this.images!.push(PositionAxisContainerModelOfString.fromJS(item));
+            }
+            if (data["gifs"] && data["gifs"].constructor === Array) {
+                this.gifs = [] as any;
+                for (let item of data["gifs"])
+                    this.gifs!.push(AxisContainerModelOfString.fromJS(item));
+            }
+            this.combinedGif = data["combinedGif"];
+        }
+    }
+
+    static fromJS(data: any): ProcessResultModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProcessResultModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["resultType"] = this.resultType;
+        data["labelCount"] = this.labelCount;
+        if (this.images && this.images.constructor === Array) {
+            data["images"] = [];
+            for (let item of this.images)
+                data["images"].push(item.toJSON());
+        }
+        if (this.gifs && this.gifs.constructor === Array) {
+            data["gifs"] = [];
+            for (let item of this.gifs)
+                data["gifs"].push(item.toJSON());
+        }
+        data["combinedGif"] = this.combinedGif;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A model containing information about the result of the image processing. */
+export interface IProcessResultModel extends IResultModel {
+    /** Gets the type of the result. */
+    resultType?: ResultType;
+    /** Gets or sets the label count. */
+    labelCount?: number;
+    /** Gets or sets the images. */
+    images?: PositionAxisContainerModelOfString[] | undefined;
+    /** Gets or sets the axis containers of the GIF images. */
+    gifs?: AxisContainerModelOfString[] | undefined;
+    /** Gets or sets the combined GIF. */
+    combinedGif?: string | undefined;
+}
+
+export class AxisContainerModelOfString implements IAxisContainerModelOfString {
+    axisType?: AxisType;
+    entity?: string | undefined;
+
+    constructor(data?: IAxisContainerModelOfString) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.axisType = data["axisType"];
+            this.entity = data["entity"];
+        }
+    }
+
+    static fromJS(data: any): AxisContainerModelOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new AxisContainerModelOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["axisType"] = this.axisType;
+        data["entity"] = this.entity;
+        return data; 
+    }
+}
+
+export interface IAxisContainerModelOfString {
+    axisType?: AxisType;
+    entity?: string | undefined;
+}
+
+export class PositionAxisContainerModelOfString extends AxisContainerModelOfString implements IPositionAxisContainerModelOfString {
+    position?: number;
+
+    constructor(data?: IPositionAxisContainerModelOfString) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.position = data["position"];
+        }
+    }
+
+    static fromJS(data: any): PositionAxisContainerModelOfString {
+        data = typeof data === 'object' ? data : {};
+        let result = new PositionAxisContainerModelOfString();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["position"] = this.position;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPositionAxisContainerModelOfString extends IAxisContainerModelOfString {
+    position?: number;
+}
+
 /** A model containing information about the pagination. */
 export class PaginationModel implements IPaginationModel {
     /** Gets or sets the limit to constrain the number of items. */
@@ -1600,135 +2055,6 @@ export interface IPaginationModel {
     total?: number;
     /** Gets or sets the current page number. */
     page?: number;
-}
-
-export abstract class BaseProcessCommandOfTaskModel implements IBaseProcessCommandOfTaskModel {
-    desiredSize?: number | undefined;
-    amountPerAxis?: number;
-    axisTypes?: AxisType[] | undefined;
-    imageFormat?: ImageFormat;
-    bezierEasingTypePerAxis?: BezierEasingType;
-    bezierEasingTypeCombined?: BezierEasingType;
-    grayscale?: boolean;
-
-    constructor(data?: IBaseProcessCommandOfTaskModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.desiredSize = data["desiredSize"];
-            this.amountPerAxis = data["amountPerAxis"];
-            if (data["axisTypes"] && data["axisTypes"].constructor === Array) {
-                this.axisTypes = [] as any;
-                for (let item of data["axisTypes"])
-                    this.axisTypes!.push(item);
-            }
-            this.imageFormat = data["imageFormat"];
-            this.bezierEasingTypePerAxis = data["bezierEasingTypePerAxis"];
-            this.bezierEasingTypeCombined = data["bezierEasingTypeCombined"];
-            this.grayscale = data["grayscale"];
-        }
-    }
-
-    static fromJS(data: any): BaseProcessCommandOfTaskModel {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["desiredSize"] = this.desiredSize;
-        data["amountPerAxis"] = this.amountPerAxis;
-        if (this.axisTypes && this.axisTypes.constructor === Array) {
-            data["axisTypes"] = [];
-            for (let item of this.axisTypes)
-                data["axisTypes"].push(item);
-        }
-        data["imageFormat"] = this.imageFormat;
-        data["bezierEasingTypePerAxis"] = this.bezierEasingTypePerAxis;
-        data["bezierEasingTypeCombined"] = this.bezierEasingTypeCombined;
-        data["grayscale"] = this.grayscale;
-        return data; 
-    }
-}
-
-export interface IBaseProcessCommandOfTaskModel {
-    desiredSize?: number | undefined;
-    amountPerAxis?: number;
-    axisTypes?: AxisType[] | undefined;
-    imageFormat?: ImageFormat;
-    bezierEasingTypePerAxis?: BezierEasingType;
-    bezierEasingTypeCombined?: BezierEasingType;
-    grayscale?: boolean;
-}
-
-/** A command containing information needed to process objects. */
-export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel implements IProcessObjectAsyncCommand {
-    /** Gets or sets the identifier of the object. */
-    id?: string | undefined;
-
-    constructor(data?: IProcessObjectAsyncCommand) {
-        super(data);
-    }
-
-    init(data?: any) {
-        super.init(data);
-        if (data) {
-            this.id = data["id"];
-        }
-    }
-
-    static fromJS(data: any): ProcessObjectAsyncCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProcessObjectAsyncCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-/** A command containing information needed to process objects. */
-export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfTaskModel {
-    /** Gets or sets the identifier of the object. */
-    id?: string | undefined;
-}
-
-/** The different axis types of the coordinate system. */
-export enum AxisType {
-    X = 0, 
-    Y = 1, 
-    Z = 2, 
-}
-
-/** A type to describe the image format. */
-export enum ImageFormat {
-    Unknown = 0, 
-    Jpeg = 1, 
-    Png = 2, 
-}
-
-/** A type to describe the Bézier curve easing. */
-export enum BezierEasingType {
-    None = 0, 
-    Linear = 1, 
-    EaseInCubic = 2, 
-    EaseOutCubic = 3, 
-    EaseInOutCubic = 4, 
-    EaseInQuart = 5, 
-    EaseOutQuart = 6, 
-    EaseInOutQuart = 7, 
 }
 
 export interface FileParameter {

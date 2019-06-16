@@ -1512,7 +1512,12 @@
           },
           "command": {
             "description": "Gets or sets the command used to create this task.",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BaseTaskCommand"
+              }
+            ]
           },
           "result": {
             "description": "Gets or sets the result associated with this task.",
@@ -1564,6 +1569,211 @@
         "enum": [
           0,
           1
+        ]
+      },
+      "BaseTaskCommand": {
+        "type": "object",
+        "description": "A command containing information used to create a task.",
+        "x-abstract": true,
+        "additionalProperties": false
+      },
+      "ProcessObjectCommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseProcessCommandOfProcessResultModel"
+          },
+          {
+            "type": "object",
+            "description": "A command containing information needed to process objects.",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Gets or sets the identifier of the object.",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "BaseProcessCommandOfProcessResultModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTaskCommand"
+          },
+          {
+            "type": "object",
+            "x-abstract": true,
+            "additionalProperties": false,
+            "properties": {
+              "desiredSize": {
+                "type": "integer",
+                "nullable": true
+              },
+              "amountPerAxis": {
+                "type": "integer"
+              },
+              "axisTypes": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/AxisType"
+                }
+              },
+              "imageFormat": {
+                "$ref": "#/components/schemas/ImageFormat"
+              },
+              "bezierEasingTypePerAxis": {
+                "$ref": "#/components/schemas/BezierEasingType"
+              },
+              "bezierEasingTypeCombined": {
+                "$ref": "#/components/schemas/BezierEasingType"
+              },
+              "grayscale": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "AxisType": {
+        "type": "integer",
+        "description": "The different axis types of the coordinate system.",
+        "x-enumNames": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "ImageFormat": {
+        "type": "integer",
+        "description": "A type to describe the image format.",
+        "x-enumNames": [
+          "Unknown",
+          "Jpeg",
+          "Png"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "BezierEasingType": {
+        "type": "integer",
+        "description": "A type to describe the Bézier curve easing.",
+        "x-enumNames": [
+          "None",
+          "Linear",
+          "EaseInCubic",
+          "EaseOutCubic",
+          "EaseInOutCubic",
+          "EaseInQuart",
+          "EaseOutQuart",
+          "EaseInOutQuart"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "ProcessObjectAsyncCommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseProcessCommandOfTaskModel"
+          },
+          {
+            "type": "object",
+            "description": "A command containing information needed to process objects.",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Gets or sets the identifier of the object.",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "BaseProcessCommandOfTaskModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTaskCommand"
+          },
+          {
+            "type": "object",
+            "x-abstract": true,
+            "additionalProperties": false,
+            "properties": {
+              "desiredSize": {
+                "type": "integer",
+                "nullable": true
+              },
+              "amountPerAxis": {
+                "type": "integer"
+              },
+              "axisTypes": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/AxisType"
+                }
+              },
+              "imageFormat": {
+                "$ref": "#/components/schemas/ImageFormat"
+              },
+              "bezierEasingTypePerAxis": {
+                "$ref": "#/components/schemas/BezierEasingType"
+              },
+              "bezierEasingTypeCombined": {
+                "$ref": "#/components/schemas/BezierEasingType"
+              },
+              "grayscale": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "ProcessPathCommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseProcessCommandOfProcessResultModel"
+          },
+          {
+            "type": "object",
+            "description": "A command containing information needed to process paths (directory, file, url, etc.).",
+            "additionalProperties": false,
+            "properties": {
+              "sourcePath": {
+                "type": "string",
+                "description": "Gets or sets the source path.",
+                "nullable": true
+              },
+              "watermarkSourcePath": {
+                "type": "string",
+                "description": "Gets or sets the source path of the watermark.",
+                "nullable": true
+              },
+              "destinationPath": {
+                "type": "string",
+                "description": "Gets or sets the destination path.",
+                "nullable": true
+              }
+            }
+          }
         ]
       },
       "ResultModel": {
@@ -1619,6 +1829,83 @@
           1
         ]
       },
+      "ProcessResultModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ResultModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the result of the image processing.",
+            "additionalProperties": false,
+            "properties": {
+              "resultType": {
+                "description": "Gets the type of the result.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ResultType"
+                  }
+                ]
+              },
+              "labelCount": {
+                "type": "integer",
+                "description": "Gets or sets the label count.",
+                "format": "int32"
+              },
+              "images": {
+                "type": "array",
+                "description": "Gets or sets the images.",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/PositionAxisContainerModelOfString"
+                }
+              },
+              "gifs": {
+                "type": "array",
+                "description": "Gets or sets the axis containers of the GIF images.",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/AxisContainerModelOfString"
+                }
+              },
+              "combinedGif": {
+                "type": "string",
+                "description": "Gets or sets the combined GIF.",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "PositionAxisContainerModelOfString": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AxisContainerModelOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "position": {
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      },
+      "AxisContainerModelOfString": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "axisType": {
+            "$ref": "#/components/schemas/AxisType"
+          },
+          "entity": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "PaginationModel": {
         "type": "object",
         "description": "A model containing information about the pagination.",
@@ -1640,110 +1927,6 @@
             "format": "int32"
           }
         }
-      },
-      "ProcessObjectAsyncCommand": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseProcessCommandOfTaskModel"
-          },
-          {
-            "type": "object",
-            "description": "A command containing information needed to process objects.",
-            "additionalProperties": false,
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "Gets or sets the identifier of the object.",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "BaseProcessCommandOfTaskModel": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "properties": {
-          "desiredSize": {
-            "type": "integer",
-            "nullable": true
-          },
-          "amountPerAxis": {
-            "type": "integer"
-          },
-          "axisTypes": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/AxisType"
-            }
-          },
-          "imageFormat": {
-            "$ref": "#/components/schemas/ImageFormat"
-          },
-          "bezierEasingTypePerAxis": {
-            "$ref": "#/components/schemas/BezierEasingType"
-          },
-          "bezierEasingTypeCombined": {
-            "$ref": "#/components/schemas/BezierEasingType"
-          },
-          "grayscale": {
-            "type": "boolean"
-          }
-        }
-      },
-      "AxisType": {
-        "type": "integer",
-        "description": "The different axis types of the coordinate system.",
-        "x-enumNames": [
-          "X",
-          "Y",
-          "Z"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
-      },
-      "ImageFormat": {
-        "type": "integer",
-        "description": "A type to describe the image format.",
-        "x-enumNames": [
-          "Unknown",
-          "Jpeg",
-          "Png"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
-      },
-      "BezierEasingType": {
-        "type": "integer",
-        "description": "A type to describe the Bézier curve easing.",
-        "x-enumNames": [
-          "None",
-          "Linear",
-          "EaseInCubic",
-          "EaseOutCubic",
-          "EaseInOutCubic",
-          "EaseInQuart",
-          "EaseOutQuart",
-          "EaseInOutQuart"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ]
       }
     }
   }

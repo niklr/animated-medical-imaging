@@ -1,4 +1,5 @@
 ﻿using System;
+using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
 using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
@@ -54,7 +55,7 @@ namespace AMI.Core.Entities.Models
         /// <summary>
         /// Gets or sets the command used to create this task.
         /// </summary>
-        public object Command { get; set; }
+        public BaseTaskCommand Command { get; set; }
 
         /// <summary>
         /// Gets or sets the result associated with this task.
