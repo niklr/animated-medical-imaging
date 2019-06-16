@@ -62,10 +62,9 @@ namespace AMI.Core.Workers
                         await ProcessObjectAsync(item, ct);
                         break;
                     default:
+                        await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
                         break;
                 }
-
-                await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
 
                 StopWatch();
             }
@@ -100,6 +99,8 @@ namespace AMI.Core.Workers
                 };
 
                 var result = await mediator.Send(command, ct);
+
+                await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
             }
             catch (OperationCanceledException)
             {

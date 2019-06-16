@@ -15,7 +15,6 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
     /// <summary>
     /// A handler for process command requests.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{ProcessObjectCommand, ProcessObjectTaskModel}" />
     public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectAsyncCommand, TaskModel>
     {
         private readonly IAmiUnitOfWork context;

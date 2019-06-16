@@ -1409,9 +1409,9 @@
             "description": "Gets or sets the source path (directory, file, url, etc.).",
             "nullable": true
           },
-          "uncompressedFsPath": {
+          "uncompressedPath": {
             "type": "string",
-            "description": "Gets or sets the uncompressed filesystem path (directory).",
+            "description": "Gets or sets the uncompressed path (directory).",
             "nullable": true
           },
           "latestTask": {

@@ -56,9 +56,9 @@ namespace AMI.Core.Entities.Models
         public string SourcePath { get; set; }
 
         /// <summary>
-        /// Gets or sets the uncompressed filesystem path (directory).
+        /// Gets or sets the uncompressed path (directory).
         /// </summary>
-        public string UncompressedFsPath { get; set; }
+        public string UncompressedPath { get; set; }
 
         /// <summary>
         /// Gets or sets the latest task.
@@ -86,7 +86,7 @@ namespace AMI.Core.Entities.Models
                 FileFormat = Enum.TryParse(entity.FileFormat.ToString(), out FileFormat fileFormat) ? fileFormat : FileFormat.Unknown,
                 OriginalFilename = entity.OriginalFilename,
                 SourcePath = entity.SourcePath,
-                UncompressedFsPath = entity.UncompressedFsPath
+                UncompressedPath = entity.UncompressedPath
             };
         }
 

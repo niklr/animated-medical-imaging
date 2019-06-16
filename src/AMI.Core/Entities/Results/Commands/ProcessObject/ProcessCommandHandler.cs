@@ -74,7 +74,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             var tempDestPath = fileSystem.Path.Combine(configuration.WorkingDirectory, "Temp", Guid.NewGuid().ToString());
             fileSystem.Directory.CreateDirectory(tempDestPath);
 
-            // TODO: extract if needed, update the ObjectEntity.UncompressedFsPath
+            // TODO: extract if needed, update the ObjectEntity.UncompressedPath
             // and use the extracted directory as source path
             var pathRequest = new ProcessPathCommand()
             {
@@ -110,7 +110,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             }
 
             // Update BaseFsPath of ResultEntity
-            resultEntity.BaseFsPath = baseDestPath;
+            resultEntity.BasePath = baseDestPath;
             resultEntity.ModifiedDate = DateTime.UtcNow;
             context.ResultRepository.Update(resultEntity);
 
