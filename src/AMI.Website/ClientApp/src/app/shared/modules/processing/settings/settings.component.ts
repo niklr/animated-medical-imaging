@@ -1,8 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AxisType, ProcessObjectCommand } from '../../../../clients/ami-api-client';
 
-import M from 'materialize-css';
-
 @Component({
   selector: 'app-processing-settings',
   templateUrl: './settings.component.html'

@@ -2,9 +2,6 @@ import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { ClipboardUtil, GuidUtil } from '../../../../utils';
 import { NotificationService } from '../../../../services/notification.service';
 
-import M from 'materialize-css';
-import * as $ from 'jquery';
-
 @Component({
   selector: 'app-common-guid-badge',
   templateUrl: './guid-badge.component.html'

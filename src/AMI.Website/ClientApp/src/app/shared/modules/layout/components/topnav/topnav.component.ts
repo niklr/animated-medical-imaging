@@ -1,8 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import M from 'materialize-css';
-
 @Component({
   selector: 'app-topnav',
   templateUrl: './topnav.component.html',
@@ -23,8 +21,10 @@ export class TopnavComponent implements OnInit, AfterViewInit {
   }
 
   private initSidenav(): void {
-    var elems = document.querySelectorAll('.sidenav');
-    var options = {};
-    var instances = M.Sidenav.init(elems, options);
+    setTimeout(() => {
+      var elems = document.querySelectorAll('.sidenav');
+      var options = {};
+      var instances = M.Sidenav.init(elems, options);
+    });
   }
 }

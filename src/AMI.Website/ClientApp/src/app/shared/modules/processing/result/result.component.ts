@@ -6,8 +6,6 @@ import {
   PositionAxisContainerModelOfString
 } from '../../../../clients/ami-api-client';
 
-import M from 'materialize-css';
-
 @Component({
   selector: 'app-processing-result',
   templateUrl: './result.component.html'
@@ -30,9 +28,11 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   private initMaterialbox(): void {
-    var options = {};
-    var elems = document.querySelectorAll('.materialboxed');
-    var instance = M.Materialbox.init(elems, options);
+    setTimeout(() => {
+      var options = {};
+      var elems = document.querySelectorAll('.materialboxed');
+      var instance = M.Materialbox.init(elems, options);
+    });
   }
 
   private initExtendedResult(): void {

@@ -4,8 +4,6 @@ import { ObjectProxy } from '../../../../proxies/object.proxy';
 import { NotificationService } from '../../../../services/notification.service';
 import { ObjectModel, TaskModel, TaskStatus } from '../../../../clients/ami-api-client';
 
-import M from 'materialize-css';
-
 @Component({
   selector: 'app-processing-objects',
   templateUrl: './objects.component.html'
@@ -34,9 +32,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   }
 
   private initDropdown(): void {
-    var options = {};
-    var elem = document.querySelector('#objectActionsDropdownButton');
-    var instance = M.Dropdown.init(elem, options);
+    setTimeout(() => {
+      var options = {};
+      var elem = document.querySelector('#objectActionsDropdownButton');
+      var instance = M.Dropdown.init(elem, options);
+    });
   }
 
   private init(): void {
@@ -85,6 +85,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
       this.pageEvent.pageSize = result.pagination.limit;
       this.pageEvent.length = result.pagination.total;
       this.objects = result.items;
+      this.initDropdown();
     }, error => {
       this.notificationService.handleError(error);
     });

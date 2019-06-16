@@ -1,9 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { GuidUtil, MomentUtil } from '../../../../utils';
 
-import M from 'materialize-css';
-import * as $ from 'jquery';
-
 @Component({
   selector: '[app-processing-object]',
   templateUrl: './object.component.html'

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ErrorModel, IErrorModel } from '../clients/ami-api-client';
 
-import M from 'materialize-css';
-
 @Injectable()
 export class NotificationService {
 
