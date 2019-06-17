@@ -7,7 +7,6 @@ import { AmiApiClientModule } from './clients/ami-api-client.module';
 import { API_BASE_URL } from './clients/ami-api-client';
 import { AppComponent } from './app.component';
 import { AppProxy } from './proxies/app.proxy';
-import { ObjectProxy } from './proxies/object.proxy';
 import { ConfigService } from './services/config.service';
 import { NotificationService } from './services/notification.service';
 
@@ -31,7 +30,6 @@ export function initBaseAmiApi() {
   ],
   providers: [
     AppProxy,
-    ObjectProxy,
     ConfigService,
     NotificationService,
     {

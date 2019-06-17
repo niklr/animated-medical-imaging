@@ -9,6 +9,9 @@ using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
+using AMI.Domain.Exceptions;
+using RNS.Framework.Extensions.MutexExtensions;
+using RNS.Framework.Extensions.Reflection;
 
 namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
 {
@@ -17,6 +20,8 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
     /// </summary>
     public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectAsyncCommand, TaskModel>
     {
+        private static Mutex processMutex;
+
         private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
         private readonly IDefaultJsonSerializer serializer;
@@ -45,31 +50,49 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
         /// <inheritdoc/>
         protected override async Task<TaskModel> ProtectedHandleAsync(ProcessObjectAsyncCommand request, CancellationToken cancellationToken)
         {
-            context.BeginTransaction();
+            processMutex = new Mutex(false, this.GetMethodName());
 
-            var entity = new TaskEntity()
+            return await processMutex.Execute(new TimeSpan(0, 0, 1), async () =>
             {
-                Id = idGenService.CreateId(),
-                CreatedDate = DateTime.UtcNow,
-                ModifiedDate = DateTime.UtcNow,
-                Status = (int)Domain.Enums.TaskStatus.Queued,
-                Progress = 0,
-                Position = queue.Count,
-                CommandType = (int)CommandType.ProcessObjectAsyncCommand,
-                CommandSerialized = serializer.Serialize(request),
-                ObjectId = Guid.Parse(request.Id)
-            };
+                context.BeginTransaction();
 
-            context.TaskRepository.Add(entity);
+                Guid objectId = Guid.Parse(request.Id);
 
-            await context.SaveChangesAsync(cancellationToken);
+                var activeCount = await context.TaskRepository.CountAsync(e =>
+                    e.ObjectId == objectId &&
+                    (e.Status == (int)Domain.Enums.TaskStatus.Created ||
+                    e.Status == (int)Domain.Enums.TaskStatus.Queued ||
+                    e.Status == (int)Domain.Enums.TaskStatus.Processing));
 
-            var result = TaskModel.Create(entity, serializer);
-            queue.Add(result);
+                if (activeCount > 0)
+                {
+                    throw new AmiException("The specified object is already actively being processed.");
+                }
 
-            context.CommitTransaction();
+                var entity = new TaskEntity()
+                {
+                    Id = idGenService.CreateId(),
+                    CreatedDate = DateTime.UtcNow,
+                    ModifiedDate = DateTime.UtcNow,
+                    Status = (int)Domain.Enums.TaskStatus.Queued,
+                    Progress = 0,
+                    Position = queue.Count,
+                    CommandType = (int)CommandType.ProcessObjectAsyncCommand,
+                    CommandSerialized = serializer.Serialize(request),
+                    ObjectId = objectId
+                };
 
-            return result;
+                context.TaskRepository.Add(entity);
+
+                await context.SaveChangesAsync(cancellationToken);
+
+                var result = TaskModel.Create(entity, serializer);
+                queue.Add(result);
+
+                context.CommitTransaction();
+
+                return result;
+            });
         }
     }
 }

@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedCommonModule } from '../common/common.module';
-import { GuidBadgeComponent } from '../common/guid-badge/guid-badge.component';
 import { ObjectComponent } from './object/object.component';
 import { ObjectsComponent } from './objects/objects.component';
 import { ResultComponent } from './result/result.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TaskComponent } from './task/task.component';
+import { ObjectProxy } from '../../../proxies/object.proxy';
+import { ObjectStore } from '../../../stores/object.store';
 import { ClipboardUtil, GuidUtil, MomentUtil } from '../../../utils';
 
 @NgModule({
@@ -24,6 +25,8 @@ import { ClipboardUtil, GuidUtil, MomentUtil } from '../../../utils';
     TaskComponent
   ],
   providers: [
+    ObjectProxy,
+    ObjectStore,
     ClipboardUtil,
     GuidUtil,
     MomentUtil

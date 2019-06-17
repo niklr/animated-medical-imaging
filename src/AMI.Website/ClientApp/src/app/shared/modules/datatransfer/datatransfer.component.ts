@@ -45,12 +45,5 @@ export class DatatransferComponent implements OnInit {
     };
     var event = new CustomEvent('github:niklr/angular-material-datatransfer.create', { 'detail': config });
     document.dispatchEvent(event);
-
-    document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', this.onItemCompleted);
   }
-
-  private onItemCompleted(item): void {
-    console.log(item);
-  }
-
 }

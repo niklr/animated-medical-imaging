@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AxisType, ProcessObjectCommand } from '../../../../clients/ami-api-client';
+import { ObjectStore } from '../../../../stores/object.store';
 
 @Component({
   selector: 'app-processing-settings',
@@ -7,7 +8,7 @@ import { AxisType, ProcessObjectCommand } from '../../../../clients/ami-api-clie
 })
 export class SettingsComponent implements OnInit, AfterViewInit {
 
-  settings: ProcessObjectCommand = new ProcessObjectCommand(); 
+  settings: ProcessObjectCommand;
 
   axisTypeContainers: AxisTypeContainer[] = [
     new AxisTypeContainer({ displayName: "X-Axis", enum: AxisType.X, checked: true }),
@@ -15,10 +16,8 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     new AxisTypeContainer({ displayName: "Z-Axis", enum: AxisType.Z, checked: true })
   ];
 
-  constructor() {
-    this.settings.desiredSize = 250;
-    this.settings.amountPerAxis = 10;
-    this.settings.grayscale = true;
+  constructor(public objectStore: ObjectStore) {
+    this.settings = this.objectStore.settings;
   }
 
   ngOnInit() {

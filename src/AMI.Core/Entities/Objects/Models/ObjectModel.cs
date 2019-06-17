@@ -119,7 +119,12 @@ namespace AMI.Core.Entities.Models
             var latestTask = tasks.FirstOrDefault();
             if (latestTask != null)
             {
-                var result = results.Where(e => e.Id == latestTask.ResultId).FirstOrDefault();
+                ResultEntity result = null;
+                if (latestTask.ResultId.HasValue)
+                {
+                    result = results.Where(e => e.Id == latestTask.ResultId).FirstOrDefault();
+                }
+
                 model.LatestTask = TaskModel.Create(latestTask, entity, result, serializer);
             }
 

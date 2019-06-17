@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PageEvent } from '../../../../events/page.event';
 import { ObjectProxy } from '../../../../proxies/object.proxy';
+import { ObjectStore } from '../../../../stores/object.store';
 import { NotificationService } from '../../../../services/notification.service';
-import { ObjectModel, TaskModel, TaskStatus } from '../../../../clients/ami-api-client';
+import { ObjectModel, TaskModel, TaskStatus, ProcessObjectAsyncCommand } from '../../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-objects',
@@ -16,7 +17,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   // Paginator Output
   public pageEvent: PageEvent;
 
-  constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy) {
+  constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy, private objectStore: ObjectStore) {
     this.pageEvent = new PageEvent();
     this.pageEvent.pageIndex = 1;
     this.pageEvent.pageSize = 50;
@@ -24,6 +25,14 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', function (item) {
+      try {
+        let that = this as ObjectsComponent;
+        that.refresh();
+        let result = JSON.parse(item.detail.message) as ObjectModel;
+        that.processObject(result.id);
+      } catch (e) { }
+    }.bind(this));
   }
 
   ngAfterViewInit(): void {
@@ -67,7 +76,26 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     this.objects = [object1, object2];
   }
 
-  private toggleCheckbox(): void {
+  private processObject(id: string): void {
+    var settings = this.objectStore.settings;
+    var command = new ProcessObjectAsyncCommand({
+      amountPerAxis: settings.amountPerAxis,
+      axisTypes: settings.axisTypes,
+      bezierEasingTypeCombined: settings.bezierEasingTypeCombined,
+      bezierEasingTypePerAxis: settings.bezierEasingTypePerAxis,
+      desiredSize: settings.desiredSize,
+      grayscale: settings.grayscale,
+      id: id,
+      imageFormat: settings.imageFormat
+    });
+    this.objectProxy.processObject(id, command).subscribe(result => {
+      this.refresh();
+    }, error => {
+      this.notificationService.handleError(error);
+    });
+  }
+
+  public toggleCheckbox(): void {
     this.isChecked = !this.isChecked;
     if (this.objects) {
       this.objects.forEach(function (value, index, array) {
@@ -87,6 +115,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
       this.objects = result.items;
       this.initDropdown();
     }, error => {
+      console.log(error);
       this.notificationService.handleError(error);
     });
   }
