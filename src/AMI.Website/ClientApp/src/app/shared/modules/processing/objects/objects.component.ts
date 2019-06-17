@@ -36,7 +36,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initDropdown();
     this.init();
   }
 
@@ -49,8 +48,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   }
 
   private init(): void {
-    // this.initDemoObjects();
-    this.setPage(this.pageEvent);
+    this.initDemoObjects();
+    // this.setPage(this.pageEvent);
   }
 
   private initDemoObjects(): void {
@@ -73,7 +72,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
       modifiedDate: new Date('2019-04-17T07:52:41.4700000Z')
     });
 
-    this.objects = [object1, object2];
+    setTimeout(() => {
+      this.objects = [object1, object2];
+      this.initDropdown();
+    });
   }
 
   private processObject(id: string): void {

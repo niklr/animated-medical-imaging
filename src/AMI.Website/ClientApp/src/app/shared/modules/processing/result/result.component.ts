@@ -67,66 +67,45 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   private initDemoResult(): void {
     var example1 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/';
+    var example2 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/';
     this.result.labelCount = 4;
     this.result.combinedGif = example1 + 'Z.gif';
     this.result.gifs = [
+      new AxisContainerModelOfString({
+        axisType: AxisType.X,
+        entity: example1 + 'Z.gif'
+      }),
+      new AxisContainerModelOfString({
+        axisType: AxisType.Y,
+        entity: example2 + 'Z.gif'
+      }),
       new AxisContainerModelOfString({
         axisType: AxisType.Z,
         entity: example1 + 'Z.gif'
       })
     ];
-    this.result.images = [
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_0.png',
-        position: 0
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_1.png',
-        position: 1
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_2.png',
-        position: 2
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_3.png',
-        position: 3
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_4.png',
-        position: 4
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_5.png',
-        position: 5
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_6.png',
-        position: 6
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_7.png',
-        position: 7
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_8.png',
-        position: 8
-      }),
-      new PositionAxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z_9.png',
-        position: 9
-      })
-    ]
+
+    this.result.images = [];
+
+    for (var i = 0; i < 10; i++) {
+      this.result.images.push(this.createDemoItem(AxisType.X, example1, i));
+    }
+
+    for (var i = 0; i < 10; i++) {
+      this.result.images.push(this.createDemoItem(AxisType.Y, example2, i));
+    }
+
+    for (var i = 0; i < 10; i++) {
+      this.result.images.push(this.createDemoItem(AxisType.Z, example1, i));
+    }
+  }
+
+  private createDemoItem(axisType: AxisType, basePath: string, position: number): PositionAxisContainerModelOfString {
+    return new PositionAxisContainerModelOfString({
+      axisType: axisType,
+      entity: basePath + 'Z_' + position + '.png',
+      position: position
+    });
   }
 }
 
