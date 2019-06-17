@@ -1,6 +1,7 @@
 ﻿using System;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessPath
 {
@@ -10,6 +11,9 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
     [Serializable]
     public class ProcessPathCommand : BaseProcessCommand<ProcessResultModel>
     {
+        /// <inheritdoc/>
+        public override CommandType CommandType => CommandType.ProcessPathCommand;
+
         /// <summary>
         /// Gets or sets the source path.
         /// </summary>

@@ -11,8 +11,18 @@
         Unknown = 0,
 
         /// <summary>
+        /// The command type to process paths.
+        /// </summary>
+        ProcessPathCommand = 1,
+
+        /// <summary>
+        /// The command type to process objects.
+        /// </summary>
+        ProcessObjectCommand = 2,
+
+        /// <summary>
         /// The command type to process objects asynchronous.
         /// </summary>
-        ProcessObjectAsyncCommand = 1
+        ProcessObjectAsyncCommand = 3
     }
 }

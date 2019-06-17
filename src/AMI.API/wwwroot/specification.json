@@ -1502,20 +1502,12 @@
             "description": "Gets or sets the progress (0-100).",
             "format": "int32"
           },
-          "commandType": {
-            "description": "Gets or sets the type of the command used to create this task.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CommandType"
-              }
-            ]
-          },
           "command": {
             "description": "Gets or sets the command used to create this task.",
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/BaseTaskCommand"
+                "$ref": "#/components/schemas/BaseCommand"
               }
             ]
           },
@@ -1524,7 +1516,7 @@
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/ResultModel"
+                "$ref": "#/components/schemas/BaseResultModel"
               }
             ]
           },
@@ -1559,23 +1551,36 @@
           5
         ]
       },
+      "BaseCommand": {
+        "type": "object",
+        "description": "The base all commands have in common.",
+        "additionalProperties": false,
+        "properties": {
+          "commandType": {
+            "description": "Gets the type of the command.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CommandType"
+              }
+            ]
+          }
+        }
+      },
       "CommandType": {
         "type": "integer",
         "description": "A type to describe the command.",
         "x-enumNames": [
           "Unknown",
+          "ProcessPathCommand",
+          "ProcessObjectCommand",
           "ProcessObjectAsyncCommand"
         ],
         "enum": [
           0,
-          1
+          1,
+          2,
+          3
         ]
-      },
-      "BaseTaskCommand": {
-        "type": "object",
-        "description": "A command containing information used to create a task.",
-        "x-abstract": true,
-        "additionalProperties": false
       },
       "ProcessObjectCommand": {
         "allOf": [
@@ -1587,6 +1592,14 @@
             "description": "A command containing information needed to process objects.",
             "additionalProperties": false,
             "properties": {
+              "commandType": {
+                "description": "Gets the type of the command.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CommandType"
+                  }
+                ]
+              },
               "id": {
                 "type": "string",
                 "description": "Gets or sets the identifier of the object.",
@@ -1599,11 +1612,10 @@
       "BaseProcessCommandOfProcessResultModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/BaseTaskCommand"
+            "$ref": "#/components/schemas/BaseCommand"
           },
           {
             "type": "object",
-            "x-abstract": true,
             "additionalProperties": false,
             "properties": {
               "desiredSize": {
@@ -1698,6 +1710,14 @@
             "description": "A command containing information needed to process objects.",
             "additionalProperties": false,
             "properties": {
+              "commandType": {
+                "description": "Gets the type of the command.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CommandType"
+                  }
+                ]
+              },
               "id": {
                 "type": "string",
                 "description": "Gets or sets the identifier of the object.",
@@ -1710,11 +1730,10 @@
       "BaseProcessCommandOfTaskModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/BaseTaskCommand"
+            "$ref": "#/components/schemas/BaseCommand"
           },
           {
             "type": "object",
-            "x-abstract": true,
             "additionalProperties": false,
             "properties": {
               "desiredSize": {
@@ -1757,6 +1776,14 @@
             "description": "A command containing information needed to process paths (directory, file, url, etc.).",
             "additionalProperties": false,
             "properties": {
+              "commandType": {
+                "description": "Gets the type of the command.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CommandType"
+                  }
+                ]
+              },
               "sourcePath": {
                 "type": "string",
                 "description": "Gets or sets the source path.",
@@ -1776,27 +1803,11 @@
           }
         ]
       },
-      "ResultModel": {
+      "BaseResultModel": {
         "type": "object",
-        "description": "A model containing information about the result of the processing.",
-        "x-abstract": true,
+        "description": "The base all results have in common.",
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Gets or sets the identifier.",
-            "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "description": "Gets or sets the created date.",
-            "format": "date-time"
-          },
-          "modifiedDate": {
-            "type": "string",
-            "description": "Gets or sets the modified date.",
-            "format": "date-time"
-          },
           "resultType": {
             "description": "Gets the type of the result.",
             "oneOf": [
@@ -1804,16 +1815,6 @@
                 "$ref": "#/components/schemas/ResultType"
               }
             ]
-          },
-          "version": {
-            "type": "string",
-            "description": "Gets or sets the application version.",
-            "nullable": true
-          },
-          "jsonFilename": {
-            "type": "string",
-            "description": "Gets or sets the JSON filename.",
-            "nullable": true
           }
         }
       },
@@ -1840,12 +1841,7 @@
             "additionalProperties": false,
             "properties": {
               "resultType": {
-                "description": "Gets the type of the result.",
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ResultType"
-                  }
-                ]
+                "$ref": "#/components/schemas/ResultType"
               },
               "labelCount": {
                 "type": "integer",
@@ -1905,6 +1901,45 @@
             "nullable": true
           }
         }
+      },
+      "ResultModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResultModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the result of the processing.",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Gets or sets the identifier.",
+                "nullable": true
+              },
+              "createdDate": {
+                "type": "string",
+                "description": "Gets or sets the created date.",
+                "format": "date-time"
+              },
+              "modifiedDate": {
+                "type": "string",
+                "description": "Gets or sets the modified date.",
+                "format": "date-time"
+              },
+              "version": {
+                "type": "string",
+                "description": "Gets or sets the application version.",
+                "nullable": true
+              },
+              "jsonFilename": {
+                "type": "string",
+                "description": "Gets or sets the JSON filename.",
+                "nullable": true
+              }
+            }
+          }
+        ]
       },
       "PaginationModel": {
         "type": "object",

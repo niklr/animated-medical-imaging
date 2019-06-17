@@ -56,14 +56,17 @@ namespace AMI.Core.Workers
                 await UpdateStatus(item, Domain.Enums.TaskStatus.Processing, string.Empty, ct);
                 await UpdatePositionsAsync();
 
-                switch (item.CommandType)
+                if (item.Command != null)
                 {
-                    case CommandType.ProcessObjectAsyncCommand:
-                        await ProcessObjectAsync(item, ct);
-                        break;
-                    default:
-                        await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
-                        break;
+                    switch (item.Command.CommandType)
+                    {
+                        case CommandType.ProcessObjectAsyncCommand:
+                            await ProcessObjectAsync(item, ct);
+                            break;
+                        default:
+                            await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
+                            break;
+                    }
                 }
 
                 StopWatch();

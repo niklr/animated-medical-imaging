@@ -11,7 +11,7 @@ namespace AMI.Core.Entities.Shared.Commands
     /// </summary>
     /// <typeparam name="T">The type of the response.</typeparam>
     [Serializable]
-    public abstract class BaseProcessCommand<T> : BaseTaskCommand, IRequest<T>
+    public abstract class BaseProcessCommand<T> : BaseCommand, IRequest<T>
     {
         /// <summary>
         /// Gets or sets the desired size of the processed images.

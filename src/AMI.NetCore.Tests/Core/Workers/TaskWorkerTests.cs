@@ -36,7 +36,7 @@ namespace AMI.NetCore.Tests.Core.Workers
             // Assert
             Assert.IsNotNull(result1);
             Assert.AreEqual(TaskStatus.Queued, result1.Status);
-            Assert.AreEqual(CommandType.ProcessObjectAsyncCommand, result1.CommandType);
+            Assert.AreEqual(CommandType.ProcessObjectAsyncCommand, result1.Command.CommandType);
             Assert.AreEqual(WorkerStatus.Terminated, worker.WorkerStatus);
             Assert.IsNotNull(result2);
             Assert.AreEqual(TaskStatus.Failed, (TaskStatus)result2.Status);

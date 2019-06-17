@@ -48,19 +48,14 @@ namespace AMI.Core.Entities.Models
         public int Progress { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the command used to create this task.
-        /// </summary>
-        public CommandType CommandType { get; set; }
-
-        /// <summary>
         /// Gets or sets the command used to create this task.
         /// </summary>
-        public BaseTaskCommand Command { get; set; }
+        public BaseCommand Command { get; set; }
 
         /// <summary>
         /// Gets or sets the result associated with this task.
         /// </summary>
-        public ResultModel Result { get; set; }
+        public BaseResultModel Result { get; set; }
 
         /// <summary>
         /// Gets or sets the object associated with this task.
@@ -88,17 +83,19 @@ namespace AMI.Core.Entities.Models
                 Status = Enum.TryParse(entity.Status.ToString(), out TaskStatus status) ? status : TaskStatus.Created,
                 Message = entity.Message,
                 Position = entity.Position,
-                Progress = entity.Progress,
-                CommandType = Enum.TryParse(entity.CommandType.ToString(), out CommandType commandType) ? commandType : CommandType.Unknown
+                Progress = entity.Progress
             };
 
-            switch (model.CommandType)
+            if (Enum.TryParse(entity.CommandType.ToString(), out CommandType commandType))
             {
-                case CommandType.ProcessObjectAsyncCommand:
-                    model.Command = serializer.Deserialize<ProcessObjectAsyncCommand>(entity.CommandSerialized);
-                    break;
-                default:
-                    break;
+                switch (commandType)
+                {
+                    case CommandType.ProcessObjectAsyncCommand:
+                        model.Command = serializer.Deserialize<ProcessObjectAsyncCommand>(entity.CommandSerialized);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             return model;

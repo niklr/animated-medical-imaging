@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
@@ -9,8 +8,7 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model containing information about the result of the processing.
     /// </summary>
-    [KnownType(typeof(ProcessResultModel))]
-    public abstract class ResultModel
+    public abstract class ResultModel : BaseResultModel
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -26,17 +24,6 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the modified date.
         /// </summary>
         public DateTime ModifiedDate { get; set; }
-
-        /// <summary>
-        /// Gets the type of the result.
-        /// </summary>
-        public virtual ResultType ResultType
-        {
-            get
-            {
-                return ResultType.Unknown;
-            }
-        }
 
         /// <summary>
         /// Gets or sets the application version.

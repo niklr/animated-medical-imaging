@@ -1376,12 +1376,10 @@ export class TaskModel implements ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
-    /** Gets or sets the type of the command used to create this task. */
-    commandType?: CommandType;
     /** Gets or sets the command used to create this task. */
-    command?: BaseTaskCommand | undefined;
+    command?: BaseCommand | undefined;
     /** Gets or sets the result associated with this task. */
-    result?: ResultModel | undefined;
+    result?: BaseResultModel | undefined;
     /** Gets or sets the object associated with this task. */
     object?: ObjectModel | undefined;
 
@@ -1403,9 +1401,8 @@ export class TaskModel implements ITaskModel {
             this.message = data["message"];
             this.position = data["position"];
             this.progress = data["progress"];
-            this.commandType = data["commandType"];
-            this.command = data["command"] ? BaseTaskCommand.fromJS(data["command"]) : <any>undefined;
-            this.result = data["result"] ? ResultModel.fromJS(data["result"]) : <any>undefined;
+            this.command = data["command"] ? BaseCommand.fromJS(data["command"]) : <any>undefined;
+            this.result = data["result"] ? BaseResultModel.fromJS(data["result"]) : <any>undefined;
             this.object = data["object"] ? ObjectModel.fromJS(data["object"]) : <any>undefined;
         }
     }
@@ -1426,7 +1423,6 @@ export class TaskModel implements ITaskModel {
         data["message"] = this.message;
         data["position"] = this.position;
         data["progress"] = this.progress;
-        data["commandType"] = this.commandType;
         data["command"] = this.command ? this.command.toJSON() : <any>undefined;
         data["result"] = this.result ? this.result.toJSON() : <any>undefined;
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
@@ -1450,12 +1446,10 @@ export interface ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
-    /** Gets or sets the type of the command used to create this task. */
-    commandType?: CommandType;
     /** Gets or sets the command used to create this task. */
-    command?: BaseTaskCommand | undefined;
+    command?: BaseCommand | undefined;
     /** Gets or sets the result associated with this task. */
-    result?: ResultModel | undefined;
+    result?: BaseResultModel | undefined;
     /** Gets or sets the object associated with this task. */
     object?: ObjectModel | undefined;
 }
@@ -1470,16 +1464,12 @@ export enum TaskStatus {
     Finished = 5, 
 }
 
-/** A type to describe the command. */
-export enum CommandType {
-    Unknown = 0, 
-    ProcessObjectAsyncCommand = 1, 
-}
+/** The base all commands have in common. */
+export class BaseCommand implements IBaseCommand {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
 
-/** A command containing information used to create a task. */
-export abstract class BaseTaskCommand implements IBaseTaskCommand {
-
-    constructor(data?: IBaseTaskCommand) {
+    constructor(data?: IBaseCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1489,24 +1479,40 @@ export abstract class BaseTaskCommand implements IBaseTaskCommand {
     }
 
     init(data?: any) {
+        if (data) {
+            this.commandType = data["commandType"];
+        }
     }
 
-    static fromJS(data: any): BaseTaskCommand {
+    static fromJS(data: any): BaseCommand {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseTaskCommand' cannot be instantiated.");
+        let result = new BaseCommand();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["commandType"] = this.commandType;
         return data; 
     }
 }
 
-/** A command containing information used to create a task. */
-export interface IBaseTaskCommand {
+/** The base all commands have in common. */
+export interface IBaseCommand {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
 }
 
-export abstract class BaseProcessCommandOfProcessResultModel extends BaseTaskCommand implements IBaseProcessCommandOfProcessResultModel {
+/** A type to describe the command. */
+export enum CommandType {
+    Unknown = 0, 
+    ProcessPathCommand = 1, 
+    ProcessObjectCommand = 2, 
+    ProcessObjectAsyncCommand = 3, 
+}
+
+export class BaseProcessCommandOfProcessResultModel extends BaseCommand implements IBaseProcessCommandOfProcessResultModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1538,7 +1544,9 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseTaskCom
 
     static fromJS(data: any): BaseProcessCommandOfProcessResultModel {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseProcessCommandOfProcessResultModel' cannot be instantiated.");
+        let result = new BaseProcessCommandOfProcessResultModel();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
@@ -1559,7 +1567,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseTaskCom
     }
 }
 
-export interface IBaseProcessCommandOfProcessResultModel extends IBaseTaskCommand {
+export interface IBaseProcessCommandOfProcessResultModel extends IBaseCommand {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1571,6 +1579,8 @@ export interface IBaseProcessCommandOfProcessResultModel extends IBaseTaskComman
 
 /** A command containing information needed to process objects. */
 export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel implements IProcessObjectCommand {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 
@@ -1581,6 +1591,7 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
     init(data?: any) {
         super.init(data);
         if (data) {
+            this.commandType = data["commandType"];
             this.id = data["id"];
         }
     }
@@ -1594,6 +1605,7 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["commandType"] = this.commandType;
         data["id"] = this.id;
         super.toJSON(data);
         return data; 
@@ -1602,6 +1614,8 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
 
 /** A command containing information needed to process objects. */
 export interface IProcessObjectCommand extends IBaseProcessCommandOfProcessResultModel {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 }
@@ -1632,7 +1646,7 @@ export enum BezierEasingType {
     EaseInOutQuart = 7, 
 }
 
-export abstract class BaseProcessCommandOfTaskModel extends BaseTaskCommand implements IBaseProcessCommandOfTaskModel {
+export class BaseProcessCommandOfTaskModel extends BaseCommand implements IBaseProcessCommandOfTaskModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1664,7 +1678,9 @@ export abstract class BaseProcessCommandOfTaskModel extends BaseTaskCommand impl
 
     static fromJS(data: any): BaseProcessCommandOfTaskModel {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
+        let result = new BaseProcessCommandOfTaskModel();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
@@ -1685,7 +1701,7 @@ export abstract class BaseProcessCommandOfTaskModel extends BaseTaskCommand impl
     }
 }
 
-export interface IBaseProcessCommandOfTaskModel extends IBaseTaskCommand {
+export interface IBaseProcessCommandOfTaskModel extends IBaseCommand {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1697,6 +1713,8 @@ export interface IBaseProcessCommandOfTaskModel extends IBaseTaskCommand {
 
 /** A command containing information needed to process objects. */
 export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel implements IProcessObjectAsyncCommand {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 
@@ -1707,6 +1725,7 @@ export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel imp
     init(data?: any) {
         super.init(data);
         if (data) {
+            this.commandType = data["commandType"];
             this.id = data["id"];
         }
     }
@@ -1720,6 +1739,7 @@ export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel imp
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["commandType"] = this.commandType;
         data["id"] = this.id;
         super.toJSON(data);
         return data; 
@@ -1728,12 +1748,16 @@ export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel imp
 
 /** A command containing information needed to process objects. */
 export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfTaskModel {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
 }
 
 /** A command containing information needed to process paths (directory, file, url, etc.). */
 export class ProcessPathCommand extends BaseProcessCommandOfProcessResultModel implements IProcessPathCommand {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
     /** Gets or sets the source path. */
     sourcePath?: string | undefined;
     /** Gets or sets the source path of the watermark. */
@@ -1748,6 +1772,7 @@ export class ProcessPathCommand extends BaseProcessCommandOfProcessResultModel i
     init(data?: any) {
         super.init(data);
         if (data) {
+            this.commandType = data["commandType"];
             this.sourcePath = data["sourcePath"];
             this.watermarkSourcePath = data["watermarkSourcePath"];
             this.destinationPath = data["destinationPath"];
@@ -1763,6 +1788,7 @@ export class ProcessPathCommand extends BaseProcessCommandOfProcessResultModel i
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["commandType"] = this.commandType;
         data["sourcePath"] = this.sourcePath;
         data["watermarkSourcePath"] = this.watermarkSourcePath;
         data["destinationPath"] = this.destinationPath;
@@ -1773,6 +1799,8 @@ export class ProcessPathCommand extends BaseProcessCommandOfProcessResultModel i
 
 /** A command containing information needed to process paths (directory, file, url, etc.). */
 export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultModel {
+    /** Gets the type of the command. */
+    commandType?: CommandType;
     /** Gets or sets the source path. */
     sourcePath?: string | undefined;
     /** Gets or sets the source path of the watermark. */
@@ -1781,22 +1809,12 @@ export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultM
     destinationPath?: string | undefined;
 }
 
-/** A model containing information about the result of the processing. */
-export abstract class ResultModel implements IResultModel {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
-    /** Gets or sets the created date. */
-    createdDate?: Date;
-    /** Gets or sets the modified date. */
-    modifiedDate?: Date;
+/** The base all results have in common. */
+export class BaseResultModel implements IBaseResultModel {
     /** Gets the type of the result. */
     resultType?: ResultType;
-    /** Gets or sets the application version. */
-    version?: string | undefined;
-    /** Gets or sets the JSON filename. */
-    jsonFilename?: string | undefined;
 
-    constructor(data?: IResultModel) {
+    constructor(data?: IBaseResultModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1807,46 +1825,28 @@ export abstract class ResultModel implements IResultModel {
 
     init(data?: any) {
         if (data) {
-            this.id = data["id"];
-            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
-            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
             this.resultType = data["resultType"];
-            this.version = data["version"];
-            this.jsonFilename = data["jsonFilename"];
         }
     }
 
-    static fromJS(data: any): ResultModel {
+    static fromJS(data: any): BaseResultModel {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'ResultModel' cannot be instantiated.");
+        let result = new BaseResultModel();
+        result.init(data);
+        return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
-        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
         data["resultType"] = this.resultType;
-        data["version"] = this.version;
-        data["jsonFilename"] = this.jsonFilename;
         return data; 
     }
 }
 
-/** A model containing information about the result of the processing. */
-export interface IResultModel {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
-    /** Gets or sets the created date. */
-    createdDate?: Date;
-    /** Gets or sets the modified date. */
-    modifiedDate?: Date;
+/** The base all results have in common. */
+export interface IBaseResultModel {
     /** Gets the type of the result. */
     resultType?: ResultType;
-    /** Gets or sets the application version. */
-    version?: string | undefined;
-    /** Gets or sets the JSON filename. */
-    jsonFilename?: string | undefined;
 }
 
 /** A type to describe the command. */
@@ -1855,9 +1855,69 @@ export enum ResultType {
     ProcessResult = 1, 
 }
 
+/** A model containing information about the result of the processing. */
+export class ResultModel extends BaseResultModel implements IResultModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the application version. */
+    version?: string | undefined;
+    /** Gets or sets the JSON filename. */
+    jsonFilename?: string | undefined;
+
+    constructor(data?: IResultModel) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.id = data["id"];
+            this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
+            this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
+            this.version = data["version"];
+            this.jsonFilename = data["jsonFilename"];
+        }
+    }
+
+    static fromJS(data: any): ResultModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResultModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["version"] = this.version;
+        data["jsonFilename"] = this.jsonFilename;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A model containing information about the result of the processing. */
+export interface IResultModel extends IBaseResultModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+    /** Gets or sets the created date. */
+    createdDate?: Date;
+    /** Gets or sets the modified date. */
+    modifiedDate?: Date;
+    /** Gets or sets the application version. */
+    version?: string | undefined;
+    /** Gets or sets the JSON filename. */
+    jsonFilename?: string | undefined;
+}
+
 /** A model containing information about the result of the image processing. */
 export class ProcessResultModel extends ResultModel implements IProcessResultModel {
-    /** Gets the type of the result. */
     resultType?: ResultType;
     /** Gets or sets the label count. */
     labelCount?: number;
@@ -1920,7 +1980,6 @@ export class ProcessResultModel extends ResultModel implements IProcessResultMod
 
 /** A model containing information about the result of the image processing. */
 export interface IProcessResultModel extends IResultModel {
-    /** Gets the type of the result. */
     resultType?: ResultType;
     /** Gets or sets the label count. */
     labelCount?: number;

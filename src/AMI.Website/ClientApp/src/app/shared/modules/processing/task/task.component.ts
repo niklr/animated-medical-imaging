@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { GuidUtil, MomentUtil } from '../../../../utils';
-import { TaskStatus } from '../../../../clients/ami-api-client';
+import { MomentUtil } from '../../../../utils';
+import { TaskStatus, TaskModel, ProcessObjectAsyncCommand } from '../../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-task',
@@ -8,10 +8,9 @@ import { TaskStatus } from '../../../../clients/ami-api-client';
 })
 export class TaskComponent implements OnInit, AfterViewInit {
 
-  @Input() task: any;
+  @Input() task: TaskModel;
 
-  constructor(private guidUtil: GuidUtil, public momentUtil: MomentUtil) {
-
+  constructor(public momentUtil: MomentUtil) {
   }
 
   ngOnInit() {
@@ -19,6 +18,9 @@ export class TaskComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMaterialize();
+    console.log(this.task);
+    let asdf = this.task.command as ProcessObjectAsyncCommand;
+    console.log(asdf);
   }
 
   private initMaterialize(): void {
