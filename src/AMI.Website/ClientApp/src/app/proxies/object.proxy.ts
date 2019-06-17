@@ -15,11 +15,11 @@ export class ObjectProxy extends BaseProxy {
     super();
   }
 
-  public getObjects(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfObjectModel | null> {
+  public getObjects(page: number, limit: number): Observable<PaginationResultModelOfObjectModel> {
     return this.objectsClient.getPaginated(page, limit);
   }
 
-  public processObject(id: string, command: ProcessObjectAsyncCommand): Observable<TaskModel | null> {
+  public processObject(id: string, command: ProcessObjectAsyncCommand): Observable<TaskModel> {
     return this.objectsClient.process(id, command);
   }
 }
