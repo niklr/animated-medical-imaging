@@ -1465,9 +1465,9 @@ export enum TaskStatus {
 }
 
 /** The base all commands have in common. */
-export class BaseCommand implements IBaseCommand {
-    /** Gets the type of the command. */
-    commandType?: CommandType;
+export abstract class BaseCommand implements IBaseCommand {
+
+    protected _discriminator: string;
 
     constructor(data?: IBaseCommand) {
         if (data) {
@@ -1476,43 +1476,50 @@ export class BaseCommand implements IBaseCommand {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+        this._discriminator = "BaseCommand";
     }
 
     init(data?: any) {
-        if (data) {
-            this.commandType = data["commandType"];
-        }
     }
 
     static fromJS(data: any): BaseCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new BaseCommand();
-        result.init(data);
-        return result;
+        if (data["discriminator"] === "BaseProcessCommand`1") {
+            throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
+        }
+        if (data["discriminator"] === "ProcessObjectCommand") {
+            let result = new ProcessObjectCommand();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "BaseProcessCommandOfProcessResultModel") {
+            throw new Error("The abstract class 'BaseProcessCommandOfProcessResultModel' cannot be instantiated.");
+        }
+        if (data["discriminator"] === "ProcessObjectAsyncCommand") {
+            let result = new ProcessObjectAsyncCommand();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "ProcessPathCommand") {
+            let result = new ProcessPathCommand();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'BaseCommand' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["commandType"] = this.commandType;
+        data["discriminator"] = this._discriminator; 
         return data; 
     }
 }
 
 /** The base all commands have in common. */
 export interface IBaseCommand {
-    /** Gets the type of the command. */
-    commandType?: CommandType;
 }
 
-/** A type to describe the command. */
-export enum CommandType {
-    Unknown = 0, 
-    ProcessPathCommand = 1, 
-    ProcessObjectCommand = 2, 
-    ProcessObjectAsyncCommand = 3, 
-}
-
-export class BaseProcessCommandOfProcessResultModel extends BaseCommand implements IBaseProcessCommandOfProcessResultModel {
+export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand implements IBaseProcessCommandOfProcessResultModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1523,6 +1530,7 @@ export class BaseProcessCommandOfProcessResultModel extends BaseCommand implemen
 
     constructor(data?: IBaseProcessCommandOfProcessResultModel) {
         super(data);
+        this._discriminator = "BaseProcessCommandOfProcessResultModel";
     }
 
     init(data?: any) {
@@ -1544,9 +1552,17 @@ export class BaseProcessCommandOfProcessResultModel extends BaseCommand implemen
 
     static fromJS(data: any): BaseProcessCommandOfProcessResultModel {
         data = typeof data === 'object' ? data : {};
-        let result = new BaseProcessCommandOfProcessResultModel();
-        result.init(data);
-        return result;
+        if (data["discriminator"] === "ProcessObjectCommand") {
+            let result = new ProcessObjectCommand();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "ProcessPathCommand") {
+            let result = new ProcessPathCommand();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'BaseProcessCommandOfProcessResultModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -1586,6 +1602,7 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
 
     constructor(data?: IProcessObjectCommand) {
         super(data);
+        this._discriminator = "ProcessObjectCommand";
     }
 
     init(data?: any) {
@@ -1620,6 +1637,14 @@ export interface IProcessObjectCommand extends IBaseProcessCommandOfProcessResul
     id?: string | undefined;
 }
 
+/** A type to describe the command. */
+export enum CommandType {
+    Unknown = 0, 
+    ProcessPathCommand = 1, 
+    ProcessObjectCommand = 2, 
+    ProcessObjectAsyncCommand = 3, 
+}
+
 /** The different axis types of the coordinate system. */
 export enum AxisType {
     X = 0, 
@@ -1646,7 +1671,7 @@ export enum BezierEasingType {
     EaseInOutQuart = 7, 
 }
 
-export class BaseProcessCommandOfTaskModel extends BaseCommand implements IBaseProcessCommandOfTaskModel {
+export abstract class BaseProcessCommandOfTaskModel extends BaseCommand implements IBaseProcessCommandOfTaskModel {
     desiredSize?: number | undefined;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
@@ -1657,6 +1682,7 @@ export class BaseProcessCommandOfTaskModel extends BaseCommand implements IBaseP
 
     constructor(data?: IBaseProcessCommandOfTaskModel) {
         super(data);
+        this._discriminator = "BaseProcessCommandOfTaskModel";
     }
 
     init(data?: any) {
@@ -1678,9 +1704,12 @@ export class BaseProcessCommandOfTaskModel extends BaseCommand implements IBaseP
 
     static fromJS(data: any): BaseProcessCommandOfTaskModel {
         data = typeof data === 'object' ? data : {};
-        let result = new BaseProcessCommandOfTaskModel();
-        result.init(data);
-        return result;
+        if (data["discriminator"] === "ProcessObjectAsyncCommand") {
+            let result = new ProcessObjectAsyncCommand();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -1720,6 +1749,7 @@ export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel imp
 
     constructor(data?: IProcessObjectAsyncCommand) {
         super(data);
+        this._discriminator = "ProcessObjectAsyncCommand";
     }
 
     init(data?: any) {
@@ -1767,6 +1797,7 @@ export class ProcessPathCommand extends BaseProcessCommandOfProcessResultModel i
 
     constructor(data?: IProcessPathCommand) {
         super(data);
+        this._discriminator = "ProcessPathCommand";
     }
 
     init(data?: any) {
@@ -1810,9 +1841,9 @@ export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultM
 }
 
 /** The base all results have in common. */
-export class BaseResultModel implements IBaseResultModel {
-    /** Gets the type of the result. */
-    resultType?: ResultType;
+export abstract class BaseResultModel implements IBaseResultModel {
+
+    protected _discriminator: string;
 
     constructor(data?: IBaseResultModel) {
         if (data) {
@@ -1821,42 +1852,38 @@ export class BaseResultModel implements IBaseResultModel {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+        this._discriminator = "BaseResultModel";
     }
 
     init(data?: any) {
-        if (data) {
-            this.resultType = data["resultType"];
-        }
     }
 
     static fromJS(data: any): BaseResultModel {
         data = typeof data === 'object' ? data : {};
-        let result = new BaseResultModel();
-        result.init(data);
-        return result;
+        if (data["discriminator"] === "ResultModel") {
+            throw new Error("The abstract class 'ResultModel' cannot be instantiated.");
+        }
+        if (data["discriminator"] === "ProcessResultModel") {
+            let result = new ProcessResultModel();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'BaseResultModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["resultType"] = this.resultType;
+        data["discriminator"] = this._discriminator; 
         return data; 
     }
 }
 
 /** The base all results have in common. */
 export interface IBaseResultModel {
-    /** Gets the type of the result. */
-    resultType?: ResultType;
-}
-
-/** A type to describe the command. */
-export enum ResultType {
-    Unknown = 0, 
-    ProcessResult = 1, 
 }
 
 /** A model containing information about the result of the processing. */
-export class ResultModel extends BaseResultModel implements IResultModel {
+export abstract class ResultModel extends BaseResultModel implements IResultModel {
     /** Gets or sets the identifier. */
     id?: string | undefined;
     /** Gets or sets the created date. */
@@ -1870,6 +1897,7 @@ export class ResultModel extends BaseResultModel implements IResultModel {
 
     constructor(data?: IResultModel) {
         super(data);
+        this._discriminator = "ResultModel";
     }
 
     init(data?: any) {
@@ -1885,9 +1913,12 @@ export class ResultModel extends BaseResultModel implements IResultModel {
 
     static fromJS(data: any): ResultModel {
         data = typeof data === 'object' ? data : {};
-        let result = new ResultModel();
-        result.init(data);
-        return result;
+        if (data["discriminator"] === "ProcessResultModel") {
+            let result = new ProcessResultModel();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'ResultModel' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -1930,6 +1961,7 @@ export class ProcessResultModel extends ResultModel implements IProcessResultMod
 
     constructor(data?: IProcessResultModel) {
         super(data);
+        this._discriminator = "ProcessResultModel";
     }
 
     init(data?: any) {
@@ -1989,6 +2021,12 @@ export interface IProcessResultModel extends IResultModel {
     gifs?: AxisContainerModelOfString[] | undefined;
     /** Gets or sets the combined GIF. */
     combinedGif?: string | undefined;
+}
+
+/** A type to describe the command. */
+export enum ResultType {
+    Unknown = 0, 
+    ProcessResult = 1, 
 }
 
 export class AxisContainerModelOfString implements IAxisContainerModelOfString {

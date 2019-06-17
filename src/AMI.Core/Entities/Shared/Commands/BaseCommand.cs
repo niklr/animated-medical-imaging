@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using AMI.Core.Converters;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
 using AMI.Domain.Enums;
+using Newtonsoft.Json;
 
 namespace AMI.Core.Entities.Shared.Commands
 {
@@ -11,6 +13,7 @@ namespace AMI.Core.Entities.Shared.Commands
     /// The base all commands have in common.
     /// </summary>
     [Serializable]
+    [JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
     [KnownType(typeof(ProcessObjectCommand))]
     [KnownType(typeof(ProcessObjectAsyncCommand))]
     [KnownType(typeof(ProcessPathCommand))]

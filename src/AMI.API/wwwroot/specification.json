@@ -1228,34 +1228,26 @@
       },
       "BaseCommand": {
         "type": "object",
+        "discriminator": {
+          "propertyName": "discriminator",
+          "mapping": {
+            "BaseProcessCommand`1": "#/components/schemas/BaseProcessCommandOfTaskModel",
+            "ProcessObjectCommand": "#/components/schemas/ProcessObjectCommand",
+            "ProcessObjectAsyncCommand": "#/components/schemas/ProcessObjectAsyncCommand",
+            "ProcessPathCommand": "#/components/schemas/ProcessPathCommand"
+          }
+        },
         "description": "The base all commands have in common.",
+        "x-abstract": true,
         "additionalProperties": false,
+        "required": [
+          "discriminator"
+        ],
         "properties": {
-          "commandType": {
-            "description": "Gets the type of the command.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CommandType"
-              }
-            ]
+          "discriminator": {
+            "type": "string"
           }
         }
-      },
-      "CommandType": {
-        "type": "integer",
-        "description": "A type to describe the command.",
-        "x-enumNames": [
-          "Unknown",
-          "ProcessPathCommand",
-          "ProcessObjectCommand",
-          "ProcessObjectAsyncCommand"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
       },
       "ProcessObjectCommand": {
         "allOf": [
@@ -1284,6 +1276,22 @@
           }
         ]
       },
+      "CommandType": {
+        "type": "integer",
+        "description": "A type to describe the command.",
+        "x-enumNames": [
+          "Unknown",
+          "ProcessPathCommand",
+          "ProcessObjectCommand",
+          "ProcessObjectAsyncCommand"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
       "BaseProcessCommandOfProcessResultModel": {
         "allOf": [
           {
@@ -1291,6 +1299,7 @@
           },
           {
             "type": "object",
+            "x-abstract": true,
             "additionalProperties": false,
             "properties": {
               "desiredSize": {
@@ -1409,6 +1418,7 @@
           },
           {
             "type": "object",
+            "x-abstract": true,
             "additionalProperties": false,
             "properties": {
               "desiredSize": {
@@ -1480,30 +1490,24 @@
       },
       "BaseResultModel": {
         "type": "object",
+        "discriminator": {
+          "propertyName": "discriminator",
+          "mapping": {
+            "ResultModel": "#/components/schemas/ResultModel",
+            "ProcessResultModel": "#/components/schemas/ProcessResultModel"
+          }
+        },
         "description": "The base all results have in common.",
+        "x-abstract": true,
         "additionalProperties": false,
+        "required": [
+          "discriminator"
+        ],
         "properties": {
-          "resultType": {
-            "description": "Gets the type of the result.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ResultType"
-              }
-            ]
+          "discriminator": {
+            "type": "string"
           }
         }
-      },
-      "ResultType": {
-        "type": "integer",
-        "description": "A type to describe the command.",
-        "x-enumNames": [
-          "Unknown",
-          "ProcessResult"
-        ],
-        "enum": [
-          0,
-          1
-        ]
       },
       "ProcessResultModel": {
         "allOf": [
@@ -1548,6 +1552,18 @@
           }
         ]
       },
+      "ResultType": {
+        "type": "integer",
+        "description": "A type to describe the command.",
+        "x-enumNames": [
+          "Unknown",
+          "ProcessResult"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
       "PositionAxisContainerModelOfString": {
         "allOf": [
           {
@@ -1585,6 +1601,7 @@
           {
             "type": "object",
             "description": "A model containing information about the result of the processing.",
+            "x-abstract": true,
             "additionalProperties": false,
             "properties": {
               "id": {
