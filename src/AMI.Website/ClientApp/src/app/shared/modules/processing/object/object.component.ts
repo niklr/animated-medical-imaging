@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { ObjectModelExtended } from '../../../../models/object-extended.model';
 import { ObjectProxy } from '../../../../proxies/object.proxy';
 import { NotificationService } from '../../../../services/notification.service';
 import { ObjectStore } from '../../../../stores/object.store';
 import { GuidUtil, MomentUtil } from '../../../../utils';
-import { ObjectModel } from '../../../../clients/ami-api-client';
 
 @Component({
   selector: '[app-processing-object]',
@@ -11,7 +11,7 @@ import { ObjectModel } from '../../../../clients/ami-api-client';
 })
 export class ObjectComponent implements OnInit, AfterViewInit {
 
-  @Input() object: ObjectModel;
+  @Input() object: ObjectModelExtended;
 
   public dropdownButtonGuid: string;
   public dropdownTargetGuid: string;

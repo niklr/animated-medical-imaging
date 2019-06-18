@@ -21,14 +21,14 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.setAxisTypes();
   }
 
   ngAfterViewInit(): void {
     M.updateTextFields();
   }
 
-  toggleAxisTypeContainer(axisTypeContainer: AxisTypeContainer, $event) {
-    axisTypeContainer.checked = !axisTypeContainer.checked;
+  public setAxisTypes(): void {
     this.settings.axisTypes = [];
     for (var i = 0; i < this.axisTypeContainers.length; i++) {
       var axisTypeContainer = this.axisTypeContainers[i];
@@ -36,6 +36,11 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         this.settings.axisTypes.push(axisTypeContainer.enum);
       }
     }
+  }
+
+  public toggleAxisTypeContainer(axisTypeContainer: AxisTypeContainer, $event) {
+    axisTypeContainer.checked = !axisTypeContainer.checked;
+    this.setAxisTypes();
   }
 }
 

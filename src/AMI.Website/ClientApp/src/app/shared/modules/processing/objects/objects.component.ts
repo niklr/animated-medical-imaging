@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PageEvent } from '../../../../events/page.event';
+import { ObjectModelExtended } from '../../../../models/object-extended.model';
 import { ObjectProxy } from '../../../../proxies/object.proxy';
 import { ObjectStore } from '../../../../stores/object.store';
 import { NotificationService } from '../../../../services/notification.service';
@@ -65,7 +66,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     var items = this.objectStore.getItems();
     if (items) {
       for (var i = 0; i < items.length; i++) {
-        var item: any = items[i];
+        var item = items[i];
         item.isChecked = true;
       }
     }
@@ -106,7 +107,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     });
 
     setTimeout(() => {
-      this.objectStore.setItems([object1, object2, object3]);
+      var items = [object1, object2, object3] as ObjectModelExtended[];
+      this.objectStore.setItems(items);
       this.afterInit();
     });
   }
@@ -157,10 +159,28 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public processSelected = (callbackFn) => {
+  public deleteSelectedObjects = (callbackFn) => {
     var items = this.objectStore.getItems();
     for (var i = 0; i < items.length; i++) {
-      var item: any = items[i];
+      var item = items[i];
+      if (item.isChecked) {
+        this.deleteObject(item.id);
+      }
+    }
+  }
+
+  public deleteObject(id: string): void {
+    this.objectProxy.deleteObject(id).subscribe(result => {
+      this.objectStore.deleteById(id);
+    }, error => {
+      this.notificationService.handleError(error);
+    });
+  }
+
+  public processSelectedObjects = (callbackFn) => {
+    var items = this.objectStore.getItems();
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
       if (item.isChecked) {
         this.processObject(item.id, callbackFn);
       }
@@ -186,7 +206,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     var items = this.objectStore.getItems();
     if (items) {
       for (var i = 0; i < items.length; i++) {
-        var item: any = items[i];
+        var item = items[i];
         item.isChecked = this.isChecked;
       }
     }
@@ -199,7 +219,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
       this.pageEvent.pageIndex = result.pagination.page;
       this.pageEvent.pageSize = result.pagination.limit;
       this.pageEvent.length = result.pagination.total;
-      this.objectStore.setItems(result.items);
+      this.objectStore.setItems(result.items as ObjectModelExtended[]);
       this.afterInit();
     }, error => {
       console.log(error);
