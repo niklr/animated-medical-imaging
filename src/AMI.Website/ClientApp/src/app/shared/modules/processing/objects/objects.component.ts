@@ -8,7 +8,6 @@ import {
   AxisType,
   ObjectModel,
   PositionAxisContainerModelOfString,
-  ProcessObjectAsyncCommand,
   ProcessResultModel,
   TaskModel,
   TaskStatus
@@ -38,7 +37,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         let that = this as ObjectsComponent;
         that.refresh();
         let result = JSON.parse(item.detail.message) as ObjectModel;
-        that.processObject(result.id);
+        that.processObject(result.id, undefined);
       } catch (e) { }
     }.bind(this));
   }
@@ -158,20 +157,25 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public processObject(id: string): void {
+  public processSelected = (callbackFn) => {
+    var items = this.objectStore.getItems();
+    for (var i = 0; i < items.length; i++) {
+      var item: any = items[i];
+      if (item.isChecked) {
+        this.processObject(item.id, callbackFn);
+      }
+    }
+  }
+
+  public processObject(id: string, callbackFn: Function): void {
     var settings = this.objectStore.settings;
-    var command = new ProcessObjectAsyncCommand({
-      amountPerAxis: settings.amountPerAxis,
-      axisTypes: settings.axisTypes,
-      bezierEasingTypeCombined: settings.bezierEasingTypeCombined,
-      bezierEasingTypePerAxis: settings.bezierEasingTypePerAxis,
-      desiredSize: settings.desiredSize,
-      grayscale: settings.grayscale,
-      id: id,
-      imageFormat: settings.imageFormat
-    });
-    this.objectProxy.processObject(id, command).subscribe(result => {
+    this.objectProxy.processObject(id, settings).subscribe(result => {
       this.refresh();
+      setTimeout(() => {
+        if (!!callbackFn && typeof callbackFn === 'function') {
+          callbackFn();
+        }
+      }, 2000);
     }, error => {
       this.notificationService.handleError(error);
     });

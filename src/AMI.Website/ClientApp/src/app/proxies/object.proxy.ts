@@ -5,6 +5,7 @@ import {
   ObjectModel,
   PaginationResultModelOfObjectModel,
   ProcessObjectAsyncCommand,
+  ProcessObjectCommand,
   TaskModel
 } from '../clients/ami-api-client';
 import { BaseProxy } from './base.proxy';
@@ -24,7 +25,17 @@ export class ObjectProxy extends BaseProxy {
     return this.objectsClient.deleteById(id);
   }
 
-  public processObject(id: string, command: ProcessObjectAsyncCommand): Observable<TaskModel> {
+  public processObject(id: string, settings: ProcessObjectCommand): Observable<TaskModel> {
+    var command = new ProcessObjectAsyncCommand({
+      amountPerAxis: settings.amountPerAxis,
+      axisTypes: settings.axisTypes,
+      bezierEasingTypeCombined: settings.bezierEasingTypeCombined,
+      bezierEasingTypePerAxis: settings.bezierEasingTypePerAxis,
+      desiredSize: settings.desiredSize,
+      grayscale: settings.grayscale,
+      id: id,
+      imageFormat: settings.imageFormat
+    });
     return this.objectsClient.process(id, command);
   }
 }

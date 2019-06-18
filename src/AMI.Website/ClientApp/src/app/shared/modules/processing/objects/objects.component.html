@@ -46,7 +46,7 @@
   </table>
   <div class="row mt-2 mb-0">
     <div class="col s12 m6 offset-m3">
-      <button class="btn waves-effect waves-light full-width custom-fas-btn">
+      <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn" [clickFn]="processSelected" appClickOnce>
         <i class="fas fa-rocket"></i> PROCESS
       </button>
     </div>
