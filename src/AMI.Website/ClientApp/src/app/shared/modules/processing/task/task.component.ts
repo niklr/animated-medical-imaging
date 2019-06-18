@@ -18,13 +18,14 @@ export class TaskComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMaterialize();
-    console.log(this.task);
-    let asdf = this.task.command as ProcessObjectAsyncCommand;
-    console.log(asdf);
   }
 
   private initMaterialize(): void {
 
+  }
+
+  public showSpinner(): boolean {
+    return this.task.status === TaskStatus.Queued || this.task.status === TaskStatus.Processing;
   }
 
   public displayTaskStatus(status: TaskStatus): string {

@@ -1,9 +1,7 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import {
   AxisType,
-  AxisContainerModelOfString,
-  ProcessResultModel,
-  PositionAxisContainerModelOfString
+  ProcessResultModel
 } from '../../../../clients/ami-api-client';
 
 @Component({
@@ -12,18 +10,20 @@ import {
 })
 export class ResultComponent implements OnInit, AfterViewInit {
 
-  result: ProcessResultModel = new ProcessResultModel();
+  @Input() result: ProcessResultModel;
+  
   extendedResult: any = {};
 
   constructor() {
-    this.initDemoResult();
-    this.initExtendedResult();
   }
 
   ngOnInit() {
   }
 
   ngAfterViewInit(): void {
+    if (this.result) {
+      this.initExtendedResult();
+    }
     this.initMaterialbox();
   }
 
@@ -36,75 +36,39 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   private initExtendedResult(): void {
-    // X-Axis
-    this.extendedResult.xAxisGif = this.result.gifs.filter((value) => {
-      return value.axisType === AxisType.X;
-    }).shift();
-    this.extendedResult.xAxisImages = this.result.images.filter((value) => {
-      return value.axisType === AxisType.X;
-    });
+    var extendedResult: any = {};
+    // Filter gifs
+    if (this.result.gifs) {
+      extendedResult.xAxisGif = this.result.gifs.filter((value) => {
+        return value.axisType === AxisType.X;
+      }).shift();
+      extendedResult.yAxisGif = this.result.gifs.filter((value) => {
+        return value.axisType === AxisType.Y;
+      }).shift();
+      extendedResult.zAxisGif = this.result.gifs.filter((value) => {
+        return value.axisType === AxisType.Z;
+      }).shift();
+    }
 
-    // Y-Axis
-    this.extendedResult.yAxisGif = this.result.gifs.filter((value) => {
-      return value.axisType === AxisType.Y;
-    }).shift();
-    this.extendedResult.yAxisImages = this.result.images.filter((value) => {
-      return value.axisType === AxisType.Y;
-    });
-
-    // Z-Axis
-    this.extendedResult.zAxisGif = this.result.gifs.filter((value) => {
-      return value.axisType === AxisType.Z;
-    }).shift();
-    this.extendedResult.zAxisImages = this.result.images.filter((value) => {
-      return value.axisType === AxisType.Z;
-    });
+    // Filter images
+    if (this.result.images) {
+      extendedResult.xAxisImages = this.result.images.filter((value) => {
+        return value.axisType === AxisType.X;
+      });
+      extendedResult.yAxisImages = this.result.images.filter((value) => {
+        return value.axisType === AxisType.Y;
+      });
+      extendedResult.zAxisImages = this.result.images.filter((value) => {
+        return value.axisType === AxisType.Z;
+      });
+    }
 
     // Other
-    this.extendedResult.showCombinedGif = (this.extendedResult.xAxisGif ? 1 : 0)
-      + (this.extendedResult.yAxisGif ? 1 : 0) + (this.extendedResult.zAxisGif ? 1 : 0) > 1;
-  }
+    extendedResult.showCombinedGif = (extendedResult.xAxisGif ? 1 : 0)
+      + (extendedResult.yAxisGif ? 1 : 0) + (extendedResult.zAxisGif ? 1 : 0) > 1;
 
-  private initDemoResult(): void {
-    var example1 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/';
-    var example2 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/';
-    this.result.labelCount = 4;
-    this.result.combinedGif = example1 + 'Z.gif';
-    this.result.gifs = [
-      new AxisContainerModelOfString({
-        axisType: AxisType.X,
-        entity: example1 + 'Z.gif'
-      }),
-      new AxisContainerModelOfString({
-        axisType: AxisType.Y,
-        entity: example2 + 'Z.gif'
-      }),
-      new AxisContainerModelOfString({
-        axisType: AxisType.Z,
-        entity: example1 + 'Z.gif'
-      })
-    ];
-
-    this.result.images = [];
-
-    for (var i = 0; i < 10; i++) {
-      this.result.images.push(this.createDemoItem(AxisType.X, example1, i));
-    }
-
-    for (var i = 0; i < 10; i++) {
-      this.result.images.push(this.createDemoItem(AxisType.Y, example2, i));
-    }
-
-    for (var i = 0; i < 10; i++) {
-      this.result.images.push(this.createDemoItem(AxisType.Z, example1, i));
-    }
-  }
-
-  private createDemoItem(axisType: AxisType, basePath: string, position: number): PositionAxisContainerModelOfString {
-    return new PositionAxisContainerModelOfString({
-      axisType: axisType,
-      entity: basePath + 'Z_' + position + '.png',
-      position: position
+    setTimeout(() => {
+      this.extendedResult = extendedResult;
     });
   }
 }

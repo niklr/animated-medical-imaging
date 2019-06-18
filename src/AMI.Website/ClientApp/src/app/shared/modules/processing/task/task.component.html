@@ -12,23 +12,29 @@
         <dd>{{momentUtil.getLocalDate(task.modifiedDate)}} {{momentUtil.getLocalTime(task.modifiedDate)}}</dd>
         <dt>Status</dt>
         <dd>{{task.status}}</dd>
+      </dl>
+      <dl class="dl-horizontal" *ngIf="task.position > 0">
         <dt>Position</dt>
         <dd>{{task.position}}</dd>
       </dl>
     </blockquote>
   </div>
   <div class="col s4 valign-wrapper">
-    <div class="preloader-wrapper small active">
-      <div class="spinner-layer spinner-blue-only">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
+    <div *ngIf="showSpinner()">
+      <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<app-processing-result></app-processing-result>
+<div *ngIf="task.result">
+  <app-processing-result [result]="task.result"></app-processing-result>
+</div>

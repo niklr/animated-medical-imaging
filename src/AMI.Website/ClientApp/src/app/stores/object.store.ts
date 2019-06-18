@@ -28,6 +28,13 @@ export class ObjectStore {
     this.updateCount();
   }
 
+  public deleteById(id: string): void {
+    this.items = this.items.filter((item: ObjectModel) => {
+      return item.id !== id;
+    });
+    this.updateCount();
+  }
+
   public clear(): void {
     this.items.length = 0;
     this.updateCount();

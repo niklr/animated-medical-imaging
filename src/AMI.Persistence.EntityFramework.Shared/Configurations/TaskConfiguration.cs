@@ -27,7 +27,7 @@ namespace AMI.Persistence.InMemory.Configurations
             builder.HasOne(e => e.Object)
                 .WithMany(e => e.Tasks)
                 .HasForeignKey(e => e.ObjectId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Result)
                 .WithMany(e => e.Tasks)

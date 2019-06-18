@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Objects.Queries.GetById;
 using AMI.Core.Entities.Objects.Queries.GetObjects;
 using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
@@ -53,6 +54,19 @@ namespace AMI.API.Controllers
         public async Task<IActionResult> GetById(string id)
         {
             return Ok(await Mediator.Send(new GetByIdQuery { Id = id }, CancellationToken));
+        }
+
+        /// <summary>
+        /// Deletes the object with the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier of the object.</param>
+        /// <returns>No content.</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteById(string id)
+        {
+            await Mediator.Send(new DeleteObjectCommand { Id = id }, CancellationToken);
+            return NoContent();
         }
 
         /// <summary>

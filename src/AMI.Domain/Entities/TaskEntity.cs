@@ -55,7 +55,7 @@ namespace AMI.Domain.Entities
         /// <summary>
         /// Gets or sets the object identifier.
         /// </summary>
-        public Guid ObjectId { get; set; }
+        public Guid? ObjectId { get; set; }
 
         /// <summary>
         /// Gets or sets the object.

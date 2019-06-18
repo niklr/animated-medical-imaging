@@ -3,7 +3,16 @@ import { PageEvent } from '../../../../events/page.event';
 import { ObjectProxy } from '../../../../proxies/object.proxy';
 import { ObjectStore } from '../../../../stores/object.store';
 import { NotificationService } from '../../../../services/notification.service';
-import { ObjectModel, TaskModel, TaskStatus, ProcessObjectAsyncCommand } from '../../../../clients/ami-api-client';
+import {
+  AxisContainerModelOfString,
+  AxisType,
+  ObjectModel,
+  PositionAxisContainerModelOfString,
+  ProcessObjectAsyncCommand,
+  ProcessResultModel,
+  TaskModel,
+  TaskStatus
+} from '../../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-objects',
@@ -11,13 +20,12 @@ import { ObjectModel, TaskModel, TaskStatus, ProcessObjectAsyncCommand } from '.
 })
 export class ObjectsComponent implements OnInit, AfterViewInit {
 
-  private isChecked: boolean = false;
-  public objects: ObjectModel[] = [];
+  private isChecked: boolean = true;
 
   // Paginator Output
   public pageEvent: PageEvent;
 
-  constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy, private objectStore: ObjectStore) {
+  constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy, public objectStore: ObjectStore) {
     this.pageEvent = new PageEvent();
     this.pageEvent.pageIndex = 1;
     this.pageEvent.pageSize = 50;
@@ -48,8 +56,20 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   }
 
   private init(): void {
-    this.initDemoObjects();
-    // this.setPage(this.pageEvent);
+    // this.initDemoObjects();
+    this.setPage(this.pageEvent);
+  }
+
+  private afterInit(): void {
+    this.initDropdown();
+    // Mark all objects as checked by default
+    var items = this.objectStore.getItems();
+    if (items) {
+      for (var i = 0; i < items.length; i++) {
+        var item: any = items[i];
+        item.isChecked = true;
+      }
+    }
   }
 
   private initDemoObjects(): void {
@@ -61,24 +81,84 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         id: '87619062-ec17-4e4a-ab08-4f87aeea4249',
         createdDate: new Date('2019-05-21T14:05:26.1100000Z'),
         modifiedDate: new Date('2019-05-21T14:05:27.1900000Z'),
-        status: TaskStatus.Queued,
-        position: 12
+        status: TaskStatus.Finished,
+        position: 0,
+        result: this.createDemoResult()
       })
     });
 
     var object2 = new ObjectModel({
       id: 'a8bfea94-614b-466c-9400-3ace2d5e4f06',
       originalFilename: 'SMIR.Brain.XX.O.CT.346124.nii',
+      modifiedDate: new Date('2019-04-17T07:52:41.4700000Z'),
+      latestTask: new TaskModel({
+        id: '87619062-ec17-4e4a-ab08-4f87aeea4249',
+        createdDate: new Date('2019-05-21T14:05:26.1100000Z'),
+        modifiedDate: new Date('2019-05-21T14:05:27.1900000Z'),
+        status: TaskStatus.Queued,
+        position: 12
+      })
+    });
+
+    var object3 = new ObjectModel({
+      id: 'a8bfea94-614b-466c-9400-3ace2d5e4f06',
+      originalFilename: 'SMIR.Brain.XX.O.CT.346124.nii',
       modifiedDate: new Date('2019-04-17T07:52:41.4700000Z')
     });
 
     setTimeout(() => {
-      this.objects = [object1, object2];
-      this.initDropdown();
+      this.objectStore.setItems([object1, object2, object3]);
+      this.afterInit();
     });
   }
 
-  private processObject(id: string): void {
+  private createDemoResult(): ProcessResultModel {
+    var result = new ProcessResultModel();
+    var example1 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/';
+    var example2 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/';
+    result.labelCount = 4;
+    result.combinedGif = example1 + 'Z.gif';
+    result.gifs = [
+      new AxisContainerModelOfString({
+        axisType: AxisType.X,
+        entity: example1 + 'Z.gif'
+      }),
+      new AxisContainerModelOfString({
+        axisType: AxisType.Y,
+        entity: example2 + 'Z.gif'
+      }),
+      new AxisContainerModelOfString({
+        axisType: AxisType.Z,
+        entity: example1 + 'Z.gif'
+      })
+    ];
+
+    result.images = [];
+
+    for (var i = 0; i < 10; i++) {
+      result.images.push(this.createDemoResultItem(AxisType.X, example1, i));
+    }
+
+    for (var i = 0; i < 10; i++) {
+      result.images.push(this.createDemoResultItem(AxisType.Y, example2, i));
+    }
+
+    for (var i = 0; i < 10; i++) {
+      result.images.push(this.createDemoResultItem(AxisType.Z, example1, i));
+    }
+
+    return result;
+  }
+
+  private createDemoResultItem(axisType: AxisType, basePath: string, position: number): PositionAxisContainerModelOfString {
+    return new PositionAxisContainerModelOfString({
+      axisType: axisType,
+      entity: basePath + 'Z_' + position + '.png',
+      position: position
+    });
+  }
+
+  public processObject(id: string): void {
     var settings = this.objectStore.settings;
     var command = new ProcessObjectAsyncCommand({
       amountPerAxis: settings.amountPerAxis,
@@ -99,11 +179,12 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
   public toggleCheckbox(): void {
     this.isChecked = !this.isChecked;
-    if (this.objects) {
-      this.objects.forEach(function (value, index, array) {
-        let that = this as ObjectsComponent;
-        value.isChecked = that.isChecked;
-      }.bind(this));
+    var items = this.objectStore.getItems();
+    if (items) {
+      for (var i = 0; i < items.length; i++) {
+        var item: any = items[i];
+        item.isChecked = this.isChecked;
+      }
     }
   }
 
@@ -114,8 +195,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
       this.pageEvent.pageIndex = result.pagination.page;
       this.pageEvent.pageSize = result.pagination.limit;
       this.pageEvent.length = result.pagination.total;
-      this.objects = result.items;
-      this.initDropdown();
+      this.objectStore.setItems(result.items);
+      this.afterInit();
     }, error => {
       console.log(error);
       this.notificationService.handleError(error);

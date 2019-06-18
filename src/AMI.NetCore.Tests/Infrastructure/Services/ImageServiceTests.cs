@@ -90,7 +90,8 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
   ""createdDate"": ""0001-01-01T00:00:00"",
   ""modifiedDate"": ""0001-01-01T00:00:00"",
   ""version"": ""0.0.3"",
-  ""jsonFilename"": ""output.json""
+  ""jsonFilename"": ""output.json"",
+  ""discriminator"": ""ProcessResultModel""
 }";
 
             try
