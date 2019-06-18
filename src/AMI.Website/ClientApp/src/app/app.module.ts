@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AmiApiClientModule } from './clients/ami-api-client.module';
 import { API_BASE_URL } from './clients/ami-api-client';
 import { AppComponent } from './app.component';
+import { TimeoutInterceptor, DEFAULT_TIMEOUT } from './interceptors';
 import { AppProxy } from './proxies/app.proxy';
 import { ConfigService } from './services/config.service';
 import { NotificationService } from './services/notification.service';
@@ -32,6 +33,15 @@ export function initBaseAmiApi() {
     AppProxy,
     ConfigService,
     NotificationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TimeoutInterceptor,
+      multi: true
+    },
+    {
+      provide: DEFAULT_TIMEOUT,
+      useValue: 10000
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: initConfig,

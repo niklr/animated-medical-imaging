@@ -32,6 +32,8 @@ namespace AMI.Core.Entities.Shared.Commands
         {
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // TODO: audit response
                 var response = await ProtectedHandleAsync(request, cancellationToken);
                 return response;

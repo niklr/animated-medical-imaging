@@ -191,13 +191,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     var settings = this.objectStore.settings;
     this.objectProxy.processObject(id, settings).subscribe(result => {
       this.refresh();
-      setTimeout(() => {
-        if (!!callbackFn && typeof callbackFn === 'function') {
-          callbackFn();
-        }
-      }, 2000);
     }, error => {
       this.notificationService.handleError(error);
+    }).add(() => {
+      // finally block
+      if (!!callbackFn && typeof callbackFn === 'function') {
+        callbackFn();
+      }
     });
   }
 
