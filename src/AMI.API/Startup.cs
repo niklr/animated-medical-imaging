@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -43,6 +44,11 @@ namespace AMI.API
     /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Acts as a root for all in-memory databases such that they will be available across context instances and service providers.
+        /// </summary>
+        public static readonly InMemoryDatabaseRoot InMemoryDatabaseRoot = new InMemoryDatabaseRoot();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -87,10 +93,9 @@ namespace AMI.API
             services.AddHostedService<ProcessObjectHostedService>();
 
             // TODO: replace InMemoryUnitOfWork with SQLite
-            // services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
+            services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
-            services.AddSingleton<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
@@ -110,7 +115,7 @@ namespace AMI.API
             // Add DbContext
             services.AddDbContext<InMemoryDbContext>(options =>
             {
-                options.UseInMemoryDatabase(Guid.NewGuid().ToString());
+                options.UseInMemoryDatabase("AmiInMemoryDb", InMemoryDatabaseRoot);
                 options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)); // remove when not using InMemory context
             });
 
@@ -131,7 +136,7 @@ namespace AMI.API
                     defaultSerializer.OverrideJsonSerializerSettings(options.SerializerSettings);
                 });
 
-            // Customise default API behavour
+            // Customise default API behavior
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 // Otherwise the RequestValidationBehavior is never triggered

@@ -10,6 +10,8 @@ export class TaskComponent implements OnInit, AfterViewInit {
 
   @Input() task: TaskModel;
 
+  public command: ProcessObjectAsyncCommand;
+
   constructor(public momentUtil: MomentUtil) {
   }
 
@@ -17,7 +19,18 @@ export class TaskComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.initCommand();
     this.initMaterialize();
+  }
+
+  private initCommand(): void {
+    setTimeout(() => {
+      if (this.task) {
+        if (this.task.command instanceof ProcessObjectAsyncCommand) {
+          this.command = this.task.command;
+        }
+      }
+    });
   }
 
   private initMaterialize(): void {
