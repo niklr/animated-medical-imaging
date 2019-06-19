@@ -16,12 +16,12 @@ namespace AMI.Core.Entities.Shared.Commands
         /// <summary>
         /// Gets or sets the desired size of the processed images.
         /// </summary>
-        public uint? DesiredSize { get; set; }
+        public int DesiredSize { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of images per axis.
         /// </summary>
-        public uint AmountPerAxis { get; set; }
+        public int AmountPerAxis { get; set; }
 
         /// <summary>
         /// Gets or sets the axis types to be considered.

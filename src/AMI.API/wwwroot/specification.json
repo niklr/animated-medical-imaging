@@ -1396,10 +1396,11 @@
             "properties": {
               "desiredSize": {
                 "type": "integer",
-                "nullable": true
+                "format": "int32"
               },
               "amountPerAxis": {
-                "type": "integer"
+                "type": "integer",
+                "format": "int32"
               },
               "axisTypes": {
                 "type": "array",
@@ -1515,10 +1516,11 @@
             "properties": {
               "desiredSize": {
                 "type": "integer",
-                "nullable": true
+                "format": "int32"
               },
               "amountPerAxis": {
-                "type": "integer"
+                "type": "integer",
+                "format": "int32"
               },
               "axisTypes": {
                 "type": "array",

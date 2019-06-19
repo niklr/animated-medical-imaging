@@ -128,9 +128,9 @@ namespace AMI.Core.IO.Extractors
 
             await reader.InitAsync(command.SourcePath, ct);
 
-            reader.Mapper = new AxisPositionMapper(command.AmountPerAxis, reader.Width, reader.Height, reader.Depth);
+            reader.Mapper = new AxisPositionMapper(Convert.ToUInt32(command.AmountPerAxis), reader.Width, reader.Height, reader.Depth);
 
-            PreProcess(reader, imageFormat, command.AmountPerAxis, command.DesiredSize);
+            PreProcess(reader, imageFormat, Convert.ToUInt32(command.AmountPerAxis), Convert.ToUInt32(command.DesiredSize));
 
             result.LabelCount = Convert.ToInt32(reader.GetLabelCount());
 
@@ -145,7 +145,7 @@ namespace AMI.Core.IO.Extractors
             if (!string.IsNullOrWhiteSpace(command.WatermarkSourcePath))
             {
                 BitmapReader bitmapReader = new BitmapReader();
-                var watermarkBitmap = await bitmapReader.ReadAsync(command.WatermarkSourcePath, command.DesiredSize, ct);
+                var watermarkBitmap = await bitmapReader.ReadAsync(command.WatermarkSourcePath, Convert.ToUInt32(command.DesiredSize), ct);
                 if (watermarkBitmap == null)
                 {
                     throw new UnexpectedNullException("Watermark could not be read.");
@@ -162,7 +162,7 @@ namespace AMI.Core.IO.Extractors
                 {
                     ct.ThrowIfCancellationRequested();
                     string filename = $"{axisType}_{i}{imageExtension}";
-                    var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), command.DesiredSize);
+                    var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), Convert.ToUInt32(command.DesiredSize));
                     if (bitmap != null)
                     {
                         if (command.Grayscale)
@@ -170,7 +170,7 @@ namespace AMI.Core.IO.Extractors
                             bitmap = bitmap.To8bppIndexedGrayscale();
                         }
 
-                        bitmap = bitmap.ToCenter(command.DesiredSize, Color.Black);
+                        bitmap = bitmap.ToCenter(Convert.ToUInt32(command.DesiredSize), Color.Black);
                         if (bitmap == null)
                         {
                             throw new UnexpectedNullException("Bitmap could not be centered.");

@@ -46,6 +46,11 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
             entity.Status = (int)request.Status;
             entity.Message = request.Message;
 
+            if (request.Status != Domain.Enums.TaskStatus.Queued)
+            {
+                entity.Position = 0;
+            }
+
             context.TaskRepository.Update(entity);
 
             await context.SaveChangesAsync(cancellationToken);

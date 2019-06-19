@@ -1,4 +1,6 @@
 ﻿using System;
+using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Shared.Commands.ProcessObjectAsync;
 using FluentValidation;
 
 namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
@@ -14,6 +16,7 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
         /// </summary>
         public ProcessCommandValidator()
         {
+            Include(new BaseProcessCommandValidator<TaskModel>());
             RuleFor(x => x.Id).NotEmpty().Must(x =>
             {
                 return Guid.TryParse(x, out Guid result);
