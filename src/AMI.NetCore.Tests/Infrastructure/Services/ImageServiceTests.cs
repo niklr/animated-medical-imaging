@@ -25,63 +25,63 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             };
             command.AxisTypes.Add(AxisType.Z);
             var expected = @"{
-  ""resultType"": ""ProcessResult"",
+  ""resultType"": 1,
   ""labelCount"": 5,
   ""images"": [
     {
       ""position"": 0,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_0.png""
     },
     {
       ""position"": 1,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_1.png""
     },
     {
       ""position"": 2,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_2.png""
     },
     {
       ""position"": 3,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_3.png""
     },
     {
       ""position"": 4,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_4.png""
     },
     {
       ""position"": 5,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_5.png""
     },
     {
       ""position"": 6,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_6.png""
     },
     {
       ""position"": 7,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_7.png""
     },
     {
       ""position"": 8,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_8.png""
     },
     {
       ""position"": 9,
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z_9.png""
     }
   ],
   ""gifs"": [
     {
-      ""axisType"": ""Z"",
+      ""axisType"": 2,
       ""entity"": ""Z.gif""
     }
   ],

@@ -13,8 +13,8 @@ namespace AMI.Core.Entities.Shared.Commands.ProcessObjectAsync
         /// </summary>
         public BaseProcessCommandValidator()
         {
-            RuleFor(x => x.AmountPerAxis).NotEmpty().GreaterThan(0);
-            RuleFor(x => x.DesiredSize).NotEmpty().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.AmountPerAxis).NotNull().GreaterThan(0);
+            RuleFor(x => x.DesiredSize).NotNull().GreaterThanOrEqualTo(0);
         }
     }
 }

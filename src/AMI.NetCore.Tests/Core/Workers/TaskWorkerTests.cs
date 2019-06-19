@@ -23,7 +23,9 @@ namespace AMI.NetCore.Tests.Core.Workers
             var context = GetService<IAmiUnitOfWork>();
             var command = new ProcessObjectAsyncCommand()
             {
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid().ToString(),
+                AmountPerAxis = 1,
+                DesiredSize = 0
             };
             var cts = new CancellationTokenSource();
             cts.CancelAfter(3000);

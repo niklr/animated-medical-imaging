@@ -1624,7 +1624,7 @@ export interface IBaseCommand {
 }
 
 export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand implements IBaseProcessCommandOfProcessResultModel {
-  desiredSize?: number | undefined;
+  desiredSize?: number;
   amountPerAxis?: number;
   axisTypes?: AxisType[] | undefined;
   imageFormat?: ImageFormat;
@@ -1688,7 +1688,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand
 }
 
 export interface IBaseProcessCommandOfProcessResultModel extends IBaseCommand {
-  desiredSize?: number | undefined;
+  desiredSize?: number;
   amountPerAxis?: number;
   axisTypes?: AxisType[] | undefined;
   imageFormat?: ImageFormat;
@@ -1776,7 +1776,7 @@ export enum BezierEasingType {
 }
 
 export abstract class BaseProcessCommandOfTaskModel extends BaseCommand implements IBaseProcessCommandOfTaskModel {
-  desiredSize?: number | undefined;
+  desiredSize?: number;
   amountPerAxis?: number;
   axisTypes?: AxisType[] | undefined;
   imageFormat?: ImageFormat;
@@ -1835,7 +1835,7 @@ export abstract class BaseProcessCommandOfTaskModel extends BaseCommand implemen
 }
 
 export interface IBaseProcessCommandOfTaskModel extends IBaseCommand {
-  desiredSize?: number | undefined;
+  desiredSize?: number;
   amountPerAxis?: number;
   axisTypes?: AxisType[] | undefined;
   imageFormat?: ImageFormat;
