@@ -107,12 +107,6 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public IQueryable<T> Include(IQueryable<T> queryable, Expression<Func<T, bool>> navigationPropertyPath)
-        {
-            return queryable;
-        }
-
-        /// <inheritdoc/>
         public void Remove(T entity)
         {
             entities.Remove(entity);
@@ -126,12 +120,6 @@ namespace AMI.Core.Repositories
             {
                 Remove(entity);
             }
-        }
-
-        /// <inheritdoc/>
-        public async Task<List<T>> ToListAsync(IQueryable<T> queryable, CancellationToken cancellationToken = default)
-        {
-            return await Task.Run(() => { return queryable.ToList(); });
         }
 
         /// <inheritdoc/>

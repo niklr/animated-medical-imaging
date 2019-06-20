@@ -79,5 +79,20 @@ namespace AMI.Core.Extensions.FluentValidationExtensions
                 .Must(validOptions.Contains)
                 .WithMessage($"'{{PropertyName}}' must be one of these values: {formatted}");
         }
+
+        /// <summary>
+        /// Applies the GUID validation.
+        /// </summary>
+        /// <typeparam name="T">The type of the object being validated.</typeparam>
+        /// <param name="rule">The rule builder.</param>
+        /// <returns>The rule builder options.</returns>
+        public static IRuleBuilderOptions<T, string> GuidValidation<T>(this IRuleBuilder<T, string> rule)
+        {
+            return rule
+                .Must(x =>
+                {
+                    return Guid.TryParse(x, out Guid result);
+                });
+        }
     }
 }

@@ -57,7 +57,6 @@ namespace AMI.Portable
                 });
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
             services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
@@ -67,6 +66,7 @@ namespace AMI.Portable
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
 
             // Add MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));

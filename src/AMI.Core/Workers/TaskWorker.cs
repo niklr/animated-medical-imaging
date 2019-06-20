@@ -92,6 +92,7 @@ namespace AMI.Core.Workers
                 var command = new ProcessObjectCommand()
                 {
                     Id = castedCommand.Id,
+                    TaskId = item.Id,
                     DesiredSize = castedCommand.DesiredSize,
                     AmountPerAxis = castedCommand.AmountPerAxis,
                     AxisTypes = castedCommand.AxisTypes,

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using AMI.Core.Extensions.FluentValidationExtensions;
 using FluentValidation;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessObject
@@ -14,10 +14,8 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// </summary>
         public ProcessCommandValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().Must(x =>
-            {
-                return Guid.TryParse(x, out Guid result);
-            });
+            RuleFor(x => x.Id).NotEmpty().GuidValidation();
+            RuleFor(x => x.TaskId).NotEmpty().GuidValidation();
         }
     }
 }

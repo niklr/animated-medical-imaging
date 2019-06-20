@@ -10,6 +10,7 @@ using AMI.Core.IO.Serializers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
+using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
 using MediatR;
 
@@ -64,10 +65,10 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         {
             context.BeginTransaction();
 
-            var entity = await context.ObjectRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
-            if (entity == null)
+            var objectEntity = await context.ObjectRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
+            if (objectEntity == null)
             {
-                throw new UnexpectedNullException("ObjectEntity not found.");
+                throw new UnexpectedNullException($"{nameof(ObjectEntity)} not found.");
             }
 
             // Create temporary directory and use it as destination path
@@ -78,7 +79,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             // and use the extracted directory as source path
             var pathRequest = new ProcessPathCommand()
             {
-                SourcePath = fileSystem.Path.Combine(configuration.WorkingDirectory, entity.SourcePath),
+                SourcePath = fileSystem.Path.Combine(configuration.WorkingDirectory, objectEntity.SourcePath),
                 DestinationPath = tempDestPath,
                 DesiredSize = request.DesiredSize,
                 AmountPerAxis = request.AmountPerAxis,
@@ -97,22 +98,33 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             }
 
             // Move content of temporary directory and delete it
-            var baseDestPath = fileSystem.Path.Combine("Results", result.Id);
+            var resultsDirectoryName = "Results";
+            var resultsPath = fileSystem.Path.Combine(configuration.WorkingDirectory, resultsDirectoryName);
+            var baseDestPath = fileSystem.Path.Combine(resultsDirectoryName, result.Id);
             var destPath = fileSystem.Path.Combine(configuration.WorkingDirectory, baseDestPath);
-            fileSystem.Directory.CreateDirectory(destPath);
+            fileSystem.Directory.CreateDirectory(resultsPath);
             fileSystem.Directory.Move(tempDestPath, destPath);
-            fileSystem.Directory.Delete(tempDestPath, true);
 
             var resultEntity = await context.ResultRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(result.Id), cancellationToken);
             if (resultEntity == null)
             {
-                throw new UnexpectedNullException("ResultEntity not found.");
+                throw new UnexpectedNullException($"{nameof(ResultEntity)} not found.");
             }
 
             // Update BaseFsPath of ResultEntity
             resultEntity.BasePath = baseDestPath;
             resultEntity.ModifiedDate = DateTime.UtcNow;
             context.ResultRepository.Update(resultEntity);
+
+            // Update TaskEntity
+            var taskEntity = await context.TaskRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.TaskId), cancellationToken);
+            if (taskEntity == null)
+            {
+                throw new UnexpectedNullException($"{nameof(TaskEntity)} not found.");
+            }
+
+            taskEntity.ResultId = Guid.Parse(result.Id);
+            context.TaskRepository.Update(taskEntity);
 
             await context.SaveChangesAsync(cancellationToken);
 

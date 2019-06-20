@@ -1,4 +1,4 @@
-﻿using System;
+﻿using AMI.Core.Extensions.FluentValidationExtensions;
 using FluentValidation;
 
 namespace AMI.Core.Entities.Objects.Commands.Delete
@@ -14,10 +14,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         /// </summary>
         public DeleteCommandValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().Must(x =>
-            {
-                return Guid.TryParse(x, out Guid result);
-            });
+            RuleFor(x => x.Id).NotEmpty().GuidValidation();
         }
     }
 }

@@ -18,5 +18,10 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// Gets or sets the identifier of the object.
         /// </summary>
         public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the task.
+        /// </summary>
+        public string TaskId { get; set; }
     }
 }

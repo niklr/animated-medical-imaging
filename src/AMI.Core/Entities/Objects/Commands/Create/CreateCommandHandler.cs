@@ -61,7 +61,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
 
             Guid guid = idGenService.CreateId();
             string path = fileSystem.Path.Combine("Binary", "Objects", guid.ToString());
-            string destFilename = string.Concat(guid.ToString(), constants.DefaultFileExtension);
+            string destFilename = string.Concat(guid.ToString(), fileSystem.Path.GetExtension(request.OriginalFilename));
             string destPath = fileSystem.Path.Combine(path, destFilename);
 
             fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(configuration.WorkingDirectory, path));

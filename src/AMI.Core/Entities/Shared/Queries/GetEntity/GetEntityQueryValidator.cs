@@ -1,5 +1,5 @@
-﻿using System;
-using AMI.Core.Entities.Shared.Models;
+﻿using AMI.Core.Entities.Shared.Models;
+using AMI.Core.Extensions.FluentValidationExtensions;
 using FluentValidation;
 
 namespace AMI.Core.Entities.Shared.Queries.GetEntity
@@ -16,10 +16,7 @@ namespace AMI.Core.Entities.Shared.Queries.GetEntity
         /// </summary>
         public GetEntityQueryValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().Must(x =>
-            {
-                return Guid.TryParse(x, out Guid result);
-            });
+            RuleFor(x => x.Id).NotEmpty().GuidValidation();
         }
     }
 }

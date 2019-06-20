@@ -1363,6 +1363,11 @@
                 "type": "string",
                 "description": "Gets or sets the identifier of the object.",
                 "nullable": true
+              },
+              "taskId": {
+                "type": "string",
+                "description": "Gets or sets the identifier of the task.",
+                "nullable": true
               }
             }
           }

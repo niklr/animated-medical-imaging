@@ -13,6 +13,10 @@
         <dt>Status</dt>
         <dd>{{displayTaskStatus()}}</dd>
       </dl>
+      <dl class="dl-horizontal" *ngIf="task.message">
+        <dt>Message</dt>
+        <dd>{{task.message}}</dd>
+      </dl>
       <dl class="dl-horizontal" *ngIf="task.position > 0">
         <dt>Position</dt>
         <dd>{{task.position}}</dd>

@@ -1703,6 +1703,8 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
     commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
+    /** Gets or sets the identifier of the task. */
+    taskId?: string | undefined;
 
     constructor(data?: IProcessObjectCommand) {
         super(data);
@@ -1714,6 +1716,7 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
         if (data) {
             this.commandType = data["commandType"];
             this.id = data["id"];
+            this.taskId = data["taskId"];
         }
     }
 
@@ -1728,6 +1731,7 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
         data = typeof data === 'object' ? data : {};
         data["commandType"] = this.commandType;
         data["id"] = this.id;
+        data["taskId"] = this.taskId;
         super.toJSON(data);
         return data; 
     }
@@ -1739,6 +1743,8 @@ export interface IProcessObjectCommand extends IBaseProcessCommandOfProcessResul
     commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
+    /** Gets or sets the identifier of the task. */
+    taskId?: string | undefined;
 }
 
 /** A type to describe the command. */
