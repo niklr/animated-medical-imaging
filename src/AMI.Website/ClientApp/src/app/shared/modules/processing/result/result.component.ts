@@ -1,7 +1,9 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { ContainerModelExtended } from '../../../../models/container-extended.model';
+import { ProcessResultModelExtended } from '../../../../models/result-extended.model';
+import { ConfigService } from '../../../../services/config.service';
 import {
-  AxisType,
-  ProcessResultModel
+  AxisType, AxisContainerModelOfString, PositionAxisContainerModelOfString
 } from '../../../../clients/ami-api-client';
 
 @Component({
@@ -10,9 +12,7 @@ import {
 })
 export class ResultComponent implements OnInit, AfterViewInit {
 
-  @Input() result: ProcessResultModel;
-  
-  extendedResult: any = {};
+  @Input() result: ProcessResultModelExtended;
 
   constructor() {
   }
@@ -21,10 +21,12 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.result) {
-      this.initExtendedResult();
-    }
-    this.initMaterialbox();
+    setTimeout(() => {
+      if (this.result) {
+        this.initExtendedResult();
+      }
+      this.initMaterialbox();
+    });
   }
 
   private initMaterialbox(): void {
@@ -36,40 +38,63 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   private initExtendedResult(): void {
-    var extendedResult: any = {};
-    // Filter gifs
+    // Extend gifs
     if (this.result.gifs) {
-      extendedResult.xAxisGif = this.result.gifs.filter((value) => {
-        return value.axisType === AxisType.X;
-      }).shift();
-      extendedResult.yAxisGif = this.result.gifs.filter((value) => {
-        return value.axisType === AxisType.Y;
-      }).shift();
-      extendedResult.zAxisGif = this.result.gifs.filter((value) => {
-        return value.axisType === AxisType.Z;
-      }).shift();
+      for (var i = 0; i < this.result.gifs.length; i++) {
+        var currentGif = this.result.gifs[i] as AxisContainerModelOfString & ContainerModelExtended;
+        currentGif.entityUrl = this.buildEntityUrl(currentGif.entity);
+        switch (currentGif.axisType) {
+          case AxisType.X:
+            this.result.xAxisGif = currentGif;
+            break;
+          case AxisType.Y:
+            this.result.yAxisGif = currentGif;
+            break;
+          case AxisType.Z:
+            this.result.zAxisGif = currentGif;
+            break;
+          default:
+            break;
+        }
+      }
     }
 
-    // Filter images
+    // Extend images
+    this.result.xAxisImages = [] as PositionAxisContainerModelOfString & ContainerModelExtended[];
+    this.result.yAxisImages = [] as PositionAxisContainerModelOfString & ContainerModelExtended[];
+    this.result.zAxisImages = [] as PositionAxisContainerModelOfString & ContainerModelExtended[];
     if (this.result.images) {
-      extendedResult.xAxisImages = this.result.images.filter((value) => {
-        return value.axisType === AxisType.X;
-      });
-      extendedResult.yAxisImages = this.result.images.filter((value) => {
-        return value.axisType === AxisType.Y;
-      });
-      extendedResult.zAxisImages = this.result.images.filter((value) => {
-        return value.axisType === AxisType.Z;
-      });
+      for (var i = 0; i < this.result.images.length; i++) {
+        var currentImage = this.result.images[i] as PositionAxisContainerModelOfString & ContainerModelExtended;
+        currentImage.entityUrl = this.buildEntityUrl(currentImage.entity);
+        switch (currentImage.axisType) {
+          case AxisType.X:
+            this.result.xAxisImages.push(currentImage);
+            break;
+          case AxisType.Y:
+            this.result.yAxisImages.push(currentImage);
+            break;
+          case AxisType.Z:
+            this.result.zAxisImages.push(currentImage);
+            break;
+          default:
+            break;
+        }
+      }
     }
 
     // Other
-    extendedResult.showCombinedGif = (extendedResult.xAxisGif ? 1 : 0)
-      + (extendedResult.yAxisGif ? 1 : 0) + (extendedResult.zAxisGif ? 1 : 0) > 1;
+    this.result.combinedGifUrl = this.buildEntityUrl(this.result.combinedGif);
+    this.result.showCombinedGif = (this.result.xAxisGif ? 1 : 0)
+      + (this.result.yAxisGif ? 1 : 0) + (this.result.zAxisGif ? 1 : 0) > 1;
+  }
 
-    setTimeout(() => {
-      this.extendedResult = extendedResult;
-    });
+  private buildEntityUrl(entity: string): string {
+    var pattern = /^((http|https):\/\/)/;
+    if (entity && !pattern.test(entity)) {
+      return ConfigService.settings.apiEndpoint + '/results/' + this.result.id + '/images/' + entity;
+    } else {
+      return entity;
+    }
   }
 }
-

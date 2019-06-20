@@ -1,6 +1,6 @@
-<div class="row" *ngIf="extendedResult.showCombinedGif">
+<div class="row" *ngIf="result.showCombinedGif">
   <div class="col s12">
-    <img class="materialboxed" data-caption="The combined GIF of all selected/available axis types." width="250" [src]="result.combinedGif">
+    <img class="materialboxed" data-caption="The combined GIF of all selected/available axis types." width="250" [src]="result.combinedGifUrl">
   </div>
 </div>
 
@@ -8,36 +8,36 @@
   <div class="col s12">
     <div class="card">
       <div class="card-content">
-        <div *ngIf="extendedResult.xAxisGif">
+        <div *ngIf="result.xAxisGif">
           <h6>X-Axis</h6>
           <div class="row">
-            <div class="col s12 m6 l2" *ngIf="extendedResult.xAxisGif">
-              <img class="materialboxed responsive-img mt-10" [src]="extendedResult.xAxisGif.entity">
+            <div class="col s12 m6 l2" *ngIf="result.xAxisGif">
+              <img class="materialboxed responsive-img mt-10" [src]="result.xAxisGif.entityUrl">
             </div>
-            <div class="col s12 m6 l2" *ngFor="let image of extendedResult.xAxisImages">
-              <img class="materialboxed responsive-img mt-10" [src]="image.entity">
+            <div class="col s12 m6 l2" *ngFor="let image of result.xAxisImages">
+              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1">
             </div>
           </div>
         </div>
-        <div *ngIf="extendedResult.yAxisGif">
+        <div *ngIf="result.yAxisGif">
           <h6>Y-Axis</h6>
           <div class="row">
-            <div class="col s12 m6 l2" *ngIf="extendedResult.yAxisGif">
-              <img class="materialboxed responsive-img mt-10" [src]="extendedResult.yAxisGif.entity">
+            <div class="col s12 m6 l2" *ngIf="result.yAxisGif">
+              <img class="materialboxed responsive-img mt-10" [src]="result.yAxisGif.entityUrl">
             </div>
-            <div class="col s12 m6 l2" *ngFor="let image of extendedResult.yAxisImages">
-              <img class="materialboxed responsive-img mt-10" [src]="image.entity">
+            <div class="col s12 m6 l2" *ngFor="let image of result.yAxisImages">
+              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1">
             </div>
           </div>
         </div>
-        <div *ngIf="extendedResult.zAxisGif">
+        <div *ngIf="result.zAxisGif">
           <h6>Z-Axis</h6>
           <div class="row">
-            <div class="col s12 m6 l2" *ngIf="extendedResult.zAxisGif">
-              <img class="materialboxed responsive-img mt-10" [src]="extendedResult.zAxisGif.entity">
+            <div class="col s12 m6 l2" *ngIf="result.zAxisGif">
+              <img class="materialboxed responsive-img mt-10" [src]="result.zAxisGif.entityUrl">
             </div>
-            <div class="col s12 m6 l2" *ngFor="let image of extendedResult.zAxisImages">
-              <img class="materialboxed responsive-img mt-10" [src]="image.entity">
+            <div class="col s12 m6 l2" *ngFor="let image of result.zAxisImages">
+              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1">
             </div>
           </div>
         </div>
