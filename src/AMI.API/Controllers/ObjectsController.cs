@@ -49,7 +49,7 @@ namespace AMI.API.Controllers
         /// </summary>
         /// <param name="id">The identifier of the object.</param>
         /// <returns>The information of the object.</returns>
-        [HttpPut("{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
         {

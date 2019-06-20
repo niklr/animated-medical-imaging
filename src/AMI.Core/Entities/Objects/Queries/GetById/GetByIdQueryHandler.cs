@@ -17,19 +17,19 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
     /// </summary>
     public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, ObjectModel>
     {
-        private readonly IAmiUnitOfWork uow;
+        private readonly IAmiUnitOfWork context;
         private readonly IApplicationConstants constants;
         private readonly IDefaultJsonSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetByIdQueryHandler"/> class.
         /// </summary>
-        /// <param name="uow">The context.</param>
+        /// <param name="context">The context.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="serializer">The JSON serializer.</param>
-        public GetByIdQueryHandler(IAmiUnitOfWork uow, IApplicationConstants constants, IDefaultJsonSerializer serializer)
+        public GetByIdQueryHandler(IAmiUnitOfWork context, IApplicationConstants constants, IDefaultJsonSerializer serializer)
         {
-            this.uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
@@ -37,7 +37,7 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
         /// <inheritdoc/>
         public async Task<ObjectModel> Handle(GetByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = uow.ObjectRepository
+            var result = context.ObjectRepository
                 .GetQuery()
                 .Where(e => e.Id == Guid.Parse(request.Id))
                 .Select(e => new

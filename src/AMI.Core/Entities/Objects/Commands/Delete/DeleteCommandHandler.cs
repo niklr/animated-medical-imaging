@@ -51,7 +51,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
             context.BeginTransaction();
 
             var entity = await context.ObjectRepository
-                .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id));
+                .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
 
             if (entity == null)
             {
