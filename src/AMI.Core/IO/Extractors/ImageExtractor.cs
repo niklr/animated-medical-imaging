@@ -57,17 +57,8 @@ namespace AMI.Core.IO.Extractors
                 throw new ArgumentNullException(nameof(loggerFactory));
             }
 
-            this.fileSystemStrategy = fileSystemStrategy;
-            if (this.fileSystemStrategy == null)
-            {
-                throw new ArgumentNullException(nameof(fileSystemStrategy));
-            }
-
-            this.readerFactory = readerFactory;
-            if (this.readerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(readerFactory));
-            }
+            this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
+            this.readerFactory = readerFactory ?? throw new ArgumentNullException(nameof(readerFactory));
         }
 
         /// <summary>

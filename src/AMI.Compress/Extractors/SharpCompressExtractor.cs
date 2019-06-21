@@ -69,6 +69,8 @@ namespace AMI.Compress.Extractors
                             var sortedEntries = archive.Entries.Sort(comparer).Take(MaxCompressibleEntries);
                             foreach (var entry in sortedEntries)
                             {
+                                ct.ThrowIfCancellationRequested();
+
                                 if (!entry.IsDirectory)
                                 {
                                     // TODO: add options as parameters

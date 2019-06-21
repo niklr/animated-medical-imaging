@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using AMI.Compress.Extractors;
 using AMI.Compress.Readers;
+using AMI.Compress.Writers;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
@@ -71,6 +72,7 @@ namespace AMI.NetCore.Tests
             services.AddSingleton<ITaskQueue, TaskQueue>();
             services.AddSingleton<ITaskWorker, TaskWorker>();
             services.AddTransient<ICompressibleReader, SharpCompressReader>();
+            services.AddTransient<ICompressibleWriter, SharpCompressWriter>();
             services.AddTransient<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<IDefaultJsonWriter, DefaultJsonWriter>();
@@ -114,6 +116,11 @@ namespace AMI.NetCore.Tests
         {
             var configuration = GetService<IAmiConfigurationManager>();
             return Path.Combine(configuration.WorkingDirectory, path);
+        }
+
+        public string GetImagesPath()
+        {
+            return Path.Combine(FileSystemHelper.BuildCurrentPath(), "assets", "images");
         }
 
         public string GetTempPath()
