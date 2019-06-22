@@ -46,5 +46,12 @@ namespace AMI.Core.Workers
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task StartAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Stops the worker asynchronous.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task StopAsync(CancellationToken cancellationToken);
     }
 }

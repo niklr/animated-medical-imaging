@@ -113,7 +113,7 @@ namespace AMI.Core.Workers
             }
             catch (Exception e)
             {
-                logger.LogInformation($"Processing of task {item.Id} failed. {e.Message}");
+                logger.LogWarning(e, $"Processing of task {item.Id} failed. {e.Message}");
                 await UpdateStatus(item, Domain.Enums.TaskStatus.Failed, e.Message, ct);
             }
         }

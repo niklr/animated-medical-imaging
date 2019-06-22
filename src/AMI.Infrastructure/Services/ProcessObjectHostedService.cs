@@ -28,6 +28,15 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation($"{GetType().Name} stop called.");
+            await worker.StopAsync(cancellationToken);
+            await base.StopAsync(cancellationToken);
+            logger.LogInformation($"{GetType().Name} stop call ended.");
+        }
+
+        /// <inheritdoc/>
         protected async override Task ExecuteAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation($"{GetType().Name} is starting.");

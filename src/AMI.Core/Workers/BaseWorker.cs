@@ -14,6 +14,7 @@ namespace AMI.Core.Workers
     {
         private readonly ILogger logger;
         private Stopwatch stopwatch;
+        private CancellationTokenSource cts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseWorker"/> class.
@@ -30,14 +31,10 @@ namespace AMI.Core.Workers
             Id = Guid.NewGuid();
         }
 
-        /// <summary>
-        /// Gets the identifier of the worker.
-        /// </summary>
+        /// <inheritdoc/>
         public Guid Id { get; }
 
-        /// <summary>
-        /// Gets the name of the worker.
-        /// </summary>
+        /// <inheritdoc/>
         public string WorkerName
         {
             get
@@ -46,19 +43,13 @@ namespace AMI.Core.Workers
             }
         }
 
-        /// <summary>
-        /// Gets the last activity date.
-        /// </summary>
+        /// <inheritdoc/>
         public DateTime LastActivityDate { get; private set; }
 
-        /// <summary>
-        /// Gets the current status of the worker.
-        /// </summary>
+        /// <inheritdoc/>
         public WorkerStatus WorkerStatus { get; private set; }
 
-        /// <summary>
-        /// Gets the current processing time.
-        /// </summary>
+        /// <inheritdoc/>
         public TimeSpan CurrentProcessingTime
         {
             get
@@ -67,19 +58,15 @@ namespace AMI.Core.Workers
             }
         }
 
-        /// <summary>
-        /// Gets the last processing time.
-        /// </summary>
+        /// <inheritdoc/>
         public TimeSpan LastProcessingTime { get; private set; }
 
-        /// <summary>
-        /// Starts the worker asynchronous.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation($"{GetType().Name} is starting.");
+
+            cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             UpdateActivity(WorkerStatus.Initialized);
 
@@ -106,6 +93,15 @@ namespace AMI.Core.Workers
             }
 
             logger.LogInformation($"{GetType().Name} is stopping.");
+        }
+
+        /// <inheritdoc/>
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation($"{GetType().Name} stop called.");
+            cts?.Cancel();
+            logger.LogInformation($"{GetType().Name} stop call ended.");
+            await Task.CompletedTask;
         }
 
         /// <summary>
