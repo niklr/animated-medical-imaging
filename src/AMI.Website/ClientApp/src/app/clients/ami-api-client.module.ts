@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import {
   AppInfoAmiApiClient,
-  ObjectsAmiApiClient
+  ObjectsAmiApiClient,
+  TasksAmiApiClient
 } from './ami-api-client';
 
 @NgModule({
@@ -13,7 +14,8 @@ import {
   ],
   providers: [
     AppInfoAmiApiClient,
-    ObjectsAmiApiClient
+    ObjectsAmiApiClient,
+    TasksAmiApiClient
   ]
 })
 export class AmiApiClientModule { }

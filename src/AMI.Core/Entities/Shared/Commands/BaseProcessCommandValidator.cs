@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace AMI.Core.Entities.Shared.Commands.ProcessObjectAsync
+namespace AMI.Core.Entities.Shared.Commands
 {
     /// <summary>
     /// A base validator for process command requests.

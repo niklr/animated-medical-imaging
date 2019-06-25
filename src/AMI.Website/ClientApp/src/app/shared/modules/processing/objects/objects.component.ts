@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PageEvent } from '../../../../events/page.event';
 import { ObjectModelExtended } from '../../../../models/object-extended.model';
-import { ObjectProxy } from '../../../../proxies/object.proxy';
+import { ObjectProxy, TaskProxy } from '../../../../proxies';
 import { ObjectStore } from '../../../../stores/object.store';
 import { NotificationService } from '../../../../services/notification.service';
 import {
@@ -25,7 +25,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   // Paginator Output
   public pageEvent: PageEvent;
 
-  constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy, public objectStore: ObjectStore) {
+  constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy, private taskProxy: TaskProxy, public objectStore: ObjectStore) {
     this.pageEvent = new PageEvent();
     this.pageEvent.pageIndex = 1;
     this.pageEvent.pageSize = 50;
@@ -189,7 +189,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
   public processObject(id: string, callbackFn: Function): void {
     var settings = this.objectStore.settings;
-    this.objectProxy.processObject(id, settings).subscribe(result => {
+    this.taskProxy.create(id, settings).subscribe(result => {
       this.refresh();
     }, error => {
       this.notificationService.handleError(error);

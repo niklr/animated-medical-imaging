@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using RNS.Framework.Extensions.Attribute;
 
-namespace AMI.Core.Converters
+namespace AMI.Core.IO.Converters
 {
 #pragma warning disable SA1201 // Elements must appear in the correct order
 #pragma warning disable SA1204 // Static elements must appear before instance elements
@@ -231,33 +233,13 @@ namespace AMI.Core.Converters
             var type = objectType;
             do
             {
-                var knownTypeAttributes = type.GetTypeInfo().GetCustomAttributes(false)
-                    .Where(a => a.GetType().Name == "KnownTypeAttribute");
-                foreach (object attribute in knownTypeAttributes)
+                var knownTypes = objectType.GetAttributeValues((KnownTypeAttribute t) => t.Type);
+                foreach (Type currentType in knownTypes)
                 {
-                    var currentType = attribute.GetType();
                     if (currentType != null && currentType.Name == discriminator)
                     {
-                        return attribute.GetType();
+                        return currentType;
                     }
-                    /*
-                    else if (attribute.MethodName != null)
-                    {
-                        var method = type.GetRuntimeMethod((string)attribute.MethodName, new Type[0]);
-                        if (method != null)
-                        {
-                            var types = (System.Collections.Generic.IEnumerable<Type>)method.Invoke(null, new object[0]);
-                            foreach (var knownType in types)
-                            {
-                                if (knownType.Name == discriminator)
-                                {
-                                    return knownType;
-                                }
-                            }
-                            return null;
-                        }
-                    }
-                    */
                 }
 
                 type = type.GetTypeInfo().BaseType;

@@ -1,5 +1,5 @@
 ﻿using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Shared.Commands.ProcessObjectAsync;
+using AMI.Core.Entities.Shared.Commands;
 using FluentValidation;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessPath

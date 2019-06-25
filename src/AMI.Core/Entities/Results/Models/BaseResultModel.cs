@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using AMI.Core.Converters;
+using AMI.Core.IO.Converters;
 using AMI.Domain.Enums;
 using Newtonsoft.Json;
 

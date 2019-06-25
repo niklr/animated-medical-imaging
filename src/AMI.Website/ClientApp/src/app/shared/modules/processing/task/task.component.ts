@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MomentUtil } from '../../../../utils';
-import { TaskStatus, TaskModel, ProcessObjectAsyncCommand, AxisType } from '../../../../clients/ami-api-client';
+import { TaskStatus, TaskModel, ProcessObjectCommand, AxisType } from '../../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-task',
@@ -10,7 +10,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
 
   @Input() task: TaskModel;
 
-  public command: ProcessObjectAsyncCommand;
+  public command: ProcessObjectCommand;
   public displayAxisTypes: string;
 
   constructor(public momentUtil: MomentUtil) {
@@ -27,7 +27,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
   private initCommand(): void {
     setTimeout(() => {
       if (this.task) {
-        if (this.task.command instanceof ProcessObjectAsyncCommand) {
+        if (this.task.command instanceof ProcessObjectCommand) {
           this.command = this.task.command;
           if (this.task.command.axisTypes) {
             var tempAxisTypes: string[] = [];
