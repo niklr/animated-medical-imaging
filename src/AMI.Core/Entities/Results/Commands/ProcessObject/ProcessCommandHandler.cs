@@ -116,16 +116,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             resultEntity.ModifiedDate = DateTime.UtcNow;
             context.ResultRepository.Update(resultEntity);
 
-            // Update TaskEntity
-            var taskEntity = await context.TaskRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.TaskId), cancellationToken);
-            if (taskEntity == null)
-            {
-                throw new UnexpectedNullException($"{nameof(TaskEntity)} not found.");
-            }
-
-            taskEntity.ResultId = Guid.Parse(result.Id);
-            context.TaskRepository.Update(taskEntity);
-
             await context.SaveChangesAsync(cancellationToken);
 
             context.CommitTransaction();

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Objects.Queries.GetById;
 using AMI.Core.Entities.Objects.Queries.GetObjects;
-using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
 using AMI.Core.IO.Uploaders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -67,20 +66,6 @@ namespace AMI.API.Controllers
         {
             await Mediator.Send(new DeleteObjectCommand { Id = id }, CancellationToken);
             return NoContent();
-        }
-
-        /// <summary>
-        /// Processes an existing object.
-        /// </summary>
-        /// <param name="id">The identifier of the object.</param>
-        /// <param name="command">The command to process an existing object.</param>
-        /// <returns>The created task.</returns>
-        [HttpPut("{id}/process")]
-        [ProducesResponseType(typeof(Models.TaskModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> ProcessAsync(string id, [FromBody] ProcessObjectAsyncCommand command)
-        {
-            command.Id = id;
-            return Ok(await Mediator.Send(command, CancellationToken));
         }
 
         /// <summary>

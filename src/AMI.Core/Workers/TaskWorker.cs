@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
-using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
 using AMI.Core.Entities.Tasks.Commands.UpdateStatus;
 using AMI.Core.Queues;
 using AMI.Domain.Enums;
@@ -60,7 +59,7 @@ namespace AMI.Core.Workers
                 {
                     switch (item.Command.CommandType)
                     {
-                        case CommandType.ProcessObjectAsyncCommand:
+                        case CommandType.ProcessObjectCommand:
                             await ProcessObjectAsync(item, ct);
                             break;
                         default:
@@ -82,29 +81,14 @@ namespace AMI.Core.Workers
                     throw new UnexpectedNullException($"The command of task {item.Id} is null.");
                 }
 
-                if (item.Command.GetType() != typeof(ProcessObjectAsyncCommand))
+                if (item.Command.GetType() != typeof(ProcessObjectCommand))
                 {
                     throw new AmiException($"Task {item.Id} has an unexpected command type.");
                 }
 
-                var castedCommand = (ProcessObjectAsyncCommand)item.Command;
+                var result = await mediator.Send((ProcessObjectCommand)item.Command, ct);
 
-                var command = new ProcessObjectCommand()
-                {
-                    Id = castedCommand.Id,
-                    TaskId = item.Id,
-                    DesiredSize = castedCommand.DesiredSize,
-                    AmountPerAxis = castedCommand.AmountPerAxis,
-                    AxisTypes = castedCommand.AxisTypes,
-                    ImageFormat = castedCommand.ImageFormat,
-                    BezierEasingTypePerAxis = castedCommand.BezierEasingTypePerAxis,
-                    BezierEasingTypeCombined = castedCommand.BezierEasingTypeCombined,
-                    Grayscale = castedCommand.Grayscale
-                };
-
-                var result = await mediator.Send(command, ct);
-
-                await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
+                await UpdateStatus(item, result.Id, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
             }
             catch (OperationCanceledException)
             {
@@ -120,9 +104,15 @@ namespace AMI.Core.Workers
 
         private async Task UpdateStatus(TaskModel task, Domain.Enums.TaskStatus status, string message, CancellationToken ct)
         {
+            await UpdateStatus(task, string.Empty, status, message, ct);
+        }
+
+        private async Task UpdateStatus(TaskModel task, string resultId, Domain.Enums.TaskStatus status, string message, CancellationToken ct)
+        {
             var command = new UpdateTaskStatusCommand()
             {
                 Id = task.Id,
+                ResultId = resultId,
                 Status = status,
                 Message = message
             };

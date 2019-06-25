@@ -15,6 +15,7 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
         public UpdateCommandValidator()
         {
             RuleFor(x => x.Id).NotEmpty().GuidValidation();
+            RuleFor(x => x.ResultId).OptionalGuidValidation();
             RuleFor(x => x.Status).NotEmpty();
         }
     }

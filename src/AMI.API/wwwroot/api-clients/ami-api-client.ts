@@ -149,13 +149,6 @@ export interface IObjectsAmiApiClient {
      */
     deleteById(id: string | null): Observable<ObjectModel>;
     /**
-     * Processes an existing object.
-     * @param id The identifier of the object.
-     * @param command The command to process an existing object.
-     * @return The created task.
-     */
-    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel>;
-    /**
      * Uploads an object.
      * @param file The file.
      * @param chunkNumber The chunk number.
@@ -481,109 +474,6 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     }
 
     /**
-     * Processes an existing object.
-     * @param id The identifier of the object.
-     * @param command The command to process an existing object.
-     * @return The created task.
-     */
-    process(id: string | null, command: ProcessObjectAsyncCommand): Observable<TaskModel> {
-        let url_ = this.baseUrl + "/objects/{id}/process";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json", 
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processProcess(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processProcess(<any>response_);
-                } catch (e) {
-                    return <Observable<TaskModel>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<TaskModel>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processProcess(response: HttpResponseBase): Observable<TaskModel> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ErrorModel.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ErrorModel.fromJS(resultData403);
-            return throwException("A server error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorModel.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-            }));
-        } else if (status === 409) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result409: any = null;
-            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = ErrorModel.fromJS(resultData409);
-            return throwException("A server error occurred.", status, _responseText, _headers, result409);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = ErrorModel.fromJS(resultData500);
-            return throwException("A server error occurred.", status, _responseText, _headers, result500);
-            }));
-        } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TaskModel.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<TaskModel>(<any>null);
-    }
-
-    /**
      * Uploads an object.
      * @param file The file.
      * @param chunkNumber The chunk number.
@@ -838,36 +728,23 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
     }
 }
 
-export interface IValuesAmiApiClient {
+export interface ITasksAmiApiClient {
     /**
-     * Gets a list of values.
+     * Gets the information of the task with the specified identifier.
+     * @param id The identifier of the task.
+     * @return The information of the task.
      */
-    get(): Observable<void>;
+    getById(id: string | null): Observable<TaskModel>;
     /**
-     * Posts the specified value.
-     * @param value The value.
+     * Creates a new task.
+     * @param command The command to create a new task.
+     * @return The created task.
      */
-    post(value: string): Observable<void>;
-    /**
-     * Gets value with the specified identifier.
-     * @param id The identifier.
-     */
-    get2(id: number): Observable<void>;
-    /**
-     * Puts the value with the specified identifier.
-     * @param id The identifier.
-     * @param value The value.
-     */
-    put(id: number, value: string): Observable<void>;
-    /**
-     * Deletes the value with the specified identifier.
-     * @param id The identifier.
-     */
-    delete(id: number): Observable<void>;
+    create(command: CreateTaskCommand): Observable<TaskModel>;
 }
 
 @Injectable()
-export class ValuesAmiApiClient implements IValuesAmiApiClient {
+export class TasksAmiApiClient implements ITasksAmiApiClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -878,34 +755,40 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
     }
 
     /**
-     * Gets a list of values.
+     * Gets the information of the task with the specified identifier.
+     * @param id The identifier of the task.
+     * @return The information of the task.
      */
-    get(): Observable<void> {
-        let url_ = this.baseUrl + "/values";
+    getById(id: string | null): Observable<TaskModel> {
+        let url_ = this.baseUrl + "/tasks/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
+            return this.processGetById(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGet(<any>response_);
+                    return this.processGetById(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<TaskModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<TaskModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<void> {
+    protected processGetById(response: HttpResponseBase): Observable<TaskModel> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -954,23 +837,31 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             result500 = ErrorModel.fromJS(resultData500);
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TaskModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
+        return _observableOf<TaskModel>(<any>null);
     }
 
     /**
-     * Posts the specified value.
-     * @param value The value.
+     * Creates a new task.
+     * @param command The command to create a new task.
+     * @return The created task.
      */
-    post(value: string): Observable<void> {
-        let url_ = this.baseUrl + "/values";
+    create(command: CreateTaskCommand): Observable<TaskModel> {
+        let url_ = this.baseUrl + "/tasks";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(value);
+        const content_ = JSON.stringify(command);
 
         let options_ : any = {
             body: content_,
@@ -978,24 +869,25 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json", 
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPost(response_);
+            return this.processCreate(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPost(<any>response_);
+                    return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<TaskModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<TaskModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processPost(response: HttpResponseBase): Observable<void> {
+    protected processCreate(response: HttpResponseBase): Observable<TaskModel> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -1044,284 +936,19 @@ export class ValuesAmiApiClient implements IValuesAmiApiClient {
             result500 = ErrorModel.fromJS(resultData500);
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
-        } else if (status !== 200 && status !== 204) {
+        } else if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * Gets value with the specified identifier.
-     * @param id The identifier.
-     */
-    get2(id: number): Observable<void> {
-        let url_ = this.baseUrl + "/values/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet2(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet2(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet2(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ErrorModel.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ErrorModel.fromJS(resultData403);
-            return throwException("A server error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorModel.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-            }));
-        } else if (status === 409) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result409: any = null;
-            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = ErrorModel.fromJS(resultData409);
-            return throwException("A server error occurred.", status, _responseText, _headers, result409);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = ErrorModel.fromJS(resultData500);
-            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = TaskModel.fromJS(resultData201);
+            return _observableOf(result201);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * Puts the value with the specified identifier.
-     * @param id The identifier.
-     * @param value The value.
-     */
-    put(id: number, value: string): Observable<void> {
-        let url_ = this.baseUrl + "/values/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(value);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json", 
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPut(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPut(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processPut(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ErrorModel.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ErrorModel.fromJS(resultData403);
-            return throwException("A server error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorModel.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-            }));
-        } else if (status === 409) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result409: any = null;
-            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = ErrorModel.fromJS(resultData409);
-            return throwException("A server error occurred.", status, _responseText, _headers, result409);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = ErrorModel.fromJS(resultData500);
-            return throwException("A server error occurred.", status, _responseText, _headers, result500);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
-    }
-
-    /**
-     * Deletes the value with the specified identifier.
-     * @param id The identifier.
-     */
-    delete(id: number): Observable<void> {
-        let url_ = this.baseUrl + "/values/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<void>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ErrorModel.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ErrorModel.fromJS(resultData403);
-            return throwException("A server error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorModel.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-            }));
-        } else if (status === 409) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result409: any = null;
-            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = ErrorModel.fromJS(resultData409);
-            return throwException("A server error occurred.", status, _responseText, _headers, result409);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = ErrorModel.fromJS(resultData500);
-            return throwException("A server error occurred.", status, _responseText, _headers, result500);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(<any>null);
+        return _observableOf<TaskModel>(<any>null);
     }
 }
 
@@ -1713,18 +1340,10 @@ export abstract class BaseCommand implements IBaseCommand {
     static fromJS(data: any): BaseCommand {
         data = typeof data === 'object' ? data : {};
         if (data["discriminator"] === "BaseProcessCommand`1") {
-            throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
+            throw new Error("The abstract class 'BaseProcessCommandOfProcessResultModel' cannot be instantiated.");
         }
         if (data["discriminator"] === "ProcessObjectCommand") {
             let result = new ProcessObjectCommand();
-            result.init(data);
-            return result;
-        }
-        if (data["discriminator"] === "BaseProcessCommandOfProcessResultModel") {
-            throw new Error("The abstract class 'BaseProcessCommandOfProcessResultModel' cannot be instantiated.");
-        }
-        if (data["discriminator"] === "ProcessObjectAsyncCommand") {
-            let result = new ProcessObjectAsyncCommand();
             result.init(data);
             return result;
         }
@@ -1827,8 +1446,6 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
     commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
-    /** Gets or sets the identifier of the task. */
-    taskId?: string | undefined;
 
     constructor(data?: IProcessObjectCommand) {
         super(data);
@@ -1840,7 +1457,6 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
         if (data) {
             this.commandType = data["commandType"];
             this.id = data["id"];
-            this.taskId = data["taskId"];
         }
     }
 
@@ -1855,7 +1471,6 @@ export class ProcessObjectCommand extends BaseProcessCommandOfProcessResultModel
         data = typeof data === 'object' ? data : {};
         data["commandType"] = this.commandType;
         data["id"] = this.id;
-        data["taskId"] = this.taskId;
         super.toJSON(data);
         return data; 
     }
@@ -1867,8 +1482,6 @@ export interface IProcessObjectCommand extends IBaseProcessCommandOfProcessResul
     commandType?: CommandType;
     /** Gets or sets the identifier of the object. */
     id?: string | undefined;
-    /** Gets or sets the identifier of the task. */
-    taskId?: string | undefined;
 }
 
 /** A type to describe the command. */
@@ -1876,7 +1489,6 @@ export enum CommandType {
     Unknown = 0, 
     ProcessPathCommand = 1, 
     ProcessObjectCommand = 2, 
-    ProcessObjectAsyncCommand = 3, 
 }
 
 /** The different axis types of the coordinate system. */
@@ -1903,119 +1515,6 @@ export enum BezierEasingType {
     EaseInQuart = 5, 
     EaseOutQuart = 6, 
     EaseInOutQuart = 7, 
-}
-
-export abstract class BaseProcessCommandOfTaskModel extends BaseCommand implements IBaseProcessCommandOfTaskModel {
-    desiredSize?: number;
-    amountPerAxis?: number;
-    axisTypes?: AxisType[] | undefined;
-    imageFormat?: ImageFormat;
-    bezierEasingTypePerAxis?: BezierEasingType;
-    bezierEasingTypeCombined?: BezierEasingType;
-    grayscale?: boolean;
-
-    constructor(data?: IBaseProcessCommandOfTaskModel) {
-        super(data);
-        this._discriminator = "BaseProcessCommandOfTaskModel";
-    }
-
-    init(data?: any) {
-        super.init(data);
-        if (data) {
-            this.desiredSize = data["desiredSize"];
-            this.amountPerAxis = data["amountPerAxis"];
-            if (Array.isArray(data["axisTypes"])) {
-                this.axisTypes = [] as any;
-                for (let item of data["axisTypes"])
-                    this.axisTypes!.push(item);
-            }
-            this.imageFormat = data["imageFormat"];
-            this.bezierEasingTypePerAxis = data["bezierEasingTypePerAxis"];
-            this.bezierEasingTypeCombined = data["bezierEasingTypeCombined"];
-            this.grayscale = data["grayscale"];
-        }
-    }
-
-    static fromJS(data: any): BaseProcessCommandOfTaskModel {
-        data = typeof data === 'object' ? data : {};
-        if (data["discriminator"] === "ProcessObjectAsyncCommand") {
-            let result = new ProcessObjectAsyncCommand();
-            result.init(data);
-            return result;
-        }
-        throw new Error("The abstract class 'BaseProcessCommandOfTaskModel' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["desiredSize"] = this.desiredSize;
-        data["amountPerAxis"] = this.amountPerAxis;
-        if (Array.isArray(this.axisTypes)) {
-            data["axisTypes"] = [];
-            for (let item of this.axisTypes)
-                data["axisTypes"].push(item);
-        }
-        data["imageFormat"] = this.imageFormat;
-        data["bezierEasingTypePerAxis"] = this.bezierEasingTypePerAxis;
-        data["bezierEasingTypeCombined"] = this.bezierEasingTypeCombined;
-        data["grayscale"] = this.grayscale;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IBaseProcessCommandOfTaskModel extends IBaseCommand {
-    desiredSize?: number;
-    amountPerAxis?: number;
-    axisTypes?: AxisType[] | undefined;
-    imageFormat?: ImageFormat;
-    bezierEasingTypePerAxis?: BezierEasingType;
-    bezierEasingTypeCombined?: BezierEasingType;
-    grayscale?: boolean;
-}
-
-/** A command containing information needed to process objects. */
-export class ProcessObjectAsyncCommand extends BaseProcessCommandOfTaskModel implements IProcessObjectAsyncCommand {
-    /** Gets the type of the command. */
-    commandType?: CommandType;
-    /** Gets or sets the identifier of the object. */
-    id?: string | undefined;
-
-    constructor(data?: IProcessObjectAsyncCommand) {
-        super(data);
-        this._discriminator = "ProcessObjectAsyncCommand";
-    }
-
-    init(data?: any) {
-        super.init(data);
-        if (data) {
-            this.commandType = data["commandType"];
-            this.id = data["id"];
-        }
-    }
-
-    static fromJS(data: any): ProcessObjectAsyncCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProcessObjectAsyncCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["commandType"] = this.commandType;
-        data["id"] = this.id;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-/** A command containing information needed to process objects. */
-export interface IProcessObjectAsyncCommand extends IBaseProcessCommandOfTaskModel {
-    /** Gets the type of the command. */
-    commandType?: CommandType;
-    /** Gets or sets the identifier of the object. */
-    id?: string | undefined;
 }
 
 /** A command containing information needed to process paths (directory, file, url, etc.). */
@@ -2481,6 +1980,46 @@ export abstract class MarshalByRefObject implements IMarshalByRefObject {
 }
 
 export interface IMarshalByRefObject {
+}
+
+/** A command containing information needed to create a task. */
+export class CreateTaskCommand implements ICreateTaskCommand {
+    /** Gets or sets the command used to create this task. */
+    command?: BaseCommand | undefined;
+
+    constructor(data?: ICreateTaskCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.command = data["command"] ? BaseCommand.fromJS(data["command"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateTaskCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTaskCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["command"] = this.command ? this.command.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+/** A command containing information needed to create a task. */
+export interface ICreateTaskCommand {
+    /** Gets or sets the command used to create this task. */
+    command?: BaseCommand | undefined;
 }
 
 export interface FileParameter {

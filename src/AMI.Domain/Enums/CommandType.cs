@@ -18,11 +18,6 @@
         /// <summary>
         /// The command type to process objects.
         /// </summary>
-        ProcessObjectCommand = 2,
-
-        /// <summary>
-        /// The command type to process objects asynchronous.
-        /// </summary>
-        ProcessObjectAsyncCommand = 3
+        ProcessObjectCommand = 2
     }
 }

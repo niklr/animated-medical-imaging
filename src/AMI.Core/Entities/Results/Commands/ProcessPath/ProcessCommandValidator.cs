@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Shared.Commands.ProcessObjectAsync;
+using FluentValidation;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessPath
 {
@@ -13,6 +15,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
         /// </summary>
         public ProcessCommandValidator()
         {
+            Include(new BaseProcessCommandValidator<ProcessResultModel>());
             RuleFor(x => x.SourcePath).NotEmpty().MaximumLength(1024);
             RuleFor(x => x.DestinationPath).NotEmpty().MaximumLength(1024);
         }

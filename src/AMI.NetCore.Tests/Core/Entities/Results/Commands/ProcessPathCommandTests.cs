@@ -50,13 +50,16 @@ namespace AMI.NetCore.Tests.Core.Entities.Results.Commands
             var ex = Assert.ThrowsAsync<ValidationException>(() => mediator.Send(command, ct));
             Assert.AreEqual("One or more validation failures have occurred.", ex.Message);
             Assert.IsNotNull(ex.Failures);
-            Assert.AreEqual(2, ex.Failures.Count);
-            var firstEntry = ex.Failures[nameof(command.SourcePath)];
+            Assert.AreEqual(3, ex.Failures.Count);
+            var firstEntry = ex.Failures[nameof(command.AmountPerAxis)];
             Assert.AreEqual(1, firstEntry.Length);
-            Assert.AreEqual("'Source Path' must not be empty.", firstEntry[0]);
-            var secondEntry = ex.Failures[nameof(command.DestinationPath)];
+            Assert.AreEqual("'Amount Per Axis' must be greater than '0'.", firstEntry[0]);
+            var secondEntry = ex.Failures[nameof(command.SourcePath)];
             Assert.AreEqual(1, secondEntry.Length);
-            Assert.AreEqual("'Destination Path' must not be empty.", secondEntry[0]);
+            Assert.AreEqual("'Source Path' must not be empty.", secondEntry[0]);
+            var thirdEntry = ex.Failures[nameof(command.DestinationPath)];
+            Assert.AreEqual(1, thirdEntry.Length);
+            Assert.AreEqual("'Destination Path' must not be empty.", thirdEntry[0]);
         }
     }
 }

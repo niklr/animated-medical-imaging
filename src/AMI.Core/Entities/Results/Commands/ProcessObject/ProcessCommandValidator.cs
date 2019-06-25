@@ -1,4 +1,6 @@
-﻿using AMI.Core.Extensions.FluentValidationExtensions;
+﻿using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Shared.Commands.ProcessObjectAsync;
+using AMI.Core.Extensions.FluentValidationExtensions;
 using FluentValidation;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessObject
@@ -14,8 +16,8 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// </summary>
         public ProcessCommandValidator()
         {
+            Include(new BaseProcessCommandValidator<ProcessResultModel>());
             RuleFor(x => x.Id).NotEmpty().GuidValidation();
-            RuleFor(x => x.TaskId).NotEmpty().GuidValidation();
         }
     }
 }

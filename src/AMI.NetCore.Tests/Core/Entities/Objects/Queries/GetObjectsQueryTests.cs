@@ -48,7 +48,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Queries
         }
 
         [Test]
-        public void GetObjectsQuery_Validation_Failures_1()
+        public void GetObjectsQuery_Validation_Failures()
         {
             // Arrange
             var mediator = GetService<IMediator>();

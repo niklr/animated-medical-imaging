@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Queues;
@@ -13,12 +14,13 @@ using AMI.Domain.Exceptions;
 using RNS.Framework.Extensions.MutexExtensions;
 using RNS.Framework.Extensions.Reflection;
 
-namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
+namespace AMI.Core.Entities.Tasks.Commands.Create
 {
     /// <summary>
-    /// A handler for process command requests.
+    /// A handler for create command requests.
     /// </summary>
-    public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectAsyncCommand, TaskModel>
+    /// <seealso cref="BaseCommandRequestHandler{CreateObjectCommand, TaskModel}" />
+    public class CreateCommandHandler : BaseCommandRequestHandler<CreateTaskCommand, TaskModel>
     {
         private static Mutex processMutex;
 
@@ -28,13 +30,13 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
         private readonly ITaskQueue queue;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProcessCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="idGenService">The service to generate unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="queue">The task queue.</param>
-        public ProcessCommandHandler(
+        public CreateCommandHandler(
             IAmiUnitOfWork context,
             IIdGenService idGenService,
             IDefaultJsonSerializer serializer,
@@ -48,15 +50,24 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
         }
 
         /// <inheritdoc/>
-        protected override async Task<TaskModel> ProtectedHandleAsync(ProcessObjectAsyncCommand request, CancellationToken cancellationToken)
+        protected override async Task<TaskModel> ProtectedHandleAsync(CreateTaskCommand request, CancellationToken cancellationToken)
         {
+            context.BeginTransaction();
+
+            if (request.Command.CommandType != CommandType.ProcessObjectCommand || request.Command.GetType() != typeof(ProcessObjectCommand))
+            {
+                throw new NotSupportedException("The provided command type is not supported.");
+            }
+
+            var command = request.Command as ProcessObjectCommand;
+
             processMutex = new Mutex(false, this.GetMethodName());
 
             return await processMutex.Execute(new TimeSpan(0, 0, 1), async () =>
             {
                 context.BeginTransaction();
 
-                Guid objectId = Guid.Parse(request.Id);
+                Guid objectId = Guid.Parse(command.Id);
 
                 var activeCount = await context.TaskRepository.CountAsync(e =>
                     e.ObjectId == objectId &&
@@ -77,8 +88,8 @@ namespace AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync
                     Status = (int)Domain.Enums.TaskStatus.Queued,
                     Progress = 0,
                     Position = queue.Count,
-                    CommandType = (int)CommandType.ProcessObjectAsyncCommand,
-                    CommandSerialized = serializer.Serialize(request),
+                    CommandType = (int)CommandType.ProcessObjectCommand,
+                    CommandSerialized = serializer.Serialize(command),
                     ObjectId = objectId
                 };
 

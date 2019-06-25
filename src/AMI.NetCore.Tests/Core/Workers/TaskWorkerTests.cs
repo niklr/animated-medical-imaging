@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
-using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
+using AMI.Core.Entities.Results.Commands.ProcessObject;
+using AMI.Core.Entities.Tasks.Commands.Create;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Workers;
@@ -21,11 +22,14 @@ namespace AMI.NetCore.Tests.Core.Workers
             var queue = GetService<ITaskQueue>();
             var mediator = GetService<IMediator>();
             var context = GetService<IAmiUnitOfWork>();
-            var command = new ProcessObjectAsyncCommand()
+            var command = new CreateTaskCommand()
             {
-                Id = Guid.NewGuid().ToString(),
-                AmountPerAxis = 1,
-                DesiredSize = 0
+                Command = new ProcessObjectCommand()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    AmountPerAxis = 1,
+                    DesiredSize = 0
+                }
             };
             var cts = new CancellationTokenSource();
             cts.CancelAfter(3000);
@@ -38,7 +42,7 @@ namespace AMI.NetCore.Tests.Core.Workers
             // Assert
             Assert.IsNotNull(result1);
             Assert.AreEqual(TaskStatus.Queued, result1.Status);
-            Assert.AreEqual(CommandType.ProcessObjectAsyncCommand, result1.Command.CommandType);
+            Assert.AreEqual(CommandType.ProcessObjectCommand, result1.Command.CommandType);
             Assert.AreEqual(WorkerStatus.Terminated, worker.WorkerStatus);
             Assert.IsNotNull(result2);
             Assert.AreEqual(TaskStatus.Failed, (TaskStatus)result2.Status);

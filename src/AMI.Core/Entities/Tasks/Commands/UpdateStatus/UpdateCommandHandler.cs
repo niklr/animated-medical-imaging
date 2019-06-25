@@ -51,6 +51,11 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
                 entity.Position = 0;
             }
 
+            if (!string.IsNullOrWhiteSpace(request.ResultId))
+            {
+                entity.ResultId = Guid.Parse(request.ResultId);
+            }
+
             context.TaskRepository.Update(entity);
 
             await context.SaveChangesAsync(cancellationToken);

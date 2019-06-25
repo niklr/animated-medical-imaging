@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Repositories;
@@ -10,41 +9,40 @@ using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
 using MediatR;
 
-namespace AMI.Core.Entities.Objects.Queries.GetById
+namespace AMI.Core.Entities.Tasks.Queries.GetById
 {
     /// <summary>
     /// A handler for queries to get an object by its identifier.
     /// </summary>
-    public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, ObjectModel>
+    public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, TaskModel>
     {
         private readonly IAmiUnitOfWork context;
-        private readonly IApplicationConstants constants;
         private readonly IDefaultJsonSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetByIdQueryHandler"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <param name="constants">The application constants.</param>
         /// <param name="serializer">The JSON serializer.</param>
-        public GetByIdQueryHandler(IAmiUnitOfWork context, IApplicationConstants constants, IDefaultJsonSerializer serializer)
+        public GetByIdQueryHandler(IAmiUnitOfWork context, IDefaultJsonSerializer serializer)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
         /// <inheritdoc/>
-        public async Task<ObjectModel> Handle(GetByIdQuery request, CancellationToken cancellationToken)
+        public async Task<TaskModel> Handle(GetByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = context.ObjectRepository
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = context.TaskRepository
                 .GetQuery()
                 .Where(e => e.Id == Guid.Parse(request.Id))
                 .Select(e => new
                 {
-                    Object = e,
-                    Tasks = e.Tasks.OrderByDescending(e1 => e1.CreatedDate).Take(constants.DefaultPaginationLimit),
-                    Results = e.Tasks.OrderByDescending(e1 => e1.CreatedDate).Select(e1 => e1.Result).Take(constants.DefaultPaginationLimit)
+                    Task = e,
+                    e.Object,
+                    e.Result
                 })
                 .FirstOrDefault();
 
@@ -53,7 +51,7 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
                 throw new NotFoundException(nameof(ObjectEntity), request.Id);
             }
 
-            var model = ObjectModel.Create(result.Object, result.Tasks, result.Results, serializer);
+            var model = TaskModel.Create(result.Task, result.Object, result.Result, serializer);
 
             await Task.CompletedTask;
 

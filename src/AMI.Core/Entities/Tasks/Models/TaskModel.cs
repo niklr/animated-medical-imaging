@@ -1,6 +1,7 @@
 ﻿using System;
+using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Shared.Commands;
-using AMI.Core.Entities.Tasks.Commands.ProcessObjectAsync;
+using AMI.Core.Entities.Shared.Models;
 using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
@@ -10,7 +11,7 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model containing information about the task.
     /// </summary>
-    public class TaskModel
+    public class TaskModel : IEntity
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -90,8 +91,8 @@ namespace AMI.Core.Entities.Models
             {
                 switch (commandType)
                 {
-                    case CommandType.ProcessObjectAsyncCommand:
-                        model.Command = serializer.Deserialize<ProcessObjectAsyncCommand>(entity.CommandSerialized);
+                    case CommandType.ProcessObjectCommand:
+                        model.Command = serializer.Deserialize<ProcessObjectCommand>(entity.CommandSerialized);
                         break;
                     default:
                         break;

@@ -16,6 +16,11 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the result.
+        /// </summary>
+        public string ResultId { get; set; }
+
+        /// <summary>
         /// Gets or sets the status.
         /// </summary>
         public TaskStatus Status { get; set; }
