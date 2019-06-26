@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { PageEvent } from '../../../../events/page.event';
-import { ObjectModelExtended } from '../../../../models/object-extended.model';
-import { ObjectProxy, TaskProxy } from '../../../../proxies';
-import { ObjectStore } from '../../../../stores/object.store';
-import { NotificationService } from '../../../../services/notification.service';
+import { PageEvent } from '../../../events/page.event';
+import { ObjectModelExtended } from '../../../models/object-extended.model';
+import { ObjectProxy, TaskProxy } from '../../../proxies';
+import { ObjectStore } from '../../../stores/object.store';
+import { NotificationService } from '../../../services/notification.service';
 import {
   AxisContainerModelOfString,
   AxisType,
@@ -12,7 +12,7 @@ import {
   ProcessResultModel,
   TaskModel,
   TaskStatus
-} from '../../../../clients/ami-api-client';
+} from '../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-objects',

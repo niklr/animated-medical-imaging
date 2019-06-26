@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigService } from '../../../services/config.service';
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-datatransfer',
-  templateUrl: './datatransfer.component.html',
-  styleUrls: ['./datatransfer.component.scss']
+  templateUrl: './datatransfer.component.html'
 })
 export class DatatransferComponent implements OnInit {
 

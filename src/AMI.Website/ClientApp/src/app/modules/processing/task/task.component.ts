@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { MomentUtil } from '../../../../utils';
-import { TaskStatus, TaskModel, ProcessObjectCommand, AxisType } from '../../../../clients/ami-api-client';
+import { MomentUtil } from '../../../utils';
+import { TaskStatus, TaskModel, ProcessObjectCommand, AxisType } from '../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-task',

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
-import { DatatransferModule } from '../../shared/modules/datatransfer/datatransfer.module';
-import { ProcessingModule } from '../../shared/modules/processing/processing.module';
+import { DatatransferModule } from '../datatransfer/datatransfer.module';
+import { ProcessingModule } from '../processing/processing.module';
 
 @NgModule({
   imports: [

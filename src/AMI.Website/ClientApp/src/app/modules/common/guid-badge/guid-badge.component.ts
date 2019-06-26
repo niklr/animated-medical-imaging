@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { ClipboardUtil, GuidUtil } from '../../../../utils';
-import { NotificationService } from '../../../../services/notification.service';
+import { ClipboardUtil, GuidUtil } from '../../../utils';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-common-guid-badge',

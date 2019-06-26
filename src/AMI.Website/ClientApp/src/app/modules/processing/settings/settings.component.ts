@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { AxisType, ProcessObjectCommand } from '../../../../clients/ami-api-client';
-import { ObjectStore } from '../../../../stores/object.store';
+import { AxisType, ProcessObjectCommand } from '../../../clients/ami-api-client';
+import { ObjectStore } from '../../../stores/object.store';
 
 @Component({
   selector: 'app-processing-settings',

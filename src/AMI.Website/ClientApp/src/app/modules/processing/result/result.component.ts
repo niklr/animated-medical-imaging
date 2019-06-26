@@ -1,10 +1,10 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { ContainerModelExtended } from '../../../../models/container-extended.model';
-import { ProcessResultModelExtended } from '../../../../models/result-extended.model';
-import { ConfigService } from '../../../../services/config.service';
+import { ContainerModelExtended } from '../../../models/container-extended.model';
+import { ProcessResultModelExtended } from '../../../models/result-extended.model';
+import { ConfigService } from '../../../services/config.service';
 import {
   AxisType, AxisContainerModelOfString, PositionAxisContainerModelOfString
-} from '../../../../clients/ami-api-client';
+} from '../../../clients/ami-api-client';
 
 @Component({
   selector: 'app-processing-result',

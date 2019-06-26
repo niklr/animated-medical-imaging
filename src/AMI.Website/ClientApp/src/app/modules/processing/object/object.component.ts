@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
-import { ObjectModelExtended } from '../../../../models/object-extended.model';
-import { ObjectProxy } from '../../../../proxies';
-import { NotificationService } from '../../../../services/notification.service';
-import { ObjectStore } from '../../../../stores/object.store';
-import { GuidUtil, MomentUtil } from '../../../../utils';
+import { ObjectModelExtended } from '../../../models/object-extended.model';
+import { ObjectProxy } from '../../../proxies';
+import { NotificationService } from '../../../services/notification.service';
+import { ObjectStore } from '../../../stores/object.store';
+import { GuidUtil, MomentUtil } from '../../../utils';
 
 @Component({
   selector: '[app-processing-object]',
