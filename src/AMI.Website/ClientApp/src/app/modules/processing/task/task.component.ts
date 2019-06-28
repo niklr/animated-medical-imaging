@@ -42,7 +42,6 @@ export class TaskComponent implements OnInit, AfterViewInit {
   }
 
   private initMaterialize(): void {
-
   }
 
   public showSpinner(): boolean {

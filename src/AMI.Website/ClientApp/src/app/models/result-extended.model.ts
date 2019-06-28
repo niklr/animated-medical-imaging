@@ -6,7 +6,7 @@ import {
 } from '../../app/clients/ami-api-client';
 
 export interface ProcessResultModelExtended extends ProcessResultModel {
-  combinedGifUrl: string;
+  combinedGifExtended: ContainerModelExtended;
   showCombinedGif: boolean;
   xAxisGif: AxisContainerModelOfString & ContainerModelExtended;
   yAxisGif: AxisContainerModelOfString & ContainerModelExtended;

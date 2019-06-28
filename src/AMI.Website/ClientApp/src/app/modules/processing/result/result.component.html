@@ -1,9 +1,8 @@
 <div class="row" *ngIf="result.showCombinedGif">
   <div class="col s12">
-    <img class="materialboxed" data-caption="The combined GIF of all selected/available axis types." width="250" [src]="result.combinedGifUrl">
+    <img class="materialboxed" data-caption="The combined GIF of all selected/available axis types." width="250" [src]="result.combinedGifExtended.entityUrl" (click)="openPhotoSwipe(result.combinedGifExtended)">
   </div>
 </div>
-
 <div class="row">
   <div class="col s12">
     <div class="card">
@@ -12,10 +11,10 @@
           <h6>X-Axis</h6>
           <div class="row">
             <div class="col s12 m6 l2" *ngIf="result.xAxisGif">
-              <img class="materialboxed responsive-img mt-10" [src]="result.xAxisGif.entityUrl">
+              <img class="materialboxed responsive-img mt-10" [src]="result.xAxisGif.entityUrl" (click)="openPhotoSwipe(result.xAxisGif)">
             </div>
             <div class="col s12 m6 l2" *ngFor="let image of result.xAxisImages">
-              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1">
+              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1" (click)="openPhotoSwipe(image)">
             </div>
           </div>
         </div>
@@ -23,10 +22,10 @@
           <h6>Y-Axis</h6>
           <div class="row">
             <div class="col s12 m6 l2" *ngIf="result.yAxisGif">
-              <img class="materialboxed responsive-img mt-10" [src]="result.yAxisGif.entityUrl">
+              <img class="materialboxed responsive-img mt-10" [src]="result.yAxisGif.entityUrl" (click)="openPhotoSwipe(result.yAxisGif)">
             </div>
             <div class="col s12 m6 l2" *ngFor="let image of result.yAxisImages">
-              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1">
+              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1" (click)="openPhotoSwipe(image)">
             </div>
           </div>
         </div>
@@ -34,10 +33,10 @@
           <h6>Z-Axis</h6>
           <div class="row">
             <div class="col s12 m6 l2" *ngIf="result.zAxisGif">
-              <img class="materialboxed responsive-img mt-10" [src]="result.zAxisGif.entityUrl">
+              <img class="materialboxed responsive-img mt-10" [src]="result.zAxisGif.entityUrl" (click)="openPhotoSwipe(result.zAxisGif)">
             </div>
             <div class="col s12 m6 l2" *ngFor="let image of result.zAxisImages">
-              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1">
+              <img class="materialboxed responsive-img mt-10" [src]="image.entityUrl" [alt]="image.position + 1" (click)="openPhotoSwipe(image)">
             </div>
           </div>
         </div>

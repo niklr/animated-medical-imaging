@@ -1,9 +1,13 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { ContainerModelExtended } from '../../../models/container-extended.model';
+import { PhotoSwipeItemModel } from '../../../models/photoswipe-item.model';
 import { ProcessResultModelExtended } from '../../../models/result-extended.model';
 import { ConfigService } from '../../../services/config.service';
 import {
-  AxisType, AxisContainerModelOfString, PositionAxisContainerModelOfString
+  AxisType,
+  AxisContainerModelOfString,
+  PositionAxisContainerModelOfString,
+  ProcessObjectCommand
 } from '../../../clients/ami-api-client';
 
 @Component({
@@ -13,6 +17,9 @@ import {
 export class ResultComponent implements OnInit, AfterViewInit {
 
   @Input() result: ProcessResultModelExtended;
+  @Input() command: ProcessObjectCommand;
+
+  public photoswipeItems: PhotoSwipeItemModel[] = [];
 
   constructor() {
   }
@@ -25,15 +32,6 @@ export class ResultComponent implements OnInit, AfterViewInit {
       if (this.result) {
         this.initExtendedResult();
       }
-      this.initMaterialbox();
-    });
-  }
-
-  private initMaterialbox(): void {
-    setTimeout(() => {
-      var options = {};
-      var elems = document.querySelectorAll('.materialboxed');
-      var instance = M.Materialbox.init(elems, options);
     });
   }
 
@@ -84,9 +82,13 @@ export class ResultComponent implements OnInit, AfterViewInit {
     }
 
     // Other
-    this.result.combinedGifUrl = this.buildEntityUrl(this.result.combinedGif);
+    this.result.combinedGifExtended = new ContainerModelExtended({
+      entityUrl: this.buildEntityUrl(this.result.combinedGif)
+    });
     this.result.showCombinedGif = (this.result.xAxisGif ? 1 : 0)
       + (this.result.yAxisGif ? 1 : 0) + (this.result.zAxisGif ? 1 : 0) > 1;
+
+    this.initPhotoSwipe();
   }
 
   private buildEntityUrl(entity: string): string {
@@ -96,5 +98,46 @@ export class ResultComponent implements OnInit, AfterViewInit {
     } else {
       return entity;
     }
+  }
+
+  private initPhotoSwipe(): void {
+    var currentIndex = -1;
+    currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.combinedGifExtended);
+    currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.xAxisGif);
+    for (var i = 0; i < this.result.xAxisImages.length; i++) {
+      currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.xAxisImages[i]);
+    }
+    currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.yAxisGif);
+    for (var i = 0; i < this.result.yAxisImages.length; i++) {
+      currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.yAxisImages[i]);
+    }
+    currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.zAxisGif);
+    for (var i = 0; i < this.result.zAxisImages.length; i++) {
+      currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.zAxisImages[i]);
+    }
+  }
+
+  private addPhotoSwipeItem(index: number, container: ContainerModelExtended): number {
+    if (container && container.entityUrl) {
+      this.photoswipeItems.push(new PhotoSwipeItemModel({
+        src: container.entityUrl,
+        h: this.command.desiredSize,
+        w: this.command.desiredSize
+      }));
+      container.index = ++index;
+    }
+    return index;
+  }
+
+  public openPhotoSwipe(container: ContainerModelExtended): void {
+    var pswpElement = document.querySelectorAll('.pswp')[0];
+    var options = {
+      index: container.index,
+      shareButtons: [
+        { id: 'download', label: 'Download image', url: '{{raw_image_url}}', download: true }
+      ]
+    };
+    var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, this.photoswipeItems, options);
+    gallery.init();
   }
 }
