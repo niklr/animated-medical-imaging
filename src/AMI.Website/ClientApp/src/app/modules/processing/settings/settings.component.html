@@ -2,7 +2,7 @@
   <div class="input-field col s12 m6">
     <input [value]="settings.desiredSize" [(ngModel)]="settings.desiredSize" id="size" type="number" class="validate" min="0" max="1000">
     <label for="size">Image size</label>
-    <span class="helper-text">The desired size of the extracted images.</span>
+    <span class="helper-text">The desired size of the extracted images in pixels.</span>
   </div>
   <div class="input-field col s12 m6">
     <input [value]="settings.amountPerAxis" [(ngModel)]="settings.amountPerAxis" id="amount" type="number" class="validate" min="0" max="1000">
@@ -25,5 +25,12 @@
         Convert to grayscale
       </label>
     </div>
+  </div>
+</div>
+<div class="row mt-2 mb-0">
+  <div class="col s12 m6 offset-m3">
+    <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn" [clickFn]="processSelectedObjects" appClickOnce>
+      <i class="fas fa-rocket"></i> PROCESS
+    </button>
   </div>
 </div>

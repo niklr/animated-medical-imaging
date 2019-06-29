@@ -1,3 +1,10 @@
+.object-table-container {
+  position: relative;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .object-table {
   table-layout: fixed;
   width: 100%;

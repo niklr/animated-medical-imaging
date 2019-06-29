@@ -10,6 +10,7 @@ import { TimeoutInterceptor, DEFAULT_TIMEOUT } from './interceptors';
 import { AppProxy } from './proxies/app.proxy';
 import { ConfigService } from './services/config.service';
 import { NotificationService } from './services/notification.service';
+import { PubSubService } from './services/pubsub.service';
 
 export function initConfig(configService: ConfigService) {
   return () => configService.load();
@@ -33,6 +34,7 @@ export function initBaseAmiApi() {
     AppProxy,
     ConfigService,
     NotificationService,
+    PubSubService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TimeoutInterceptor,

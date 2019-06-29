@@ -1,9 +1,11 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { PubSubTopic } from '../../../enums/pub-sub-topic.enum';
 import { PageEvent } from '../../../events/page.event';
 import { ObjectModelExtended } from '../../../models/object-extended.model';
-import { ObjectProxy, TaskProxy } from '../../../proxies';
+import { ObjectProxy } from '../../../proxies';
 import { ObjectStore } from '../../../stores/object.store';
 import { NotificationService } from '../../../services/notification.service';
+import { PubSubService } from '../../../services/pubsub.service';
 import {
   AxisContainerModelOfString,
   AxisType,
@@ -18,30 +20,30 @@ import {
   selector: 'app-processing-objects',
   templateUrl: './objects.component.html'
 })
-export class ObjectsComponent implements OnInit, AfterViewInit {
+export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  private isChecked: boolean = true;
+  private _subs: string[] = [];
 
-  // Paginator Output
+  public isChecked: boolean = true;
   public pageEvent: PageEvent;
 
-  constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy, private taskProxy: TaskProxy, public objectStore: ObjectStore) {
+  constructor(private notificationService: NotificationService, private pubSubService: PubSubService,
+    private objectProxy: ObjectProxy, public objectStore: ObjectStore) {
     this.pageEvent = this.objectStore.pageEvent;
   }
 
   ngOnInit() {
-    document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', function (item) {
-      try {
-        let that = this as ObjectsComponent;
-        that.refresh();
-        let result = JSON.parse(item.detail.message) as ObjectModel;
-        that.processObject(result.id, undefined);
-      } catch (e) { }
-    }.bind(this));
   }
 
   ngAfterViewInit(): void {
     this.init();
+  }
+
+  ngOnDestroy(): void {
+    this._subs.forEach(sub => {
+      this.pubSubService.unsubscribe(sub);
+    });
+    this._subs = [];
   }
 
   private initDropdown(): void {
@@ -53,6 +55,12 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   }
 
   private init(): void {
+    const sub1 = this.pubSubService.subscribe(PubSubTopic.OBJECTS_INIT_TOPIC, function (msg, data) {
+      const that = this as ObjectsComponent;
+      that.refresh();
+    }.bind(this));
+    this._subs.push(sub1);
+
     // this.initDemoObjects();
     this.setPage(this.pageEvent);
   }
@@ -60,6 +68,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   private afterInit(): void {
     this.initDropdown();
     // Mark all objects as checked by default
+    this.isChecked = true;
     var items = this.objectStore.getItems();
     if (items) {
       for (var i = 0; i < items.length; i++) {
@@ -174,30 +183,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public processSelectedObjects = (callbackFn) => {
-    var items = this.objectStore.getItems();
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      if (item.isChecked) {
-        this.processObject(item.id, callbackFn);
-      }
-    }
-  }
-
-  public processObject(id: string, callbackFn: Function): void {
-    var settings = this.objectStore.settings;
-    this.taskProxy.create(id, settings).subscribe(result => {
-      this.refresh();
-    }, error => {
-      this.notificationService.handleError(error);
-    }).add(() => {
-      // finally block
-      if (!!callbackFn && typeof callbackFn === 'function') {
-        callbackFn();
-      }
-    });
-  }
-
   public toggleCheckbox(): void {
     this.isChecked = !this.isChecked;
     var items = this.objectStore.getItems();
@@ -220,13 +205,34 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
       this.objectStore.setItems(result.items as ObjectModelExtended[]);
       this.afterInit();
     }, error => {
-      console.log(error);
       this.notificationService.handleError(error);
     });
   }
 
   public refresh(): void {
     this.setPage(this.pageEvent);
+  }
+
+  public downloadSelectedObjects = (callbackFn) => {
+    var items = this.objectStore.getItems();
+    if (items) {
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        if (item.isChecked) {
+          // TODO: start download
+        }
+      }
+    }
+
+    var timeout = 1000;
+    if (items.length > 0) {
+      timeout = 5000;
+    }
+    setTimeout(() => {
+      if (!!callbackFn && typeof callbackFn === 'function') {
+        callbackFn();
+      }
+    }, timeout);
   }
 }
 

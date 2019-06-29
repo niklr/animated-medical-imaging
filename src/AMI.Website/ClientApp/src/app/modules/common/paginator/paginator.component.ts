@@ -39,6 +39,7 @@ export class PaginationComponent implements OnInit, AfterViewInit, OnDestroy {
     this._pageSize = Math.max(value, 0);
     this._updateDisplayedPageSizeOptions();
     if (this._pageSize != previousPageSize) {
+      this.pageIndex = 0;
       this._emitPageEvent(0);
     }
   }
@@ -75,7 +76,6 @@ export class PaginationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this._intlChanges.unsubscribe();
   }
 
   /** Advances to the next page if it exists. */
