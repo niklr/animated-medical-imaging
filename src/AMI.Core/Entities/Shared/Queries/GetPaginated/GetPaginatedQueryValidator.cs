@@ -23,7 +23,7 @@ namespace AMI.Core.Entities.Shared.Queries.GetPaginated
                 throw new ArgumentNullException(nameof(constants));
             }
 
-            RuleFor(x => x.Page).NotEmpty().GreaterThan(0);
+            RuleFor(x => x.Page).NotNull().GreaterThanOrEqualTo(0);
             RuleFor(x => x.Limit).NotEmpty().GreaterThan(0).In(constants.AllowedPaginationLimitValues);
         }
     }

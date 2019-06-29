@@ -1,14 +1,14 @@
-.collapsible.custom-collapsible .collapsible-header {
+.custom-collapsible .collapsible-header {
   padding: 24px;
   justify-content: space-between;
   transition: border 0s linear .3s;
 }
 
-.collapsible.custom-collapsible > .active .caret {
+.custom-collapsible > .active > .collapsible-header > .caret {
   transform: rotate(90deg)
 }
 
-.collapsible.custom-collapsible .collapsible-header .caret {
+.custom-collapsible .collapsible-header > .caret {
   transition: transform .2s
 }
 

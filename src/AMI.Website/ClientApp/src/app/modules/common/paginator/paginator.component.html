@@ -1,0 +1,21 @@
+<div class="row" *ngIf="isPaginated()">
+  <div class="col s12">
+    <div class="input-field custom-pagination-select mr-2">
+      <select [id]="pageSizeOptionsGuid" [(ngModel)]="pageSize">
+        <option *ngFor="let o of pageSizeOptions" [value]="o">
+          {{o}}
+        </option>
+      </select>
+      <label>Limit</label>
+    </div>
+    <span class="mr-1">{{getMin()}} - {{getMax()}} of {{length}}</span>
+    <button [ngClass]="{'waves-effect': hasPreviousPage(), 'disabled': !hasPreviousPage()}"
+            class="btn-flat" type="button" (click)="previousPage()">
+      <i class="material-icons">chevron_left</i>
+    </button>
+    <button [ngClass]="{'waves-effect': hasNextPage(), 'disabled': !hasNextPage()}"
+            class="btn-flat" type="button" (click)="nextPage()">
+      <i class="material-icons">chevron_right</i>
+    </button>
+  </div>
+</div>

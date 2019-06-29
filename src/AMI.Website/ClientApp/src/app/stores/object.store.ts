@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ObjectModel, ProcessObjectCommand } from '../clients/ami-api-client';
+import { ProcessObjectCommand } from '../clients/ami-api-client';
+import { PageEvent } from '../events/page.event';
 import { ObjectModelExtended } from '../models/object-extended.model';
 
 @Injectable()
@@ -8,7 +9,8 @@ export class ObjectStore {
   private items: ObjectModelExtended[] = [];
 
   public count = 0;
-  public settings: ProcessObjectCommand = new ProcessObjectCommand()
+  public settings: ProcessObjectCommand = new ProcessObjectCommand();
+  public pageEvent: PageEvent = new PageEvent();
 
   constructor() {
     this.settings.desiredSize = 250;
@@ -30,7 +32,7 @@ export class ObjectStore {
   }
 
   public deleteById(id: string): void {
-    this.items = this.items.filter((item: ObjectModelExtended) => {
+    this.items = this.items.filter((item) => {
       return item.id !== id;
     });
     this.updateCount();

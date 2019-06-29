@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ClickOnceDirective } from '../../directives';
 import { ClipboardUtil, GuidUtil } from '../../utils';
 import { GuidBadgeComponent } from './guid-badge/guid-badge.component';
+import { PaginationComponent } from './paginator/paginator.component';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { GuidBadgeComponent } from './guid-badge/guid-badge.component';
   ],
   declarations: [
     ClickOnceDirective,
-    GuidBadgeComponent
+    GuidBadgeComponent,
+    PaginationComponent
   ],
   providers: [
     ClipboardUtil,
@@ -20,7 +22,8 @@ import { GuidBadgeComponent } from './guid-badge/guid-badge.component';
   ],
   exports: [
     ClickOnceDirective,
-    GuidBadgeComponent
+    GuidBadgeComponent,
+    PaginationComponent
   ]
 })
 export class SharedCommonModule { }

@@ -44,6 +44,9 @@
       <tr *ngFor="let item of objectStore.getItems()" [object]="item" app-processing-object></tr>
     </tbody>
   </table>
+  <div class="row mt-2 right-align">
+    <paginator [pageIndex]="pageEvent.pageIndex" [length]="pageEvent.length" [pageSize]="pageEvent.pageSize" (page)="setPage($event)"></paginator>
+  </div>
   <div class="row mt-2 mb-0">
     <div class="col s12 m6 offset-m3">
       <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn" [clickFn]="processSelectedObjects" appClickOnce>

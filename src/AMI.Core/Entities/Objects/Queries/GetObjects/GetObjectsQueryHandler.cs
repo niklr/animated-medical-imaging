@@ -42,7 +42,7 @@ namespace AMI.Core.Entities.Objects.Queries.GetObjects
                     Results = e.Tasks.OrderByDescending(e1 => e1.CreatedDate).Select(e1 => e1.Result).Take(request.Limit)
                 })
                 .OrderByDescending(e => e.Object.CreatedDate)
-                .Skip((request.Page - 1) * request.Limit)
+                .Skip(request.Page * request.Limit)
                 .Take(request.Limit);
 
             var entities = await context.ToListAsync(query, cancellationToken);

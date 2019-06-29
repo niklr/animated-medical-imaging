@@ -26,10 +26,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   public pageEvent: PageEvent;
 
   constructor(private notificationService: NotificationService, private objectProxy: ObjectProxy, private taskProxy: TaskProxy, public objectStore: ObjectStore) {
-    this.pageEvent = new PageEvent();
-    this.pageEvent.pageIndex = 1;
-    this.pageEvent.pageSize = 50;
-    this.pageEvent.length = 0;
+    this.pageEvent = this.objectStore.pageEvent;
   }
 
   ngOnInit() {
@@ -213,7 +210,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   }
 
   public setPage(event: PageEvent): void {
-    this.pageEvent = event;
+    this.objectStore.pageEvent = event;
+    this.pageEvent = this.objectStore.pageEvent;
     this.objectProxy.getObjects(this.pageEvent.pageIndex, this.pageEvent.pageSize).subscribe(result => {
       this.pageEvent.previousPageIndex = this.pageEvent.pageIndex;
       this.pageEvent.pageIndex = result.pagination.page;
