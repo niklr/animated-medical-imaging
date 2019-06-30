@@ -6,6 +6,7 @@ import { ObjectProxy } from '../../../proxies';
 import { ObjectStore } from '../../../stores/object.store';
 import { NotificationService } from '../../../services/notification.service';
 import { PubSubService } from '../../../services/pubsub.service';
+import { CallbackWrapper } from '../../../wrappers/callback.wrapper';
 import {
   AxisContainerModelOfString,
   AxisType,
@@ -178,6 +179,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   public deleteObject(id: string): void {
     this.objectProxy.deleteObject(id).subscribe(result => {
       this.objectStore.deleteById(id);
+      if (this.objectStore.count <= 0) {
+        this.refresh();
+      }
     }, error => {
       this.notificationService.handleError(error);
     });
@@ -210,29 +214,27 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public refresh(): void {
-    this.setPage(this.pageEvent);
+    this.setPage(new PageEvent());
   }
 
   public downloadSelectedObjects = (callbackFn) => {
+    var callbackWrapper = new CallbackWrapper(callbackFn);
+
     var items = this.objectStore.getItems();
     if (items) {
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
         if (item.isChecked) {
+          callbackWrapper.counter++;
           // TODO: start download
+          callbackWrapper.invokeCallbackFn();
         }
       }
     }
 
-    var timeout = 1000;
-    if (items.length > 0) {
-      timeout = 5000;
+    if (callbackWrapper.counter <= 0) {
+      callbackWrapper.invokeCallbackFn();
     }
-    setTimeout(() => {
-      if (!!callbackFn && typeof callbackFn === 'function') {
-        callbackFn();
-      }
-    }, timeout);
   }
 }
 

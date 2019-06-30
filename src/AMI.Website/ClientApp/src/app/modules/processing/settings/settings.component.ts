@@ -4,6 +4,7 @@ import { TaskProxy } from '../../../proxies';
 import { NotificationService } from '../../../services/notification.service';
 import { PubSubService } from '../../../services/pubsub.service';
 import { ObjectStore } from '../../../stores/object.store';
+import { CallbackWrapper } from '../../../wrappers/callback.wrapper';
 import { AxisType, ProcessObjectCommand, ObjectModel } from '../../../clients/ami-api-client';
 
 class AxisTypeContainer {
@@ -67,28 +68,25 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
 
   public processSelectedObjects = (callbackFn) => {
+    var callbackWrapper = new CallbackWrapper(callbackFn);
+
     var items = this.objectStore.getItems();
     if (items) {
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
         if (item.isChecked) {
-          this.processObject(item.id, callbackFn);
+          callbackWrapper.counter++;
+          this.processObject(item.id, callbackWrapper);
         }
       }
     }
 
-    var timeout = 1000;
-    if (items.length > 0) {
-      timeout = 5000;
+    if (callbackWrapper.counter <= 0) {
+      callbackWrapper.invokeCallbackFn();
     }
-    setTimeout(() => {
-      if (!!callbackFn && typeof callbackFn === 'function') {
-        callbackFn();
-      }
-    }, timeout);
   }
 
-  public processObject(id: string, callbackFn: Function): void {
+  public processObject(id: string, callbackWrapper: CallbackWrapper): void {
     var settings = this.objectStore.settings;
     this.taskProxy.create(id, settings).subscribe(result => {
       this.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
@@ -96,8 +94,8 @@ export class SettingsComponent implements OnInit, AfterViewInit {
       this.notificationService.handleError(error);
     }).add(() => {
       // finally block
-      if (!!callbackFn && typeof callbackFn === 'function') {
-        callbackFn();
+      if (callbackWrapper) {
+        callbackWrapper.invokeCallbackFn();
       }
     });
   }

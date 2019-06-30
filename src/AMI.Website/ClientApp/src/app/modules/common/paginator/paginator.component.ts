@@ -14,6 +14,7 @@ export class PaginationComponent implements OnInit, AfterViewInit, OnDestroy {
   public pageSizeOptionsGuid: string;
 
   private _initialized: boolean;
+  private _showComponent: boolean;
 
   /** The zero-based page index of the displayed list of items. Defaulted to 0. */
   @Input()
@@ -146,9 +147,14 @@ export class PaginationComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.length > 0 ? (this.pageIndex + 1) * this.pageSize - this.pageSize + 1 : 0;
   }
 
-  /** Whether the items are paginated. */
-  isPaginated(): boolean {
-    return Math.ceil(this.length / PageEventNamespace.DEFAULT_PAGE_SIZE) > 1;
+  /** Whether the component should be shown. */
+  showComponent(): boolean {
+    var showComponent = Math.ceil(this.length / PageEventNamespace.DEFAULT_PAGE_SIZE) > 1;
+    if (this._showComponent != showComponent && showComponent) {
+      this._initMaterialize();
+    }
+    this._showComponent = showComponent;
+    return this._showComponent;
   }
 
   private _initMaterialize() {
