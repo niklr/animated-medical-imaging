@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.IO.Models;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.IO.Writers
 {
@@ -32,8 +33,9 @@ namespace AMI.Core.IO.Writers
         /// <summary>
         /// Creates a new zip archive.
         /// </summary>
+        /// <param name="compressionType">The compression type.</param>
         /// <returns>The zip archive.</returns>
-        IZipArchive Create();
+        IZipArchive Create(CompressionType compressionType);
 
         /// <summary>
         /// Writes the archive to the specified stream.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.IO.Models
 {
@@ -10,6 +11,21 @@ namespace AMI.Core.IO.Models
     /// <seealso cref="System.IDisposable" />
     public interface IZipArchive : IDisposable
     {
+        /// <summary>
+        /// Gets the compression type.
+        /// </summary>
+        CompressionType CompressionType { get; }
+
+        /// <summary>
+        /// Gets the total size of the files as uncompressed in the archive.
+        /// </summary>
+        long TotalSize { get; }
+
+        /// <summary>
+        /// Gets the total size of the files compressed in the archive.
+        /// </summary>
+        long TotalCompressedSize { get; }
+
         /// <summary>
         /// Adds the provided stream to the archive and closes the stream afterwards.
         /// </summary>

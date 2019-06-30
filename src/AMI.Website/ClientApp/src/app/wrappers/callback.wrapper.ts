@@ -24,6 +24,6 @@ export class CallbackWrapper {
         }
       }
     }
-    console.log('Disposed: ' + this._isDisposed + ' Counter: ' + this.counter);
+    // console.log('Disposed: ' + this._isDisposed + ' Counter: ' + this.counter);
   }
 }

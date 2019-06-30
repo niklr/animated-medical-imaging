@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AMI.Core.IO.Models;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using SharpCompress.Archives.Zip;
+using SharpCompress.Writers;
 
 namespace AMI.Compress.Wrappers
 {
@@ -15,15 +17,53 @@ namespace AMI.Compress.Wrappers
     public class ZipArchiveWrapper : IZipArchive
     {
         private readonly ZipArchive archive;
+        private readonly WriterOptions writerOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZipArchiveWrapper"/> class.
         /// </summary>
         /// <param name="archive">The archive.</param>
+        /// <param name="compressionType">The compression type.</param>
         /// <exception cref="ArgumentNullException">archive</exception>
-        public ZipArchiveWrapper(ZipArchive archive)
+        public ZipArchiveWrapper(ZipArchive archive, CompressionType compressionType)
         {
             this.archive = archive ?? throw new ArgumentNullException(nameof(archive));
+            CompressionType = compressionType;
+
+            switch (compressionType)
+            {
+                case CompressionType.None:
+                    writerOptions = new WriterOptions(SharpCompress.Common.CompressionType.None);
+                    break;
+                case CompressionType.Deflate:
+                    writerOptions = new WriterOptions(SharpCompress.Common.CompressionType.Deflate);
+                    break;
+                default:
+                    CompressionType = CompressionType.Deflate;
+                    writerOptions = new WriterOptions(SharpCompress.Common.CompressionType.Deflate);
+                    break;
+            }
+        }
+
+        /// <inheritdoc/>
+        public CompressionType CompressionType { get; }
+
+        /// <inheritdoc/>
+        public long TotalSize
+        {
+            get
+            {
+                return archive.TotalUncompressSize;
+            }
+        }
+
+        /// <inheritdoc/>
+        public long TotalCompressedSize
+        {
+            get
+            {
+                return archive.TotalSize;
+            }
         }
 
         /// <inheritdoc/>
@@ -75,7 +115,7 @@ namespace AMI.Compress.Wrappers
         /// <inheritdoc/>
         public void Save(Stream stream)
         {
-            archive.SaveTo(stream);
+            archive.SaveTo(stream, writerOptions);
         }
     }
 }

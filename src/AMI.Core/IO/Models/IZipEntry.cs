@@ -12,5 +12,15 @@
         /// /Dir1/Dir2/MyFile.tmp
         /// </example>
         string Key { get; }
+
+        /// <summary>
+        /// Gets the size of the compressed file.
+        /// </summary>
+        long CompressedSize { get; }
+
+        /// <summary>
+        /// Gets the size of the uncompressed file.
+        /// </summary>
+        long Size { get; }
     }
 }

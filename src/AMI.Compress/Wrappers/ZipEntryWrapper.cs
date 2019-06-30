@@ -30,5 +30,23 @@ namespace AMI.Compress.Wrappers
                 return entry.Key;
             }
         }
+
+        /// <inheritdoc/>
+        public long CompressedSize
+        {
+            get
+            {
+                return entry.CompressedSize;
+            }
+        }
+
+        /// <inheritdoc/>
+        public long Size
+        {
+            get
+            {
+                return entry.Size;
+            }
+        }
     }
 }
