@@ -6,6 +6,9 @@
     public class ApplicationConstants : IApplicationConstants
     {
         /// <inheritdoc/>
+        public string ApplicationNameShort => "AMI";
+
+        /// <inheritdoc/>
         public string DefaultFileExtension => ".ami";
 
         /// <inheritdoc/>

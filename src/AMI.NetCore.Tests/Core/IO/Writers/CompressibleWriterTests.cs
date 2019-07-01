@@ -81,7 +81,7 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
                 Assert.AreEqual(compression, archive.CompressionType);
                 Assert.AreEqual(1, items.Count());
                 Assert.AreEqual(1, result.Count);
-                Assert.AreEqual(2097504, new FileInfo(dataPath).Length);
+                Assert.AreEqual(archive.TotalSize, new FileInfo(dataPath).Length);
                 Assert.AreEqual(2097660, new FileInfo(zipPath).Length);
             }
             finally

@@ -79,7 +79,7 @@ namespace AMI.Compress.Wrappers
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var entry = archive.AddEntry(key, source, true);
+            var entry = archive.AddEntry(key, source, true, source.Length);
             if (entry == null)
             {
                 throw new UnexpectedNullException("The entry added to the archive was null.");

@@ -1,12 +1,12 @@
 ﻿using AMI.Core.Entities.Models;
 using MediatR;
 
-namespace AMI.Core.Entities.Results.Queries
+namespace AMI.Core.Entities.Results.Queries.GetImage
 {
     /// <summary>
     /// A query to get the image file result.
     /// </summary>
-    public class GetImageQuery : IRequest<FileResultModel>
+    public class GetImageQuery : IRequest<FileByteResultModel>
     {
         /// <summary>
         /// Gets or sets the identifier of the result.

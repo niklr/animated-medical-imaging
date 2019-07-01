@@ -5,6 +5,7 @@ using AMI.API.Configuration;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Filters;
 using AMI.API.Handlers;
+using AMI.Compress.Writers;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
@@ -103,6 +104,7 @@ namespace AMI.API
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
+            services.AddScoped<ICompressibleWriter, SharpCompressWriter>();
             services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();

@@ -42,33 +42,32 @@ namespace AMI.Compress.Readers
                 throw new ArgumentNullException(nameof(ct));
             }
 
-            return await Task.Run(
-                () =>
+            IList<CompressedEntryModel> entries = new List<CompressedEntryModel>();
+
+            // TODO: add options as parameters
+            var options = new ReaderOptions()
+            {
+                LeaveStreamOpen = false,
+                LookForHeader = false
+            };
+
+            using (var file = File.OpenRead(path))
+            {
+                using (var archive = ArchiveFactory.Open(file, options))
+                using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))
                 {
-                    IList<CompressedEntryModel> entries = new List<CompressedEntryModel>();
-
-                    // TODO: add options as parameters
-                    var options = new ReaderOptions()
+                    var sortedEntries = archive.Entries.Sort(comparer).Take(MaxCompressibleEntries);
+                    foreach (var entry in sortedEntries)
                     {
-                        LeaveStreamOpen = false,
-                        LookForHeader = false
-                    };
-
-                    using (var file = File.OpenRead(path))
-                    {
-                        using (var archive = ArchiveFactory.Open(file, options))
-                        using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))
-                        {
-                            var sortedEntries = archive.Entries.Sort(comparer).Take(MaxCompressibleEntries);
-                            foreach (var entry in sortedEntries)
-                            {
-                                entries.Add(EntryMapper.Map(entry));
-                            }
-                        }
+                        ct.ThrowIfCancellationRequested();
+                        entries.Add(EntryMapper.Map(entry));
                     }
+                }
+            }
 
-                    return entries;
-                }, ct);
+            await Task.CompletedTask;
+
+            return entries;
         }
     }
 }

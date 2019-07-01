@@ -6,6 +6,11 @@
     public interface IApplicationConstants
     {
         /// <summary>
+        /// Gets the short version of the application name.
+        /// </summary>
+        string ApplicationNameShort { get; }
+
+        /// <summary>
         /// Gets the default file extension.
         /// </summary>
         string DefaultFileExtension { get; }

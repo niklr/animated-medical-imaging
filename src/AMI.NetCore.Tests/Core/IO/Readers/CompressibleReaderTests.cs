@@ -27,7 +27,11 @@ namespace AMI.NetCore.Tests.Core.IO.Readers
             Assert.AreEqual(configuration.MaxCompressedEntries, result.Count);
             Assert.IsNotNull(firstEntry);
             Assert.AreEqual("SMIR.Brain.XX.O.CT.346124_Frame_1.dcm", firstEntry.Key);
+            Assert.AreEqual(197408, firstEntry.Size);
+            Assert.AreEqual(1867, firstEntry.CompressedSize);
             Assert.AreEqual("SMIR.Brain.XX.O.CT.346124_Frame_10.dcm", lastEntry.Key);
+            Assert.AreEqual(197408, lastEntry.Size);
+            Assert.AreEqual(22517, lastEntry.CompressedSize);
         }
     }
 }

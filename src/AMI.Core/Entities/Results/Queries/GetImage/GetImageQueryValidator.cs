@@ -1,7 +1,7 @@
 ﻿using AMI.Core.Extensions.FluentValidationExtensions;
 using FluentValidation;
 
-namespace AMI.Core.Entities.Results.Queries
+namespace AMI.Core.Entities.Results.Queries.GetImage
 {
     /// <summary>
     /// A validator for queries to get an image file result.

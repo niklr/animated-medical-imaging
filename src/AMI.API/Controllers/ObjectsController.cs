@@ -27,7 +27,7 @@ namespace AMI.API.Controllers
         /// <param name="uploader">The resumable uploader.</param>
         public ObjectsController(IChunkedObjectUploader uploader)
         {
-            this.uploader = uploader;
+            this.uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
         }
 
         /// <summary>

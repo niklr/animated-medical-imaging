@@ -27,23 +27,19 @@ namespace AMI.Infrastructure.IO.Uploaders
         /// <summary>
         /// Initializes a new instance of the <see cref="ChunkedObjectUploader" /> class.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <param name="fileSystemStrategy">The file system strategy.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="mediator">The mediator.</param>
-        /// <exception cref="ArgumentNullException">
-        /// configuration
-        /// or
-        /// fileSystemStrategy
-        /// or
-        /// objectService
-        /// </exception>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
         public ChunkedObjectUploader(
-            IAmiConfigurationManager configuration,
-            IFileSystemStrategy fileSystemStrategy,
             IApplicationConstants constants,
-            IMediator mediator)
+            IMediator mediator,
+            IAmiConfigurationManager configuration,
+            IFileSystemStrategy fileSystemStrategy)
         {
+            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
             if (configuration == null)
             {
                 throw new ArgumentNullException(nameof(configuration));
@@ -56,9 +52,6 @@ namespace AMI.Infrastructure.IO.Uploaders
 
             fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
             baseUploadPath = fileSystem.Path.Combine(configuration.WorkingDirectory, "Upload", "Objects");
-
-            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -110,6 +103,8 @@ namespace AMI.Infrastructure.IO.Uploaders
 
                     for (int chunkNumber = 1; chunkNumber <= chunkCount; chunkNumber++)
                     {
+                        ct.ThrowIfCancellationRequested();
+
                         string currentChunkFilename = GetChunkedFilename(chunkNumber, uid);
                         string currentChunkFilePath = fileSystem.Path.Combine(localPath, currentChunkFilename);
 
