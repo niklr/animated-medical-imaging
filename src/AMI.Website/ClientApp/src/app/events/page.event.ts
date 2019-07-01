@@ -1,6 +1,6 @@
 export namespace PageEventNamespace {
   /** The default page size if there is no page size and there are no provided page size options. */
-  export const DEFAULT_PAGE_SIZE = 25;
+  export const DEFAULT_PAGE_SIZE = 10;
 
   /** The default page size options if there are no provided page size options. */
   export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50];

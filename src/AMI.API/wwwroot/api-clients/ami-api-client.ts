@@ -1783,6 +1783,8 @@ export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultM
 
 /** The base all results have in common. */
 export abstract class BaseResultModel implements IBaseResultModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
 
     protected _discriminator: string;
 
@@ -1797,6 +1799,9 @@ export abstract class BaseResultModel implements IBaseResultModel {
     }
 
     init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+        }
     }
 
     static fromJS(data: any): BaseResultModel {
@@ -1815,18 +1820,19 @@ export abstract class BaseResultModel implements IBaseResultModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["discriminator"] = this._discriminator; 
+        data["id"] = this.id;
         return data; 
     }
 }
 
 /** The base all results have in common. */
 export interface IBaseResultModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
 }
 
 /** A model containing information about the result of the processing. */
 export abstract class ResultModel extends BaseResultModel implements IResultModel {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
     /** Gets or sets the modified date. */
@@ -1844,7 +1850,6 @@ export abstract class ResultModel extends BaseResultModel implements IResultMode
     init(data?: any) {
         super.init(data);
         if (data) {
-            this.id = data["id"];
             this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
             this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
             this.version = data["version"];
@@ -1864,7 +1869,6 @@ export abstract class ResultModel extends BaseResultModel implements IResultMode
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
         data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
         data["version"] = this.version;
@@ -1876,8 +1880,6 @@ export abstract class ResultModel extends BaseResultModel implements IResultMode
 
 /** A model containing information about the result of the processing. */
 export interface IResultModel extends IBaseResultModel {
-    /** Gets or sets the identifier. */
-    id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
     /** Gets or sets the modified date. */

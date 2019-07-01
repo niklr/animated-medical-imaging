@@ -40,9 +40,11 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', function (item) {
       try {
         let that = this as SettingsComponent;
-        that.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
-        let result = JSON.parse(item.detail.message) as ObjectModel;
-        that.processObject(result.id, undefined);
+        let result = ObjectModel.fromJS(JSON.parse(item.detail.message));
+        if (result && result.id) {
+          that.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
+          that.processObject(result.id, undefined);
+        }
       } catch (e) { }
     }.bind(this));
   }

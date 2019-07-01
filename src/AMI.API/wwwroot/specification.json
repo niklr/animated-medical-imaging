@@ -1487,6 +1487,11 @@
           "discriminator"
         ],
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the identifier.",
+            "nullable": true
+          },
           "discriminator": {
             "type": "string"
           }
@@ -1587,11 +1592,6 @@
             "x-abstract": true,
             "additionalProperties": false,
             "properties": {
-              "id": {
-                "type": "string",
-                "description": "Gets or sets the identifier.",
-                "nullable": true
-              },
               "createdDate": {
                 "type": "string",
                 "description": "Gets or sets the created date.",

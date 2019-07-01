@@ -10,7 +10,6 @@ import { GuidUtil } from '../../../utils';
 // Source: https://github.com/angular/components/blob/8b5c0f12c823a16bdf3d4bcd767d0c42c6b0e870/src/material/paginator/paginator.ts
 export class PaginationComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public pageIndexGuid: string;
   public pageSizeOptionsGuid: string;
 
   private _initialized: boolean;
@@ -32,7 +31,7 @@ export class PaginationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   private _length = 0;
 
-  /** Number of items to display on a page. By default set to 50. */
+  /** Number of items to display on a page. By default set to 10. */
   @Input()
   get pageSize(): number { return this._pageSize; }
   set pageSize(value: number) {
@@ -62,7 +61,6 @@ export class PaginationComponent implements OnInit, AfterViewInit, OnDestroy {
   _displayedPageSizeOptions: number[];
 
   constructor(private guidUtil: GuidUtil) {
-    this.pageIndexGuid = this.guidUtil.createGuid();
     this.pageSizeOptionsGuid = this.guidUtil.createGuid();
   }
 

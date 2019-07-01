@@ -34,7 +34,7 @@ export class ObjectComponent implements OnInit, AfterViewInit {
   }
 
   public download(): void {
-    console.log("Download " + this.object.id);
+    this.objectProxy.downloadObject(this.object);
   }
 
   public delete(): void {

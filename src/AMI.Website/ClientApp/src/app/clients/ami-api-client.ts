@@ -606,12 +606,24 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
 
 export interface IResultsAmiApiClient {
   /**
-   * Gets the information of the object with the specified identifier.
+   * Gets the information of the result with the specified identifier.
+   * @param id The identifier of the result.
+   * @return The information of the result.
+   */
+  getById(id: string | null): Observable<ResultModel>;
+  /**
+   * Gets the image of the result with the specified identifier.
    * @param id The identifier of the object.
    * @param filename The name of the file.
    * @return The information of the object.
    */
   getImage(id: string | null, filename: string | null): Observable<Stream>;
+  /**
+   * Downloads the result with the specified identifier as a ZIP.
+   * @param id The identifier.
+   * @return The result as a ZIP.
+   */
+  downloadById(id: string | null): Observable<Stream>;
 }
 
 @Injectable()
@@ -626,7 +638,105 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
   }
 
   /**
-   * Gets the information of the object with the specified identifier.
+   * Gets the information of the result with the specified identifier.
+   * @param id The identifier of the result.
+   * @return The information of the result.
+   */
+  getById(id: string | null): Observable<ResultModel> {
+    let url_ = this.baseUrl + "/results/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_: any = {
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Accept": "application/json"
+      })
+    };
+
+    return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_: any) => {
+      return this.processGetById(response_);
+    })).pipe(_observableCatch((response_: any) => {
+      if (response_ instanceof HttpResponseBase) {
+        try {
+          return this.processGetById(<any>response_);
+        } catch (e) {
+          return <Observable<ResultModel>><any>_observableThrow(e);
+        }
+      } else
+        return <Observable<ResultModel>><any>_observableThrow(response_);
+    }));
+  }
+
+  protected processGetById(response: HttpResponseBase): Observable<ResultModel> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse ? response.body :
+        (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
+    if (status === 400) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result400: any = null;
+        let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result400 = ErrorModel.fromJS(resultData400);
+        return throwException("A server error occurred.", status, _responseText, _headers, result400);
+      }));
+    } else if (status === 401) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result401: any = null;
+        let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result401 = ErrorModel.fromJS(resultData401);
+        return throwException("A server error occurred.", status, _responseText, _headers, result401);
+      }));
+    } else if (status === 403) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result403: any = null;
+        let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result403 = ErrorModel.fromJS(resultData403);
+        return throwException("A server error occurred.", status, _responseText, _headers, result403);
+      }));
+    } else if (status === 404) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result404: any = null;
+        let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result404 = ErrorModel.fromJS(resultData404);
+        return throwException("A server error occurred.", status, _responseText, _headers, result404);
+      }));
+    } else if (status === 409) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result409: any = null;
+        let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result409 = ErrorModel.fromJS(resultData409);
+        return throwException("A server error occurred.", status, _responseText, _headers, result409);
+      }));
+    } else if (status === 500) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result500: any = null;
+        let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result500 = ErrorModel.fromJS(resultData500);
+        return throwException("A server error occurred.", status, _responseText, _headers, result500);
+      }));
+    } else if (status === 200) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = ResultModel.fromJS(resultData200);
+        return _observableOf(result200);
+      }));
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      }));
+    }
+    return _observableOf<ResultModel>(<any>null);
+  }
+
+  /**
+   * Gets the image of the result with the specified identifier.
    * @param id The identifier of the object.
    * @param filename The name of the file.
    * @return The information of the object.
@@ -664,6 +774,104 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
   }
 
   protected processGetImage(response: HttpResponseBase): Observable<Stream> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse ? response.body :
+        (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
+    if (status === 400) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result400: any = null;
+        let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result400 = ErrorModel.fromJS(resultData400);
+        return throwException("A server error occurred.", status, _responseText, _headers, result400);
+      }));
+    } else if (status === 401) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result401: any = null;
+        let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result401 = ErrorModel.fromJS(resultData401);
+        return throwException("A server error occurred.", status, _responseText, _headers, result401);
+      }));
+    } else if (status === 403) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result403: any = null;
+        let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result403 = ErrorModel.fromJS(resultData403);
+        return throwException("A server error occurred.", status, _responseText, _headers, result403);
+      }));
+    } else if (status === 404) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result404: any = null;
+        let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result404 = ErrorModel.fromJS(resultData404);
+        return throwException("A server error occurred.", status, _responseText, _headers, result404);
+      }));
+    } else if (status === 409) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result409: any = null;
+        let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result409 = ErrorModel.fromJS(resultData409);
+        return throwException("A server error occurred.", status, _responseText, _headers, result409);
+      }));
+    } else if (status === 500) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result500: any = null;
+        let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result500 = ErrorModel.fromJS(resultData500);
+        return throwException("A server error occurred.", status, _responseText, _headers, result500);
+      }));
+    } else if (status === 200) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = Stream.fromJS(resultData200);
+        return _observableOf(result200);
+      }));
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      }));
+    }
+    return _observableOf<Stream>(<any>null);
+  }
+
+  /**
+   * Downloads the result with the specified identifier as a ZIP.
+   * @param id The identifier.
+   * @return The result as a ZIP.
+   */
+  downloadById(id: string | null): Observable<Stream> {
+    let url_ = this.baseUrl + "/results/{id}/download";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_: any = {
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Accept": "application/json"
+      })
+    };
+
+    return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_: any) => {
+      return this.processDownloadById(response_);
+    })).pipe(_observableCatch((response_: any) => {
+      if (response_ instanceof HttpResponseBase) {
+        try {
+          return this.processDownloadById(<any>response_);
+        } catch (e) {
+          return <Observable<Stream>><any>_observableThrow(e);
+        }
+      } else
+        return <Observable<Stream>><any>_observableThrow(response_);
+    }));
+  }
+
+  protected processDownloadById(response: HttpResponseBase): Observable<Stream> {
     const status = response.status;
     const responseBlob =
       response instanceof HttpResponse ? response.body :
@@ -1575,6 +1783,8 @@ export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultM
 
 /** The base all results have in common. */
 export abstract class BaseResultModel implements IBaseResultModel {
+  /** Gets or sets the identifier. */
+  id?: string | undefined;
 
   protected _discriminator: string;
 
@@ -1589,6 +1799,9 @@ export abstract class BaseResultModel implements IBaseResultModel {
   }
 
   init(data?: any) {
+    if (data) {
+      this.id = data["id"];
+    }
   }
 
   static fromJS(data: any): BaseResultModel {
@@ -1607,18 +1820,19 @@ export abstract class BaseResultModel implements IBaseResultModel {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["discriminator"] = this._discriminator;
+    data["id"] = this.id;
     return data;
   }
 }
 
 /** The base all results have in common. */
 export interface IBaseResultModel {
+  /** Gets or sets the identifier. */
+  id?: string | undefined;
 }
 
 /** A model containing information about the result of the processing. */
 export abstract class ResultModel extends BaseResultModel implements IResultModel {
-  /** Gets or sets the identifier. */
-  id?: string | undefined;
   /** Gets or sets the created date. */
   createdDate?: Date;
   /** Gets or sets the modified date. */
@@ -1636,7 +1850,6 @@ export abstract class ResultModel extends BaseResultModel implements IResultMode
   init(data?: any) {
     super.init(data);
     if (data) {
-      this.id = data["id"];
       this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
       this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
       this.version = data["version"];
@@ -1656,7 +1869,6 @@ export abstract class ResultModel extends BaseResultModel implements IResultMode
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data["id"] = this.id;
     data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
     data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
     data["version"] = this.version;
@@ -1668,8 +1880,6 @@ export abstract class ResultModel extends BaseResultModel implements IResultMode
 
 /** A model containing information about the result of the processing. */
 export interface IResultModel extends IBaseResultModel {
-  /** Gets or sets the identifier. */
-  id?: string | undefined;
   /** Gets or sets the created date. */
   createdDate?: Date;
   /** Gets or sets the modified date. */

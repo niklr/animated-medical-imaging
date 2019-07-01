@@ -1,5 +1,4 @@
 ﻿using System;
-using AMI.Core.Entities.Shared.Models;
 using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
@@ -9,13 +8,8 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model containing information about the result of the processing.
     /// </summary>
-    public abstract class ResultModel : BaseResultModel, IEntity
+    public abstract class ResultModel : BaseResultModel
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        public string Id { get; set; }
-
         /// <summary>
         /// Gets or sets the created date.
         /// </summary>

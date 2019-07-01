@@ -4,7 +4,6 @@ using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
-using AMI.Core.Entities.Results.Queries.GetById;
 using AMI.Core.IO.Downloaders;
 using AMI.Core.IO.Writers;
 using AMI.Core.Repositories;
@@ -28,6 +27,14 @@ namespace AMI.Infrastructure.IO.Downloaders
         private readonly ICompressibleWriter writer;
         private readonly IFileSystem fileSystem;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResultDownloader"/> class.
+        /// </summary>
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="writer">The writer.</param>
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
         public ResultDownloader(
             IMediator mediator,
             IAmiUnitOfWork context,
@@ -48,6 +55,7 @@ namespace AMI.Infrastructure.IO.Downloaders
             fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
         }
 
+        /// <inheritdoc/>
         public async Task SaveAsync(string id, Stream stream, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(id))
