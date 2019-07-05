@@ -21,6 +21,9 @@ namespace AMI.Core.IO.Serializers
             OverrideJsonSerializerSettings(settings);
         }
 
+        /// <inheritdoc/>
+        public string ContentType => "application/json";
+
         /// <summary>
         /// Overrides the provided JSON serializer settings with the default settings.
         /// </summary>

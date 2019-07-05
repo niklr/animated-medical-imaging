@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AMI.API.Extensions.HttpContextExtensions;
 using AMI.Core.Configurations;
+using AMI.Core.IO.Serializers;
+using AMI.Domain.Exceptions;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -14,7 +17,9 @@ namespace AMI.API.Middlewares
     /// <seealso cref="IpRateLimitMiddleware" />
     public class ThrottleMiddleware : IpRateLimitMiddleware
     {
+        private readonly IpRateLimitOptions options;
         private readonly IApiConfiguration configuration;
+        private readonly IDefaultJsonSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThrottleMiddleware"/> class.
@@ -26,6 +31,7 @@ namespace AMI.API.Middlewares
         /// <param name="config">The rate limit configuration.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="configuration">The API configuration.</param>
+        /// <param name="serializer">The JSON serializer.</param>
         /// <exception cref="ArgumentNullException">configuration</exception>
         public ThrottleMiddleware(
             RequestDelegate next,
@@ -34,10 +40,45 @@ namespace AMI.API.Middlewares
             IIpPolicyStore policyStore,
             IRateLimitConfiguration config,
             ILogger<IpRateLimitMiddleware> logger,
-            IApiConfiguration configuration)
+            IApiConfiguration configuration,
+            IDefaultJsonSerializer serializer)
             : base(next, options, counterStore, policyStore, config, logger)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (options.Value == null)
+            {
+                throw new UnexpectedNullException("The options value is null.");
+            }
+
+            this.options = options.Value;
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+        }
+
+        /// <inheritdoc/>
+        public override Task ReturnQuotaExceededResponse(HttpContext httpContext, RateLimitRule rule, string retryAfter)
+        {
+            var message = string.IsNullOrEmpty(options.QuotaExceededMessage)
+                ? $"API calls quota exceeded! Try again in {retryAfter} seconds. Maximum admitted {rule.Limit} per {rule.Period}." : options.QuotaExceededMessage;
+
+            if (!options.DisableRateLimitHeaders)
+            {
+                httpContext.Response.Headers["Retry-After"] = retryAfter;
+            }
+
+            var result = new Core.Entities.Models.ErrorModel()
+            {
+                Error = message
+            };
+
+            httpContext.Response.ContentType = serializer.ContentType;
+            httpContext.Response.StatusCode = options.HttpStatusCode;
+
+            return httpContext.Response.WriteAsync(serializer.Serialize(result));
         }
 
         /// <inheritdoc/>

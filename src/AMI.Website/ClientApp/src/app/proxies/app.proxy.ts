@@ -15,7 +15,7 @@ export class AppProxy extends BaseProxy {
       retryCounter = 0;
     }
     this.appInfoClient.get().subscribe((result: AppInfo) => {
-      ConfigService.settings.version = result.appVersion;
+      ConfigService.options.version = result.appVersion;
     }, error => {
       if (retryCounter <= 3) {
         setTimeout(() => {

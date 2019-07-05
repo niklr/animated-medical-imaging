@@ -24,7 +24,7 @@ export class ObjectProxy extends BaseProxy {
       var result = object.latestTask.result;
       var eventDetail = {
         'filename': object.originalFilename + '.zip',
-        'url': ConfigService.settings.apiEndpoint + '/results/' + result.id + '/download',
+        'url': ConfigService.options.apiEndpoint + '/results/' + result.id + '/download',
         'size': 0
       };
       var event = new CustomEvent('github:niklr/angular-material-datatransfer.download-item', { 'detail': eventDetail });

@@ -19,5 +19,10 @@
         /// Gets the options used to limit the rate based on the IP address of the client.
         /// </summary>
         IIpRateLimitOptions IpRateLimiting { get; }
+
+        /// <summary>
+        /// Gets the policies used to limit the rate base on the IP address of the client.
+        /// </summary>
+        IIpRateLimitPolicies IpRateLimitPolicies { get; }
     }
 }

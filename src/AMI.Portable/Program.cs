@@ -48,7 +48,7 @@ namespace AMI.Portable
 
             var services = new ServiceCollection();
             services.AddOptions();
-            services.Configure<AppOptions>(configuration.GetSection("AppSettings"));
+            services.Configure<AppOptions>(configuration.GetSection("AppOptions"));
             services.AddLogging(builder =>
                 {
                     builder

@@ -14,6 +14,8 @@ namespace AMI.NetCore.Tests.Core.Configurations
 
             // Act
             var generalRule0 = configuration.Options.IpRateLimiting.GeneralRules[0];
+            var ipRule0 = configuration.Options.IpRateLimitPolicies.IpRules[0];
+            var rule0 = ipRule0.Rules[0];
 
             // Assert
             Assert.AreEqual("CF-Connecting-IP", configuration.Options.ConnectingIpHeaderName);
@@ -30,6 +32,11 @@ namespace AMI.NetCore.Tests.Core.Configurations
             Assert.AreEqual(2, generalRule0.Limit);
             Assert.IsNull(generalRule0.PeriodTimespan);
             Assert.IsNull(configuration.Options.IpRateLimiting.ClientWhitelist);
+            Assert.AreEqual("84.247.85.224", ipRule0.Ip);
+            Assert.AreEqual("*", rule0.Endpoint);
+            Assert.AreEqual("1s", rule0.Period);
+            Assert.AreEqual(10, rule0.Limit);
+            Assert.IsNull(rule0.PeriodTimespan);
         }
     }
 }

@@ -64,6 +64,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -145,6 +155,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -217,6 +237,16 @@
             }
           },
           "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "429": {
             "description": "",
             "content": {
               "application/json": {
@@ -331,6 +361,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -425,6 +465,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -508,6 +558,16 @@
             }
           },
           "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "429": {
             "description": "",
             "content": {
               "application/json": {
@@ -679,6 +739,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -764,6 +834,16 @@
             }
           },
           "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "429": {
             "description": "",
             "content": {
               "application/json": {
@@ -878,6 +958,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -963,6 +1053,16 @@
             }
           },
           "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "429": {
             "description": "",
             "content": {
               "application/json": {
@@ -1066,6 +1166,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -1160,6 +1270,16 @@
               }
             }
           },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
           "500": {
             "description": "",
             "content": {
@@ -1236,6 +1356,15 @@
                 "$ref": "#/components/schemas/IIpRateLimitOptions"
               }
             ]
+          },
+          "ipRateLimitPolicies": {
+            "description": "Gets the policies used to limit the rate base on the IP address of the client.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IIpRateLimitPolicies"
+              }
+            ]
           }
         }
       },
@@ -1267,6 +1396,35 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "IIpRateLimitPolicies": {
+        "type": "object",
+        "description": "An interface representing the policies used to limit the rate base on the IP address of the client.\nSource: https://github.com/stefanprodan/AspNetCoreRateLimit",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "ipRules": {
+            "type": "array",
+            "description": "Gets the rules to limit the rate based on the IP address of the client.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/IIpRateLimitPolicy"
+            }
+          }
+        }
+      },
+      "IIpRateLimitPolicy": {
+        "type": "object",
+        "description": "An interface representing the policy to limit the rate based on the IP address of the client.\nSource: https://github.com/stefanprodan/AspNetCoreRateLimit",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "ip": {
+            "type": "string",
+            "description": "Gets the IP address.",
+            "nullable": true
           }
         }
       },

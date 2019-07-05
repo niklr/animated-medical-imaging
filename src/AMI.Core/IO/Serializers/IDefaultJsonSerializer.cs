@@ -9,6 +9,11 @@ namespace AMI.Core.IO.Serializers
     public interface IDefaultJsonSerializer
     {
         /// <summary>
+        /// Gets the type of the content.
+        /// </summary>
+        string ContentType { get; }
+
+        /// <summary>
         /// Overrides the provided JSON serializer settings with the default settings.
         /// </summary>
         /// <param name="settings">The settings.</param>

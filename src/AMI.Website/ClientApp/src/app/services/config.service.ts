@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { IClientSettings } from '../models/client-settings.model';
+import { IClientOptions } from '../models/client-options.model';
 
 @Injectable()
 export class ConfigService {
 
-  static settings: IClientSettings;
+  static options: IClientOptions;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
 
@@ -14,12 +14,12 @@ export class ConfigService {
 
   public load() {
     return new Promise<void>((resolve, reject) => {
-      this.http.get<IClientSettings>(this.baseUrl + 'settings').subscribe(result => {
-        ConfigService.settings = result;
-        ConfigService.settings.isDevelopment = !environment.production;
+      this.http.get<IClientOptions>(this.baseUrl + 'options').subscribe(result => {
+        ConfigService.options = result;
+        ConfigService.options.isDevelopment = !environment.production;
         resolve();
       }, error => {
-        reject(`Could not load settings: ${JSON.stringify(error)}`);
+        reject(`Could not load options: ${JSON.stringify(error)}`);
       });
     });
   }

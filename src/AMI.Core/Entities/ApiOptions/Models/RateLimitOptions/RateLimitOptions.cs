@@ -42,6 +42,6 @@ namespace AMI.Core.Entities.Models
         /// <inheritdoc/>
         public bool DisableRateLimitHeaders { get; set; }
 
-        IReadOnlyList<IRateLimitRule> IRateLimitOptions.GeneralRules => GeneralRules;
+        IReadOnlyList<IRateLimitRule> IRateLimitOptions.GeneralRules => GeneralRules ?? new List<RateLimitRule>();
     }
 }

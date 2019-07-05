@@ -17,7 +17,7 @@ export function initConfig(configService: ConfigService) {
 }
 
 export function initBaseAmiApi() {
-  return ConfigService.settings.apiEndpoint;
+  return ConfigService.options.apiEndpoint;
 }
 
 @NgModule({

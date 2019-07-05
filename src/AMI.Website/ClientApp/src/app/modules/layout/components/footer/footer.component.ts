@@ -13,7 +13,7 @@ export class FooterComponent implements OnInit {
   }
 
   get appVersion(): string {
-    return ConfigService.settings.version;
+    return ConfigService.options.version;
   }
 
 }

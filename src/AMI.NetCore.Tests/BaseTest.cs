@@ -57,8 +57,8 @@ namespace AMI.NetCore.Tests
             var services = new ServiceCollection();
 
             services.AddOptions();
-            services.Configure<AppOptions>(configuration.GetSection("AppSettings"));
-            services.Configure<ApiOptions>(configuration.GetSection("ApiSettings"));
+            services.Configure<AppOptions>(configuration.GetSection("AppOptions"));
+            services.Configure<ApiOptions>(configuration.GetSection("ApiOptions"));
             services.AddLogging();
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();

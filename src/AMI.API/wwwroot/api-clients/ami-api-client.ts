@@ -105,6 +105,13 @@ export class ApiOptionsAmiApiClient implements IApiOptionsAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -219,6 +226,13 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -332,6 +346,13 @@ export class AppOptionsAmiApiClient implements IAppOptionsAmiApiClient {
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -483,6 +504,13 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -581,6 +609,13 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -678,6 +713,13 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -808,6 +850,13 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -941,6 +990,13 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -1043,6 +1099,13 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -1140,6 +1203,13 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
             }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -1266,6 +1336,13 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -1365,6 +1442,13 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
             result409 = ErrorModel.fromJS(resultData409);
             return throwException("A server error occurred.", status, _responseText, _headers, result409);
             }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
         } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
@@ -1460,6 +1544,8 @@ export class ApiOptions implements IApiOptions {
     isDevelopment?: boolean;
     /** Gets the options used to limit the rate based on the IP address of the client. */
     ipRateLimiting?: IIpRateLimitOptions | undefined;
+    /** Gets the policies used to limit the rate base on the IP address of the client. */
+    ipRateLimitPolicies?: IIpRateLimitPolicies | undefined;
 
     constructor(data?: IApiOptions) {
         if (data) {
@@ -1475,6 +1561,7 @@ export class ApiOptions implements IApiOptions {
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.isDevelopment = data["isDevelopment"];
             this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
+            this.ipRateLimitPolicies = data["ipRateLimitPolicies"] ? IIpRateLimitPolicies.fromJS(data["ipRateLimitPolicies"]) : <any>undefined;
         }
     }
 
@@ -1490,6 +1577,7 @@ export class ApiOptions implements IApiOptions {
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["isDevelopment"] = this.isDevelopment;
         data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
+        data["ipRateLimitPolicies"] = this.ipRateLimitPolicies ? this.ipRateLimitPolicies.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -1502,6 +1590,8 @@ export interface IApiOptions {
     isDevelopment?: boolean;
     /** Gets the options used to limit the rate based on the IP address of the client. */
     ipRateLimiting?: IIpRateLimitOptions | undefined;
+    /** Gets the policies used to limit the rate base on the IP address of the client. */
+    ipRateLimitPolicies?: IIpRateLimitPolicies | undefined;
 }
 
 /** An interface representing the options to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
@@ -1566,6 +1656,90 @@ export interface IIIpRateLimitOptions {
     ipPolicyPrefix?: string | undefined;
     /** Gets the ip whitelist. */
     ipWhitelist?: string[] | undefined;
+}
+
+/** An interface representing the policies used to limit the rate base on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
+export abstract class IIpRateLimitPolicies implements IIIpRateLimitPolicies {
+    /** Gets the rules to limit the rate based on the IP address of the client. */
+    ipRules?: IIpRateLimitPolicy[] | undefined;
+
+    constructor(data?: IIIpRateLimitPolicies) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["ipRules"])) {
+                this.ipRules = [] as any;
+                for (let item of data["ipRules"])
+                    this.ipRules!.push(IIpRateLimitPolicy.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): IIpRateLimitPolicies {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IIpRateLimitPolicies' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.ipRules)) {
+            data["ipRules"] = [];
+            for (let item of this.ipRules)
+                data["ipRules"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+/** An interface representing the policies used to limit the rate base on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
+export interface IIIpRateLimitPolicies {
+    /** Gets the rules to limit the rate based on the IP address of the client. */
+    ipRules?: IIpRateLimitPolicy[] | undefined;
+}
+
+/** An interface representing the policy to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
+export abstract class IIpRateLimitPolicy implements IIIpRateLimitPolicy {
+    /** Gets the IP address. */
+    ip?: string | undefined;
+
+    constructor(data?: IIIpRateLimitPolicy) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.ip = data["ip"];
+        }
+    }
+
+    static fromJS(data: any): IIpRateLimitPolicy {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IIpRateLimitPolicy' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ip"] = this.ip;
+        return data; 
+    }
+}
+
+/** An interface representing the policy to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
+export interface IIIpRateLimitPolicy {
+    /** Gets the IP address. */
+    ip?: string | undefined;
 }
 
 /** A model containing information about the application. */

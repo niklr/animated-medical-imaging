@@ -10,23 +10,23 @@ namespace AMI.Website.Controllers
     /// <seealso cref="Controller" />
     public class HomeController : Controller
     {
-        private readonly IOptions<ClientSettings> configuration;
+        private readonly IOptions<ClientOptions> configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public HomeController(IOptions<ClientSettings> configuration)
+        public HomeController(IOptions<ClientOptions> configuration)
         {
             this.configuration = configuration;
         }
 
         /// <summary>
-        /// Gets the settings of the website.
+        /// Gets the options of the website.
         /// </summary>
-        /// <returns>The website settings.</returns>
-        [HttpGet("settings")]
-        public ClientSettings Settings()
+        /// <returns>The website options.</returns>
+        [HttpGet("options")]
+        public ClientOptions Options()
         {
             return configuration.Value;
         }

@@ -16,5 +16,8 @@ namespace AMI.Core.Entities.Models
 
         /// <inheritdoc/>
         public IIpRateLimitOptions IpRateLimiting { get; set; } = new IpRateLimitOptions();
+
+        /// <inheritdoc/>
+        public IIpRateLimitPolicies IpRateLimitPolicies { get; set; } = new IpRateLimitPolicies();
     }
 }

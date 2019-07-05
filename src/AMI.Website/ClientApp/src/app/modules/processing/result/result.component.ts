@@ -94,7 +94,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   private buildEntityUrl(entity: string): string {
     var pattern = /^((http|https):\/\/)/;
     if (entity && !pattern.test(entity)) {
-      return ConfigService.settings.apiEndpoint + '/results/' + this.result.id + '/images/' + entity;
+      return ConfigService.options.apiEndpoint + '/results/' + this.result.id + '/images/' + entity;
     } else {
       return entity;
     }

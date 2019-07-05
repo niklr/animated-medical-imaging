@@ -1,9 +1,9 @@
 ﻿namespace AMI.Website.Models
 {
     /// <summary>
-    /// A model containing information about the settings of the client.
+    /// A model containing information about the options of the client.
     /// </summary>
-    public class ClientSettings
+    public class ClientOptions
     {
         /// <summary>
         /// Gets or sets the API endpoint.

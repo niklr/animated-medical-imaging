@@ -35,7 +35,7 @@ namespace AMI.Website
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.Configure<ClientSettings>(Configuration.GetSection("ClientSettings"));
+            services.Configure<ClientOptions>(Configuration.GetSection("ClientOptions"));
             services.AddLogging(builder =>
             {
                 builder

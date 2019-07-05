@@ -87,10 +87,10 @@ namespace AMI.API
             var defaultSerializer = new DefaultJsonSerializer();
 
             services.AddOptions();
-            services.Configure<AppOptions>(Configuration.GetSection("AppSettings"));
-            services.Configure<ApiOptions>(Configuration.GetSection("ApiSettings"));
-            services.Configure<AspNetCoreRateLimit.IpRateLimitOptions>(Configuration.GetSection("ApiSettings:IpRateLimiting"));
-            services.Configure<AspNetCoreRateLimit.IpRateLimitPolicies>(Configuration.GetSection("ApiSettings:IpRateLimitPolicies"));
+            services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
+            services.Configure<ApiOptions>(Configuration.GetSection("ApiOptions"));
+            services.Configure<AspNetCoreRateLimit.IpRateLimitOptions>(Configuration.GetSection("ApiOptions:IpRateLimiting"));
+            services.Configure<AspNetCoreRateLimit.IpRateLimitPolicies>(Configuration.GetSection("ApiOptions:IpRateLimitPolicies"));
 
             // needed to store rate limit counters and ip rules
             services.AddMemoryCache();
@@ -150,6 +150,7 @@ namespace AMI.API
                     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.Forbidden));
                     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.NotFound));
                     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.Conflict));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.TooManyRequests));
                     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.InternalServerError));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)

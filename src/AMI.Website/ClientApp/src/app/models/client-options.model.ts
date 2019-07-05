@@ -1,4 +1,4 @@
-export interface IClientSettings {
+export interface IClientOptions {
   isDevelopment: boolean;
   version: string;
   enableConsoleOutput: boolean;
