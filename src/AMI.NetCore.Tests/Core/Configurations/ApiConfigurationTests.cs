@@ -13,12 +13,23 @@ namespace AMI.NetCore.Tests.Core.Configurations
             var configuration = GetService<IApiConfiguration>();
 
             // Act
-            var connectingIpHeaderName = configuration.ConnectingIpHeaderName;
-            var isDevelopment = configuration.IsDevelopment;
+            var generalRule0 = configuration.Options.IpRateLimiting.GeneralRules[0];
 
             // Assert
-            Assert.AreEqual("CF-Connecting-IP", connectingIpHeaderName);
-            Assert.AreEqual(true, isDevelopment);
+            Assert.AreEqual("CF-Connecting-IP", configuration.Options.ConnectingIpHeaderName);
+            Assert.AreEqual(true, configuration.Options.IsDevelopment);
+            Assert.IsNotNull(configuration.Options.IpRateLimiting);
+            Assert.AreEqual("X-Real-IP", configuration.Options.IpRateLimiting.RealIpHeader);
+            Assert.AreEqual("ip-pol-pref", configuration.Options.IpRateLimiting.IpPolicyPrefix);
+            Assert.AreEqual("127.0.0.1", configuration.Options.IpRateLimiting.IpWhitelist[0]);
+            Assert.IsNotNull(configuration.Options.IpRateLimiting.QuotaExceededResponse);
+            Assert.AreEqual("test", configuration.Options.IpRateLimiting.QuotaExceededResponse.Content);
+            Assert.AreEqual("*:/api/status", configuration.Options.IpRateLimiting.EndpointWhitelist[1]);
+            Assert.AreEqual("*", generalRule0.Endpoint);
+            Assert.AreEqual("1s", generalRule0.Period);
+            Assert.AreEqual(2, generalRule0.Limit);
+            Assert.IsNull(generalRule0.PeriodTimespan);
+            Assert.IsNull(configuration.Options.IpRateLimiting.ClientWhitelist);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace AMI.Compress.Extractors
         /// Initializes a new instance of the <see cref="SharpCompressExtractor"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public SharpCompressExtractor(IAmiConfigurationManager configuration)
+        public SharpCompressExtractor(IAppConfiguration configuration)
             : base(configuration)
         {
         }

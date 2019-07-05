@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
-using AMI.Core.Entities.ApplicationInformation.Queries;
+using AMI.Core.Entities.AppInfo.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Models = AMI.Core.Entities.Models;
 

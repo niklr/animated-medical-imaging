@@ -25,7 +25,7 @@ namespace AMI.Infrastructure.Services
     public class ImageService : IImageService
     {
         private readonly ILogger logger;
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
         private readonly IFileSystemStrategy fileSystemStrategy;
         private readonly IAppInfoFactory appInfoFactory;
         private readonly IDefaultJsonWriter jsonWriter;
@@ -59,7 +59,7 @@ namespace AMI.Infrastructure.Services
         /// </exception>
         public ImageService(
             ILoggerFactory loggerFactory,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy,
             IAppInfoFactory appInfoFactory,
             IDefaultJsonWriter jsonWriter,

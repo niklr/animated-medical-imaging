@@ -4,19 +4,19 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Configurations
 {
     [TestFixture]
-    public class AmiConfigurationTests : BaseTest
+    public class AppConfigurationTests : BaseTest
     {
         [Test]
-        public void AmiConfiguration()
+        public void AppConfiguration()
         {
             // Arrange
-            var configuration = GetService<IAmiConfigurationManager>();
+            var configuration = GetService<IAppConfiguration>();
 
             // Act
-            var maxCompressedEntries = configuration.MaxCompressedEntries;
-            var maxSizeKilobytes = configuration.MaxSizeKilobytes;
-            var timeoutMilliseconds = configuration.TimeoutMilliseconds;
-            var workingDirectory = configuration.WorkingDirectory;
+            var maxCompressedEntries = configuration.Options.MaxCompressedEntries;
+            var maxSizeKilobytes = configuration.Options.MaxSizeKilobytes;
+            var timeoutMilliseconds = configuration.Options.TimeoutMilliseconds;
+            var workingDirectory = configuration.Options.WorkingDirectory;
 
             // Assert
             Assert.AreEqual(10, maxCompressedEntries);

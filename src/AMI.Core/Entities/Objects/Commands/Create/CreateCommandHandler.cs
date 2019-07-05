@@ -22,7 +22,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
         private readonly IApplicationConstants constants;
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             IAmiUnitOfWork context,
             IIdGenService idGenService,
             IApplicationConstants constants,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
             : base()
         {
@@ -51,7 +51,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
+            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 
         /// <inheritdoc/>
@@ -67,8 +67,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             string destFilename = string.Concat(guid.ToString(), fileExtension);
             string destPath = fileSystem.Path.Combine(path, destFilename);
 
-            fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(configuration.WorkingDirectory, path));
-            fileSystem.File.Move(request.SourcePath, fileSystem.Path.Combine(configuration.WorkingDirectory, destPath));
+            fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, path));
+            fileSystem.File.Move(request.SourcePath, fileSystem.Path.Combine(configuration.Options.WorkingDirectory, destPath));
 
             var entity = new ObjectEntity()
             {

@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using MediatR;
 
-namespace AMI.Core.Entities.ApiSettings.Queries
+namespace AMI.Core.Entities.ApiOptions.Queries
 {
     /// <summary>
-    /// A handler for the query to get the application settings.
+    /// A handler for the query to get the application options.
     /// </summary>
-    public class GetQueryHandler : IRequestHandler<GetQuery, Models.ApiSettings>
+    public class GetQueryHandler : IRequestHandler<GetQuery, Models.ApiOptions>
     {
         private readonly IApiConfiguration configuration;
 
@@ -29,10 +29,10 @@ namespace AMI.Core.Entities.ApiSettings.Queries
         /// <param name="request">The query request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.
-        /// The task result contains the application settings.</returns>
-        public Task<Models.ApiSettings> Handle(GetQuery request, CancellationToken cancellationToken)
+        /// The task result contains the application options.</returns>
+        public Task<Models.ApiOptions> Handle(GetQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(configuration.ToModel());
+            return Task.FromResult(configuration.Clone());
         }
     }
 }

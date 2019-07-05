@@ -34,7 +34,7 @@ namespace AMI.Infrastructure.IO.Uploaders
         public ChunkedObjectUploader(
             IApplicationConstants constants,
             IMediator mediator,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
         {
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
@@ -50,8 +50,8 @@ namespace AMI.Infrastructure.IO.Uploaders
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
-            baseUploadPath = fileSystem.Path.Combine(configuration.WorkingDirectory, "Upload", "Objects");
+            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+            baseUploadPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, "Upload", "Objects");
         }
 
         /// <inheritdoc/>

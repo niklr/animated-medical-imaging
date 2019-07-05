@@ -20,7 +20,7 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
             // Arrange
             var writer = GetService<ICompressibleWriter>();
             var reader = GetService<ICompressibleReader>();
-            var configuration = GetService<IAmiConfigurationManager>();
+            var configuration = GetService<IAppConfiguration>();
             var imagesPath = GetImagesPath();
             var tempPath = GetTempPath();
             var zipPath = Path.Combine(tempPath, "test.zip");
@@ -42,7 +42,7 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
                 // Assert
                 Assert.AreEqual(compression, archive.CompressionType);
                 Assert.AreEqual(25, items.Count());
-                Assert.AreEqual(configuration.MaxCompressedEntries, result.Count);
+                Assert.AreEqual(configuration.Options.MaxCompressedEntries, result.Count);
                 Assert.AreEqual(574194, new FileInfo(zipPath).Length);
             }
             finally
@@ -57,7 +57,7 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
             // Arrange
             var writer = GetService<ICompressibleWriter>();
             var reader = GetService<ICompressibleReader>();
-            var configuration = GetService<IAmiConfigurationManager>();
+            var configuration = GetService<IAppConfiguration>();
             var filename = "SMIR.Brain.XX.O.CT.339203.nii";
             var dataPath = GetDataPath(filename);
             var tempPath = GetTempPath();

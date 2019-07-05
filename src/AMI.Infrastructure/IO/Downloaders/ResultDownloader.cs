@@ -23,7 +23,7 @@ namespace AMI.Infrastructure.IO.Downloaders
     {
         private readonly IMediator mediator;
         private readonly IAmiUnitOfWork context;
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
         private readonly ICompressibleWriter writer;
         private readonly IFileSystem fileSystem;
 
@@ -38,7 +38,7 @@ namespace AMI.Infrastructure.IO.Downloaders
         public ResultDownloader(
             IMediator mediator,
             IAmiUnitOfWork context,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             ICompressibleWriter writer,
             IFileSystemStrategy fileSystemStrategy)
         {
@@ -52,7 +52,7 @@ namespace AMI.Infrastructure.IO.Downloaders
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
+            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 
         /// <inheritdoc/>
@@ -84,7 +84,7 @@ namespace AMI.Infrastructure.IO.Downloaders
                 throw new UnexpectedNullException($"The base path of result {id} is null.");
             }
 
-            var fullBasePath = fileSystem.Path.Combine(configuration.WorkingDirectory, entity.BasePath);
+            var fullBasePath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, entity.BasePath);
             var items = fileSystem.Directory.EnumerateFiles(fullBasePath, "*.*", SearchOption.TopDirectoryOnly);
 
             var archive = writer.Create(CompressionType.None);

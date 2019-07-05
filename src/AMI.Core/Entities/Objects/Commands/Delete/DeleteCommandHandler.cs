@@ -19,7 +19,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
     public class DeleteCommandHandler : BaseCommandRequestHandler<DeleteObjectCommand, ObjectModel>
     {
         private readonly IAmiUnitOfWork context;
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public DeleteCommandHandler(
             IAmiUnitOfWork context,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
             : base()
         {
@@ -42,7 +42,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
+            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 
         /// <inheritdoc/>
@@ -73,7 +73,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
 
             context.CommitTransaction();
 
-            fileSystem.Directory.Delete(fileSystem.Path.Combine(configuration.WorkingDirectory, directoryName), true);
+            fileSystem.Directory.Delete(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, directoryName), true);
 
             return ObjectModel.Create(entity);
         }

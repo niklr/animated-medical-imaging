@@ -17,14 +17,14 @@ namespace AMI.Core.IO.Extractors
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <exception cref="ArgumentNullException">configuration</exception>
-        public CompressibleExtractor(IAmiConfigurationManager configuration)
+        public CompressibleExtractor(IAppConfiguration configuration)
         {
             if (configuration == null)
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            MaxCompressibleEntries = configuration.MaxCompressedEntries;
+            MaxCompressibleEntries = configuration.Options.MaxCompressedEntries;
         }
 
         /// <summary>

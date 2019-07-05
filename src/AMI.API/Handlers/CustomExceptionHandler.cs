@@ -57,7 +57,7 @@ namespace AMI.API.Handlers
                 var result = new ErrorModel()
                 {
                     Error = exception.Message,
-                    StackTrace = configuration.IsDevelopment ? exception.StackTrace : string.Empty
+                    StackTrace = configuration.Options.IsDevelopment ? exception.StackTrace : string.Empty
                 };
 
                 switch (exception.GetType().Name)

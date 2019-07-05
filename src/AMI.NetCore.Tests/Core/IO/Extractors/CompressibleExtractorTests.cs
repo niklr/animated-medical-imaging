@@ -15,7 +15,7 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
         {
             // Arrange
             var extractor = GetService<ICompressibleExtractor>();
-            var configuration = GetService<IAmiConfigurationManager>();
+            var configuration = GetService<IAppConfiguration>();
             var ct = new CancellationToken();
             var sourcePath = GetDataPath("SMIR.Brain.XX.O.CT.346124.dcm.zip");
             var destinationPath = GetTempPath();
@@ -28,7 +28,7 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
                 var lastEntry = result.LastOrDefault();
 
                 // Assert
-                Assert.IsTrue(result.Count >= configuration.MaxCompressedEntries);
+                Assert.IsTrue(result.Count >= configuration.Options.MaxCompressedEntries);
                 Assert.IsNotNull(firstEntry);
                 Assert.IsTrue(File.Exists(Path.Combine(destinationPath, firstEntry.Key)));
                 Assert.IsNotNull(lastEntry);

@@ -1,6 +1,4 @@
-﻿using System;
-using AMI.Core.Entities.Models;
-using AMI.Domain.Exceptions;
+﻿using AMI.Core.Entities.Models;
 using Microsoft.Extensions.Options;
 
 namespace AMI.Core.Configurations
@@ -8,42 +6,19 @@ namespace AMI.Core.Configurations
     /// <summary>
     /// The API configuration.
     /// </summary>
-    public class ApiConfiguration : IApiConfiguration
+    public class ApiConfiguration : BaseConfiguration<ApiOptions>, IApiConfiguration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiConfiguration"/> class.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        public ApiConfiguration(IOptions<ApiSettings> configuration)
+        /// <param name="options">The API options.</param>
+        public ApiConfiguration(IOptions<ApiOptions> options)
+            : base(options)
         {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-
-            if (configuration.Value == null)
-            {
-                throw new UnexpectedNullException(nameof(configuration), nameof(ApiSettings));
-            }
-
-            ConnectingIpHeaderName = configuration.Value.ConnectingIpHeaderName;
-            IsDevelopment = configuration.Value.IsDevelopment;
+            Options = base.Options;
         }
 
         /// <inheritdoc/>
-        public string ConnectingIpHeaderName { get; private set; }
-
-        /// <inheritdoc/>
-        public bool IsDevelopment { get; private set; }
-
-        /// <inheritdoc/>
-        public ApiSettings ToModel()
-        {
-            return new ApiSettings()
-            {
-                ConnectingIpHeaderName = ConnectingIpHeaderName,
-                IsDevelopment = IsDevelopment
-            };
-        }
+        public new IApiOptions Options { get; private set; }
     }
 }

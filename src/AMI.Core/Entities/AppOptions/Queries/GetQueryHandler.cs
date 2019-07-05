@@ -2,25 +2,23 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
-using AMI.Core.Entities.Models;
 using MediatR;
 
-namespace AMI.Core.Entities.ApplicationSettings.Queries
+namespace AMI.Core.Entities.AppOptions.Queries
 {
     /// <summary>
-    /// A handler for the query to get the application settings.
+    /// A handler for the query to get the application options.
     /// </summary>
-    /// <seealso cref="IRequestHandler{GetQuery, AppSettings}" />
-    public class GetQueryHandler : IRequestHandler<GetQuery, AppSettings>
+    public class GetQueryHandler : IRequestHandler<GetQuery, Models.AppOptions>
     {
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetQueryHandler"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <exception cref="ArgumentNullException">configuration</exception>
-        public GetQueryHandler(IAmiConfigurationManager configuration)
+        public GetQueryHandler(IAppConfiguration configuration)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
@@ -31,10 +29,10 @@ namespace AMI.Core.Entities.ApplicationSettings.Queries
         /// <param name="request">The query request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.
-        /// The task result contains the application settings.</returns>
-        public Task<AppSettings> Handle(GetQuery request, CancellationToken cancellationToken)
+        /// The task result contains the application options.</returns>
+        public Task<Models.AppOptions> Handle(GetQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(configuration.ToModel());
+            return Task.FromResult(configuration.Clone());
         }
     }
 }

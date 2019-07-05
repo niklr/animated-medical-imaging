@@ -57,8 +57,8 @@ namespace AMI.NetCore.Tests
             var services = new ServiceCollection();
 
             services.AddOptions();
-            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
-            services.Configure<ApiSettings>(configuration.GetSection("ApiSettings"));
+            services.Configure<AppOptions>(configuration.GetSection("AppSettings"));
+            services.Configure<ApiOptions>(configuration.GetSection("ApiSettings"));
             services.AddLogging();
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();
@@ -69,7 +69,7 @@ namespace AMI.NetCore.Tests
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
-            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
             services.AddSingleton<ITaskWorker, TaskWorker>();
@@ -116,8 +116,8 @@ namespace AMI.NetCore.Tests
 
         public string GetWorkingDirectoryPath(string path)
         {
-            var configuration = GetService<IAmiConfigurationManager>();
-            return Path.Combine(configuration.WorkingDirectory, path);
+            var configuration = GetService<IAppConfiguration>();
+            return Path.Combine(configuration.Options.WorkingDirectory, path);
         }
 
         public string GetImagesPath()

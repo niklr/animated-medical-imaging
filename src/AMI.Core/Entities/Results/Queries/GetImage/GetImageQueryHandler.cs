@@ -18,7 +18,7 @@ namespace AMI.Core.Entities.Results.Queries.GetImage
     public class GetImageQueryHandler : IRequestHandler<GetImageQuery, FileByteResultModel>
     {
         private readonly IAmiUnitOfWork context;
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace AMI.Core.Entities.Results.Queries.GetImage
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public GetImageQueryHandler(
             IAmiUnitOfWork context,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
@@ -40,7 +40,7 @@ namespace AMI.Core.Entities.Results.Queries.GetImage
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
+            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace AMI.Core.Entities.Results.Queries.GetImage
             }
 
             var filename = fileSystem.Path.GetFileName(request.Filename);
-            var path = fileSystem.Path.Combine(configuration.WorkingDirectory, entity.BasePath, filename);
+            var path = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, entity.BasePath, filename);
 
             if (!fileSystem.File.Exists(path))
             {

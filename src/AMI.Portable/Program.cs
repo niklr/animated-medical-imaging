@@ -48,7 +48,7 @@ namespace AMI.Portable
 
             var services = new ServiceCollection();
             services.AddOptions();
-            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.Configure<AppOptions>(configuration.GetSection("AppSettings"));
             services.AddLogging(builder =>
                 {
                     builder
@@ -65,7 +65,7 @@ namespace AMI.Portable
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
-            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
 
             // Add MediatR
@@ -85,14 +85,14 @@ namespace AMI.Portable
 
             Logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
             Mediator = serviceProvider.GetService<IMediator>();
-            Configuration = serviceProvider.GetService<IAmiConfigurationManager>();
+            Configuration = serviceProvider.GetService<IAppConfiguration>();
         }
 
         public ILogger Logger { get; }
 
         public IMediator Mediator { get; }
 
-        public IAmiConfigurationManager Configuration { get; }
+        public IAppConfiguration Configuration { get; }
 
         public static int Main(string[] args)
         {
@@ -113,9 +113,9 @@ namespace AMI.Portable
                     await program.ExecuteAsync(args, ct);
                 }, ct);
 
-                if (program.Configuration.TimeoutMilliseconds > 0)
+                if (program.Configuration.Options.TimeoutMilliseconds > 0)
                 {
-                    if (!task.Wait(program.Configuration.TimeoutMilliseconds, ct))
+                    if (!task.Wait(program.Configuration.Options.TimeoutMilliseconds, ct))
                     {
                         string timeoutMessage = "Process timed out";
                         program.Logger.LogInformation(timeoutMessage);

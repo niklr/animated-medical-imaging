@@ -23,7 +23,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
     {
         private readonly IAmiUnitOfWork context;
         private readonly IApplicationConstants constants;
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
         private readonly ICompressibleWriter writer;
         private readonly IFileSystem fileSystem;
 
@@ -38,7 +38,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
         public GetZipQueryHandler(
             IAmiUnitOfWork context,
             IApplicationConstants constants,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             ICompressibleWriter writer,
             IFileSystemStrategy fileSystemStrategy)
         {
@@ -52,7 +52,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
+            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
                 throw new UnexpectedNullException($"The base path of result {request.Id} is null.");
             }
 
-            var fullBasePath = fileSystem.Path.Combine(configuration.WorkingDirectory, entity.BasePath);
+            var fullBasePath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, entity.BasePath);
             var items = fileSystem.Directory.EnumerateFiles(fullBasePath, "*.*", SearchOption.TopDirectoryOnly);
 
             var archive = writer.Create(CompressionType.None);

@@ -25,7 +25,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         private readonly IIdGenService idGenService;
         private readonly IDefaultJsonSerializer serializer;
         private readonly IMediator mediator;
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IAppConfiguration configuration;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             IIdGenService idGenService,
             IDefaultJsonSerializer serializer,
             IMediator mediator,
-            IAmiConfigurationManager configuration,
+            IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
             : base()
         {
@@ -57,7 +57,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.WorkingDirectory);
+            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 
         /// <inheritdoc/>
@@ -72,14 +72,14 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             }
 
             // Create temporary directory and use it as destination path
-            var tempDestPath = fileSystem.Path.Combine(configuration.WorkingDirectory, "Temp", Guid.NewGuid().ToString());
+            var tempDestPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, "Temp", Guid.NewGuid().ToString());
             fileSystem.Directory.CreateDirectory(tempDestPath);
 
             // TODO: extract if needed, update the ObjectEntity.UncompressedPath
             // and use the extracted directory as source path
             var pathRequest = new ProcessPathCommand()
             {
-                SourcePath = fileSystem.Path.Combine(configuration.WorkingDirectory, objectEntity.SourcePath),
+                SourcePath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, objectEntity.SourcePath),
                 DestinationPath = tempDestPath,
                 DesiredSize = request.DesiredSize,
                 AmountPerAxis = request.AmountPerAxis,
@@ -99,9 +99,9 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
 
             // Move content of temporary directory and delete it
             var resultsDirectoryName = "Results";
-            var resultsPath = fileSystem.Path.Combine(configuration.WorkingDirectory, resultsDirectoryName);
+            var resultsPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, resultsDirectoryName);
             var baseDestPath = fileSystem.Path.Combine(resultsDirectoryName, result.Id);
-            var destPath = fileSystem.Path.Combine(configuration.WorkingDirectory, baseDestPath);
+            var destPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, baseDestPath);
             fileSystem.Directory.CreateDirectory(resultsPath);
             fileSystem.Directory.Move(tempDestPath, destPath);
 

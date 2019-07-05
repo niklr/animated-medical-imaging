@@ -54,7 +54,7 @@ namespace AMI.CLI
 
             var services = new ServiceCollection();
             services.AddOptions();
-            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.Configure<AppOptions>(configuration.GetSection("AppSettings"));
             services.AddLogging(builder =>
                 {
                     builder
@@ -71,7 +71,7 @@ namespace AMI.CLI
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
-            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
 
             // Add MediatR
@@ -91,7 +91,7 @@ namespace AMI.CLI
 
             Logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<Program>();
             Mediator = serviceProvider.GetService<IMediator>();
-            Configuration = serviceProvider.GetService<IAmiConfigurationManager>();
+            Configuration = serviceProvider.GetService<IAppConfiguration>();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace AMI.CLI
         /// <summary>
         /// Gets the configuration.
         /// </summary>
-        public IAmiConfigurationManager Configuration { get; }
+        public IAppConfiguration Configuration { get; }
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -134,9 +134,9 @@ namespace AMI.CLI
                         await program.ExecuteAsync(args, ct);
                     }, ct);
 
-                if (program.Configuration.TimeoutMilliseconds > 0)
+                if (program.Configuration.Options.TimeoutMilliseconds > 0)
                 {
-                    if (!task.Wait(program.Configuration.TimeoutMilliseconds, ct))
+                    if (!task.Wait(program.Configuration.Options.TimeoutMilliseconds, ct))
                     {
                         string timeoutMessage = "Process timed out";
                         program.Logger.LogInformation(timeoutMessage);

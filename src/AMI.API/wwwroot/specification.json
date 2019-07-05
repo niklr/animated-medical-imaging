@@ -6,12 +6,93 @@
     "version": "0.0.1"
   },
   "paths": {
+    "/api-options": {
+      "get": {
+        "tags": [
+          "ApiOptions"
+        ],
+        "summary": "Gets the API options.",
+        "operationId": "ApiOptions_Get",
+        "responses": {
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The API options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiOptions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/app-info": {
       "get": {
         "tags": [
           "AppInfo"
         ],
-        "summary": "Get application information",
+        "summary": "Gets the application information.",
         "operationId": "AppInfo_Get",
         "responses": {
           "400": {
@@ -75,11 +156,92 @@
             }
           },
           "200": {
-            "description": "The application information",
+            "description": "The application information.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AppInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/app-options": {
+      "get": {
+        "tags": [
+          "AppOptions"
+        ],
+        "summary": "Gets the application options.",
+        "operationId": "AppOptions_Get",
+        "responses": {
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The application options.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppOptions"
                 }
               }
             }
@@ -99,7 +261,7 @@
             "name": "page",
             "in": "query",
             "required": true,
-            "description": "The current page",
+            "description": "The current page.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -833,87 +995,6 @@
         }
       }
     },
-    "/settings": {
-      "get": {
-        "tags": [
-          "Settings"
-        ],
-        "summary": "Get application information",
-        "operationId": "Settings_Get",
-        "responses": {
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "The application information",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppInfo"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/tasks/{id}": {
       "get": {
         "tags": [
@@ -1133,6 +1214,62 @@
           }
         }
       },
+      "ApiOptions": {
+        "type": "object",
+        "description": "The API options.",
+        "additionalProperties": false,
+        "properties": {
+          "connectingIpHeaderName": {
+            "type": "string",
+            "description": "Gets the name of header used to identify the IP address of the connecting client.",
+            "nullable": true
+          },
+          "isDevelopment": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether the current environment is development."
+          },
+          "ipRateLimiting": {
+            "description": "Gets the options used to limit the rate based on the IP address of the client.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IIpRateLimitOptions"
+              }
+            ]
+          }
+        }
+      },
+      "IIpRateLimitOptions": {
+        "type": "object",
+        "description": "An interface representing the options to limit the rate based on the IP address of the client.\nSource: https://github.com/stefanprodan/AspNetCoreRateLimit",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "realIpHeader": {
+            "type": "string",
+            "description": "Gets the HTTP header of the real ip header injected by reverse proxy, by default is X-Real-IP",
+            "nullable": true
+          },
+          "clientIdHeader": {
+            "type": "string",
+            "description": "Gets the HTTP header that holds the client identifier, by default is X-ClientId",
+            "nullable": true
+          },
+          "ipPolicyPrefix": {
+            "type": "string",
+            "description": "Gets the policy prefix, used to compose the client policy cache key",
+            "nullable": true
+          },
+          "ipWhitelist": {
+            "type": "array",
+            "description": "Gets the ip whitelist.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "AppInfo": {
         "type": "object",
         "description": "A model containing information about the application.",
@@ -1146,6 +1283,33 @@
           "appVersion": {
             "type": "string",
             "description": "Gets the application version.",
+            "nullable": true
+          }
+        }
+      },
+      "AppOptions": {
+        "type": "object",
+        "description": "The application options.",
+        "additionalProperties": false,
+        "properties": {
+          "maxSizeKilobytes": {
+            "type": "integer",
+            "description": "Gets the maximum size in kilobytes.",
+            "format": "int32"
+          },
+          "maxCompressedEntries": {
+            "type": "integer",
+            "description": "Gets the maximum of compressed entries.",
+            "format": "int32"
+          },
+          "timeoutMilliseconds": {
+            "type": "integer",
+            "description": "Gets the timeout in milliseconds.",
+            "format": "int32"
+          },
+          "workingDirectory": {
+            "type": "string",
+            "description": "Gets the working directory.",
             "nullable": true
           }
         }

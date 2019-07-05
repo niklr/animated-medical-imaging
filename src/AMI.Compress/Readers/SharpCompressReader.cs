@@ -24,7 +24,7 @@ namespace AMI.Compress.Readers
         /// Initializes a new instance of the <see cref="SharpCompressReader"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public SharpCompressReader(IAmiConfigurationManager configuration)
+        public SharpCompressReader(IAppConfiguration configuration)
             : base(configuration)
         {
         }

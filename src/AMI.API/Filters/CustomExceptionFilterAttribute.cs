@@ -20,7 +20,7 @@ namespace AMI.API.Filters
         /// <param name="configuration">The configuration.</param>
         /// <param name="handler">The exception handler.</param>
         /// <exception cref="ArgumentNullException">handler</exception>
-        public CustomExceptionFilterAttribute(IAmiConfigurationManager configuration, ICustomExceptionHandler handler)
+        public CustomExceptionFilterAttribute(IAppConfiguration configuration, ICustomExceptionHandler handler)
             : base()
         {
             this.handler = handler ?? throw new ArgumentNullException(nameof(handler));

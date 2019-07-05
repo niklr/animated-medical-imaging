@@ -7,7 +7,7 @@ using AMI.Compress.Writers;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
-using AMI.Core.Entities.ApplicationInformation.Queries;
+using AMI.Core.Entities.AppInfo.Queries;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Factories;
@@ -28,6 +28,7 @@ using AMI.Infrastructure.Strategies;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using AMI.Persistence.EntityFramework.InMemory;
+using AspNetCoreRateLimit;
 using FluentValidation.AspNetCore;
 using MediatR;
 using MediatR.Pipeline;
@@ -86,8 +87,14 @@ namespace AMI.API
             var defaultSerializer = new DefaultJsonSerializer();
 
             services.AddOptions();
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
+            services.Configure<AppOptions>(Configuration.GetSection("AppSettings"));
+            services.Configure<ApiOptions>(Configuration.GetSection("ApiSettings"));
+            services.Configure<AspNetCoreRateLimit.IpRateLimitOptions>(Configuration.GetSection("ApiSettings:IpRateLimiting"));
+            services.Configure<AspNetCoreRateLimit.IpRateLimitPolicies>(Configuration.GetSection("ApiSettings:IpRateLimitPolicies"));
+
+            // needed to store rate limit counters and ip rules
+            services.AddMemoryCache();
+
             services.AddLogging(builder =>
             {
                 builder
@@ -112,11 +119,15 @@ namespace AMI.API
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
-            services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
+            services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
             services.AddSingleton<ITaskWorker, TaskWorker>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
+
+            // Add AspNetCoreRateLimit
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 
             // Add MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
@@ -148,6 +159,9 @@ namespace AMI.API
                     defaultSerializer.OverrideJsonSerializerSettings(options.SerializerSettings);
                 });
 
+            // Add AspNetCoreRateLimit configuration (resolvers, counter key builders)
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
             // Customise default API behavior
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -172,6 +186,8 @@ namespace AMI.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseThrottleMiddleware();
 
             app.UseCors("AllowSpecificOrigins");
 

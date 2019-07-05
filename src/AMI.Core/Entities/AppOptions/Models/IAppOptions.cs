@@ -1,11 +1,9 @@
-﻿using AMI.Core.Entities.Models;
-
-namespace AMI.Core.Configurations
+﻿namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A manager for the application configuration.
+    /// An interface representing the application options.
     /// </summary>
-    public interface IAmiConfigurationManager
+    public interface IAppOptions
     {
         /// <summary>
         /// Gets the maximum size in kilobytes.
@@ -26,11 +24,5 @@ namespace AMI.Core.Configurations
         /// Gets the working directory.
         /// </summary>
         string WorkingDirectory { get; }
-
-        /// <summary>
-        /// Converts the application configuration to a model.
-        /// </summary>
-        /// <returns>The model represeting the application configuration.</returns>
-        AppSettings ToModel();
     }
 }

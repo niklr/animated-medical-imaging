@@ -1,24 +1,24 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
-using AMI.Core.Entities.ApiSettings.Queries;
+using AMI.Core.Entities.ApiOptions.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Models = AMI.Core.Entities.Models;
 
 namespace AMI.API.Controllers
 {
     /// <summary>
-    /// The endpoints related to API settings.
+    /// The endpoints related to API options.
     /// </summary>
     [ApiController]
-    [Route("api-settings")]
-    public class ApiSettingsController : BaseController
+    [Route("api-options")]
+    public class ApiOptionsController : BaseController
     {
         /// <summary>
-        /// Gets the API settings.
+        /// Gets the API options.
         /// </summary>
-        /// <returns>The API settings.</returns>
+        /// <returns>The API options.</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Models.ApiSettings), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Models.ApiOptions), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             return Ok(await Mediator.Send(new GetQuery()));

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Entities.Models;
 using AMI.Core.Factories;
 using MediatR;
 
-namespace AMI.Core.Entities.ApplicationInformation.Queries
+namespace AMI.Core.Entities.AppInfo.Queries
 {
     /// <summary>
     /// A handler for the query to get the application information.
     /// </summary>
-    /// <seealso cref="IRequestHandler{GetQuery, AppInfo}" />
-    public class GetQueryHandler : IRequestHandler<GetQuery, AppInfo>
+    public class GetQueryHandler : IRequestHandler<GetQuery, Models.AppInfo>
     {
         private readonly IAppInfoFactory factory;
 
@@ -32,7 +30,7 @@ namespace AMI.Core.Entities.ApplicationInformation.Queries
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.
         /// The task result contains the application information.</returns>
-        public Task<AppInfo> Handle(GetQuery request, CancellationToken cancellationToken)
+        public Task<Models.AppInfo> Handle(GetQuery request, CancellationToken cancellationToken)
         {
             return Task.FromResult(factory.Create());
         }

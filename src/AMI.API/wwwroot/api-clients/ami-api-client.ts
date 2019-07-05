@@ -14,10 +14,124 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface IApiOptionsAmiApiClient {
+    /**
+     * Gets the API options.
+     * @return The API options.
+     */
+    get(): Observable<ApiOptions>;
+}
+
+@Injectable()
+export class ApiOptionsAmiApiClient implements IApiOptionsAmiApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Gets the API options.
+     * @return The API options.
+     */
+    get(): Observable<ApiOptions> {
+        let url_ = this.baseUrl + "/api-options";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiOptions>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiOptions>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ApiOptions> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiOptions.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiOptions>(<any>null);
+    }
+}
+
 export interface IAppInfoAmiApiClient {
     /**
-     * Get application information
-     * @return The application information
+     * Gets the application information.
+     * @return The application information.
      */
     get(): Observable<AppInfo>;
 }
@@ -34,8 +148,8 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
     }
 
     /**
-     * Get application information
-     * @return The application information
+     * Gets the application information.
+     * @return The application information.
      */
     get(): Observable<AppInfo> {
         let url_ = this.baseUrl + "/app-info";
@@ -128,10 +242,124 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
     }
 }
 
+export interface IAppOptionsAmiApiClient {
+    /**
+     * Gets the application options.
+     * @return The application options.
+     */
+    get(): Observable<AppOptions>;
+}
+
+@Injectable()
+export class AppOptionsAmiApiClient implements IAppOptionsAmiApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Gets the application options.
+     * @return The application options.
+     */
+    get(): Observable<AppOptions> {
+        let url_ = this.baseUrl + "/app-options";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<AppOptions>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<AppOptions>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<AppOptions> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AppOptions.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<AppOptions>(<any>null);
+    }
+}
+
 export interface IObjectsAmiApiClient {
     /**
      * Gets a paginated list of objects.
-     * @param page The current page
+     * @param page The current page.
      * @param limit The limit to constrain the number of items.
      * @return The list of paginated objects.
      */
@@ -175,7 +403,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
 
     /**
      * Gets a paginated list of objects.
-     * @param page The current page
+     * @param page The current page.
      * @param limit The limit to constrain the number of items.
      * @return The list of paginated objects.
      */
@@ -936,120 +1164,6 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
     }
 }
 
-export interface ISettingsAmiApiClient {
-    /**
-     * Get application information
-     * @return The application information
-     */
-    get(): Observable<AppInfo>;
-}
-
-@Injectable()
-export class SettingsAmiApiClient implements ISettingsAmiApiClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
-    }
-
-    /**
-     * Get application information
-     * @return The application information
-     */
-    get(): Observable<AppInfo> {
-        let url_ = this.baseUrl + "/settings";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet(<any>response_);
-                } catch (e) {
-                    return <Observable<AppInfo>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<AppInfo>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<AppInfo> {
-        const status = response.status;
-        const responseBlob = 
-            response instanceof HttpResponse ? response.body : 
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ErrorModel.fromJS(resultData400);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ErrorModel.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ErrorModel.fromJS(resultData403);
-            return throwException("A server error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ErrorModel.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-            }));
-        } else if (status === 409) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result409: any = null;
-            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = ErrorModel.fromJS(resultData409);
-            return throwException("A server error occurred.", status, _responseText, _headers, result409);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result500: any = null;
-            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result500 = ErrorModel.fromJS(resultData500);
-            return throwException("A server error occurred.", status, _responseText, _headers, result500);
-            }));
-        } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AppInfo.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<AppInfo>(<any>null);
-    }
-}
-
 export interface ITasksAmiApiClient {
     /**
      * Gets the information of the task with the specified identifier.
@@ -1338,6 +1452,122 @@ export interface IErrorModel {
     stackTrace?: string | undefined;
 }
 
+/** The API options. */
+export class ApiOptions implements IApiOptions {
+    /** Gets the name of header used to identify the IP address of the connecting client. */
+    connectingIpHeaderName?: string | undefined;
+    /** Gets a value indicating whether the current environment is development. */
+    isDevelopment?: boolean;
+    /** Gets the options used to limit the rate based on the IP address of the client. */
+    ipRateLimiting?: IIpRateLimitOptions | undefined;
+
+    constructor(data?: IApiOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.connectingIpHeaderName = data["connectingIpHeaderName"];
+            this.isDevelopment = data["isDevelopment"];
+            this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ApiOptions {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiOptions();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["connectingIpHeaderName"] = this.connectingIpHeaderName;
+        data["isDevelopment"] = this.isDevelopment;
+        data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+/** The API options. */
+export interface IApiOptions {
+    /** Gets the name of header used to identify the IP address of the connecting client. */
+    connectingIpHeaderName?: string | undefined;
+    /** Gets a value indicating whether the current environment is development. */
+    isDevelopment?: boolean;
+    /** Gets the options used to limit the rate based on the IP address of the client. */
+    ipRateLimiting?: IIpRateLimitOptions | undefined;
+}
+
+/** An interface representing the options to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
+export abstract class IIpRateLimitOptions implements IIIpRateLimitOptions {
+    /** Gets the HTTP header of the real ip header injected by reverse proxy, by default is X-Real-IP */
+    realIpHeader?: string | undefined;
+    /** Gets the HTTP header that holds the client identifier, by default is X-ClientId */
+    clientIdHeader?: string | undefined;
+    /** Gets the policy prefix, used to compose the client policy cache key */
+    ipPolicyPrefix?: string | undefined;
+    /** Gets the ip whitelist. */
+    ipWhitelist?: string[] | undefined;
+
+    constructor(data?: IIIpRateLimitOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.realIpHeader = data["realIpHeader"];
+            this.clientIdHeader = data["clientIdHeader"];
+            this.ipPolicyPrefix = data["ipPolicyPrefix"];
+            if (Array.isArray(data["ipWhitelist"])) {
+                this.ipWhitelist = [] as any;
+                for (let item of data["ipWhitelist"])
+                    this.ipWhitelist!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): IIpRateLimitOptions {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IIpRateLimitOptions' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["realIpHeader"] = this.realIpHeader;
+        data["clientIdHeader"] = this.clientIdHeader;
+        data["ipPolicyPrefix"] = this.ipPolicyPrefix;
+        if (Array.isArray(this.ipWhitelist)) {
+            data["ipWhitelist"] = [];
+            for (let item of this.ipWhitelist)
+                data["ipWhitelist"].push(item);
+        }
+        return data; 
+    }
+}
+
+/** An interface representing the options to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
+export interface IIIpRateLimitOptions {
+    /** Gets the HTTP header of the real ip header injected by reverse proxy, by default is X-Real-IP */
+    realIpHeader?: string | undefined;
+    /** Gets the HTTP header that holds the client identifier, by default is X-ClientId */
+    clientIdHeader?: string | undefined;
+    /** Gets the policy prefix, used to compose the client policy cache key */
+    ipPolicyPrefix?: string | undefined;
+    /** Gets the ip whitelist. */
+    ipWhitelist?: string[] | undefined;
+}
+
 /** A model containing information about the application. */
 export class AppInfo implements IAppInfo {
     /** Gets the name of the application. */
@@ -1382,6 +1612,64 @@ export interface IAppInfo {
     appName?: string | undefined;
     /** Gets the application version. */
     appVersion?: string | undefined;
+}
+
+/** The application options. */
+export class AppOptions implements IAppOptions {
+    /** Gets the maximum size in kilobytes. */
+    maxSizeKilobytes?: number;
+    /** Gets the maximum of compressed entries. */
+    maxCompressedEntries?: number;
+    /** Gets the timeout in milliseconds. */
+    timeoutMilliseconds?: number;
+    /** Gets the working directory. */
+    workingDirectory?: string | undefined;
+
+    constructor(data?: IAppOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.maxSizeKilobytes = data["maxSizeKilobytes"];
+            this.maxCompressedEntries = data["maxCompressedEntries"];
+            this.timeoutMilliseconds = data["timeoutMilliseconds"];
+            this.workingDirectory = data["workingDirectory"];
+        }
+    }
+
+    static fromJS(data: any): AppOptions {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppOptions();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["maxSizeKilobytes"] = this.maxSizeKilobytes;
+        data["maxCompressedEntries"] = this.maxCompressedEntries;
+        data["timeoutMilliseconds"] = this.timeoutMilliseconds;
+        data["workingDirectory"] = this.workingDirectory;
+        return data; 
+    }
+}
+
+/** The application options. */
+export interface IAppOptions {
+    /** Gets the maximum size in kilobytes. */
+    maxSizeKilobytes?: number;
+    /** Gets the maximum of compressed entries. */
+    maxCompressedEntries?: number;
+    /** Gets the timeout in milliseconds. */
+    timeoutMilliseconds?: number;
+    /** Gets the working directory. */
+    workingDirectory?: string | undefined;
 }
 
 export class PaginationResultModelOfObjectModel implements IPaginationResultModelOfObjectModel {
