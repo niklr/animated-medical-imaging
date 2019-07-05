@@ -1,7 +1,5 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
-using AMI.API.Configuration;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Filters;
 using AMI.API.Handlers;
@@ -89,6 +87,7 @@ namespace AMI.API
 
             services.AddOptions();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
             services.AddLogging(builder =>
             {
                 builder

@@ -58,6 +58,7 @@ namespace AMI.NetCore.Tests
 
             services.AddOptions();
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.Configure<ApiSettings>(configuration.GetSection("ApiSettings"));
             services.AddLogging();
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenService, IdGenService>();
@@ -67,6 +68,7 @@ namespace AMI.NetCore.Tests
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
+            services.AddSingleton<IApiConfiguration, ApiConfiguration>();
             services.AddSingleton<IAmiConfigurationManager, AmiConfigurationManager>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<ITaskQueue, TaskQueue>();

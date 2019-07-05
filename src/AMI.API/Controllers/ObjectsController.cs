@@ -33,7 +33,7 @@ namespace AMI.API.Controllers
         /// <summary>
         /// Gets a paginated list of objects.
         /// </summary>
-        /// <param name="page">The current page</param>
+        /// <param name="page">The current page.</param>
         /// <param name="limit">The limit to constrain the number of items.</param>
         /// <returns>The list of paginated objects.</returns>
         [HttpGet]

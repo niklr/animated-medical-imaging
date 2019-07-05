@@ -1,15 +1,12 @@
-﻿namespace AMI.Core.Configurations
+﻿using AMI.Core.Entities.Models;
+
+namespace AMI.Core.Configurations
 {
     /// <summary>
     /// A manager for the application configuration.
     /// </summary>
     public interface IAmiConfigurationManager
     {
-        /// <summary>
-        /// Gets a value indicating whether the current environment is development.
-        /// </summary>
-        bool IsDevelopment { get; }
-
         /// <summary>
         /// Gets the maximum size in kilobytes.
         /// </summary>
@@ -29,5 +26,11 @@
         /// Gets the working directory.
         /// </summary>
         string WorkingDirectory { get; }
+
+        /// <summary>
+        /// Converts the application configuration to a model.
+        /// </summary>
+        /// <returns>The model represeting the application configuration.</returns>
+        AppSettings ToModel();
     }
 }

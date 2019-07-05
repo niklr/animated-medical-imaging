@@ -29,36 +29,34 @@ namespace AMI.Core.Configurations
                 throw new UnexpectedNullException(nameof(configuration), nameof(AppSettings));
             }
 
-            IsDevelopment = configuration.Value.IsDevelopment;
             MaxSizeKilobytes = configuration.Value.MaxSizeKilobytes;
             MaxCompressedEntries = configuration.Value.MaxCompressedEntries;
             TimeoutMilliseconds = configuration.Value.TimeoutMilliseconds;
             WorkingDirectory = configuration.Value.WorkingDirectory;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the current environment is development.
-        /// </summary>
-        public bool IsDevelopment { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum size in kilobytes.
-        /// </summary>
+        /// <inheritdoc/>
         public int MaxSizeKilobytes { get; private set; }
 
-        /// <summary>
-        /// Gets the maximum of compressed entries.
-        /// </summary>
+        /// <inheritdoc/>
         public int MaxCompressedEntries { get; private set; }
 
-        /// <summary>
-        /// Gets the timeout in milliseconds.
-        /// </summary>
+        /// <inheritdoc/>
         public int TimeoutMilliseconds { get; private set; }
 
-        /// <summary>
-        /// Gets the working directory.
-        /// </summary>
+        /// <inheritdoc/>
         public string WorkingDirectory { get; private set; }
+
+        /// <inheritdoc/>
+        public AppSettings ToModel()
+        {
+            return new AppSettings()
+            {
+                MaxSizeKilobytes = MaxSizeKilobytes,
+                MaxCompressedEntries = MaxCompressedEntries,
+                TimeoutMilliseconds = TimeoutMilliseconds,
+                WorkingDirectory = WorkingDirectory
+            };
+        }
     }
 }

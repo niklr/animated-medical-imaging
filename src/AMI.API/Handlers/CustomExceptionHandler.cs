@@ -16,7 +16,7 @@ namespace AMI.API.Handlers
     /// <seealso cref="ICustomExceptionHandler" />
     public class CustomExceptionHandler : ICustomExceptionHandler
     {
-        private readonly IAmiConfigurationManager configuration;
+        private readonly IApiConfiguration configuration;
         private readonly ILogger<CustomExceptionHandler> logger;
         private readonly IDefaultJsonSerializer serializer;
 
@@ -33,7 +33,7 @@ namespace AMI.API.Handlers
         /// or
         /// serializer
         /// </exception>
-        public CustomExceptionHandler(IAmiConfigurationManager configuration, ILoggerFactory loggerFactory, IDefaultJsonSerializer serializer)
+        public CustomExceptionHandler(IApiConfiguration configuration, ILoggerFactory loggerFactory, IDefaultJsonSerializer serializer)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             logger = loggerFactory?.CreateLogger<CustomExceptionHandler>() ?? throw new ArgumentNullException(nameof(loggerFactory));
