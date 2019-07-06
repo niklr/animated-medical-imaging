@@ -3,6 +3,9 @@ using System.Reflection;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Filters;
 using AMI.API.Handlers;
+using AMI.API.Hubs;
+using AMI.API.Observers;
+using AMI.API.Providers;
 using AMI.Compress.Writers;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
@@ -35,6 +38,7 @@ using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -107,6 +111,7 @@ namespace AMI.API
 
             // TODO: replace InMemoryUnitOfWork with SQLite
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
+            services.AddScoped<IGatewayService, GatewayService>();
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
@@ -122,6 +127,7 @@ namespace AMI.API
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
             services.AddSingleton<ITaskWorker, TaskWorker>();
+            services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
 
@@ -160,6 +166,16 @@ namespace AMI.API
                     defaultSerializer.OverrideJsonSerializerSettings(options.SerializerSettings);
                 });
 
+            // Add SignalR
+            services.AddSignalR()
+                .AddJsonProtocol(options =>
+                {
+                    defaultSerializer.OverrideJsonSerializerSettings(options.PayloadSerializerSettings);
+                });
+
+            // AddSignalR must be called before registering custom SignalR services.
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
             // Add AspNetCoreRateLimit configuration (resolvers, counter key builders)
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
@@ -176,8 +192,11 @@ namespace AMI.API
         /// </summary>
         /// <param name="app">The application builder.</param>
         /// <param name="env">The hosting environment.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        /// <param name="gatewayHubContext">The gateway hub context.</param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IHubContext<GatewayHub> gatewayHubContext)
         {
+            var serviceProvider = app.ApplicationServices;
+
             if (env.IsDevelopment())
             {
                 // app.UseDeveloperExceptionPage();
@@ -213,6 +232,14 @@ namespace AMI.API
             });
 
             app.UseMvc();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<GatewayHub>("/gateway");
+            });
+
+            var gatewayObserverService = serviceProvider.GetService<IGatewayObserverService>();
+            gatewayObserverService.Add(new GatewayObserver(gatewayHubContext));
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace AMI.Core.Services
 {
     /// <summary>
-    /// A service to generate unique identifiers.
+    /// An interface representing a service to generate unique identifiers.
     /// </summary>
     public interface IIdGenService
     {

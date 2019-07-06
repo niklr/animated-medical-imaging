@@ -7,7 +7,7 @@ using AMI.Core.Entities.Results.Commands.ProcessPath;
 namespace AMI.Core.Services
 {
     /// <summary>
-    /// A service for imaging purposes.
+    /// An interface representing a service for imaging purposes.
     /// </summary>
     public interface IImageService
     {
