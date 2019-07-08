@@ -19,7 +19,6 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     /// <seealso cref="BaseCommandRequestHandler{CreateObjectCommand, ObjectModel}" />
     public class CreateCommandHandler : BaseCommandRequestHandler<CreateObjectCommand, ObjectModel>
     {
-        private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
         private readonly IApplicationConstants constants;
         private readonly IAppConfiguration configuration;
@@ -29,19 +28,20 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
+        /// <param name="gateway">The gateway service.</param>
         /// <param name="idGenService">The service to generate unique identifiers.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public CreateCommandHandler(
             IAmiUnitOfWork context,
+            IGatewayService gateway,
             IIdGenService idGenService,
             IApplicationConstants constants,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base()
+            : base(context, gateway)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -57,7 +57,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// <inheritdoc/>
         protected override async Task<ObjectModel> ProtectedHandleAsync(CreateObjectCommand request, CancellationToken cancellationToken)
         {
-            context.BeginTransaction();
+            Context.BeginTransaction();
 
             // TODO: support custom extensions
             string fileExtension = fileSystem.Path.GetExtension(request.OriginalFilename);
@@ -79,11 +79,11 @@ namespace AMI.Core.Entities.Objects.Commands.Create
                 SourcePath = destPath
             };
 
-            context.ObjectRepository.Add(entity);
+            Context.ObjectRepository.Add(entity);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
-            context.CommitTransaction();
+            Context.CommitTransaction();
 
             return ObjectModel.Create(entity);
         }

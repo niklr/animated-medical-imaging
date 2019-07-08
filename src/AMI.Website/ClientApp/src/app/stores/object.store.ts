@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ProcessObjectCommand } from '../clients/ami-api-client';
+import { ProcessObjectCommand, TaskModel } from '../clients/ami-api-client';
+import { GatewayEvent } from '../enums';
 import { PageEvent } from '../events/page.event';
+import { GatewayHub } from '../hubs/gateway.hub';
 import { ObjectModelExtended } from '../models/object-extended.model';
 
 @Injectable()
@@ -12,10 +14,25 @@ export class ObjectStore {
   public settings: ProcessObjectCommand = new ProcessObjectCommand();
   public pageEvent: PageEvent = new PageEvent();
 
-  constructor() {
+  constructor(private gateway: GatewayHub) {
     this.settings.desiredSize = 250;
     this.settings.amountPerAxis = 10;
     this.settings.grayscale = true;
+    this.initGateway();
+  }
+
+  private initGateway(): void {
+    this.gateway.on(GatewayEvent[GatewayEvent.UpdateTaskStatus], function (data: TaskModel) {
+      const that = this as ObjectStore;
+      if (data && data.object && data.object.id) {
+        var index = that.items.findIndex((item) => {
+          return item.id === data.object.id;
+        });
+        if (index >= 0) {
+          that.items[index].latestTask = data;
+        }
+      }
+    }.bind(this));
   }
 
   private updateCount(): void {

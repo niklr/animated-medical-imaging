@@ -21,7 +21,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
     /// </summary>
     public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectCommand, ProcessResultModel>
     {
-        private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
         private readonly IDefaultJsonSerializer serializer;
         private readonly IMediator mediator;
@@ -32,6 +31,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// Initializes a new instance of the <see cref="ProcessCommandHandler"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
+        /// <param name="gateway">The gateway service.</param>
         /// <param name="idGenService">The service to generate unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="mediator">The mediator.</param>
@@ -39,14 +39,14 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public ProcessCommandHandler(
             IAmiUnitOfWork context,
+            IGatewayService gateway,
             IIdGenService idGenService,
             IDefaultJsonSerializer serializer,
             IMediator mediator,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base()
+            : base(context, gateway)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -63,9 +63,9 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// <inheritdoc/>
         protected override async Task<ProcessResultModel> ProtectedHandleAsync(ProcessObjectCommand request, CancellationToken cancellationToken)
         {
-            context.BeginTransaction();
+            Context.BeginTransaction();
 
-            var objectEntity = await context.ObjectRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
+            var objectEntity = await Context.ObjectRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
             if (objectEntity == null)
             {
                 throw new UnexpectedNullException($"{nameof(ObjectEntity)} not found.");
@@ -105,7 +105,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             fileSystem.Directory.CreateDirectory(resultsPath);
             fileSystem.Directory.Move(tempDestPath, destPath);
 
-            var resultEntity = await context.ResultRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(result.Id), cancellationToken);
+            var resultEntity = await Context.ResultRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(result.Id), cancellationToken);
             if (resultEntity == null)
             {
                 throw new UnexpectedNullException($"{nameof(ResultEntity)} not found.");
@@ -114,11 +114,11 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             // Update BaseFsPath of ResultEntity
             resultEntity.BasePath = baseDestPath;
             resultEntity.ModifiedDate = DateTime.UtcNow;
-            context.ResultRepository.Update(resultEntity);
+            Context.ResultRepository.Update(resultEntity);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
-            context.CommitTransaction();
+            Context.CommitTransaction();
 
             return result;
         }

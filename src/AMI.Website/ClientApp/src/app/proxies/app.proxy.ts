@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { AppInfoAmiApiClient, AppInfo } from '../clients/ami-api-client';
 import { BaseProxy } from './base.proxy';
 import { ConfigService } from '../services/config.service';
+import { LoggerService } from '../services/logger.service';
 
 @Injectable()
 export class AppProxy extends BaseProxy {
 
-  constructor(private appInfoClient: AppInfoAmiApiClient) {
+  constructor(private appInfoClient: AppInfoAmiApiClient, private logger: LoggerService) {
     super();
   }
 
@@ -19,7 +20,7 @@ export class AppProxy extends BaseProxy {
     }, error => {
       if (retryCounter <= 3) {
         setTimeout(() => {
-          console.log('AppProxy.init retryCounter: ' + retryCounter);
+          this.logger.info('AppProxy.init retryCounter: ' + retryCounter);
           this.init(++retryCounter);
         }, 5000);
       }

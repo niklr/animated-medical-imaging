@@ -6,6 +6,7 @@ using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Repositories;
+using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
@@ -18,7 +19,6 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
     /// <seealso cref="BaseCommandRequestHandler{DeleteObjectCommand, ObjectModel}" />
     public class DeleteCommandHandler : BaseCommandRequestHandler<DeleteObjectCommand, ObjectModel>
     {
-        private readonly IAmiUnitOfWork context;
         private readonly IAppConfiguration configuration;
         private readonly IFileSystem fileSystem;
 
@@ -26,15 +26,16 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         /// Initializes a new instance of the <see cref="DeleteCommandHandler"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
+        /// <param name="gateway">The gateway service.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public DeleteCommandHandler(
             IAmiUnitOfWork context,
+            IGatewayService gateway,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base()
+            : base(context, gateway)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             if (fileSystemStrategy == null)
@@ -48,9 +49,9 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         /// <inheritdoc/>
         protected override async Task<ObjectModel> ProtectedHandleAsync(DeleteObjectCommand request, CancellationToken cancellationToken)
         {
-            context.BeginTransaction();
+            Context.BeginTransaction();
 
-            var entity = await context.ObjectRepository
+            var entity = await Context.ObjectRepository
                 .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
 
             if (entity == null)
@@ -58,9 +59,9 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
                 throw new NotFoundException(nameof(ObjectEntity), request.Id);
             }
 
-            context.ObjectRepository.Remove(entity);
+            Context.ObjectRepository.Remove(entity);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
             var directoryName = fileSystem.Path.GetDirectoryName(entity.SourcePath);
             if (!directoryName.EndsWith(entity.Id.ToString()))
@@ -71,7 +72,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
                     directoryName));
             }
 
-            context.CommitTransaction();
+            Context.CommitTransaction();
 
             fileSystem.Directory.Delete(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, directoryName), true);
 

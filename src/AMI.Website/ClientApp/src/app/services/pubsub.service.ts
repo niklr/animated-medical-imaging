@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PubSubTopic } from '../enums/pub-sub-topic.enum';
+import { PubSubTopic } from '../enums';
 import PubSub from 'pubsub-js';
 
 @Injectable()

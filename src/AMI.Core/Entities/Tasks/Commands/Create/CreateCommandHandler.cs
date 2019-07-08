@@ -24,7 +24,6 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
     {
         private static Mutex processMutex;
 
-        private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
         private readonly IDefaultJsonSerializer serializer;
         private readonly ITaskQueue queue;
@@ -33,17 +32,18 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
+        /// <param name="gateway">The gateway service.</param>
         /// <param name="idGenService">The service to generate unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="queue">The task queue.</param>
         public CreateCommandHandler(
             IAmiUnitOfWork context,
+            IGatewayService gateway,
             IIdGenService idGenService,
             IDefaultJsonSerializer serializer,
             ITaskQueue queue)
-            : base()
+            : base(context, gateway)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
@@ -52,7 +52,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// <inheritdoc/>
         protected override async Task<TaskModel> ProtectedHandleAsync(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            context.BeginTransaction();
+            Context.BeginTransaction();
 
             if (request.Command.CommandType != CommandType.ProcessObjectCommand || request.Command.GetType() != typeof(ProcessObjectCommand))
             {
@@ -65,11 +65,11 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
             return await processMutex.Execute(new TimeSpan(0, 0, 1), async () =>
             {
-                context.BeginTransaction();
+                Context.BeginTransaction();
 
                 Guid objectId = Guid.Parse(command.Id);
 
-                var activeCount = await context.TaskRepository.CountAsync(e =>
+                var activeCount = await Context.TaskRepository.CountAsync(e =>
                     e.ObjectId == objectId &&
                     (e.Status == (int)Domain.Enums.TaskStatus.Created ||
                     e.Status == (int)Domain.Enums.TaskStatus.Queued ||
@@ -93,14 +93,14 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
                     ObjectId = objectId
                 };
 
-                context.TaskRepository.Add(entity);
+                Context.TaskRepository.Add(entity);
 
-                await context.SaveChangesAsync(cancellationToken);
+                await Context.SaveChangesAsync(cancellationToken);
 
                 var result = TaskModel.Create(entity, serializer);
                 queue.Add(result);
 
-                context.CommitTransaction();
+                Context.CommitTransaction();
 
                 return result;
             });

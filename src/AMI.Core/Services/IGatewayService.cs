@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.IO.Builders;
 using AMI.Domain.Enums;
 
 namespace AMI.Core.Services
@@ -10,6 +11,11 @@ namespace AMI.Core.Services
     /// </summary>
     public interface IGatewayService
     {
+        /// <summary>
+        /// Gets the builder for gateway group names.
+        /// </summary>
+        IGatewayGroupNameBuilder Builder { get; }
+
         /// <summary>
         /// Gets the group names relevant to the specified user.
         /// </summary>

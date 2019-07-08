@@ -12,6 +12,7 @@ using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Extensions.Time;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
+using AMI.Core.IO.Builders;
 using AMI.Core.IO.Extractors;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Writers;
@@ -20,6 +21,7 @@ using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Enums;
 using AMI.Gif.Writers;
+using AMI.Infrastructure.IO.Builders;
 using AMI.Infrastructure.IO.Writers;
 using AMI.Infrastructure.Services;
 using AMI.Infrastructure.Strategies;
@@ -55,6 +57,7 @@ namespace AMI.Portable
                         .AddConfiguration(configuration.GetSection("Logging"))
                         .AddConsole();
                 });
+            services.AddScoped<IGatewayService, GatewayService>();
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
@@ -66,6 +69,8 @@ namespace AMI.Portable
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
+            services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
+            services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
 
             // Add MediatR

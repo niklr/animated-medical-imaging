@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { PubSubTopic } from '../../../enums/pub-sub-topic.enum';
+import { PubSubTopic } from '../../../enums';
 import { PageEvent } from '../../../events/page.event';
 import { ObjectModelExtended } from '../../../models/object-extended.model';
 import { ObjectProxy } from '../../../proxies';

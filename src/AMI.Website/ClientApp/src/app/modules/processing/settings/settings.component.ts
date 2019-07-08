@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { PubSubTopic } from '../../../enums/pub-sub-topic.enum';
+import { PubSubTopic } from '../../../enums';
 import { TaskProxy } from '../../../proxies';
 import { NotificationService } from '../../../services/notification.service';
 import { PubSubService } from '../../../services/pubsub.service';
@@ -91,7 +91,6 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   public processObject(id: string, callbackWrapper: CallbackWrapper): void {
     var settings = this.objectStore.settings;
     this.taskProxy.create(id, settings).subscribe(result => {
-      this.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
     }, error => {
       this.notificationService.handleError(error);
     }).add(() => {

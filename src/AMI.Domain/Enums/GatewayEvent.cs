@@ -8,6 +8,11 @@
         /// <summary>
         /// The gateway event is not known.
         /// </summary>
-        Unknown = 0
+        Unknown = 0,
+
+        /// <summary>
+        /// The event representing an update of a task status.
+        /// </summary>
+        UpdateTaskStatus = 1
     }
 }

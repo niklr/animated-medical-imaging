@@ -16,7 +16,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
     /// </summary>
     public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessPathCommand, ProcessResultModel>
     {
-        private readonly IAmiUnitOfWork context;
         private readonly IIdGenService idGenService;
         private readonly IDefaultJsonSerializer serializer;
         private readonly IImageService imageService;
@@ -25,17 +24,18 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
         /// Initializes a new instance of the <see cref="ProcessCommandHandler"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
+        /// <param name="gateway">The gateway service.</param>
         /// <param name="idGenService">The service to generate unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="imageService">The image service.</param>
         public ProcessCommandHandler(
             IAmiUnitOfWork context,
+            IGatewayService gateway,
             IIdGenService idGenService,
             IDefaultJsonSerializer serializer,
             IImageService imageService)
-            : base()
+            : base(context, gateway)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
@@ -57,9 +57,9 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
                 ResultSerialized = serializer.Serialize(result)
             };
 
-            context.ResultRepository.Add(entity);
+            Context.ResultRepository.Add(entity);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
             return ProcessResultModel.Create(entity, serializer);
         }

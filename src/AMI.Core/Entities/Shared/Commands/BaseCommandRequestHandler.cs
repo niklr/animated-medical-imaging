@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Repositories;
+using AMI.Core.Services;
 using MediatR;
 
 namespace AMI.Core.Entities.Shared.Commands
@@ -17,9 +19,23 @@ namespace AMI.Core.Entities.Shared.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommandRequestHandler{TRequest, TResponse}"/> class.
         /// </summary>
-        public BaseCommandRequestHandler()
+        /// <param name="context">The context.</param>
+        /// <param name="gateway">The gateway service.</param>
+        public BaseCommandRequestHandler(IAmiUnitOfWork context, IGatewayService gateway)
         {
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+            Gateway = gateway ?? throw new ArgumentNullException(nameof(gateway));
         }
+
+        /// <summary>
+        /// Gets the context.
+        /// </summary>
+        protected IAmiUnitOfWork Context { get; private set; }
+
+        /// <summary>
+        /// Gets the gateway service.
+        /// </summary>
+        protected IGatewayService Gateway { get; private set; }
 
         /// <summary>
         /// Asynchronously handles the command request.
