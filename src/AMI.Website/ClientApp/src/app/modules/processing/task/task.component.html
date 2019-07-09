@@ -1,5 +1,5 @@
-<div class="row no-margin valign-wrapper">
-  <div class="col s12 m8 no-padding wrapword">
+<div class="row no-margin">
+  <div class="col s12 xl7 no-padding">
     <blockquote>
       <dl class="dl-horizontal">
         <dt>Task</dt>
@@ -23,7 +23,7 @@
       </dl>
     </blockquote>
   </div>
-  <div class="col s12 m4 valign-wrapper wrapword">
+  <div class="col s12 xl5 no-padding">
     <div *ngIf="showSpinner()">
       <div class="preloader-wrapper small active">
         <div class="spinner-layer spinner-blue-only">
@@ -38,14 +38,18 @@
       </div>
     </div>
     <div *ngIf="command && !showSpinner()">
-      <div class="custom-small">
-        <ul>
-          <li><b>Image size</b> {{command.desiredSize}}</li>
-          <li><b>Amount per axis</b> {{command.amountPerAxis}}</li>
-          <li><b>Axis types</b> {{displayAxisTypes}}</li>
-          <li><b>Convert to grayscale</b> {{command.grayscale}}</li>
-        </ul>
-      </div>
+      <blockquote>
+        <dl class="dl-horizontal">
+          <dt>Image size</dt>
+          <dd>{{command.desiredSize}}</dd>
+          <dt>Amount per axis</dt>
+          <dd>{{command.amountPerAxis}}</dd>
+          <dt>Axis types</dt>
+          <dd>{{displayAxisTypes}}</dd>
+          <dt>Convert to grayscale</dt>
+          <dd>{{command.grayscale}}</dd>
+        </dl>
+      </blockquote>
     </div>
   </div>
 </div>

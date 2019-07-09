@@ -1,10 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PubSubTopic } from '../../../enums';
-import { TaskProxy } from '../../../proxies';
-import { NotificationService } from '../../../services/notification.service';
+import { ObjectService } from '../../../services/object.service';
 import { PubSubService } from '../../../services/pubsub.service';
 import { ObjectStore } from '../../../stores/object.store';
-import { CallbackWrapper } from '../../../wrappers/callback.wrapper';
 import { AxisType, ProcessObjectCommand, ObjectModel } from '../../../clients/ami-api-client';
 
 class AxisTypeContainer {
@@ -30,8 +28,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     new AxisTypeContainer({ displayName: "Z-Axis", enum: AxisType.Z, checked: true })
   ];
 
-  constructor(public objectStore: ObjectStore, private notificationService: NotificationService,
-    private pubSubService: PubSubService, private taskProxy: TaskProxy) {
+  constructor(public objectStore: ObjectStore, public objectService: ObjectService, private pubSubService: PubSubService) {
     this.settings = this.objectStore.settings;
   }
 
@@ -43,7 +40,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         let result = ObjectModel.fromJS(JSON.parse(item.detail.message));
         if (result && result.id) {
           that.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
-          that.processObject(result.id, undefined);
+          that.objectService.processObject(result.id, undefined);
         }
       } catch (e) { }
     }.bind(this));
@@ -51,6 +48,10 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     M.updateTextFields();
+  }
+
+  public showProcessButton(): boolean {
+    return this.objectStore.count > 0;
   }
 
   public setAxisTypes(): void {
@@ -66,38 +67,5 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   public toggleAxisTypeContainer(axisTypeContainer: AxisTypeContainer, $event) {
     axisTypeContainer.checked = !axisTypeContainer.checked;
     this.setAxisTypes();
-  }
-
-
-  public processSelectedObjects = (callbackFn) => {
-    var callbackWrapper = new CallbackWrapper(callbackFn);
-
-    var items = this.objectStore.getItems();
-    if (items) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item.isChecked) {
-          callbackWrapper.counter++;
-          this.processObject(item.id, callbackWrapper);
-        }
-      }
-    }
-
-    if (callbackWrapper.counter <= 0) {
-      callbackWrapper.invokeCallbackFn();
-    }
-  }
-
-  public processObject(id: string, callbackWrapper: CallbackWrapper): void {
-    var settings = this.objectStore.settings;
-    this.taskProxy.create(id, settings).subscribe(result => {
-    }, error => {
-      this.notificationService.handleError(error);
-    }).add(() => {
-      // finally block
-      if (callbackWrapper) {
-        callbackWrapper.invokeCallbackFn();
-      }
-    });
   }
 }

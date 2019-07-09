@@ -6,13 +6,13 @@
 </td>
 <td>
   <div class="row">
-    <div class="col s8 no-padding">
+    <div class="col m12 l7 no-padding">
       <span class="wrapword">
         <app-common-guid-badge [guid]="object.id"></app-common-guid-badge>
         {{object.originalFilename}}
       </span>
     </div>
-    <div class="col s4">
+    <div class="col m12 l5">
       <span class="wrapword">
         <i class="far fa-calendar-alt"></i> {{momentUtil.getLocalDate(object.modifiedDate)}}
         <i class="far fa-clock"></i> {{momentUtil.getLocalTime(object.modifiedDate)}}
@@ -29,8 +29,9 @@
   </button>
   <!-- Dropdown Structure -->
   <ul [id]="dropdownTargetGuid" class="dropdown-content">
+    <li (click)="process()"><a href="javascript:void(0)"><i class="fas fa-rocket"></i> Process</a></li>
     <li (click)="download()"><a href="javascript:void(0)"><i class="fas fa-file-download"></i> Download</a></li>
     <li class="divider" tabindex="-1"></li>
-    <li (click)="delete()"><a href="javascript:void(0)"><i class="far fa-trash-alt"></i> Delete</a></li>
+    <li (click)="delete()"><a href="javascript:void(0)" class="red-text"><i class="far fa-trash-alt"></i> Delete</a></li>
   </ul>
 </td>

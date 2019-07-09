@@ -5,6 +5,7 @@ import { ObjectModelExtended } from '../../../models/object-extended.model';
 import { ObjectProxy } from '../../../proxies';
 import { ObjectStore } from '../../../stores/object.store';
 import { NotificationService } from '../../../services/notification.service';
+import { ObjectService } from '../../../services/object.service';
 import { PubSubService } from '../../../services/pubsub.service';
 import { CallbackWrapper } from '../../../wrappers/callback.wrapper';
 import {
@@ -28,8 +29,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   public isChecked: boolean = true;
   public pageEvent: PageEvent;
 
-  constructor(private notificationService: NotificationService, private pubSubService: PubSubService,
-    private objectProxy: ObjectProxy, public objectStore: ObjectStore) {
+  constructor(public objectService: ObjectService, public objectStore: ObjectStore, private notificationService: NotificationService,
+    private pubSubService: PubSubService, private objectProxy: ObjectProxy) {
     this.pageEvent = this.objectStore.pageEvent;
   }
 
@@ -194,65 +195,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public refresh(): void {
     this.setPage(new PageEvent());
-  }
-
-  public downloadSelectedObjects = (callbackFn) => {
-    var callbackWrapper = new CallbackWrapper(callbackFn);
-
-    var items = this.objectStore.getItems();
-    if (items) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item.isChecked) {
-          callbackWrapper.counter++;
-          this.downloadObject(item, callbackWrapper);
-        }
-      }
-    }
-
-    if (callbackWrapper.counter <= 0) {
-      callbackWrapper.invokeCallbackFn();
-    }
-  }
-
-  public downloadObject(object: ObjectModelExtended, callbackWrapper: CallbackWrapper): void {
-    this.objectProxy.downloadObject(object);
-    if (callbackWrapper) {
-      callbackWrapper.invokeCallbackFn();
-    }
-  }
-
-  public deleteSelectedObjects = (callbackFn) => {
-    var callbackWrapper = new CallbackWrapper(callbackFn);
-
-    var items = this.objectStore.getItems();
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      if (item.isChecked) {
-        callbackWrapper.counter++;
-        this.deleteObject(item.id, callbackWrapper);
-      }
-    }
-
-    if (callbackWrapper.counter <= 0) {
-      callbackWrapper.invokeCallbackFn();
-    }
-  }
-
-  public deleteObject(id: string, callbackWrapper: CallbackWrapper): void {
-    this.objectProxy.deleteObject(id).subscribe(result => {
-      this.objectStore.deleteById(id);
-      if (this.objectStore.count <= 0) {
-        this.refresh();
-      }
-    }, error => {
-      this.notificationService.handleError(error);
-    }).add(() => {
-      // finally block
-      if (callbackWrapper) {
-        callbackWrapper.invokeCallbackFn();
-      }
-    });
   }
 }
 

@@ -27,9 +27,9 @@
     </div>
   </div>
 </div>
-<div class="row mt-2 mb-0">
+<div class="row mt-2 mb-0" *ngIf="showProcessButton()">
   <div class="col s12 m6 offset-m3">
-    <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn" [clickFn]="processSelectedObjects" appClickOnce>
+    <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn" [clickFn]="objectService.processSelectedObjects" appClickOnce>
       <i class="fas fa-rocket"></i> PROCESS
     </button>
   </div>

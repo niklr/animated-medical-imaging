@@ -8,6 +8,7 @@ import { ResultComponent } from './result/result.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TaskComponent } from './task/task.component';
 import { ObjectProxy, TaskProxy } from '../../proxies';
+import { ObjectService } from '../../services/object.service';
 import { ObjectStore } from '../../stores/object.store';
 import { ClipboardUtil, GuidUtil, MomentUtil } from '../../utils';
 
@@ -27,6 +28,7 @@ import { ClipboardUtil, GuidUtil, MomentUtil } from '../../utils';
   providers: [
     ObjectProxy,
     TaskProxy,
+    ObjectService,
     ObjectStore,
     ClipboardUtil,
     GuidUtil,
