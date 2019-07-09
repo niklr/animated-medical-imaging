@@ -18,6 +18,7 @@ namespace AMI.NetCore.Tests.Core.Workers
         public void TaskWorker_DoWorkAsync()
         {
             // Arrange
+            var pause = new ManualResetEvent(false);
             var worker = GetService<ITaskWorker>();
             var queue = GetService<ITaskQueue>();
             var mediator = GetService<IMediator>();
@@ -37,6 +38,7 @@ namespace AMI.NetCore.Tests.Core.Workers
             // Act
             var result1 = mediator.Send(command, cts.Token).Result;
             worker.StartAsync(cts.Token);
+            pause.WaitOne(3000);
             var result2 = context.TaskRepository.GetFirstOrDefault(e => e.Id == Guid.Parse(result1.Id));
 
             // Assert

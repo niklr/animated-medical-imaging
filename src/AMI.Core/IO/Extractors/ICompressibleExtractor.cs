@@ -17,6 +17,7 @@ namespace AMI.Core.IO.Extractors
         /// <param name="sourcePath">The source path.</param>
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="ct">The cancellation token.</param>
+        /// <param name="level">The recursion level.</param>
         /// <returns>
         /// A list of compressed entries.
         /// </returns>
@@ -27,6 +28,6 @@ namespace AMI.Core.IO.Extractors
         /// or
         /// ct
         /// </exception>
-        Task<IList<CompressedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct);
+        Task<IList<CompressedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct, int level = 0);
     }
 }

@@ -97,12 +97,14 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
                 throw new UnexpectedNullException($"The processing result of object {request.Id} was null.");
             }
 
-            // Move content of temporary directory and delete it
+            // Ensure "Results" directory exists
             var resultsDirectoryName = "Results";
             var resultsPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, resultsDirectoryName);
+            fileSystem.Directory.CreateDirectory(resultsPath);
+
+            // Move content of temporary directory and delete it
             var baseDestPath = fileSystem.Path.Combine(resultsDirectoryName, result.Id);
             var destPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, baseDestPath);
-            fileSystem.Directory.CreateDirectory(resultsPath);
             fileSystem.Directory.Move(tempDestPath, destPath);
 
             var resultEntity = await Context.ResultRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(result.Id), cancellationToken);
