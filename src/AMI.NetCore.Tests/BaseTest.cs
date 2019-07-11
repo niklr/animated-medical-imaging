@@ -18,6 +18,7 @@ using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Uploaders;
 using AMI.Core.IO.Writers;
+using AMI.Core.Mappers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
@@ -78,6 +79,7 @@ namespace AMI.NetCore.Tests
             services.AddSingleton<ITaskWorker, TaskWorker>();
             services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
             services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
+            services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddTransient<ICompressibleReader, SharpCompressReader>();
             services.AddTransient<ICompressibleWriter, SharpCompressWriter>();
             services.AddTransient<IGifImageWriter, AnimatedGifImageWriter>();

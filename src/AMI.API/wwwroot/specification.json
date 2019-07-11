@@ -1575,18 +1575,26 @@
         "x-enumNames": [
           "Unknown",
           "Dicom",
-          "DicomMultiframe",
           "Analyze",
           "MetaImage",
-          "Nifti"
+          "Nifti",
+          "Rar",
+          "Zip",
+          "Tar",
+          "SevenZip",
+          "GZip"
         ],
         "enum": [
           0,
-          1,
-          2,
-          3,
-          4,
-          5
+          10,
+          20,
+          30,
+          40,
+          50,
+          51,
+          52,
+          53,
+          54
         ]
       },
       "TaskModel": {

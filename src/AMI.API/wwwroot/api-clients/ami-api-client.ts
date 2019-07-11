@@ -1992,11 +1992,15 @@ export enum DataType {
 /** A type to describe the file format. */
 export enum FileFormat {
     Unknown = 0, 
-    Dicom = 1, 
-    DicomMultiframe = 2, 
-    Analyze = 3, 
-    MetaImage = 4, 
-    Nifti = 5, 
+    Dicom = 10, 
+    Analyze = 20, 
+    MetaImage = 30, 
+    Nifti = 40, 
+    Rar = 50, 
+    Zip = 51, 
+    Tar = 52, 
+    SevenZip = 53, 
+    GZip = 54, 
 }
 
 /** A model containing information about the task. */

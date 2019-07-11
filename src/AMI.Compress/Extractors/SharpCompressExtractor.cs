@@ -13,7 +13,6 @@ using AMI.Domain.Exceptions;
 using RNS.Framework.Comparers;
 using RNS.Framework.Extensions.EnumerableExtensions;
 using SharpCompress.Archives;
-using SharpCompress.Common;
 using SharpCompress.Readers;
 
 namespace AMI.Compress.Extractors

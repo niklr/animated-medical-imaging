@@ -75,11 +75,13 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             var tempDestPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, "Temp", Guid.NewGuid().ToString());
             fileSystem.Directory.CreateDirectory(tempDestPath);
 
+            var sourcePath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, objectEntity.SourcePath);
+
             // TODO: extract if needed, update the ObjectEntity.UncompressedPath
             // and use the extracted directory as source path
             var pathRequest = new ProcessPathCommand()
             {
-                SourcePath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, objectEntity.SourcePath),
+                SourcePath = sourcePath,
                 DestinationPath = tempDestPath,
                 DesiredSize = request.DesiredSize,
                 AmountPerAxis = request.AmountPerAxis,
