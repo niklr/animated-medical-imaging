@@ -9,6 +9,25 @@ namespace AMI.NetCore.Tests.Core.IO.Readers
     [TestFixture]
     public class ArchiveReaderTests : BaseTest
     {
+        [TestCase("", false)]
+        [TestCase("test", false)]
+        [TestCase("test/test", false)]
+        [TestCase("test\test", false)]
+        [TestCase("test.tar", true)]
+        [TestCase("test\test.zip", true)]
+        [TestCase("test/test.gz", true)]
+        public void ArchiveReader_IsArchive(string path, bool expected)
+        {
+            // Arrange
+            var reader = GetService<IArchiveReader>();
+
+            // Act
+            var result = reader.IsArchive(path);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
         [Test]
         public void ArchiveReader_ReadAsync()
         {

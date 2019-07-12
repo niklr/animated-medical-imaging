@@ -13,6 +13,15 @@ namespace AMI.Core.IO.Readers
     public interface IArchiveReader
     {
         /// <summary>
+        /// Determines whether the specified path is an archive.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified path is an archive; otherwise, <c>false</c>.
+        /// </returns>
+        bool IsArchive(string path);
+
+        /// <summary>
         /// Reads the specified archived file asynchronous.
         /// </summary>
         /// <param name="path">The location of the archived file.</param>

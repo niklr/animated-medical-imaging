@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +7,9 @@ using AMI.Compress.Mappers;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.IO.Readers;
+using AMI.Core.Mappers;
+using AMI.Core.Strategies;
+using AMI.Domain.Exceptions;
 using RNS.Framework.Comparers;
 using RNS.Framework.Extensions.EnumerableExtensions;
 using SharpCompress.Archives;
@@ -24,8 +26,10 @@ namespace AMI.Compress.Readers
         /// Initializes a new instance of the <see cref="SharpCompressReader"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public SharpCompressReader(IAppConfiguration configuration)
-            : base(configuration)
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="fileExtensionMapper">The file extension mapper.</param>
+        public SharpCompressReader(IAppConfiguration configuration, IFileSystemStrategy fileSystemStrategy, IFileExtensionMapper fileExtensionMapper)
+            : base(configuration, fileSystemStrategy, fileExtensionMapper)
         {
         }
 
@@ -42,16 +46,21 @@ namespace AMI.Compress.Readers
                 throw new ArgumentNullException(nameof(ct));
             }
 
+            var fs = FileSystemStrategy.Create(path);
+            if (fs == null)
+            {
+                throw new UnexpectedNullException("Filesystem could not be created based on the provided path.");
+            }
+
             IList<ArchivedEntryModel> entries = new List<ArchivedEntryModel>();
 
-            // TODO: add options as parameters
             var options = new ReaderOptions()
             {
                 LeaveStreamOpen = false,
                 LookForHeader = false
             };
 
-            using (var file = File.OpenRead(path))
+            using (var file = fs.File.OpenRead(path))
             {
                 using (var archive = ArchiveFactory.Open(file, options))
                 using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))

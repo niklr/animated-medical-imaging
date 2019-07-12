@@ -68,7 +68,6 @@ namespace AMI.Compress.Extractors
 
             IList<ArchivedEntryModel> entries = new List<ArchivedEntryModel>();
 
-            // TODO: add options as parameters
             var options = new ReaderOptions()
             {
                 LeaveStreamOpen = false,

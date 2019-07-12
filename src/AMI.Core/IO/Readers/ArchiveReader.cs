@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
+using AMI.Core.Mappers;
+using AMI.Core.Strategies;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.IO.Readers
@@ -17,8 +19,9 @@ namespace AMI.Core.IO.Readers
         /// Initializes a new instance of the <see cref="ArchiveReader" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <exception cref="ArgumentNullException">configuration</exception>
-        public ArchiveReader(IAppConfiguration configuration)
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="fileExtensionMapper">The file extension mapper.</param>
+        public ArchiveReader(IAppConfiguration configuration, IFileSystemStrategy fileSystemStrategy, IFileExtensionMapper fileExtensionMapper)
         {
             if (configuration == null)
             {
@@ -26,6 +29,9 @@ namespace AMI.Core.IO.Readers
             }
 
             MaxArchivedEntries = configuration.Options.MaxArchivedEntries;
+
+            FileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
+            FileExtensionMapper = fileExtensionMapper ?? throw new ArgumentNullException(nameof(fileExtensionMapper));
         }
 
         /// <summary>
@@ -34,19 +40,30 @@ namespace AMI.Core.IO.Readers
         public int MaxArchivedEntries { get; private set; } = int.MinValue;
 
         /// <summary>
-        /// Reads the specified archived file asynchronous.
+        /// Gets the file system strategy.
         /// </summary>
-        /// <param name="path">The location of the archived file.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// A list of archived entries.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">path</exception>
-        /// <exception cref="AmiException">
-        /// The reading of the archived file has been cancelled.
-        /// or
-        /// The archived file could not be read.
-        /// </exception>
+        protected IFileSystemStrategy FileSystemStrategy { get; private set; }
+
+        /// <summary>
+        /// Gets the file extension mapper.
+        /// </summary>
+        protected IFileExtensionMapper FileExtensionMapper { get; private set; }
+
+        /// <inheritdoc/>
+        public bool IsArchive(string path)
+        {
+            var fs = FileSystemStrategy.Create(path);
+            if (fs == null)
+            {
+                throw new UnexpectedNullException("Filesystem could not be created based on the provided path.");
+            }
+
+            var result = FileExtensionMapper.Map(fs.Path.GetFileName(path));
+
+            return result.IsArchive;
+        }
+
+        /// <inheritdoc/>
         public Task<IList<ArchivedEntryModel>> ReadAsync(string path, CancellationToken ct)
         {
             try
