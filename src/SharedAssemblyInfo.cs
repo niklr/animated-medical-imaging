@@ -7,7 +7,7 @@
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright © 2019")]
+[assembly: AssemblyCopyright("Copyright © github.com/niklr/animated-medical-imaging")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

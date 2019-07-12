@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -160,7 +161,14 @@ namespace AMI.Portable
                        openCombinedGif = Convert.ToBoolean(o.OpenCombinedGif);
                    });
 
-            await ExecuteCommandAsync(command, ct, openCombinedGif);
+            if (args.Contains("--help") || args.Contains("--version"))
+            {
+                await Task.CompletedTask;
+            }
+            else
+            {
+                await ExecuteCommandAsync(command, ct, openCombinedGif);
+            }
         }
 
         public async Task ExecuteTestAsync(string[] args, CancellationToken ct)
