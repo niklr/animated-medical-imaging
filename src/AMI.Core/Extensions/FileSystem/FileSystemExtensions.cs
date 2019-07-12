@@ -12,6 +12,11 @@ namespace AMI.Core.Extensions.FileSystemExtensions
         /// <summary>
         /// Builds the absolute path.
         /// </summary>
+        /// <example>
+        /// Depending on the location where the program is executed
+        /// . will return C:\temp\AMI
+        /// test will return C:\temp\AMI\test
+        /// </example>
         /// <param name="fs">The file system.</param>
         /// <param name="path">The partial path.</param>
         /// <returns>
@@ -51,7 +56,7 @@ namespace AMI.Core.Extensions.FileSystemExtensions
         {
             try
             {
-                return fs.File.GetAttributes(@"c:\Temp").HasFlag(FileAttributes.Directory);
+                return fs.File.GetAttributes(path).HasFlag(FileAttributes.Directory);
             }
             catch (Exception)
             {
