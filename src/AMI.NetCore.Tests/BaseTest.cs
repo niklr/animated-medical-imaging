@@ -82,11 +82,11 @@ namespace AMI.NetCore.Tests
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddTransient<IArchiveReader, SharpCompressReader>();
             services.AddTransient<IArchiveWriter, SharpCompressWriter>();
+            services.AddTransient<IArchiveExtractor, SharpCompressExtractor>();
             services.AddTransient<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<IDefaultJsonWriter, DefaultJsonWriter>();
             services.AddTransient<IImageExtractor, ItkImageExtractor>();
-            services.AddTransient<IArchiveExtractor, SharpCompressExtractor>();
 
             // Add MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));

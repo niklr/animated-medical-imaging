@@ -7,6 +7,7 @@ using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Extensions.FileSystemExtensions;
 using AMI.Core.Factories;
 using AMI.Core.IO.Extractors;
+using AMI.Core.IO.Readers;
 using AMI.Core.IO.Writers;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -24,6 +25,8 @@ namespace AMI.Infrastructure.Services
     {
         private readonly ILogger logger;
         private readonly IAppConfiguration configuration;
+        private readonly IArchiveReader archiveReader;
+        private readonly IArchiveExtractor archiveExtractor;
         private readonly IFileSystemStrategy fileSystemStrategy;
         private readonly IAppInfoFactory appInfoFactory;
         private readonly IDefaultJsonWriter jsonWriter;
@@ -35,6 +38,8 @@ namespace AMI.Infrastructure.Services
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="configuration">The configuration.</param>
+        /// <param name="archiveReader">The archive reader.</param>
+        /// <param name="archiveExtractor">The archive extractor.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         /// <param name="appInfoFactory">The application information factory.</param>
         /// <param name="jsonWriter">The JSON writer.</param>
@@ -43,6 +48,8 @@ namespace AMI.Infrastructure.Services
         public ImageService(
             ILoggerFactory loggerFactory,
             IAppConfiguration configuration,
+            IArchiveReader archiveReader,
+            IArchiveExtractor archiveExtractor,
             IFileSystemStrategy fileSystemStrategy,
             IAppInfoFactory appInfoFactory,
             IDefaultJsonWriter jsonWriter,
@@ -52,6 +59,8 @@ namespace AMI.Infrastructure.Services
             logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.archiveReader = archiveReader ?? throw new ArgumentNullException(nameof(archiveReader));
+            this.archiveExtractor = archiveExtractor ?? throw new ArgumentNullException(nameof(archiveExtractor));
             this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
             this.appInfoFactory = appInfoFactory ?? throw new ArgumentNullException(nameof(appInfoFactory));
             this.jsonWriter = jsonWriter ?? throw new ArgumentNullException(nameof(jsonWriter));
@@ -85,9 +94,30 @@ namespace AMI.Infrastructure.Services
             // Creates all directories and subdirectories in the specified path unless they already exist.
             destFs.Directory.CreateDirectory(commandClone.DestinationPath);
 
-            // TODO: support zip files
             // SourcePath can be a directory, archive or file
-            var result = await imageExtractor.ProcessAsync(commandClone, ct);
+            ProcessResultModel result = null;
+
+            if (sourceFs.IsDirectory(commandClone.SourcePath))
+            {
+                // TODO: process directory
+            }
+            else if (archiveReader.IsArchive(command.SourcePath))
+            {
+                var extractedPath = destFs.Path.Combine(command.DestinationPath, "Extracted");
+                destFs.Directory.CreateDirectory(extractedPath);
+                await archiveExtractor.ExtractAsync(command.SourcePath, extractedPath, ct);
+
+                // TODO: process directory
+            }
+            else
+            {
+                result = await imageExtractor.ProcessAsync(commandClone, ct);
+            }
+
+            if (result == null)
+            {
+                throw new UnexpectedNullException("The images could not be processed.");
+            }
 
             // Set GIFs
             result.Gifs = await gifImageWriter.WriteAsync(

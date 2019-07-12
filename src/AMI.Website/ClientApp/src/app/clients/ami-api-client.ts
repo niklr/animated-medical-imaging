@@ -1910,8 +1910,8 @@ export class ObjectModel implements IObjectModel {
     originalFilename?: string | undefined;
     /** Gets or sets the source path (directory, file, url, etc.). */
     sourcePath?: string | undefined;
-    /** Gets or sets the uncompressed path (directory). */
-    uncompressedPath?: string | undefined;
+    /** Gets or sets the extracted/uncompressed path (directory). */
+    extractedPath?: string | undefined;
     /** Gets or sets the latest task. */
     latestTask?: TaskModel | undefined;
 
@@ -1933,7 +1933,7 @@ export class ObjectModel implements IObjectModel {
             this.fileFormat = data["fileFormat"];
             this.originalFilename = data["originalFilename"];
             this.sourcePath = data["sourcePath"];
-            this.uncompressedPath = data["uncompressedPath"];
+            this.extractedPath = data["extractedPath"];
             this.latestTask = data["latestTask"] ? TaskModel.fromJS(data["latestTask"]) : <any>undefined;
         }
     }
@@ -1954,7 +1954,7 @@ export class ObjectModel implements IObjectModel {
         data["fileFormat"] = this.fileFormat;
         data["originalFilename"] = this.originalFilename;
         data["sourcePath"] = this.sourcePath;
-        data["uncompressedPath"] = this.uncompressedPath;
+        data["extractedPath"] = this.extractedPath;
         data["latestTask"] = this.latestTask ? this.latestTask.toJSON() : <any>undefined;
         return data; 
     }
@@ -1976,8 +1976,8 @@ export interface IObjectModel {
     originalFilename?: string | undefined;
     /** Gets or sets the source path (directory, file, url, etc.). */
     sourcePath?: string | undefined;
-    /** Gets or sets the uncompressed path (directory). */
-    uncompressedPath?: string | undefined;
+    /** Gets or sets the extracted/uncompressed path (directory). */
+    extractedPath?: string | undefined;
     /** Gets or sets the latest task. */
     latestTask?: TaskModel | undefined;
 }

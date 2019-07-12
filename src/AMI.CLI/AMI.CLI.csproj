@@ -57,6 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AMI.Compress\AMI.Compress.csproj" />
     <ProjectReference Include="..\AMI.Core\AMI.Core.csproj" />
     <ProjectReference Include="..\AMI.Gif\AMI.Gif.csproj" />
     <ProjectReference Include="..\AMI.Infrastructure\AMI.Infrastructure.csproj" />

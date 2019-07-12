@@ -1539,9 +1539,9 @@
             "description": "Gets or sets the source path (directory, file, url, etc.).",
             "nullable": true
           },
-          "uncompressedPath": {
+          "extractedPath": {
             "type": "string",
-            "description": "Gets or sets the uncompressed path (directory).",
+            "description": "Gets or sets the extracted/uncompressed path (directory).",
             "nullable": true
           },
           "latestTask": {

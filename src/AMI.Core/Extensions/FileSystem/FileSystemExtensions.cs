@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.IO.Abstractions;
 
 namespace AMI.Core.Extensions.FileSystemExtensions
@@ -35,6 +36,26 @@ namespace AMI.Core.Extensions.FileSystemExtensions
             else
             {
                 return fs.Path.GetFullPath(path);
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the specified path is a directory.
+        /// </summary>
+        /// <param name="fs">The file system.</param>
+        /// <param name="path">The path.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified path is a directory; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsDirectory(this IFileSystem fs, string path)
+        {
+            try
+            {
+                return fs.File.GetAttributes(@"c:\Temp").HasFlag(FileAttributes.Directory);
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

@@ -52,9 +52,9 @@ namespace AMI.Domain.Entities
         public string SourcePath { get; set; }
 
         /// <summary>
-        /// Gets or sets the uncompressed path (directory).
+        /// Gets or sets the extracted/uncompressed path (directory).
         /// </summary>
-        public string UncompressedPath { get; set; }
+        public string ExtractedPath { get; set; }
 
         /// <summary>
         /// Gets or sets the tasks.

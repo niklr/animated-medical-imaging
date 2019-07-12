@@ -227,6 +227,10 @@
     </ContentWithTargetPath>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AMI.Compress\AMI.Compress.csproj">
+      <Project>{C721F11C-BE7C-4E26-B33F-49315C45A9B9}</Project>
+      <Name>AMI.Compress</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AMI.Core\AMI.Core.csproj">
       <Project>{E1800535-FB41-4DCA-A31B-ACAC17272038}</Project>
       <Name>AMI.Core</Name>
