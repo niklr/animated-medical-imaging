@@ -1792,8 +1792,8 @@ export interface IAppInfo {
 export class AppOptions implements IAppOptions {
     /** Gets the maximum size in kilobytes. */
     maxSizeKilobytes?: number;
-    /** Gets the maximum of compressed entries. */
-    maxCompressedEntries?: number;
+    /** Gets the maximum of archived entries. */
+    maxArchivedEntries?: number;
     /** Gets the timeout in milliseconds. */
     timeoutMilliseconds?: number;
     /** Gets the working directory. */
@@ -1811,7 +1811,7 @@ export class AppOptions implements IAppOptions {
     init(data?: any) {
         if (data) {
             this.maxSizeKilobytes = data["maxSizeKilobytes"];
-            this.maxCompressedEntries = data["maxCompressedEntries"];
+            this.maxArchivedEntries = data["maxArchivedEntries"];
             this.timeoutMilliseconds = data["timeoutMilliseconds"];
             this.workingDirectory = data["workingDirectory"];
         }
@@ -1827,7 +1827,7 @@ export class AppOptions implements IAppOptions {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["maxSizeKilobytes"] = this.maxSizeKilobytes;
-        data["maxCompressedEntries"] = this.maxCompressedEntries;
+        data["maxArchivedEntries"] = this.maxArchivedEntries;
         data["timeoutMilliseconds"] = this.timeoutMilliseconds;
         data["workingDirectory"] = this.workingDirectory;
         return data; 
@@ -1838,8 +1838,8 @@ export class AppOptions implements IAppOptions {
 export interface IAppOptions {
     /** Gets the maximum size in kilobytes. */
     maxSizeKilobytes?: number;
-    /** Gets the maximum of compressed entries. */
-    maxCompressedEntries?: number;
+    /** Gets the maximum of archived entries. */
+    maxArchivedEntries?: number;
     /** Gets the timeout in milliseconds. */
     timeoutMilliseconds?: number;
     /** Gets the working directory. */
@@ -1992,11 +1992,15 @@ export enum DataType {
 /** A type to describe the file format. */
 export enum FileFormat {
     Unknown = 0, 
-    Dicom = 1, 
-    DicomMultiframe = 2, 
-    Analyze = 3, 
-    MetaImage = 4, 
-    Nifti = 5, 
+    Dicom = 10, 
+    Analyze = 20, 
+    MetaImage = 30, 
+    Nifti = 40, 
+    Rar = 50, 
+    Zip = 51, 
+    Tar = 52, 
+    SevenZip = 53, 
+    GZip = 54, 
 }
 
 /** A model containing information about the task. */
@@ -2151,7 +2155,7 @@ export interface IBaseCommand {
 }
 
 export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand implements IBaseProcessCommandOfProcessResultModel {
-    desiredSize?: number;
+    outputSize?: number;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
     imageFormat?: ImageFormat;
@@ -2167,7 +2171,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand
     init(data?: any) {
         super.init(data);
         if (data) {
-            this.desiredSize = data["desiredSize"];
+            this.outputSize = data["outputSize"];
             this.amountPerAxis = data["amountPerAxis"];
             if (Array.isArray(data["axisTypes"])) {
                 this.axisTypes = [] as any;
@@ -2198,7 +2202,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["desiredSize"] = this.desiredSize;
+        data["outputSize"] = this.outputSize;
         data["amountPerAxis"] = this.amountPerAxis;
         if (Array.isArray(this.axisTypes)) {
             data["axisTypes"] = [];
@@ -2215,7 +2219,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand
 }
 
 export interface IBaseProcessCommandOfProcessResultModel extends IBaseCommand {
-    desiredSize?: number;
+    outputSize?: number;
     amountPerAxis?: number;
     axisTypes?: AxisType[] | undefined;
     imageFormat?: ImageFormat;

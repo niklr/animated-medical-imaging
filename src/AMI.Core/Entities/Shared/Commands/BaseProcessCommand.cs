@@ -14,9 +14,9 @@ namespace AMI.Core.Entities.Shared.Commands
     public abstract class BaseProcessCommand<T> : BaseCommand, IRequest<T>
     {
         /// <summary>
-        /// Gets or sets the desired size of the processed images.
+        /// Gets or sets the desired output size of the processed images.
         /// </summary>
-        public int DesiredSize { get; set; }
+        public int OutputSize { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of images per axis.

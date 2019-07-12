@@ -198,13 +198,13 @@ namespace AMI.Itk.Utils
         /// Resamples the two-dimensional ITK image to the desired size.
         /// </summary>
         /// <param name="image">The two-dimensional ITK image.</param>
-        /// <param name="desiredSize">The desired size.</param>
+        /// <param name="outputSize">The output size.</param>
         /// <returns>
         /// The resampled two-dimensional ITK image.
         /// </returns>
         /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
-        public Image ResampleImage2D(Image image, uint desiredSize)
+        public Image ResampleImage2D(Image image, uint outputSize)
         {
             if (image == null)
             {
@@ -222,27 +222,21 @@ namespace AMI.Itk.Utils
             var inputDirection = image.GetDirection();
             var inputOrigin = image.GetOrigin();
 
-            var outputSize = new VectorUInt32()
-            {
-                desiredSize,
-                desiredSize
-            };
-
             double oldw = inputSize[0] * inputSpacing[0];
             double oldh = inputSize[1] * inputSpacing[1];
             double neww, newh = 0;
-            double rw = oldw / desiredSize;
-            double rh = oldh / desiredSize;
+            double rw = oldw / outputSize;
+            double rh = oldh / outputSize;
 
             if (rw > rh)
             {
                 newh = oldh / rw;
-                neww = desiredSize;
+                neww = outputSize;
             }
             else
             {
                 neww = oldw / rh;
-                newh = desiredSize;
+                newh = outputSize;
             }
 
             var outputSpacing = new VectorDouble()
@@ -272,13 +266,13 @@ namespace AMI.Itk.Utils
         /// Resamples the three-dimensional ITK image to the desired size.
         /// </summary>
         /// <param name="image">The three-dimensional ITK image.</param>
-        /// <param name="desiredSize">The desired size.</param>
+        /// <param name="outputSize">The output size.</param>
         /// <returns>
         /// The resampled three-dimensional ITK image.
         /// </returns>
         /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
-        public Image ResampleImage3D(Image image, uint desiredSize)
+        public Image ResampleImage3D(Image image, uint outputSize)
         {
             if (image == null)
             {
@@ -294,18 +288,18 @@ namespace AMI.Itk.Utils
             var inputSize = image.GetSize();
             var inputSpacing = image.GetSpacing();
 
-            var outputSize = new VectorUInt32()
+            var desiredSize = new VectorUInt32()
             {
-                desiredSize,
-                desiredSize,
-                desiredSize
+                outputSize,
+                outputSize,
+                outputSize
             };
 
             var outputSpacing = new VectorDouble()
             {
-                inputSpacing[0] * inputSize[0] / outputSize[0],
-                inputSpacing[1] * inputSize[1] / outputSize[1],
-                inputSpacing[2] * inputSize[2] / outputSize[2]
+                inputSpacing[0] * inputSize[0] / desiredSize[0],
+                inputSpacing[1] * inputSize[1] / desiredSize[1],
+                inputSpacing[2] * inputSize[2] / desiredSize[2]
             };
 
             // https://itk.org/Wiki/ITK/Examples/ImageProcessing/ResampleImageFilter
@@ -313,7 +307,7 @@ namespace AMI.Itk.Utils
             filter.SetReferenceImage(image);
             filter.SetTransform(new ScaleTransform(image.GetDimension()));
             filter.SetInterpolator(InterpolatorEnum.sitkLinear);
-            filter.SetSize(outputSize);
+            filter.SetSize(desiredSize);
             filter.SetOutputSpacing(outputSpacing);
             return filter.Execute(image);
         }

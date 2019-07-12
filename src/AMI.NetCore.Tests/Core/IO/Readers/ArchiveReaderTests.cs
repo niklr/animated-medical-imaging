@@ -7,13 +7,13 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.IO.Readers
 {
     [TestFixture]
-    public class CompressibleReaderTests : BaseTest
+    public class ArchiveReaderTests : BaseTest
     {
         [Test]
-        public void CompressibleReader_ReadAsync()
+        public void ArchiveReader_ReadAsync()
         {
             // Arrange
-            var reader = GetService<ICompressibleReader>();
+            var reader = GetService<IArchiveReader>();
             var configuration = GetService<IAppConfiguration>();
             string path = GetDataPath("SMIR.Brain.XX.O.CT.346124.dcm.zip");
             var ct = new CancellationToken();
@@ -24,7 +24,7 @@ namespace AMI.NetCore.Tests.Core.IO.Readers
             var lastEntry = result.LastOrDefault();
 
             // Assert
-            Assert.AreEqual(configuration.Options.MaxCompressedEntries, result.Count);
+            Assert.AreEqual(configuration.Options.MaxArchivedEntries, result.Count);
             Assert.IsNotNull(firstEntry);
             Assert.AreEqual("SMIR.Brain.XX.O.CT.346124_Frame_1.dcm", firstEntry.Key);
             Assert.AreEqual(197408, firstEntry.Size);

@@ -18,7 +18,7 @@ namespace AMI.Compress.Readers
     /// <summary>
     /// A reader for compressed files.
     /// </summary>
-    public class SharpCompressReader : CompressibleReader
+    public class SharpCompressReader : ArchiveReader
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SharpCompressReader"/> class.
@@ -30,7 +30,7 @@ namespace AMI.Compress.Readers
         }
 
         /// <inheritdoc/>
-        protected override async Task<IList<CompressedEntryModel>> AbstractReadAsync(string path, CancellationToken ct)
+        protected override async Task<IList<ArchivedEntryModel>> AbstractReadAsync(string path, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -42,7 +42,7 @@ namespace AMI.Compress.Readers
                 throw new ArgumentNullException(nameof(ct));
             }
 
-            IList<CompressedEntryModel> entries = new List<CompressedEntryModel>();
+            IList<ArchivedEntryModel> entries = new List<ArchivedEntryModel>();
 
             // TODO: add options as parameters
             var options = new ReaderOptions()
@@ -56,7 +56,7 @@ namespace AMI.Compress.Readers
                 using (var archive = ArchiveFactory.Open(file, options))
                 using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))
                 {
-                    var sortedEntries = archive.Entries.Sort(comparer).Take(MaxCompressibleEntries);
+                    var sortedEntries = archive.Entries.Sort(comparer).Take(MaxArchivedEntries);
                     foreach (var entry in sortedEntries)
                     {
                         ct.ThrowIfCancellationRequested();

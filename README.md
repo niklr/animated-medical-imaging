@@ -95,7 +95,7 @@ Other dependencies:
 AMI.Portable.exe --help
 ```
 
-* `--DesiredSize` The size of the output images in pixels. (Default is 250)
+* `--OutputSize` The size of the output images in pixels. (Default is 250)
 * `--AmountPerAxis` The amount of images to be extracted per axis. (Default is 10)
 * `--SourcePath` The path of the source image.
 * `--DestinationPath` The path of the destination where the output should be written.

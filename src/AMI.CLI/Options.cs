@@ -10,8 +10,8 @@ namespace AMI.CLI
         /// <summary>
         /// Gets or sets the size of the output images in pixels. (Default is 250)
         /// </summary>
-        [Option("DesiredSize", Required = false, HelpText = "The size of the output images in pixels. (Default is 250)")]
-        public int DesiredSize { get; set; } = 250;
+        [Option("OutputSize", Required = false, HelpText = "The size of the output images in pixels. (Default is 250)")]
+        public int OutputSize { get; set; } = 250;
 
         /// <summary>
         /// Gets or sets the amount of images to be extracted per axis. (Default is 10)

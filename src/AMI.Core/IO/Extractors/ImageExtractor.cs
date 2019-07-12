@@ -121,7 +121,7 @@ namespace AMI.Core.IO.Extractors
 
             reader.Mapper = new AxisPositionMapper(Convert.ToUInt32(command.AmountPerAxis), reader.Width, reader.Height, reader.Depth);
 
-            PreProcess(reader, imageFormat, Convert.ToUInt32(command.AmountPerAxis), Convert.ToUInt32(command.DesiredSize));
+            PreProcess(reader, imageFormat, Convert.ToUInt32(command.AmountPerAxis), Convert.ToUInt32(command.OutputSize));
 
             result.LabelCount = Convert.ToInt32(reader.GetLabelCount());
 
@@ -136,7 +136,7 @@ namespace AMI.Core.IO.Extractors
             if (!string.IsNullOrWhiteSpace(command.WatermarkSourcePath))
             {
                 BitmapReader bitmapReader = new BitmapReader();
-                var watermarkBitmap = await bitmapReader.ReadAsync(command.WatermarkSourcePath, Convert.ToUInt32(command.DesiredSize), ct);
+                var watermarkBitmap = await bitmapReader.ReadAsync(command.WatermarkSourcePath, Convert.ToUInt32(command.OutputSize), ct);
                 if (watermarkBitmap == null)
                 {
                     throw new UnexpectedNullException("Watermark could not be read.");
@@ -153,7 +153,7 @@ namespace AMI.Core.IO.Extractors
                 {
                     ct.ThrowIfCancellationRequested();
                     string filename = $"{axisType}_{i}{imageExtension}";
-                    var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), Convert.ToUInt32(command.DesiredSize));
+                    var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), Convert.ToUInt32(command.OutputSize));
                     if (bitmap != null)
                     {
                         if (command.Grayscale)
@@ -161,7 +161,7 @@ namespace AMI.Core.IO.Extractors
                             bitmap = bitmap.To8bppIndexedGrayscale();
                         }
 
-                        bitmap = bitmap.ToCenter(Convert.ToUInt32(command.DesiredSize), Color.Black);
+                        bitmap = bitmap.ToCenter(Convert.ToUInt32(command.OutputSize), Color.Black);
                         if (bitmap == null)
                         {
                             throw new UnexpectedNullException("Bitmap could not be centered.");
@@ -183,7 +183,7 @@ namespace AMI.Core.IO.Extractors
             return result;
         }
 
-        private void PreProcess(IImageReader<T2> reader, ImageFormat imageFormat, uint amount, uint? desiredSize)
+        private void PreProcess(IImageReader<T2> reader, ImageFormat imageFormat, uint amount, uint? outputSize)
         {
             if (reader == null)
             {
@@ -211,7 +211,7 @@ namespace AMI.Core.IO.Extractors
                         // set initial mapped positions
                         newMap[axisType][i] = mapper.GetMappedPosition(axisType, i);
 
-                        using (var bitmap = reader.ExtractPosition(axisType, i, desiredSize))
+                        using (var bitmap = reader.ExtractPosition(axisType, i, outputSize))
                         {
                             if (bitmap != null)
                             {

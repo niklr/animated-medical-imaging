@@ -20,8 +20,8 @@ namespace AMI.Compress.Extractors
     /// <summary>
     /// An extractor for compressed files.
     /// </summary>
-    /// <seealso cref="CompressibleExtractor" />
-    public class SharpCompressExtractor : CompressibleExtractor
+    /// <seealso cref="ArchiveExtractor" />
+    public class SharpCompressExtractor : ArchiveExtractor
     {
         private readonly IFileSystemStrategy fileSystemStrategy;
 
@@ -38,7 +38,7 @@ namespace AMI.Compress.Extractors
         }
 
         /// <inheritdoc/>
-        public override async Task<IList<CompressedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct, int level = 0)
+        public override async Task<IList<ArchivedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct, int level = 0)
         {
             if (string.IsNullOrWhiteSpace(sourcePath))
             {
@@ -66,7 +66,7 @@ namespace AMI.Compress.Extractors
                 throw new UnexpectedNullException("Filesystem could not be created based on the provided source path.");
             }
 
-            IList<CompressedEntryModel> entries = new List<CompressedEntryModel>();
+            IList<ArchivedEntryModel> entries = new List<ArchivedEntryModel>();
 
             // TODO: add options as parameters
             var options = new ReaderOptions()
@@ -80,7 +80,7 @@ namespace AMI.Compress.Extractors
                 using (var archive = ArchiveFactory.Open(file, options))
                 using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))
                 {
-                    var sortedEntries = archive.Entries.Where(e => !e.IsDirectory).Sort(comparer).Take(MaxCompressibleEntries);
+                    var sortedEntries = archive.Entries.Where(e => !e.IsDirectory).Sort(comparer).Take(MaxArchivedEntries);
                     foreach (var entry in sortedEntries)
                     {
                         ct.ThrowIfCancellationRequested();

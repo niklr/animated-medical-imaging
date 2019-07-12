@@ -6,14 +6,14 @@ namespace AMI.Compress.Mappers
 {
     internal static class EntryMapper
     {
-        internal static CompressedEntryModel Map(IEntry entry)
+        internal static ArchivedEntryModel Map(IEntry entry)
         {
             if (entry == null)
             {
                 throw new ArgumentNullException(nameof(entry));
             }
 
-            return new CompressedEntryModel()
+            return new ArchivedEntryModel()
             {
                 ArchivedTime = entry.ArchivedTime,
                 CompressedSize = entry.CompressedSize,

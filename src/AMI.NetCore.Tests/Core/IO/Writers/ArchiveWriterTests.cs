@@ -12,14 +12,14 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.IO.Writers
 {
     [TestFixture]
-    public class CompressibleWriterTests : BaseTest
+    public class ArchiveWriterTests : BaseTest
     {
         [Test]
-        public async Task CompressibleWriter_AddFilesAsync()
+        public async Task ArchiveWriter_AddFilesAsync()
         {
             // Arrange
-            var writer = GetService<ICompressibleWriter>();
-            var reader = GetService<ICompressibleReader>();
+            var writer = GetService<IArchiveWriter>();
+            var reader = GetService<IArchiveReader>();
             var configuration = GetService<IAppConfiguration>();
             var imagesPath = GetImagesPath();
             var tempPath = GetTempPath();
@@ -42,7 +42,7 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
                 // Assert
                 Assert.AreEqual(compression, archive.CompressionType);
                 Assert.AreEqual(25, items.Count());
-                Assert.AreEqual(configuration.Options.MaxCompressedEntries, result.Count);
+                Assert.AreEqual(configuration.Options.MaxArchivedEntries, result.Count);
                 Assert.AreEqual(574194, new FileInfo(zipPath).Length);
             }
             finally
@@ -52,11 +52,11 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
         }
 
         [Test]
-        public async Task CompressibleWriter_CompressionType_None()
+        public async Task ArchiveWriter_CompressionType_None()
         {
             // Arrange
-            var writer = GetService<ICompressibleWriter>();
-            var reader = GetService<ICompressibleReader>();
+            var writer = GetService<IArchiveWriter>();
+            var reader = GetService<IArchiveReader>();
             var configuration = GetService<IAppConfiguration>();
             var filename = "SMIR.Brain.XX.O.CT.339203.nii";
             var dataPath = GetDataPath(filename);

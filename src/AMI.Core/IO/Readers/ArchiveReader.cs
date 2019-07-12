@@ -9,45 +9,45 @@ using AMI.Domain.Exceptions;
 namespace AMI.Core.IO.Readers
 {
     /// <summary>
-    /// A reader for compressed files.
+    /// A reader for archived files.
     /// </summary>
-    public abstract class CompressibleReader : ICompressibleReader
+    public abstract class ArchiveReader : IArchiveReader
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompressibleReader" /> class.
+        /// Initializes a new instance of the <see cref="ArchiveReader" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <exception cref="ArgumentNullException">configuration</exception>
-        public CompressibleReader(IAppConfiguration configuration)
+        public ArchiveReader(IAppConfiguration configuration)
         {
             if (configuration == null)
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            MaxCompressibleEntries = configuration.Options.MaxCompressedEntries;
+            MaxArchivedEntries = configuration.Options.MaxArchivedEntries;
         }
 
         /// <summary>
-        /// Gets the maximum of compressible entries.
+        /// Gets the maximum of archived entries.
         /// </summary>
-        public int MaxCompressibleEntries { get; private set; } = int.MinValue;
+        public int MaxArchivedEntries { get; private set; } = int.MinValue;
 
         /// <summary>
-        /// Reads the specified compressed file asynchronous.
+        /// Reads the specified archived file asynchronous.
         /// </summary>
-        /// <param name="path">The location of the compressed file.</param>
+        /// <param name="path">The location of the archived file.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// A list of compressed entries.
+        /// A list of archived entries.
         /// </returns>
         /// <exception cref="ArgumentNullException">path</exception>
         /// <exception cref="AmiException">
-        /// The reading of the compressed file has been cancelled.
+        /// The reading of the archived file has been cancelled.
         /// or
-        /// The compressed file could not be read.
+        /// The archived file could not be read.
         /// </exception>
-        public Task<IList<CompressedEntryModel>> ReadAsync(string path, CancellationToken ct)
+        public Task<IList<ArchivedEntryModel>> ReadAsync(string path, CancellationToken ct)
         {
             try
             {
@@ -60,27 +60,27 @@ namespace AMI.Core.IO.Readers
             }
             catch (OperationCanceledException e)
             {
-                throw new AmiException("The reading of the compressed file has been cancelled.", e);
+                throw new AmiException("The reading of the archived file has been cancelled.", e);
             }
             catch (Exception e)
             {
-                throw new AmiException("The compressed file could not be read.", e);
+                throw new AmiException("The archived file could not be read.", e);
             }
         }
 
         /// <summary>
-        /// Reads the specified compressed file asynchronous.
+        /// Reads the specified archived file asynchronous.
         /// </summary>
-        /// <param name="path">The location of the compressed file.</param>
+        /// <param name="path">The location of the archived file.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// A list of compressed entries.
+        /// A list of archived entries.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// path
         /// or
         /// ct
         /// </exception>
-        protected abstract Task<IList<CompressedEntryModel>> AbstractReadAsync(string path, CancellationToken ct);
+        protected abstract Task<IList<ArchivedEntryModel>> AbstractReadAsync(string path, CancellationToken ct);
     }
 }

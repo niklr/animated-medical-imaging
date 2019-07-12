@@ -14,7 +14,7 @@ namespace AMI.Core.Entities.Shared.Commands
         public BaseProcessCommandValidator()
         {
             RuleFor(x => x.AmountPerAxis).NotNull().GreaterThan(0);
-            RuleFor(x => x.DesiredSize).NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.OutputSize).NotNull().GreaterThanOrEqualTo(0);
         }
     }
 }

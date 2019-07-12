@@ -3,9 +3,9 @@
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// A model containing information about the compressed entry.
+    /// A model containing information about the archived entry.
     /// </summary>
-    public class CompressedEntryModel
+    public class ArchivedEntryModel
     {
         /// <summary>
         /// Gets or sets the archived time.
@@ -28,12 +28,12 @@ namespace AMI.Core.Entities.Models
         public string Key { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this compressed entry is a directory.
+        /// Gets or sets a value indicating whether this archived entry is a directory.
         /// </summary>
         public bool IsDirectory { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this compressed entry is encrypted.
+        /// Gets or sets a value indicating whether this archived entry is encrypted.
         /// </summary>
         public bool IsEncrypted { get; set; }
 

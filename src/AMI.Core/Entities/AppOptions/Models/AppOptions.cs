@@ -12,7 +12,7 @@ namespace AMI.Core.Entities.Models
         public int MaxSizeKilobytes { get; set; }
 
         /// <inheritdoc/>
-        public int MaxCompressedEntries { get; set; }
+        public int MaxArchivedEntries { get; set; }
 
         /// <inheritdoc/>
         public int TimeoutMilliseconds { get; set; }

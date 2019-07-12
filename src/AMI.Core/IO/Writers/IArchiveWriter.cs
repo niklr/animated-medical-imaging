@@ -9,15 +9,15 @@ using AMI.Domain.Enums;
 namespace AMI.Core.IO.Writers
 {
     /// <summary>
-    /// A writer to compress files.
+    /// A writer to archive files.
     /// </summary>
-    public interface ICompressibleWriter
+    public interface IArchiveWriter
     {
         /// <summary>
         /// Adds the files asynchronous.
         /// </summary>
         /// <typeparam name="T">The type of the items.</typeparam>
-        /// <param name="items">The items to compress.</param>
+        /// <param name="items">The items to archive.</param>
         /// <param name="diskFilePathFunc">The function to get the disk file path.</param>
         /// <param name="entryNameFunc">The function to get the entry name.</param>
         /// <param name="archive">The archive.</param>

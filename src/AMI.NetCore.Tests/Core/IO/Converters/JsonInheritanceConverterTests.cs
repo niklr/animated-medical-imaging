@@ -17,7 +17,7 @@ namespace AMI.NetCore.Tests.Core.IO.Converters
             {
                 Id = "1234",
                 AmountPerAxis = 1,
-                DesiredSize = 0
+                OutputSize = 0
             };
 
             // Act

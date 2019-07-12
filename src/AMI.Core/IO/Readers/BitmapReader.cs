@@ -16,10 +16,10 @@ namespace AMI.Core.IO.Readers
         /// Reads the image as bitmap asynchronous.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <param name="desiredSize">The desired size.</param>
+        /// <param name="outputSize">The output size.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>The image as bitmap.</returns>
-        public async Task<Bitmap> ReadAsync(string path, uint? desiredSize, CancellationToken ct)
+        public async Task<Bitmap> ReadAsync(string path, uint? outputSize, CancellationToken ct)
         {
             return await Task.Run(
                 () =>
@@ -35,7 +35,7 @@ namespace AMI.Core.IO.Readers
                             if (image != null)
                             {
                                 Bitmap bitmap = new Bitmap(image);
-                                return bitmap.Resize(desiredSize);
+                                return bitmap.Resize(outputSize);
                             }
                         }
                         return null;

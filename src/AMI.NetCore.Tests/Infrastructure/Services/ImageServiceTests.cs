@@ -19,7 +19,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var command = new ProcessPathCommand()
             {
                 AmountPerAxis = 10,
-                DesiredSize = 250,
+                OutputSize = 250,
                 SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
                 DestinationPath = GetTempPath()
             };

@@ -1455,9 +1455,9 @@
             "description": "Gets the maximum size in kilobytes.",
             "format": "int32"
           },
-          "maxCompressedEntries": {
+          "maxArchivedEntries": {
             "type": "integer",
-            "description": "Gets the maximum of compressed entries.",
+            "description": "Gets the maximum of archived entries.",
             "format": "int32"
           },
           "timeoutMilliseconds": {
@@ -1762,7 +1762,7 @@
             "x-abstract": true,
             "additionalProperties": false,
             "properties": {
-              "desiredSize": {
+              "outputSize": {
                 "type": "integer",
                 "format": "int32"
               },

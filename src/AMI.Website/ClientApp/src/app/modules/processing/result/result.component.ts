@@ -121,8 +121,8 @@ export class ResultComponent implements OnInit, AfterViewInit {
     if (container && container.entityUrl) {
       this.photoswipeItems.push(new PhotoSwipeItemModel({
         src: container.entityUrl,
-        h: this.command.desiredSize,
-        w: this.command.desiredSize
+        h: this.command.outputSize,
+        w: this.command.outputSize
       }));
       container.index = ++index;
     }

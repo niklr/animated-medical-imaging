@@ -29,7 +29,7 @@ namespace AMI.NetCore.Tests.Core.Workers
                 {
                     Id = Guid.NewGuid().ToString(),
                     AmountPerAxis = 1,
-                    DesiredSize = 0
+                    OutputSize = 0
                 }
             };
             var cts = new CancellationTokenSource();

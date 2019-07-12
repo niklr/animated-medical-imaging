@@ -24,7 +24,7 @@ namespace AMI.Infrastructure.IO.Downloaders
         private readonly IMediator mediator;
         private readonly IAmiUnitOfWork context;
         private readonly IAppConfiguration configuration;
-        private readonly ICompressibleWriter writer;
+        private readonly IArchiveWriter writer;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace AMI.Infrastructure.IO.Downloaders
             IMediator mediator,
             IAmiUnitOfWork context,
             IAppConfiguration configuration,
-            ICompressibleWriter writer,
+            IArchiveWriter writer,
             IFileSystemStrategy fileSystemStrategy)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

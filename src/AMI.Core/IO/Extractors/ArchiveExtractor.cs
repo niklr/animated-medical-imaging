@@ -8,39 +8,39 @@ using AMI.Core.Entities.Models;
 namespace AMI.Core.IO.Extractors
 {
     /// <summary>
-    /// An extractor for compressed files.
+    /// An extractor for archived files.
     /// </summary>
-    public abstract class CompressibleExtractor : ICompressibleExtractor
+    public abstract class ArchiveExtractor : IArchiveExtractor
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompressibleExtractor" /> class.
+        /// Initializes a new instance of the <see cref="ArchiveExtractor" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <exception cref="ArgumentNullException">configuration</exception>
-        public CompressibleExtractor(IAppConfiguration configuration)
+        public ArchiveExtractor(IAppConfiguration configuration)
         {
             if (configuration == null)
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            MaxCompressibleEntries = configuration.Options.MaxCompressedEntries;
+            MaxArchivedEntries = configuration.Options.MaxArchivedEntries;
         }
 
         /// <summary>
-        /// Gets the maximum of compressible entries.
+        /// Gets the maximum of archived entries.
         /// </summary>
-        public int MaxCompressibleEntries { get; private set; } = int.MinValue;
+        public int MaxArchivedEntries { get; private set; } = int.MinValue;
 
         /// <summary>
-        /// Extracts the compressed file asynchronous.
+        /// Extracts the archived file asynchronous.
         /// </summary>
         /// <param name="sourcePath">The source path.</param>
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <param name="level">The recursion level.</param>
         /// <returns>
-        /// A list of compressed entries.
+        /// A list of archived entries.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// sourcePath
@@ -49,6 +49,6 @@ namespace AMI.Core.IO.Extractors
         /// or
         /// ct
         /// </exception>
-        public abstract Task<IList<CompressedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct, int level = 0);
+        public abstract Task<IList<ArchivedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct, int level = 0);
     }
 }

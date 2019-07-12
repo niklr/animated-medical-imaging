@@ -10,15 +10,15 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.IO.Extractors
 {
     [TestFixture]
-    public class CompressibleExtractorTests : BaseTest
+    public class ArchiveExtractorTests : BaseTest
     {
         [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.zip")]
         [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar")]
         [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar.gz")]
-        public void CompressibleExtractor_ExtractAsync(string filename)
+        public void ArchiveExtractor_ExtractAsync(string filename)
         {
             // Arrange
-            var extractor = GetService<ICompressibleExtractor>();
+            var extractor = GetService<IArchiveExtractor>();
             var configuration = GetService<IAppConfiguration>();
             var ct = new CancellationToken();
             var sourcePath = GetDataPath(filename);
@@ -32,7 +32,7 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
                 var lastEntry = result.LastOrDefault();
 
                 // Assert
-                Assert.IsTrue(result.Count >= configuration.Options.MaxCompressedEntries);
+                Assert.IsTrue(result.Count >= configuration.Options.MaxArchivedEntries);
                 Assert.IsNotNull(firstEntry);
                 Assert.IsTrue(File.Exists(Path.Combine(destinationPath, firstEntry.Key)));
                 Assert.IsNotNull(lastEntry);
@@ -45,10 +45,10 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
         }
 
         [TestCase]
-        public void CompressibleExtractor_ExtractAsync_NotSupportedException()
+        public void ArchiveExtractor_ExtractAsync_NotSupportedException()
         {
             // Arrange
-            var extractor = GetService<ICompressibleExtractor>();
+            var extractor = GetService<IArchiveExtractor>();
             var configuration = GetService<IAppConfiguration>();
             var ct = new CancellationToken();
             var sourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha.tar.tar.gz");

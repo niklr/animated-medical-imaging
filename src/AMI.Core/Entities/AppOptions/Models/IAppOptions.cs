@@ -11,9 +11,9 @@
         int MaxSizeKilobytes { get; }
 
         /// <summary>
-        /// Gets the maximum of compressed entries.
+        /// Gets the maximum of archived entries.
         /// </summary>
-        int MaxCompressedEntries { get; }
+        int MaxArchivedEntries { get; }
 
         /// <summary>
         /// Gets the timeout in milliseconds.

@@ -16,8 +16,8 @@ namespace AMI.Compress.Writers
     /// <summary>
     /// A writer to compress files.
     /// </summary>
-    /// <seealso cref="ICompressibleWriter" />
-    public class SharpCompressWriter : ICompressibleWriter
+    /// <seealso cref="IArchiveWriter" />
+    public class SharpCompressWriter : IArchiveWriter
     {
         private readonly IFileSystemStrategy fileSystemStrategy;
 

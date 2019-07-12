@@ -24,7 +24,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
         private readonly IAmiUnitOfWork context;
         private readonly IApplicationConstants constants;
         private readonly IAppConfiguration configuration;
-        private readonly ICompressibleWriter writer;
+        private readonly IArchiveWriter writer;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
@@ -33,13 +33,13 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
         /// <param name="context">The context.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="writer">The compressible writer.</param>
+        /// <param name="writer">The archive writer.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public GetZipQueryHandler(
             IAmiUnitOfWork context,
             IApplicationConstants constants,
             IAppConfiguration configuration,
-            ICompressibleWriter writer,
+            IArchiveWriter writer,
             IFileSystemStrategy fileSystemStrategy)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));

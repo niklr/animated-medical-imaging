@@ -16,6 +16,7 @@ using AMI.Core.IO.Builders;
 using AMI.Core.IO.Extractors;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Writers;
+using AMI.Core.Mappers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -66,6 +67,7 @@ namespace AMI.Portable
             services.AddSingleton<IAmiUnitOfWork, MockUnitOfWork>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
+            services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
@@ -150,7 +152,7 @@ namespace AMI.Portable
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed(o =>
                    {
-                       command.DesiredSize = o.DesiredSize;
+                       command.OutputSize = o.OutputSize;
                        command.AmountPerAxis = o.AmountPerAxis;
                        command.SourcePath = o.SourcePath;
                        command.DestinationPath = o.DestinationPath;
@@ -166,7 +168,7 @@ namespace AMI.Portable
             var command = new ProcessPathCommand()
             {
                 AmountPerAxis = 10,
-                DesiredSize = 250,
+                OutputSize = 250,
                 SourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "SMIR.Brain.XX.O.MR_Flair.36620.mha"),
                 DestinationPath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "temp", Guid.NewGuid().ToString("N")),
                 // WatermarkSourcePath = Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "watermark.png")

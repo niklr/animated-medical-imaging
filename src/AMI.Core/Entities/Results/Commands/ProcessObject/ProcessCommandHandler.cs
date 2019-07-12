@@ -83,7 +83,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             {
                 SourcePath = sourcePath,
                 DestinationPath = tempDestPath,
-                DesiredSize = request.DesiredSize,
+                OutputSize = request.OutputSize,
                 AmountPerAxis = request.AmountPerAxis,
                 AxisTypes = request.AxisTypes,
                 ImageFormat = request.ImageFormat,

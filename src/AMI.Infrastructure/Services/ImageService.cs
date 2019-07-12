@@ -3,9 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
-using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
-using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Extensions.FileSystemExtensions;
 using AMI.Core.Factories;
 using AMI.Core.IO.Extractors;
@@ -42,21 +40,6 @@ namespace AMI.Infrastructure.Services
         /// <param name="jsonWriter">The JSON writer.</param>
         /// <param name="imageExtractor">The image extractor.</param>
         /// <param name="gifImageWriter">The GIF image writer.</param>
-        /// <exception cref="ArgumentNullException">
-        /// loggerFactory
-        /// or
-        /// configuration
-        /// or
-        /// fileSystemStrategy
-        /// or
-        /// appInfoFactory
-        /// or
-        /// jsonWriter
-        /// or
-        /// imageExtractor
-        /// or
-        /// gifImageWriter
-        /// </exception>
         public ImageService(
             ILoggerFactory loggerFactory,
             IAppConfiguration configuration,
@@ -66,47 +49,14 @@ namespace AMI.Infrastructure.Services
             IImageExtractor imageExtractor,
             IGifImageWriter gifImageWriter)
         {
-            logger = loggerFactory?.CreateLogger<ImageService>();
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
+            logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
 
-            this.configuration = configuration;
-            if (this.configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-
-            this.fileSystemStrategy = fileSystemStrategy;
-            if (this.fileSystemStrategy == null)
-            {
-                throw new ArgumentNullException(nameof(fileSystemStrategy));
-            }
-
-            this.appInfoFactory = appInfoFactory;
-            if (this.appInfoFactory == null)
-            {
-                throw new ArgumentNullException(nameof(appInfoFactory));
-            }
-
-            this.jsonWriter = jsonWriter;
-            if (this.jsonWriter == null)
-            {
-                throw new ArgumentNullException(nameof(jsonWriter));
-            }
-
-            this.imageExtractor = imageExtractor;
-            if (this.imageExtractor == null)
-            {
-                throw new ArgumentNullException(nameof(imageExtractor));
-            }
-
-            this.gifImageWriter = gifImageWriter;
-            if (this.gifImageWriter == null)
-            {
-                throw new ArgumentNullException(nameof(gifImageWriter));
-            }
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
+            this.appInfoFactory = appInfoFactory ?? throw new ArgumentNullException(nameof(appInfoFactory));
+            this.jsonWriter = jsonWriter ?? throw new ArgumentNullException(nameof(jsonWriter));
+            this.imageExtractor = imageExtractor ?? throw new ArgumentNullException(nameof(imageExtractor));
+            this.gifImageWriter = gifImageWriter ?? throw new ArgumentNullException(nameof(gifImageWriter));
         }
 
         /// <inheritdoc/>
@@ -136,13 +86,14 @@ namespace AMI.Infrastructure.Services
             destFs.Directory.CreateDirectory(commandClone.DestinationPath);
 
             // TODO: support zip files
+            // SourcePath can be a directory, archive or file
             var result = await imageExtractor.ProcessAsync(commandClone, ct);
 
             // Set GIFs
             result.Gifs = await gifImageWriter.WriteAsync(
-                command.DestinationPath, result.Images, command.BezierEasingTypePerAxis, ct);
+                commandClone.DestinationPath, result.Images, commandClone.BezierEasingTypePerAxis, ct);
             result.CombinedGif = await gifImageWriter.WriteAsync(
-                command.DestinationPath, result.Images, "combined", command.BezierEasingTypeCombined, ct);
+                commandClone.DestinationPath, result.Images, "combined", commandClone.BezierEasingTypeCombined, ct);
 
             // Set application version
             var appInfo = appInfoFactory.Create();

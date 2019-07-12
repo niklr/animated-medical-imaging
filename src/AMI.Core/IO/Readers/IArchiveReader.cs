@@ -8,24 +8,24 @@ using AMI.Domain.Exceptions;
 namespace AMI.Core.IO.Readers
 {
     /// <summary>
-    /// A reader for compressed files.
+    /// A reader for archived files.
     /// </summary>
-    public interface ICompressibleReader
+    public interface IArchiveReader
     {
         /// <summary>
-        /// Reads the specified compressed file asynchronous.
+        /// Reads the specified archived file asynchronous.
         /// </summary>
-        /// <param name="path">The location of the compressed file.</param>
+        /// <param name="path">The location of the archived file.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
-        /// A list of compressed entries.
+        /// A list of archived entries.
         /// </returns>
         /// <exception cref="ArgumentNullException">path</exception>
         /// <exception cref="AmiException">
-        /// The reading of the compressed file has been cancelled.
+        /// The reading of the archived file has been cancelled.
         /// or
-        /// The compressed file could not be read.
+        /// The archived file could not be read.
         /// </exception>
-        Task<IList<CompressedEntryModel>> ReadAsync(string path, CancellationToken ct);
+        Task<IList<ArchivedEntryModel>> ReadAsync(string path, CancellationToken ct);
     }
 }

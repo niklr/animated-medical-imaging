@@ -63,13 +63,13 @@ namespace AMI.Itk.Utils
         /// Resamples the two-dimensional ITK image to the desired size.
         /// </summary>
         /// <param name="image">The two-dimensional ITK image.</param>
-        /// <param name="desiredSize">The desired size.</param>
+        /// <param name="outputSize">The output size.</param>
         /// <returns>
         /// The resampled two-dimensional ITK image.
         /// </returns>
         /// <exception cref="ArgumentNullException">image</exception>
         /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
-        Image ResampleImage2D(Image image, uint desiredSize);
+        Image ResampleImage2D(Image image, uint outputSize);
 
         /// <summary>
         /// Gets the number of labels in the ITK image.
