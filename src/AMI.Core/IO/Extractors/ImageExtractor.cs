@@ -178,6 +178,8 @@ namespace AMI.Core.IO.Extractors
                 }
             }
 
+            reader.Dispose();
+
             result.Images = images.OrderBy(e => e.Position).ToList();
 
             return result;

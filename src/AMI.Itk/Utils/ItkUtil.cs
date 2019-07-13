@@ -3,6 +3,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Extensions.Drawing;
+using AMI.Core.Extensions.FileSystemExtensions;
+using AMI.Core.Mappers;
+using AMI.Core.Strategies;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using itk.simple;
@@ -14,6 +17,61 @@ namespace AMI.Itk.Utils
     /// </summary>
     internal class ItkUtil : IItkUtil
     {
+        private readonly IFileSystemStrategy fileSystemStrategy;
+        private readonly IFileExtensionMapper fileExtensionMapper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ItkUtil"/> class.
+        /// </summary>
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="fileExtensionMapper">The file extension mapper.</param>
+        public ItkUtil(IFileSystemStrategy fileSystemStrategy, IFileExtensionMapper fileExtensionMapper)
+            : base()
+        {
+            this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
+            this.fileExtensionMapper = fileExtensionMapper ?? throw new ArgumentNullException(nameof(fileExtensionMapper));
+        }
+
+        /// <summary>
+        /// Creates the image reader depending on the provided path being a directory, archive or file.
+        /// </summary>
+        /// <param name="path">The location of the directory, archive or file on the file system.</param>
+        /// <returns>The image reader based on the provided path.</returns>
+        /// <exception cref="ArgumentNullException">path</exception>
+        /// <exception cref="UnexpectedNullException">Filesystem could not be created based on the provided path.</exception>
+        public ImageReaderBase CreateImageReader(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            var fs = fileSystemStrategy.Create(path);
+            if (fs == null)
+            {
+                throw new UnexpectedNullException("Filesystem could not be created based on the provided path.");
+            }
+
+            // TODO:
+            // - check if path is a directory
+            // - check if path contains multiple files
+            // - determine file format
+            // read DICOM image series
+            // https://simpleitk.readthedocs.io/en/master/Examples/DicomSeriesReader/Documentation.html
+            if (fs.IsDirectory(path))
+            {
+                ImageSeriesReader seriesReader = new ImageSeriesReader();
+                seriesReader.SetFileNames(ImageSeriesReader.GetGDCMSeriesFileNames(path));
+                return seriesReader;
+            }
+            else
+            {
+                ImageFileReader reader = new ImageFileReader();
+                reader.SetFileName(path);
+                return reader;
+            }
+        }
+
         /// <summary>
         /// Reads the image asynchronous.
         /// </summary>
@@ -22,10 +80,14 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The ITK image.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// path
+        /// <exception cref="ArgumentNullException">path
         /// or
-        /// ct
+        /// ct</exception>
+        /// <exception cref="UnexpectedNullException">Filesystem could not be created based on the provided path.</exception>
+        /// <exception cref="AmiException">
+        /// The reading of the ITK image has been cancelled.
+        /// or
+        /// The ITK image could not be read.
         /// </exception>
         public async Task<Image> ReadImageAsync(string path, CancellationToken ct)
         {
@@ -39,43 +101,41 @@ namespace AMI.Itk.Utils
                 throw new ArgumentNullException(nameof(ct));
             }
 
-            return await Task.Run(
-                () =>
+            var reader = CreateImageReader(path);
+            if (reader == null)
+            {
+                throw new UnexpectedNullException("The image reader could not be created based on the provided path.");
+            }
+
+            try
+            {
+                ct.Register(() =>
                 {
-                    // TODO:
-                    // - check if path is a directory
-                    // - check if path contains multiple files
-                    // - determine file format
-                    // read DICOM image series
-                    // https://simpleitk.readthedocs.io/en/master/Examples/DicomSeriesReader/Documentation.html
-                    using (ImageFileReader reader = new ImageFileReader())
-                    {
-                        try
-                        {
-                            ct.Register(() =>
-                            {
-                                reader.Abort();
-                            });
+                    reader.Abort();
+                });
 
-                            ct.ThrowIfCancellationRequested();
+                ct.ThrowIfCancellationRequested();
 
-                            reader.SetFileName(path);
+                Image image = reader.Execute();
+                image = ApplyRescaleIntensityImageFilter(image);
+                image = ApplyCastImageFilter(image);
 
-                            Image image = reader.Execute();
-                            image = ApplyRescaleIntensityImageFilter(image);
-                            image = ApplyCastImageFilter(image);
-                            return image;
-                        }
-                        catch (OperationCanceledException e)
-                        {
-                            throw new AmiException("The reading of the ITK image has been cancelled.", e);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new AmiException("The ITK image could not be read.", e);
-                        }
-                    }
-                }, ct);
+                await Task.CompletedTask;
+
+                return image;
+            }
+            catch (OperationCanceledException e)
+            {
+                throw new AmiException("The reading of the ITK image has been cancelled.", e);
+            }
+            catch (Exception e)
+            {
+                throw new AmiException("The ITK image could not be read.", e);
+            }
+            finally
+            {
+                reader.Dispose();
+            }
         }
 
         /// <summary>
@@ -88,14 +148,17 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// A <see cref="T:System.Threading.Tasks.Task" /> representing the asynchronous operation.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// image
+        /// <exception cref="ArgumentNullException">image
         /// or
         /// path
         /// or
         /// filename
         /// or
-        /// ct
+        /// ct</exception>
+        /// <exception cref="AmiException">
+        /// The writing of the ITK image has been cancelled.
+        /// or
+        /// The ITK image could not be written.
         /// </exception>
         public async Task WriteImageAsync(Image image, string path, string filename, CancellationToken ct)
         {
@@ -119,33 +182,32 @@ namespace AMI.Itk.Utils
                 throw new ArgumentNullException(nameof(ct));
             }
 
-            await Task.Run(
-                () =>
+            using (ImageFileWriter writer = new ImageFileWriter())
+            {
+                try
+                {
+                    ct.Register(() =>
                     {
-                        using (ImageFileWriter writer = new ImageFileWriter())
-                        {
-                            try
-                            {
-                                ct.Register(() =>
-                                {
-                                    writer.Abort();
-                                });
-                                ct.ThrowIfCancellationRequested();
+                        writer.Abort();
+                    });
 
-                                writer.SetUseCompression(true);
-                                writer.SetFileName(Path.Combine(path, filename));
-                                writer.Execute(image);
-                            }
-                            catch (OperationCanceledException e)
-                            {
-                                throw new AmiException("The writing of the ITK image has been cancelled.", e);
-                            }
-                            catch (Exception e)
-                            {
-                                throw new AmiException("The ITK image could not be written.", e);
-                            }
-                        }
-                    }, ct);
+                    ct.ThrowIfCancellationRequested();
+
+                    writer.SetUseCompression(true);
+                    writer.SetFileName(Path.Combine(path, filename));
+                    writer.Execute(image);
+
+                    await Task.CompletedTask;
+                }
+                catch (OperationCanceledException e)
+                {
+                    throw new AmiException("The writing of the ITK image has been cancelled.", e);
+                }
+                catch (Exception e)
+                {
+                    throw new AmiException("The ITK image could not be written.", e);
+                }
+            }
         }
 
         /// <summary>
@@ -187,11 +249,13 @@ namespace AMI.Itk.Utils
                     break;
             }
 
-            var filter = new ExtractImageFilter();
+            ExtractImageFilter filter = new ExtractImageFilter();
             filter.SetSize(size);
             filter.SetIndex(indexVector);
+            Image output = filter.Execute(image);
+            filter.Dispose();
 
-            return filter.Execute(image);
+            return output ?? image;
         }
 
         /// <summary>
@@ -252,14 +316,14 @@ namespace AMI.Itk.Utils
             };
 
             // https://itk.org/ITKExamples/src/Filtering/ImageGrid/ResampleAnImage/Documentation.html
-            var resampleFilter = new ResampleImageFilter();
-            resampleFilter.SetReferenceImage(image);
-            resampleFilter.SetSize(actualSize);
-            resampleFilter.SetOutputSpacing(outputSpacing);
+            ResampleImageFilter filter = new ResampleImageFilter();
+            filter.SetReferenceImage(image);
+            filter.SetSize(actualSize);
+            filter.SetOutputSpacing(outputSpacing);
+            Image output = filter.Execute(image);
+            filter.Dispose();
 
-            var outputImage = resampleFilter.Execute(image);
-
-            return outputImage;
+            return output ?? image;
         }
 
         /// <summary>
@@ -303,20 +367,25 @@ namespace AMI.Itk.Utils
             };
 
             // https://itk.org/Wiki/ITK/Examples/ImageProcessing/ResampleImageFilter
-            var filter = new ResampleImageFilter();
+            ResampleImageFilter filter = new ResampleImageFilter();
             filter.SetReferenceImage(image);
             filter.SetTransform(new ScaleTransform(image.GetDimension()));
             filter.SetInterpolator(InterpolatorEnum.sitkLinear);
             filter.SetSize(desiredSize);
             filter.SetOutputSpacing(outputSpacing);
-            return filter.Execute(image);
+            Image output = filter.Execute(image);
+            filter.Dispose();
+
+            return output ?? image;
         }
 
         /// <summary>
         /// Gets the number of labels in the ITK image.
         /// </summary>
         /// <param name="image">The ITK image.</param>
-        /// <returns>The number of labels in the ITK image.</returns>
+        /// <returns>
+        /// The number of labels in the ITK image.
+        /// </returns>
         /// <exception cref="ArgumentNullException">image</exception>
         public ulong GetLabelCount(Image image)
         {
@@ -334,7 +403,10 @@ namespace AMI.Itk.Utils
 
             LabelStatisticsImageFilter filter = new LabelStatisticsImageFilter();
             filter.Execute(labelImage, image);
-            return filter.GetNumberOfLabels();
+            ulong labelCount = filter.GetNumberOfLabels();
+            filter.Dispose();
+
+            return labelCount;
         }
 
         /// <summary>
@@ -385,11 +457,11 @@ namespace AMI.Itk.Utils
             try
             {
                 // Execute rescale intensity image filter
-                RescaleIntensityImageFilter filterRS = new RescaleIntensityImageFilter();
-                filterRS.SetOutputMinimum(0);
-                filterRS.SetOutputMaximum(255);
-                output = filterRS.Execute(image);
-                filterRS.Dispose();
+                RescaleIntensityImageFilter filter = new RescaleIntensityImageFilter();
+                filter.SetOutputMinimum(0);
+                filter.SetOutputMaximum(255);
+                output = filter.Execute(image);
+                filter.Dispose();
             }
             catch (Exception)
             {
@@ -419,10 +491,19 @@ namespace AMI.Itk.Utils
             // see https://github.com/SimpleITK/SimpleITK/issues/582
 
             // Execute cast filter
-            CastImageFilter filterC = new CastImageFilter();
-            filterC.SetOutputPixelType(PixelIDValueEnum.sitkUInt8);
-            Image output = filterC.Execute(image);
-            filterC.Dispose();
+            CastImageFilter filter = new CastImageFilter();
+            PixelIDValueEnum imageType = PixelIDValueEnum.swigToEnum(image.GetPixelIDValue());
+            if (imageType.ToString().ToLowerInvariant().Contains("vector"))
+            {
+                filter.SetOutputPixelType(PixelIDValueEnum.sitkVectorUInt8);
+            }
+            else
+            {
+                filter.SetOutputPixelType(PixelIDValueEnum.sitkUInt8);
+            }
+
+            Image output = filter.Execute(image);
+            filter.Dispose();
 
             return output ?? image;
         }
@@ -435,46 +516,45 @@ namespace AMI.Itk.Utils
             }
 
             PixelIDValueEnum imageType = PixelIDValueEnum.swigToEnum(image.GetPixelIDValue());
+            int swigValue = imageType.swigValue;
 
-            if (imageType.swigValue == PixelIDValueEnum.sitkUInt8.swigValue)
+            if (swigValue == PixelIDValueEnum.sitkUInt8.swigValue || swigValue == PixelIDValueEnum.sitkVectorUInt8.swigValue)
             {
                 return image.GetBufferAsUInt8();
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkUInt16.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkUInt16.swigValue || swigValue == PixelIDValueEnum.sitkVectorUInt16.swigValue)
             {
                 return image.GetBufferAsUInt16();
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkUInt32.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkUInt32.swigValue || swigValue == PixelIDValueEnum.sitkVectorUInt32.swigValue)
             {
                 return image.GetBufferAsUInt32();
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkUInt64.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkUInt64.swigValue || swigValue == PixelIDValueEnum.sitkVectorUInt64.swigValue)
             {
                 throw new NotSupportedException($"The image type {imageType} is not supported.");
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkInt8.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkInt8.swigValue || swigValue == PixelIDValueEnum.sitkVectorInt8.swigValue)
             {
                 return image.GetBufferAsInt8();
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkInt16.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkInt16.swigValue || swigValue == PixelIDValueEnum.sitkVectorInt16.swigValue)
             {
                 return image.GetBufferAsInt16();
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkInt32.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkInt32.swigValue || swigValue == PixelIDValueEnum.sitkVectorInt32.swigValue)
             {
                 return image.GetBufferAsInt32();
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkInt64.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkInt64.swigValue || swigValue == PixelIDValueEnum.sitkVectorInt64.swigValue)
             {
                 throw new NotSupportedException($"The image type {imageType} is not supported.");
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkFloat32.swigValue
-                || imageType.swigValue == PixelIDValueEnum.sitkComplexFloat32.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkFloat32.swigValue || swigValue == PixelIDValueEnum.sitkComplexFloat32.swigValue)
             {
                 return image.GetBufferAsFloat();
             }
-            else if (imageType.swigValue == PixelIDValueEnum.sitkFloat64.swigValue
-                || imageType.swigValue == PixelIDValueEnum.sitkComplexFloat64.swigValue)
+            else if (swigValue == PixelIDValueEnum.sitkFloat64.swigValue || swigValue == PixelIDValueEnum.sitkComplexFloat64.swigValue)
             {
                 return image.GetBufferAsDouble();
             }

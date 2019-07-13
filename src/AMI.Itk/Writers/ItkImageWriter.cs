@@ -1,5 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Mappers;
+using AMI.Core.Strategies;
 using AMI.Itk.Readers;
 using AMI.Itk.Utils;
 
@@ -11,14 +14,22 @@ namespace AMI.Itk.Writers
     /// <seealso cref="IItkImageWriter" />
     public class ItkImageWriter : IItkImageWriter
     {
+        private readonly IFileSystemStrategy fileSystemStrategy;
+        private readonly IFileExtensionMapper fileExtensionMapper;
         private readonly IItkUtil itkUtil;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ItkImageWriter"/> class.
         /// </summary>
-        public ItkImageWriter()
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="fileExtensionMapper">The file extension mapper.</param>
+        public ItkImageWriter(IFileSystemStrategy fileSystemStrategy, IFileExtensionMapper fileExtensionMapper)
+            : base()
         {
-            itkUtil = new ItkUtil();
+            this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
+            this.fileExtensionMapper = fileExtensionMapper ?? throw new ArgumentNullException(nameof(fileExtensionMapper));
+
+            itkUtil = new ItkUtil(fileSystemStrategy, fileExtensionMapper);
         }
 
         /// <summary>

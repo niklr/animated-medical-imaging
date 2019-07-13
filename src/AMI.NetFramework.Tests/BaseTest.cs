@@ -3,6 +3,7 @@ using System.IO;
 using AMI.Core.Constants;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Writers;
+using AMI.Core.Mappers;
 using AMI.Core.Strategies;
 using AMI.Gif.Writers;
 using AMI.Infrastructure.Strategies;
@@ -24,6 +25,7 @@ namespace AMI.NetFramework.Tests
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
                 .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()
                 .AddSingleton<IFileSystemStrategy, FileSystemStrategy>()
+                .AddSingleton<IFileExtensionMapper, FileExtensionMapper>()
                 .AddSingleton<IGifImageWriter, AnimatedGifImageWriter>()
                 .BuildServiceProvider();
         }

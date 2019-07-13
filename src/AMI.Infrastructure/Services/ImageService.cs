@@ -95,25 +95,17 @@ namespace AMI.Infrastructure.Services
             destFs.Directory.CreateDirectory(commandClone.DestinationPath);
 
             // SourcePath can be a directory, archive or file
-            ProcessResultModel result = null;
-
-            if (sourceFs.IsDirectory(commandClone.SourcePath))
+            if (archiveReader.IsArchive(commandClone.SourcePath))
             {
-                // TODO: process directory
-            }
-            else if (archiveReader.IsArchive(command.SourcePath))
-            {
-                var extractedPath = destFs.Path.Combine(command.DestinationPath, "Extracted");
+                var extractedPath = destFs.Path.Combine(commandClone.DestinationPath, "Extracted");
                 destFs.Directory.CreateDirectory(extractedPath);
-                await archiveExtractor.ExtractAsync(command.SourcePath, extractedPath, ct);
+                await archiveExtractor.ExtractAsync(commandClone.SourcePath, extractedPath, ct);
 
-                // TODO: process directory
-            }
-            else
-            {
-                result = await imageExtractor.ProcessAsync(commandClone, ct);
+                // Use the extracted directory as source path
+                commandClone.SourcePath = extractedPath;
             }
 
+            var result = await imageExtractor.ProcessAsync(commandClone, ct);
             if (result == null)
             {
                 throw new UnexpectedNullException("The images could not be processed.");

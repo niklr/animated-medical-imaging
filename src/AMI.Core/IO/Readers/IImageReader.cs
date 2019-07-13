@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Mappers;
@@ -10,7 +11,7 @@ namespace AMI.Core.IO.Readers
     /// A reader for images.
     /// </summary>
     /// <typeparam name="T">The type of the image.</typeparam>
-    public interface IImageReader<T>
+    public interface IImageReader<T> : IDisposable
     {
         /// <summary>
         /// Gets the image.

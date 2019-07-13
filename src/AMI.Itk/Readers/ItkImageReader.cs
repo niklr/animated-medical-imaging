@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Mappers;
+using AMI.Core.Strategies;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using AMI.Itk.Utils;
@@ -19,6 +20,8 @@ namespace AMI.Itk.Readers
     {
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
+        private readonly IFileSystemStrategy fileSystemStrategy;
+        private readonly IFileExtensionMapper fileExtensionMapper;
         private readonly IItkUtil itkUtil;
         private VectorUInt32 size = new VectorUInt32();
         private IDictionary<AxisType, Image> axisImages;
@@ -26,9 +29,15 @@ namespace AMI.Itk.Readers
         /// <summary>
         /// Initializes a new instance of the <see cref="ItkImageReader"/> class.
         /// </summary>
-        public ItkImageReader()
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="fileExtensionMapper">The file extension mapper.</param>
+        public ItkImageReader(IFileSystemStrategy fileSystemStrategy, IFileExtensionMapper fileExtensionMapper)
+            : base()
         {
-            itkUtil = new ItkUtil();
+            this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
+            this.fileExtensionMapper = fileExtensionMapper ?? throw new ArgumentNullException(nameof(fileExtensionMapper));
+
+            itkUtil = new ItkUtil(fileSystemStrategy, fileExtensionMapper);
         }
 
         /// <summary>
@@ -64,6 +73,15 @@ namespace AMI.Itk.Readers
         /// Gets or sets the axis position mapper.
         /// </summary>
         public IAxisPositionMapper Mapper { get; set; }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            if (Image != null)
+            {
+                Image.Dispose();
+            }
+        }
 
         /// <summary>
         /// Initializes the reader asynchronous.
