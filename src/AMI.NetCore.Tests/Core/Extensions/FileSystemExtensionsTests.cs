@@ -1,9 +1,8 @@
-﻿using AMI.Core.Strategies;
+﻿using AMI.Core.Configurations;
 using AMI.Core.Extensions.FileSystemExtensions;
-using NUnit.Framework;
-using System.Reflection;
-using AMI.Core.Configurations;
 using AMI.Core.Helpers;
+using AMI.Core.Strategies;
+using NUnit.Framework;
 
 namespace AMI.NetCore.Tests.Extensions
 {

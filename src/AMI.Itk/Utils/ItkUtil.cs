@@ -1,5 +1,6 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Extensions.Drawing;
@@ -9,6 +10,9 @@ using AMI.Core.Strategies;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using itk.simple;
+
+[assembly: InternalsVisibleTo("AMI.NetCore.Tests")]
+[assembly: InternalsVisibleTo("AMI.NetFramework.Tests")]
 
 namespace AMI.Itk.Utils
 {
@@ -32,13 +36,7 @@ namespace AMI.Itk.Utils
             this.fileExtensionMapper = fileExtensionMapper ?? throw new ArgumentNullException(nameof(fileExtensionMapper));
         }
 
-        /// <summary>
-        /// Creates the image reader depending on the provided path being a directory, archive or file.
-        /// </summary>
-        /// <param name="path">The location of the directory, archive or file on the file system.</param>
-        /// <returns>The image reader based on the provided path.</returns>
-        /// <exception cref="ArgumentNullException">path</exception>
-        /// <exception cref="UnexpectedNullException">Filesystem could not be created based on the provided path.</exception>
+        /// <inheritdoc/>
         public ImageReaderBase CreateImageReader(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -52,17 +50,24 @@ namespace AMI.Itk.Utils
                 throw new UnexpectedNullException("Filesystem could not be created based on the provided path.");
             }
 
-            // TODO:
-            // - check if path is a directory
-            // - check if path contains multiple files
-            // - determine file format
-            // read DICOM image series
-            // https://simpleitk.readthedocs.io/en/master/Examples/DicomSeriesReader/Documentation.html
             if (fs.IsDirectory(path))
             {
-                ImageSeriesReader seriesReader = new ImageSeriesReader();
-                seriesReader.SetFileNames(ImageSeriesReader.GetGDCMSeriesFileNames(path));
-                return seriesReader;
+                var entryPath = DiscoverEntryPath(fs.Directory.GetFiles(path));
+                if (string.IsNullOrWhiteSpace(entryPath))
+                {
+                    // By default try to read DICOM image series
+                    // https://simpleitk.readthedocs.io/en/master/Examples/DicomSeriesReader/Documentation.html
+                    ImageSeriesReader seriesReader = new ImageSeriesReader();
+                    seriesReader.SetFileNames(ImageSeriesReader.GetGDCMSeriesFileNames(path));
+                    return seriesReader;
+                }
+                else
+                {
+                    // Try to read the image based on the entry path
+                    ImageFileReader reader = new ImageFileReader();
+                    reader.SetFileName(entryPath);
+                    return reader;
+                }
             }
             else
             {
@@ -72,23 +77,47 @@ namespace AMI.Itk.Utils
             }
         }
 
-        /// <summary>
-        /// Reads the image asynchronous.
-        /// </summary>
-        /// <param name="path">The location of the image on the file system.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// The ITK image.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">path
-        /// or
-        /// ct</exception>
-        /// <exception cref="UnexpectedNullException">Filesystem could not be created based on the provided path.</exception>
-        /// <exception cref="AmiException">
-        /// The reading of the ITK image has been cancelled.
-        /// or
-        /// The ITK image could not be read.
-        /// </exception>
+        /// <inheritdoc/>
+        public string DiscoverEntryPath(string[] files)
+        {
+            if (files != null)
+            {
+                var file = files.FirstOrDefault();
+                if (file != null)
+                {
+                    // Check if directory contains multiple files
+                    if (files.Length > 1)
+                    {
+                        var result = fileExtensionMapper.Map(file);
+                        if (result.FileFormat == FileFormat.Dicom)
+                        {
+                            return string.Empty;
+                        }
+                        else
+                        {
+                            if (result.FileExtensionType == FileExtensionType.Header)
+                            {
+                                return file;
+                            }
+                            else
+                            {
+                                var counterpart = fileExtensionMapper.MapCounterpart(file);
+                                return files.Where(e => e.ToLowerInvariant().EndsWith(counterpart.Extension.ToLowerInvariant())).FirstOrDefault();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Directory contains just 1 file
+                        return file;
+                    }
+                }
+            }
+
+            return string.Empty;
+        }
+
+        /// <inheritdoc/>
         public async Task<Image> ReadImageAsync(string path, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -138,28 +167,7 @@ namespace AMI.Itk.Utils
             }
         }
 
-        /// <summary>
-        /// Writes the image asynchronous.
-        /// </summary>
-        /// <param name="image">The ITK image.</param>
-        /// <param name="path">The file system location where the image should be written.</param>
-        /// <param name="filename">The name of the file.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// A <see cref="T:System.Threading.Tasks.Task" /> representing the asynchronous operation.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image
-        /// or
-        /// path
-        /// or
-        /// filename
-        /// or
-        /// ct</exception>
-        /// <exception cref="AmiException">
-        /// The writing of the ITK image has been cancelled.
-        /// or
-        /// The ITK image could not be written.
-        /// </exception>
+        /// <inheritdoc/>
         public async Task WriteImageAsync(Image image, string path, string filename, CancellationToken ct)
         {
             if (image == null)
@@ -182,6 +190,12 @@ namespace AMI.Itk.Utils
                 throw new ArgumentNullException(nameof(ct));
             }
 
+            var fs = fileSystemStrategy.Create(path);
+            if (fs == null)
+            {
+                throw new UnexpectedNullException("Filesystem could not be created based on the provided path.");
+            }
+
             using (ImageFileWriter writer = new ImageFileWriter())
             {
                 try
@@ -194,7 +208,7 @@ namespace AMI.Itk.Utils
                     ct.ThrowIfCancellationRequested();
 
                     writer.SetUseCompression(true);
-                    writer.SetFileName(Path.Combine(path, filename));
+                    writer.SetFileName(fs.Path.Combine(path, filename));
                     writer.Execute(image);
 
                     await Task.CompletedTask;
@@ -210,16 +224,7 @@ namespace AMI.Itk.Utils
             }
         }
 
-        /// <summary>
-        /// Extracts the position on the specified axis.
-        /// </summary>
-        /// <param name="image">The ITK image.</param>
-        /// <param name="axisType">Type of the axis.</param>
-        /// <param name="index">The position.</param>
-        /// <returns>
-        /// The extracted position as two-dimensional ITK image.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
+        /// <inheritdoc/>
         public Image ExtractPosition(Image image, AxisType axisType, uint index)
         {
             if (image == null)
@@ -258,16 +263,7 @@ namespace AMI.Itk.Utils
             return output ?? image;
         }
 
-        /// <summary>
-        /// Resamples the two-dimensional ITK image to the desired size.
-        /// </summary>
-        /// <param name="image">The two-dimensional ITK image.</param>
-        /// <param name="outputSize">The output size.</param>
-        /// <returns>
-        /// The resampled two-dimensional ITK image.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
-        /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
+        /// <inheritdoc/>
         public Image ResampleImage2D(Image image, uint outputSize)
         {
             if (image == null)
@@ -326,16 +322,7 @@ namespace AMI.Itk.Utils
             return output ?? image;
         }
 
-        /// <summary>
-        /// Resamples the three-dimensional ITK image to the desired size.
-        /// </summary>
-        /// <param name="image">The three-dimensional ITK image.</param>
-        /// <param name="outputSize">The output size.</param>
-        /// <returns>
-        /// The resampled three-dimensional ITK image.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
-        /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
+        /// <inheritdoc/>
         public Image ResampleImage3D(Image image, uint outputSize)
         {
             if (image == null)
@@ -379,14 +366,7 @@ namespace AMI.Itk.Utils
             return output ?? image;
         }
 
-        /// <summary>
-        /// Gets the number of labels in the ITK image.
-        /// </summary>
-        /// <param name="image">The ITK image.</param>
-        /// <returns>
-        /// The number of labels in the ITK image.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
+        /// <inheritdoc/>
         public ulong GetLabelCount(Image image)
         {
             if (image == null)
@@ -409,15 +389,7 @@ namespace AMI.Itk.Utils
             return labelCount;
         }
 
-        /// <summary>
-        /// Converts the two-dimensional ITK image to a bitmap.
-        /// </summary>
-        /// <param name="image">The two-dimensional ITK image</param>
-        /// <returns>
-        /// The image as bitmap.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
-        /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
+        /// <inheritdoc/>
         public System.Drawing.Bitmap ToBitmap(Image image)
         {
             if (image == null)
@@ -437,14 +409,6 @@ namespace AMI.Itk.Utils
             return GetBuffer(image).ToBitmap(width, height);
         }
 
-        /// <summary>
-        /// Convert the image to a specific format.
-        /// </summary>
-        /// <param name="image">The ITK image.</param>
-        /// <returns>
-        /// The rescaled ITK image.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
         private Image ApplyRescaleIntensityImageFilter(Image image)
         {
             if (image == null)
@@ -472,14 +436,6 @@ namespace AMI.Itk.Utils
             return output ?? image;
         }
 
-        /// <summary>
-        /// Applies the cast image filter.
-        /// </summary>
-        /// <param name="image">The ITK image.</param>
-        /// <returns>
-        /// The modified ITK image.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
         private Image ApplyCastImageFilter(Image image)
         {
             if (image == null)

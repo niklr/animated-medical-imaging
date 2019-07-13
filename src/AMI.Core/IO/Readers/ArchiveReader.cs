@@ -52,13 +52,7 @@ namespace AMI.Core.IO.Readers
         /// <inheritdoc/>
         public bool IsArchive(string path)
         {
-            var fs = FileSystemStrategy.Create(path);
-            if (fs == null)
-            {
-                throw new UnexpectedNullException("Filesystem could not be created based on the provided path.");
-            }
-
-            var result = FileExtensionMapper.Map(fs.Path.GetFileName(path));
+            var result = FileExtensionMapper.Map(path);
 
             return result.IsArchive;
         }

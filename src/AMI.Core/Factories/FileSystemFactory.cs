@@ -8,6 +8,16 @@ namespace AMI.Core.Factories
     /// <seealso cref="IFileSystemFactory" />
     public class FileSystemFactory : IFileSystemFactory
     {
+        private readonly IFileSystem fileSystem;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemFactory"/> class.
+        /// </summary>
+        public FileSystemFactory()
+        {
+            fileSystem = new FileSystem();
+        }
+
         /// <summary>
         /// Determines whether this factory can provide a file system for the provided path.
         /// </summary>
@@ -26,7 +36,7 @@ namespace AMI.Core.Factories
         /// <returns>The file system instance.</returns>
         public IFileSystem Create()
         {
-            return new FileSystem();
+            return fileSystem;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace AMI.Core.Mappers
         }
 
         /// <inheritdoc/>
-        public FileExtensionMappingResult Map(string filename)
+        public FileExtensionMappingResult Map(string path)
         {
             // The file format is DICOM by default to support files without extensions.
             var defaultResult = new FileExtensionMappingResult()
@@ -41,7 +41,7 @@ namespace AMI.Core.Mappers
 
             try
             {
-                string extension = MapExtension(filename);
+                string extension = MapExtension(path);
 
                 if (results.TryGetValue(extension, out FileExtensionMappingResult result))
                 {
@@ -54,6 +54,31 @@ namespace AMI.Core.Mappers
             {
                 return defaultResult;
             }
+        }
+
+        /// <inheritdoc/>
+        public FileExtensionMappingResult MapCounterpart(string path)
+        {
+            FileExtensionMappingResult result = Map(path);
+            FileExtensionMappingResult counterpart = null;
+
+            switch (result.FileExtensionType)
+            {
+                case FileExtensionType.Header:
+                    counterpart = results.Where(e => e.Value.FileExtensionType == FileExtensionType.Source && e.Value.FileFormat == result.FileFormat)
+                        .Select(e => e.Value)
+                        .FirstOrDefault();
+                    break;
+                case FileExtensionType.Source:
+                    counterpart = results.Where(e => e.Value.FileExtensionType == FileExtensionType.Header && e.Value.FileFormat == result.FileFormat)
+                        .Select(e => e.Value)
+                        .FirstOrDefault();
+                    break;
+                default:
+                    break;
+            }
+
+            return counterpart ?? result;
         }
 
         private void Init()

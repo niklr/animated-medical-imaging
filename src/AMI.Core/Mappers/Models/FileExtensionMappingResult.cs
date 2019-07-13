@@ -15,16 +15,16 @@ namespace AMI.Core.Mappers
         /// <summary>
         /// Gets or sets the type of the file extension.
         /// </summary>
-        public FileExtensionType FileExtensionType { get; set; }
+        public FileExtensionType FileExtensionType { get; set; } = FileExtensionType.Unknown;
 
         /// <summary>
         /// Gets or sets the file format.
         /// </summary>
-        public FileFormat FileFormat { get; set; }
+        public FileFormat FileFormat { get; set; } = FileFormat.Unknown;
 
         /// <summary>
         /// Gets or sets a value indicating whether the mapped file extension represents an archive.
         /// </summary>
-        public bool IsArchive { get; set; }
+        public bool IsArchive { get; set; } = false;
     }
 }

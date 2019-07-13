@@ -1,8 +1,11 @@
-﻿using System;
+﻿using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Domain.Enums;
 using itk.simple;
+
+[assembly: InternalsVisibleTo("AMI.NetCore.Tests")]
+[assembly: InternalsVisibleTo("AMI.NetFramework.Tests")]
 
 namespace AMI.Itk.Utils
 {
@@ -12,6 +15,22 @@ namespace AMI.Itk.Utils
     internal interface IItkUtil
     {
         /// <summary>
+        /// Creates the image reader depending on the provided path being a directory or file.
+        /// </summary>
+        /// <param name="path">The location of the directory or file on the file system.</param>
+        /// <returns>
+        /// The image reader based on the provided path.
+        /// </returns>
+        ImageReaderBase CreateImageReader(string path);
+
+        /// <summary>
+        /// Discovers the entry path based on the provided file names.
+        /// </summary>
+        /// <param name="files">The names of files (including their paths) in a directory.</param>
+        /// <returns>The entry path.</returns>
+        string DiscoverEntryPath(string[] files);
+
+        /// <summary>
         /// Reads the image asynchronous.
         /// </summary>
         /// <param name="path">The location of the image on the file system.</param>
@@ -19,11 +38,6 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The ITK image.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// path
-        /// or
-        /// ct
-        /// </exception>
         Task<Image> ReadImageAsync(string path, CancellationToken ct);
 
         /// <summary>
@@ -36,15 +50,6 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// A <see cref="Task" /> representing the asynchronous operation.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// image
-        /// or
-        /// path
-        /// or
-        /// filename
-        /// or
-        /// ct
-        /// </exception>
         Task WriteImageAsync(Image image, string path, string filename, CancellationToken ct);
 
         /// <summary>
@@ -56,7 +61,6 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The extracted position as two-dimensional ITK image.
         /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
         Image ExtractPosition(Image image, AxisType axisType, uint index);
 
         /// <summary>
@@ -67,16 +71,25 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The resampled two-dimensional ITK image.
         /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
-        /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
         Image ResampleImage2D(Image image, uint outputSize);
+
+        /// <summary>
+        /// Resamples the three-dimensional ITK image to the desired size.
+        /// </summary>
+        /// <param name="image">The three-dimensional ITK image.</param>
+        /// <param name="outputSize">The output size.</param>
+        /// <returns>
+        /// The resampled three-dimensional ITK image.
+        /// </returns>
+        Image ResampleImage3D(Image image, uint outputSize);
 
         /// <summary>
         /// Gets the number of labels in the ITK image.
         /// </summary>
         /// <param name="image">The ITK image.</param>
-        /// <returns>The number of labels in the ITK image.</returns>
-        /// <exception cref="ArgumentNullException">image</exception>
+        /// <returns>
+        /// The number of labels in the ITK image.
+        /// </returns>
         ulong GetLabelCount(Image image);
 
         /// <summary>
@@ -86,8 +99,6 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The image as bitmap.
         /// </returns>
-        /// <exception cref="ArgumentNullException">image</exception>
-        /// <exception cref="NotSupportedException">The dimension ({dimension}) of the provided image is not supported.</exception>
         System.Drawing.Bitmap ToBitmap(Image image);
     }
 }
