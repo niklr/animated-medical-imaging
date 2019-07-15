@@ -27,6 +27,7 @@ export class DatatransferComponent implements OnInit {
       },
       resumablejs: {
         target: ConfigService.options.apiEndpoint + '/objects/upload',
+        chunkSize: 5 * 1024 * 1024,
         testChunks: false,
         simultaneousUploads: 1,
         maxChunkRetries: 6,

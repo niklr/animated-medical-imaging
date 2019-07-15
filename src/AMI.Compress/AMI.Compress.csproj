@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RNS.Framework" Version="0.0.8" />
+    <PackageReference Include="RNS.Framework" Version="0.0.9" />
     <PackageReference Include="SharpCompress" Version="0.23.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>

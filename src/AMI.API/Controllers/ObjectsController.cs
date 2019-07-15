@@ -7,6 +7,7 @@ using AMI.Core.Entities.Objects.Queries.GetObjects;
 using AMI.Core.IO.Uploaders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RNS.Framework.Threading;
 using Models = AMI.Core.Entities.Models;
 
 namespace AMI.API.Controllers
@@ -97,7 +98,12 @@ namespace AMI.API.Controllers
                     throw new ArgumentException("The provided unique identifier is not valid.");
                 }
 
+                ThreadThrottler throttler = new ThreadThrottler();
+
                 var chunkResult = await uploader.UploadAsync(totalChunks, chunkNumber, uid, file.OpenReadStream(), CancellationToken);
+
+                // Ensure current request lasts at least 500 milliseconds
+                throttler.Throttle(500);
 
                 if (chunkResult != null && chunkResult.IsCompleted)
                 {

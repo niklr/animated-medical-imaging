@@ -84,13 +84,23 @@ namespace AMI.Compress.Extractors
                     {
                         ct.ThrowIfCancellationRequested();
 
+                        // extract all files to destination path (no sub-directories supported)
+                        var filename = fs.Path.GetFileName(entry.Key);
+                        if (string.IsNullOrWhiteSpace(filename))
+                        {
+                            continue;
+                        }
+
                         using (var ms = new MemoryStream())
                         {
                             entry.WriteTo(ms);
-                            fs.File.WriteAllBytes(fs.Path.Combine(destinationPath, entry.Key), ms.ToArray());
+                            fs.File.WriteAllBytes(fs.Path.Combine(destinationPath, filename), ms.ToArray());
                         }
 
-                        entries.Add(EntryMapper.Map(entry));
+                        var mappedEntry = EntryMapper.Map(entry);
+                        mappedEntry.Key = filename;
+
+                        entries.Add(mappedEntry);
                     }
                 }
             }
