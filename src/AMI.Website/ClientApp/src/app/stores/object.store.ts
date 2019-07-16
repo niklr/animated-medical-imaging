@@ -22,7 +22,7 @@ export class ObjectStore {
   }
 
   private initGateway(): void {
-    this.gateway.on(GatewayEvent[GatewayEvent.UpdateTaskStatus], function (data: TaskModel) {
+    this.gateway.on(GatewayEvent[GatewayEvent.UpdateTask], function (data: TaskModel) {
       const that = this as ObjectStore;
       if (data && data.object && data.object.id) {
         var index = that.items.findIndex((item) => {

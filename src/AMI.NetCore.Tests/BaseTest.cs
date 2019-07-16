@@ -23,7 +23,6 @@ using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
-using AMI.Core.Workers;
 using AMI.Gif.Writers;
 using AMI.Infrastructure.IO.Builders;
 using AMI.Infrastructure.IO.Uploaders;
@@ -76,7 +75,6 @@ namespace AMI.NetCore.Tests
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
-            services.AddSingleton<ITaskWorker, TaskWorker>();
             services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
             services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();

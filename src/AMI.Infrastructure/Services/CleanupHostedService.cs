@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Configurations;
 using AMI.Core.Workers;
+using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.Infrastructure.Services
 {
     /// <summary>
-    /// A hosted service to process objects.
+    /// A hosted service to cleanup the working directory.
     /// </summary>
-    /// <seealso cref="BackgroundService" />
-    public class ProcessObjectHostedService : BackgroundService
+    /// <seealso cref="CleanupHostedService" />
+    public class CleanupHostedService : BackgroundService
     {
         private readonly ILogger logger;
-        private readonly ITaskWorker worker;
+        private readonly CleanupRecurringWorker worker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProcessObjectHostedService"/> class.
+        /// Initializes a new instance of the <see cref="CleanupHostedService"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
-        /// <param name="worker">The worker to process objects.</param>
-        public ProcessObjectHostedService(ILoggerFactory loggerFactory, ITaskWorker worker)
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="configuration">The API configuration.</param>
+        public CleanupHostedService(ILoggerFactory loggerFactory, IMediator mediator, IApiConfiguration configuration)
         {
-            logger = loggerFactory.CreateLogger<ProcessObjectHostedService>();
-            this.worker = worker;
+            logger = loggerFactory?.CreateLogger<CleanupHostedService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+            worker = new CleanupRecurringWorker(loggerFactory, mediator, configuration);
         }
 
         /// <inheritdoc/>

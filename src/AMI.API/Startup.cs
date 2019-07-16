@@ -27,7 +27,6 @@ using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
-using AMI.Core.Workers;
 using AMI.Gif.Writers;
 using AMI.Infrastructure.IO.Builders;
 using AMI.Infrastructure.IO.Uploaders;
@@ -113,7 +112,8 @@ namespace AMI.API
             });
 
             // Add hosted services
-            services.AddHostedService<ProcessObjectHostedService>();
+            services.AddHostedService<ProcessTaskHostedService>();
+            services.AddHostedService<CleanupHostedService>();
 
             // TODO: replace InMemoryUnitOfWork with SQLite
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
@@ -135,7 +135,6 @@ namespace AMI.API
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
-            services.AddSingleton<ITaskWorker, TaskWorker>();
             services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
             services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();

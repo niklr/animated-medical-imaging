@@ -10,7 +10,7 @@ namespace AMI.Core.Workers
     /// <summary>
     /// A base class for all workers.
     /// </summary>
-    public abstract class BaseWorker : IBasicWorker
+    public abstract class BaseWorker : IBaseWorker
     {
         private readonly ILogger logger;
         private Stopwatch stopwatch;
@@ -22,12 +22,7 @@ namespace AMI.Core.Workers
         /// <param name="loggerFactory">The logger factory.</param>
         public BaseWorker(ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            logger = loggerFactory.CreateLogger<BaseWorker>();
+            logger = loggerFactory?.CreateLogger<BaseWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             Id = Guid.NewGuid();
         }
 
@@ -44,10 +39,13 @@ namespace AMI.Core.Workers
         }
 
         /// <inheritdoc/>
-        public DateTime LastActivityDate { get; private set; }
+        public abstract WorkerType WorkerType { get; }
 
         /// <inheritdoc/>
         public WorkerStatus WorkerStatus { get; private set; }
+
+        /// <inheritdoc/>
+        public DateTime LastActivityDate { get; private set; }
 
         /// <inheritdoc/>
         public TimeSpan CurrentProcessingTime

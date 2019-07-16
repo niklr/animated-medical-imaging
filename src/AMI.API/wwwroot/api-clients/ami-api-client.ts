@@ -1538,6 +1538,9 @@ export interface IErrorModel {
 
 /** The API options. */
 export class ApiOptions implements IApiOptions {
+    /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
+Automatically deletes objects older than the defined period. */
+    cleanupPeriod?: number;
     /** Gets the name of header used to identify the IP address of the connecting client. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */
@@ -1558,6 +1561,7 @@ export class ApiOptions implements IApiOptions {
 
     init(data?: any) {
         if (data) {
+            this.cleanupPeriod = data["cleanupPeriod"];
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.isDevelopment = data["isDevelopment"];
             this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
@@ -1574,6 +1578,7 @@ export class ApiOptions implements IApiOptions {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["cleanupPeriod"] = this.cleanupPeriod;
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["isDevelopment"] = this.isDevelopment;
         data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
@@ -1584,6 +1589,9 @@ export class ApiOptions implements IApiOptions {
 
 /** The API options. */
 export interface IApiOptions {
+    /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
+Automatically deletes objects older than the defined period. */
+    cleanupPeriod?: number;
     /** Gets the name of header used to identify the IP address of the connecting client. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */

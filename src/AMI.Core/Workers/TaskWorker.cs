@@ -16,8 +16,7 @@ namespace AMI.Core.Workers
     /// A worker to process tasks.
     /// </summary>
     /// <seealso cref="BaseWorker" />
-    /// <seealso cref="ITaskWorker" />
-    public class TaskWorker : BaseWorker, ITaskWorker
+    public class TaskWorker : BaseWorker
     {
         private readonly ILogger logger;
         private readonly ITaskQueue queue;
@@ -27,21 +26,18 @@ namespace AMI.Core.Workers
         /// Initializes a new instance of the <see cref="TaskWorker"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
-        /// <param name="queue">The queue.</param>
         /// <param name="mediator">The mediator.</param>
-        public TaskWorker(ILoggerFactory loggerFactory, ITaskQueue queue, IMediator mediator)
+        /// <param name="queue">The queue.</param>
+        public TaskWorker(ILoggerFactory loggerFactory, IMediator mediator, ITaskQueue queue)
             : base(loggerFactory)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            logger = loggerFactory.CreateLogger<TaskWorker>();
-
-            this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
+            logger = loggerFactory?.CreateLogger<TaskWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
         }
+
+        /// <inheritdoc/>
+        public override WorkerType WorkerType => WorkerType.Default;
 
         /// <inheritdoc/>
         protected override async Task DoWorkAsync(CancellationToken ct)
@@ -123,6 +119,7 @@ namespace AMI.Core.Workers
         private async Task UpdatePositionsAsync()
         {
             // TODO: Decrease all positions by 1
+            await Task.CompletedTask;
         }
     }
 }

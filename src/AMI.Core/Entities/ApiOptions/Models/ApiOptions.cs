@@ -9,6 +9,9 @@ namespace AMI.Core.Entities.Models
     public class ApiOptions : IApiOptions
     {
         /// <inheritdoc/>
+        public int CleanupPeriod { get; set; }
+
+        /// <inheritdoc/>
         public string ConnectingIpHeaderName { get; set; }
 
         /// <inheritdoc/>

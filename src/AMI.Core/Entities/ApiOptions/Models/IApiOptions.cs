@@ -6,6 +6,12 @@
     public interface IApiOptions
     {
         /// <summary>
+        /// Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
+        /// Automatically deletes objects older than the defined period.
+        /// </summary>
+        int CleanupPeriod { get; }
+
+        /// <summary>
         /// Gets the name of header used to identify the IP address of the connecting client.
         /// </summary>
         string ConnectingIpHeaderName { get; }

@@ -6,9 +6,9 @@ using AMI.Domain.Enums;
 namespace AMI.Core.Workers
 {
     /// <summary>
-    /// An interface representing a basic worker.
+    /// An interface all workers have in common.
     /// </summary>
-    public interface IBasicWorker
+    public interface IBaseWorker
     {
         /// <summary>
         /// Gets the identifier of the worker.
@@ -21,14 +21,19 @@ namespace AMI.Core.Workers
         string WorkerName { get; }
 
         /// <summary>
-        /// Gets the last activity date.
+        /// Gets the type of the worker.
         /// </summary>
-        DateTime LastActivityDate { get; }
+        WorkerType WorkerType { get; }
 
         /// <summary>
         /// Gets the current status of the worker.
         /// </summary>
         WorkerStatus WorkerStatus { get; }
+
+            /// <summary>
+        /// Gets the last activity date.
+        /// </summary>
+        DateTime LastActivityDate { get; }
 
         /// <summary>
         /// Gets the current processing time.

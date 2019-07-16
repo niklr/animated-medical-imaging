@@ -1339,6 +1339,11 @@
         "description": "The API options.",
         "additionalProperties": false,
         "properties": {
+          "cleanupPeriod": {
+            "type": "integer",
+            "description": "Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.\nAutomatically deletes objects older than the defined period.",
+            "format": "int32"
+          },
           "connectingIpHeaderName": {
             "type": "string",
             "description": "Gets the name of header used to identify the IP address of the connecting client.",

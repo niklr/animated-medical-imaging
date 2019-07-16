@@ -75,7 +75,7 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
             await Gateway.NotifyGroupAsync(
                 Gateway.Builder.BuildDefaultGroupName(),
                 GatewayOpCode.Dispatch,
-                GatewayEvent.UpdateTaskStatus,
+                GatewayEvent.UpdateTask,
                 result,
                 cancellationToken);
 

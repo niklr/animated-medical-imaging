@@ -9,6 +9,7 @@ using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Entities.Objects.Commands.Delete
@@ -76,7 +77,16 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
 
             fileSystem.Directory.Delete(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, directoryName), true);
 
-            return ObjectModel.Create(entity);
+            var result = ObjectModel.Create(entity);
+
+            await Gateway.NotifyGroupAsync(
+                Gateway.Builder.BuildDefaultGroupName(),
+                GatewayOpCode.Dispatch,
+                GatewayEvent.DeleteObject,
+                result,
+                cancellationToken);
+
+            return result;
         }
     }
 }
