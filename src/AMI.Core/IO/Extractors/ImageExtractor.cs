@@ -174,6 +174,8 @@ namespace AMI.Core.IO.Extractors
 
                         fs.File.WriteAllBytes(fs.Path.Combine(command.DestinationPath, filename), bitmap.ToByteArray(imageFormat));
                         images.Add(new PositionAxisContainerModel<string>(Convert.ToUInt32(i), axisType, filename));
+
+                        bitmap.Dispose();
                     }
                 }
             }

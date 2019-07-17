@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Workers;
 using MediatR;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.Infrastructure.Services
@@ -13,7 +10,7 @@ namespace AMI.Infrastructure.Services
     /// A hosted service to cleanup the working directory.
     /// </summary>
     /// <seealso cref="CleanupHostedService" />
-    public class CleanupHostedService : BackgroundService
+    public class CleanupHostedService : BaseHostedService
     {
         private readonly ILogger logger;
         private readonly CleanupRecurringWorker worker;
@@ -31,29 +28,9 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public override async Task StopAsync(CancellationToken cancellationToken)
-        {
-            logger.LogInformation($"{GetType().Name} stop called.");
-            await worker.StopAsync(cancellationToken);
-            await base.StopAsync(cancellationToken);
-            logger.LogInformation($"{GetType().Name} stop call ended.");
-        }
+        protected override ILogger Logger => logger;
 
         /// <inheritdoc/>
-        protected async override Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            logger.LogInformation($"{GetType().Name} is starting.");
-
-            try
-            {
-                await worker.StartAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, e.Message);
-            }
-
-            logger.LogInformation($"{GetType().Name} is stopping.");
-        }
+        protected override IBaseWorker Worker => worker;
     }
 }

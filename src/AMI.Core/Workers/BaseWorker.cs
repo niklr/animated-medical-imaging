@@ -87,6 +87,8 @@ namespace AMI.Core.Workers
                     UpdateActivity(WorkerStatus.Exception);
 
                     logger.LogCritical(e, $"Critical exception in {WorkerName}.");
+
+                    await StartAsync(cancellationToken);
                 }
             }
 

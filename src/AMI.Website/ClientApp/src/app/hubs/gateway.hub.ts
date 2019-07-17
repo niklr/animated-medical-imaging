@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
-import { IGatewayResult } from '../models/gateway-result.model';
-import { GatewayOpCode, ConnectionState } from '../enums';
-import { GarbageCollector, BackgroundWorker } from '../utils';
 import { BaseHub } from './base.hub';
+import { GatewayOpCode, ConnectionState } from '../enums';
+import { IGatewayResult } from '../models/gateway-result.model';
 import { LoggerService } from '../services/logger.service';
 import { ConfigService } from '../services/config.service';
+import { GarbageCollector, BackgroundWorker } from '../utils';
 
 @Injectable()
 export class GatewayHub extends BaseHub {

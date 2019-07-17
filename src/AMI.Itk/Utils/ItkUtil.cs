@@ -374,17 +374,20 @@ namespace AMI.Itk.Utils
                 throw new ArgumentNullException(nameof(image));
             }
 
+            ulong labelCount = 0;
+
             PixelIDValueEnum imageType = PixelIDValueEnum.swigToEnum(image.GetPixelIDValue());
-            Image labelImage = new Image(image.GetWidth(), image.GetHeight(), image.GetDepth(), imageType);
+            using (Image labelImage = new Image(image.GetWidth(), image.GetHeight(), image.GetDepth(), imageType))
+            {
+                labelImage.SetOrigin(image.GetOrigin());
+                labelImage.SetDirection(image.GetDirection());
+                labelImage.SetSpacing(image.GetSpacing());
 
-            labelImage.SetOrigin(image.GetOrigin());
-            labelImage.SetDirection(image.GetDirection());
-            labelImage.SetSpacing(image.GetSpacing());
-
-            LabelStatisticsImageFilter filter = new LabelStatisticsImageFilter();
-            filter.Execute(labelImage, image);
-            ulong labelCount = filter.GetNumberOfLabels();
-            filter.Dispose();
+                LabelStatisticsImageFilter filter = new LabelStatisticsImageFilter();
+                filter.Execute(labelImage, image);
+                labelCount = filter.GetNumberOfLabels();
+                filter.Dispose();
+            }
 
             return labelCount;
         }

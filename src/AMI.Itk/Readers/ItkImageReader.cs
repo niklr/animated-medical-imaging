@@ -81,6 +81,14 @@ namespace AMI.Itk.Readers
             {
                 Image.Dispose();
             }
+
+            if (axisImages != null)
+            {
+                foreach (var axisImage in axisImages)
+                {
+                    axisImage.Value.Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -180,26 +188,30 @@ namespace AMI.Itk.Readers
             uint mappedPosition = Mapper == null ?
                 position : Mapper.GetMappedPosition(axisType, position);
 
-            Image image = itkUtil.ExtractPosition(Image, axisType, mappedPosition);
+            using (Image image = itkUtil.ExtractPosition(Image, axisType, mappedPosition))
+            {
+                if (axisImages.TryGetValue(axisType, out Image axisImage))
+                {
+                    var filter = new AddImageFilter();
+                    axisImage = filter.Execute(axisImage, image);
+                    axisImages[axisType] = axisImage;
+                }
+                else
+                {
+                    axisImages.Add(axisType, new Image(image));
+                }
 
-            if (axisImages.TryGetValue(axisType, out Image axisImage))
-            {
-                var filter = new AddImageFilter();
-                axisImage = filter.Execute(axisImage, image);
-                axisImages[axisType] = axisImage;
-            }
-            else
-            {
-                axisImages.Add(axisType, new Image(image));
-            }
-
-            if (size.HasValue && size.Value > 0)
-            {
-                return itkUtil.ToBitmap(itkUtil.ResampleImage2D(image, size.Value));
-            }
-            else
-            {
-                return itkUtil.ToBitmap(image);
+                if (size.HasValue && size.Value > 0)
+                {
+                    using (var resampledImage = itkUtil.ResampleImage2D(image, size.Value))
+                    {
+                        return itkUtil.ToBitmap(resampledImage);
+                    }
+                }
+                else
+                {
+                    return itkUtil.ToBitmap(image);
+                }
             }
         }
 
@@ -237,6 +249,7 @@ namespace AMI.Itk.Readers
                         var filter = new StatisticsImageFilter();
                         filter.Execute(axisImage);
                         areas[axisType] += filter.GetSum() * areaOfOneVoxel;
+                        filter.Dispose();
                     }
                 }
 

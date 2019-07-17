@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProcessObjectCommand, TaskModel } from '../clients/ami-api-client';
+import { ProcessObjectCommand, TaskModel, ObjectModel } from '../clients/ami-api-client';
 import { GatewayEvent } from '../enums';
 import { PageEvent } from '../events/page.event';
 import { GatewayHub } from '../hubs/gateway.hub';
@@ -31,6 +31,12 @@ export class ObjectStore {
         if (index >= 0) {
           that.items[index].latestTask = data;
         }
+      }
+    }.bind(this));
+    this.gateway.on(GatewayEvent[GatewayEvent.DeleteObject], function (data: ObjectModel) {
+      const that = this as ObjectStore;
+      if (data && data.id) {
+        that.deleteById(data.id);
       }
     }.bind(this));
   }

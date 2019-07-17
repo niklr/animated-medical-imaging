@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using AMI.Core.Queues;
 using AMI.Core.Workers;
 using MediatR;
@@ -13,7 +11,7 @@ namespace AMI.Infrastructure.Services
     /// A hosted service to process tasks.
     /// </summary>
     /// <seealso cref="BackgroundService" />
-    public class ProcessTaskHostedService : BackgroundService
+    public class ProcessTaskHostedService : BaseHostedService
     {
         private readonly ILogger logger;
         private readonly TaskWorker worker;
@@ -31,29 +29,9 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public override async Task StopAsync(CancellationToken cancellationToken)
-        {
-            logger.LogInformation($"{GetType().Name} stop called.");
-            await worker.StopAsync(cancellationToken);
-            await base.StopAsync(cancellationToken);
-            logger.LogInformation($"{GetType().Name} stop call ended.");
-        }
+        protected override ILogger Logger => logger;
 
         /// <inheritdoc/>
-        protected async override Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            logger.LogInformation($"{GetType().Name} is starting.");
-
-            try
-            {
-                await worker.StartAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, e.Message);
-            }
-
-            logger.LogInformation($"{GetType().Name} is stopping.");
-        }
+        protected override IBaseWorker Worker => worker;
     }
 }

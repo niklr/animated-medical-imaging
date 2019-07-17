@@ -60,17 +60,16 @@ namespace AMI.Core.Workers
 
             if (configuration.Options.CleanupPeriod > 0)
             {
-                NextActivityDate = DateTime.Now.AddMinutes(configuration.Options.CleanupPeriod);
+                DateTime refDate = DateTime.Now;
+                NextActivityDate = refDate.AddMinutes(configuration.Options.CleanupPeriod);
 
                 void action(DateTime date)
                 {
-                    Task.Run(async () => await CleanupAsync(ct));
+                    Task.Run(async () => await CleanupAsync(date, ct));
                     Schedule(ct);
                 }
 
-                // need to hold on to the reference to the timer otherwise the timer object will be garbage collected, which will run its finalizer, stopping the timer.
-                Timer timer = SimpleScheduler.CallActionAt(NextActivityDate, action, NextActivityDate);
-                Timer = timer;
+                Timer = SimpleScheduler.CallActionAt(NextActivityDate, action, refDate);
             }
         }
 
@@ -92,7 +91,7 @@ namespace AMI.Core.Workers
             }
         }
 
-        private async Task CleanupAsync(CancellationToken ct)
+        private async Task CleanupAsync(DateTime refDate, CancellationToken ct)
         {
             try
             {
@@ -100,7 +99,7 @@ namespace AMI.Core.Workers
 
                 var command = new ClearObjectsCommand()
                 {
-                    RefDate = NextActivityDate
+                    RefDate = refDate
                 };
 
                 await mediator.Send(command, ct);
