@@ -13,6 +13,11 @@ namespace AMI.Core.Entities.Models
         bool AllowAnonymous { get; }
 
         /// <summary>
+        /// Gets the JSON Web Token (JWT) options.
+        /// </summary>
+        IAuthJwtOptions JwtOptions { get; }
+
+        /// <summary>
         /// Gets the entities allowed to authenticate.
         /// </summary>
         IReadOnlyList<IAuthEntity> Entities { get; }

@@ -1353,6 +1353,15 @@
             "type": "boolean",
             "description": "Gets a value indicating whether the current environment is development."
           },
+          "authOptions": {
+            "description": "Gets the options used for authentication and authorization.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAuthOptions"
+              }
+            ]
+          },
           "ipRateLimiting": {
             "description": "Gets the options used to limit the rate based on the IP address of the client.",
             "nullable": true,
@@ -1370,6 +1379,52 @@
                 "$ref": "#/components/schemas/IIpRateLimitPolicies"
               }
             ]
+          }
+        }
+      },
+      "IAuthOptions": {
+        "type": "object",
+        "description": "An interface representing options related to authentication and authorization.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "allowAnonymous": {
+            "type": "boolean",
+            "description": "Gets a value indicating whether anonymous authentication is allowed."
+          },
+          "entities": {
+            "type": "array",
+            "description": "Gets the entities allowed to authenticate.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/IAuthEntity"
+            }
+          }
+        }
+      },
+      "IAuthEntity": {
+        "type": "object",
+        "description": "An interface representing an entity related to authentication.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Gets the username.",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "description": "Gets the password.",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "description": "Gets the roles.",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1396,7 +1451,7 @@
           },
           "ipWhitelist": {
             "type": "array",
-            "description": "Gets the ip whitelist.",
+            "description": "Gets the IP address whitelist.",
             "nullable": true,
             "items": {
               "type": "string"

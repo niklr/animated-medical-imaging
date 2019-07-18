@@ -25,17 +25,22 @@ namespace AMI.NetCore.Tests.Core.Configurations
             Assert.AreEqual("CF-Connecting-IP", configuration.Options.ConnectingIpHeaderName);
             Assert.AreEqual(true, configuration.Options.IsDevelopment);
 
+            Assert.IsNotNull(configuration.Options.AuthOptions.JwtOptions);
+            Assert.AreEqual("123456", configuration.Options.AuthOptions.JwtOptions.SecretKey);
+            Assert.AreEqual("AMI.NetCore.Tests.Issuer", configuration.Options.AuthOptions.JwtOptions.Issuer);
+            Assert.AreEqual("AMI.NetCore.Tests.Audience", configuration.Options.AuthOptions.JwtOptions.Audience);
+
             Assert.IsNotNull(configuration.Options.AuthOptions);
             Assert.IsTrue(configuration.Options.AuthOptions.AllowAnonymous);
             Assert.AreEqual(2, configuration.Options.AuthOptions.Entities.Count);
             Assert.IsNotNull(authEntity0);
             Assert.AreEqual("niklr", authEntity0.Username);
-            Assert.AreEqual("1234", authEntity0.Password);
+            Assert.AreEqual("123456", authEntity0.Password);
             Assert.IsNotNull(authEntity0.Roles);
             Assert.AreEqual(0, authEntity0.Roles.Count);
             Assert.IsNotNull(authEntity1);
             Assert.AreEqual("admin", authEntity1.Username);
-            Assert.AreEqual("4321", authEntity1.Password);
+            Assert.AreEqual("654321", authEntity1.Password);
             Assert.IsNotNull(authEntity1.Roles);
             Assert.AreEqual(1, authEntity1.Roles.Count);
             Assert.IsTrue(authEntity1.Roles.Contains(RoleType.Administrator.ToString()));

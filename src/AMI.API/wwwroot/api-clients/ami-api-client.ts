@@ -1545,6 +1545,8 @@ Automatically deletes objects older than the defined period. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the options used for authentication and authorization. */
+    authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
     ipRateLimiting?: IIpRateLimitOptions | undefined;
     /** Gets the policies used to limit the rate base on the IP address of the client. */
@@ -1564,6 +1566,7 @@ Automatically deletes objects older than the defined period. */
             this.cleanupPeriod = data["cleanupPeriod"];
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.isDevelopment = data["isDevelopment"];
+            this.authOptions = data["authOptions"] ? IAuthOptions.fromJS(data["authOptions"]) : <any>undefined;
             this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
             this.ipRateLimitPolicies = data["ipRateLimitPolicies"] ? IIpRateLimitPolicies.fromJS(data["ipRateLimitPolicies"]) : <any>undefined;
         }
@@ -1581,6 +1584,7 @@ Automatically deletes objects older than the defined period. */
         data["cleanupPeriod"] = this.cleanupPeriod;
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["isDevelopment"] = this.isDevelopment;
+        data["authOptions"] = this.authOptions ? this.authOptions.toJSON() : <any>undefined;
         data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
         data["ipRateLimitPolicies"] = this.ipRateLimitPolicies ? this.ipRateLimitPolicies.toJSON() : <any>undefined;
         return data; 
@@ -1596,10 +1600,122 @@ Automatically deletes objects older than the defined period. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the options used for authentication and authorization. */
+    authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
     ipRateLimiting?: IIpRateLimitOptions | undefined;
     /** Gets the policies used to limit the rate base on the IP address of the client. */
     ipRateLimitPolicies?: IIpRateLimitPolicies | undefined;
+}
+
+/** An interface representing options related to authentication and authorization. */
+export abstract class IAuthOptions implements IIAuthOptions {
+    /** Gets a value indicating whether anonymous authentication is allowed. */
+    allowAnonymous?: boolean;
+    /** Gets the entities allowed to authenticate. */
+    entities?: IAuthEntity[] | undefined;
+
+    constructor(data?: IIAuthOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.allowAnonymous = data["allowAnonymous"];
+            if (Array.isArray(data["entities"])) {
+                this.entities = [] as any;
+                for (let item of data["entities"])
+                    this.entities!.push(IAuthEntity.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): IAuthOptions {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IAuthOptions' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["allowAnonymous"] = this.allowAnonymous;
+        if (Array.isArray(this.entities)) {
+            data["entities"] = [];
+            for (let item of this.entities)
+                data["entities"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+/** An interface representing options related to authentication and authorization. */
+export interface IIAuthOptions {
+    /** Gets a value indicating whether anonymous authentication is allowed. */
+    allowAnonymous?: boolean;
+    /** Gets the entities allowed to authenticate. */
+    entities?: IAuthEntity[] | undefined;
+}
+
+/** An interface representing an entity related to authentication. */
+export abstract class IAuthEntity implements IIAuthEntity {
+    /** Gets the username. */
+    username?: string | undefined;
+    /** Gets the password. */
+    password?: string | undefined;
+    /** Gets the roles. */
+    roles?: string[] | undefined;
+
+    constructor(data?: IIAuthEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.username = data["username"];
+            this.password = data["password"];
+            if (Array.isArray(data["roles"])) {
+                this.roles = [] as any;
+                for (let item of data["roles"])
+                    this.roles!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): IAuthEntity {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IAuthEntity' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["password"] = this.password;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        return data; 
+    }
+}
+
+/** An interface representing an entity related to authentication. */
+export interface IIAuthEntity {
+    /** Gets the username. */
+    username?: string | undefined;
+    /** Gets the password. */
+    password?: string | undefined;
+    /** Gets the roles. */
+    roles?: string[] | undefined;
 }
 
 /** An interface representing the options to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
@@ -1610,7 +1726,7 @@ export abstract class IIpRateLimitOptions implements IIIpRateLimitOptions {
     clientIdHeader?: string | undefined;
     /** Gets the policy prefix, used to compose the client policy cache key */
     ipPolicyPrefix?: string | undefined;
-    /** Gets the ip whitelist. */
+    /** Gets the IP address whitelist. */
     ipWhitelist?: string[] | undefined;
 
     constructor(data?: IIIpRateLimitOptions) {
@@ -1662,7 +1778,7 @@ export interface IIIpRateLimitOptions {
     clientIdHeader?: string | undefined;
     /** Gets the policy prefix, used to compose the client policy cache key */
     ipPolicyPrefix?: string | undefined;
-    /** Gets the ip whitelist. */
+    /** Gets the IP address whitelist. */
     ipWhitelist?: string[] | undefined;
 }
 
