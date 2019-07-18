@@ -19,7 +19,11 @@ namespace AMI.Core.Entities.Models
         /// <inheritdoc/>
         public string IpPolicyPrefix { get; set; } = "ippp";
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the IP address whitelist.
+        /// </summary>
         public IReadOnlyList<string> IpWhitelist { get; set; }
+
+        IReadOnlyList<string> IIpRateLimitOptions.IpWhitelist => IpWhitelist ?? new List<string>();
     }
 }

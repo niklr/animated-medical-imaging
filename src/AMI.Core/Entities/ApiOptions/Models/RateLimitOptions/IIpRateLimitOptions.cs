@@ -24,7 +24,7 @@ namespace AMI.Core.Entities.Models
         string IpPolicyPrefix { get; }
 
         /// <summary>
-        /// Gets the ip whitelist.
+        /// Gets the IP address whitelist.
         /// </summary>
         IReadOnlyList<string> IpWhitelist { get; }
     }

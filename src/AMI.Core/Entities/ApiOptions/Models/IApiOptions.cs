@@ -22,6 +22,11 @@
         bool IsDevelopment { get; }
 
         /// <summary>
+        /// Gets the options used for authentication and authorization.
+        /// </summary>
+        IAuthOptions AuthOptions { get; }
+
+        /// <summary>
         /// Gets the options used to limit the rate based on the IP address of the client.
         /// </summary>
         IIpRateLimitOptions IpRateLimiting { get; }

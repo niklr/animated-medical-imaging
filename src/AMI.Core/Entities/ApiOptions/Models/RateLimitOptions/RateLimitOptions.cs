@@ -15,10 +15,14 @@ namespace AMI.Core.Entities.Models
         /// </summary>
         public IReadOnlyList<RateLimitRule> GeneralRules { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the endpoint whitelist.
+        /// </summary>
         public IReadOnlyList<string> EndpointWhitelist { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the client whitelist.
+        /// </summary>
         public IReadOnlyList<string> ClientWhitelist { get; set; }
 
         /// <inheritdoc/>
@@ -43,5 +47,9 @@ namespace AMI.Core.Entities.Models
         public bool DisableRateLimitHeaders { get; set; }
 
         IReadOnlyList<IRateLimitRule> IRateLimitOptions.GeneralRules => GeneralRules ?? new List<RateLimitRule>();
+
+        IReadOnlyList<string> IRateLimitOptions.EndpointWhitelist => EndpointWhitelist ?? new List<string>();
+
+        IReadOnlyList<string> IRateLimitOptions.ClientWhitelist => ClientWhitelist ?? new List<string>();
     }
 }

@@ -18,6 +18,9 @@ namespace AMI.Core.Entities.Models
         public bool IsDevelopment { get; set;  }
 
         /// <inheritdoc/>
+        public IAuthOptions AuthOptions { get; set; } = new AuthOptions();
+
+        /// <inheritdoc/>
         public IIpRateLimitOptions IpRateLimiting { get; set; } = new IpRateLimitOptions();
 
         /// <inheritdoc/>
