@@ -62,7 +62,7 @@ namespace AMI.Core.Workers
         /// <inheritdoc/>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation($"{GetType().Name} is starting.");
+            logger.LogInformation($"{GetType().Name} start called.");
 
             cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
@@ -92,7 +92,7 @@ namespace AMI.Core.Workers
                 }
             }
 
-            logger.LogInformation($"{GetType().Name} is stopping.");
+            logger.LogInformation($"{GetType().Name} start call ended.");
         }
 
         /// <inheritdoc/>

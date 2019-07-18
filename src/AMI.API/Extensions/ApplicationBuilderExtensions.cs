@@ -31,6 +31,11 @@ namespace AMI.API.Extensions.ApplicationBuilderExtensions
         /// <returns>The application builder using the throttle middleware.</returns>
         public static IApplicationBuilder UseThrottleMiddleware(this IApplicationBuilder builder)
         {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
             return builder.UseMiddleware<ThrottleMiddleware>();
         }
     }

@@ -1612,6 +1612,8 @@ Automatically deletes objects older than the defined period. */
 export abstract class IAuthOptions implements IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
+    /** Gets the JSON Web Token (JWT) options. */
+    jwtOptions?: IAuthJwtOptions | undefined;
     /** Gets the entities allowed to authenticate. */
     entities?: IAuthEntity[] | undefined;
 
@@ -1627,6 +1629,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
     init(data?: any) {
         if (data) {
             this.allowAnonymous = data["allowAnonymous"];
+            this.jwtOptions = data["jwtOptions"] ? IAuthJwtOptions.fromJS(data["jwtOptions"]) : <any>undefined;
             if (Array.isArray(data["entities"])) {
                 this.entities = [] as any;
                 for (let item of data["entities"])
@@ -1643,6 +1646,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["allowAnonymous"] = this.allowAnonymous;
+        data["jwtOptions"] = this.jwtOptions ? this.jwtOptions.toJSON() : <any>undefined;
         if (Array.isArray(this.entities)) {
             data["entities"] = [];
             for (let item of this.entities)
@@ -1656,8 +1660,84 @@ export abstract class IAuthOptions implements IIAuthOptions {
 export interface IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
+    /** Gets the JSON Web Token (JWT) options. */
+    jwtOptions?: IAuthJwtOptions | undefined;
     /** Gets the entities allowed to authenticate. */
     entities?: IAuthEntity[] | undefined;
+}
+
+/** An interface representing JSON Web Token (JWT) options. */
+export abstract class IAuthJwtOptions implements IIAuthJwtOptions {
+    /** Gets the secret key used to sign created tokens and to validate received tokens. */
+    secretKey?: string | undefined;
+    /** Gets the principal that issued the JWT. */
+    issuer?: string | undefined;
+    /** Gets the recipient that the JWT is intended for. */
+    audience?: string | undefined;
+    /** Gets the claim representing the name. */
+    nameClaimType?: string | undefined;
+    /** Gets the claim representing the role. */
+    roleClaimType?: string | undefined;
+    /** Gets the claim representing the issuer. */
+    issuerClaimType?: string | undefined;
+    /** Gets the claim representing the username. */
+    usernameClaimType?: string | undefined;
+
+    constructor(data?: IIAuthJwtOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.secretKey = data["secretKey"];
+            this.issuer = data["issuer"];
+            this.audience = data["audience"];
+            this.nameClaimType = data["nameClaimType"];
+            this.roleClaimType = data["roleClaimType"];
+            this.issuerClaimType = data["issuerClaimType"];
+            this.usernameClaimType = data["usernameClaimType"];
+        }
+    }
+
+    static fromJS(data: any): IAuthJwtOptions {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IAuthJwtOptions' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["secretKey"] = this.secretKey;
+        data["issuer"] = this.issuer;
+        data["audience"] = this.audience;
+        data["nameClaimType"] = this.nameClaimType;
+        data["roleClaimType"] = this.roleClaimType;
+        data["issuerClaimType"] = this.issuerClaimType;
+        data["usernameClaimType"] = this.usernameClaimType;
+        return data; 
+    }
+}
+
+/** An interface representing JSON Web Token (JWT) options. */
+export interface IIAuthJwtOptions {
+    /** Gets the secret key used to sign created tokens and to validate received tokens. */
+    secretKey?: string | undefined;
+    /** Gets the principal that issued the JWT. */
+    issuer?: string | undefined;
+    /** Gets the recipient that the JWT is intended for. */
+    audience?: string | undefined;
+    /** Gets the claim representing the name. */
+    nameClaimType?: string | undefined;
+    /** Gets the claim representing the role. */
+    roleClaimType?: string | undefined;
+    /** Gets the claim representing the issuer. */
+    issuerClaimType?: string | undefined;
+    /** Gets the claim representing the username. */
+    usernameClaimType?: string | undefined;
 }
 
 /** An interface representing an entity related to authentication. */

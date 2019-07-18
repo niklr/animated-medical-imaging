@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Reflection;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
+using AMI.API.Extensions.ServiceCollectionExtensions;
 using AMI.API.Filters;
 using AMI.API.Handlers;
 using AMI.API.Hubs;
@@ -187,6 +188,8 @@ namespace AMI.API
 
             // Add AspNetCoreRateLimit configuration (resolvers, counter key builders)
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            services.AddCustomAuthentication(Configuration);
 
             // Customise default API behavior
             services.Configure<ApiBehaviorOptions>(options =>

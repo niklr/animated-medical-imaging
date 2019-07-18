@@ -19,5 +19,25 @@
         /// Gets the recipient that the JWT is intended for.
         /// </summary>
         string Audience { get; }
+
+        /// <summary>
+        /// Gets the claim representing the name.
+        /// </summary>
+        string NameClaimType { get; }
+
+        /// <summary>
+        /// Gets the claim representing the role.
+        /// </summary>
+        string RoleClaimType { get; }
+
+        /// <summary>
+        /// Gets the claim representing the issuer.
+        /// </summary>
+        string IssuerClaimType { get; }
+
+        /// <summary>
+        /// Gets the claim representing the username.
+        /// </summary>
+        string UsernameClaimType { get; }
     }
 }

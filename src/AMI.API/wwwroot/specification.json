@@ -1392,6 +1392,15 @@
             "type": "boolean",
             "description": "Gets a value indicating whether anonymous authentication is allowed."
           },
+          "jwtOptions": {
+            "description": "Gets the JSON Web Token (JWT) options.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAuthJwtOptions"
+              }
+            ]
+          },
           "entities": {
             "type": "array",
             "description": "Gets the entities allowed to authenticate.",
@@ -1399,6 +1408,49 @@
             "items": {
               "$ref": "#/components/schemas/IAuthEntity"
             }
+          }
+        }
+      },
+      "IAuthJwtOptions": {
+        "type": "object",
+        "description": "An interface representing JSON Web Token (JWT) options.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "secretKey": {
+            "type": "string",
+            "description": "Gets the secret key used to sign created tokens and to validate received tokens.",
+            "nullable": true
+          },
+          "issuer": {
+            "type": "string",
+            "description": "Gets the principal that issued the JWT.",
+            "nullable": true
+          },
+          "audience": {
+            "type": "string",
+            "description": "Gets the recipient that the JWT is intended for.",
+            "nullable": true
+          },
+          "nameClaimType": {
+            "type": "string",
+            "description": "Gets the claim representing the name.",
+            "nullable": true
+          },
+          "roleClaimType": {
+            "type": "string",
+            "description": "Gets the claim representing the role.",
+            "nullable": true
+          },
+          "issuerClaimType": {
+            "type": "string",
+            "description": "Gets the claim representing the issuer.",
+            "nullable": true
+          },
+          "usernameClaimType": {
+            "type": "string",
+            "description": "Gets the claim representing the username.",
+            "nullable": true
           }
         }
       },
