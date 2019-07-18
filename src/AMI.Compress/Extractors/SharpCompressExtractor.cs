@@ -30,7 +30,6 @@ namespace AMI.Compress.Extractors
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
-        /// <exception cref="ArgumentNullException">fileSystemStrategy</exception>
         public SharpCompressExtractor(IAppConfiguration configuration, IFileSystemStrategy fileSystemStrategy)
             : base(configuration)
         {
@@ -108,6 +107,12 @@ namespace AMI.Compress.Extractors
             if (entries.Count == 1 && entries[0].Key.EndsWith(".tar"))
             {
                 return await ExtractAsync(fs.Path.Combine(destinationPath, entries[0].Key), destinationPath, ct, ++level);
+            }
+
+            // Delete tarball after extraction
+            if (level == 1 && sourcePath.EndsWith(".tar"))
+            {
+                fs.File.Delete(sourcePath);
             }
 
             await Task.CompletedTask;

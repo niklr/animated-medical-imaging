@@ -11,7 +11,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
     public class ImageServiceTests : BaseTest
     {
         [Test]
-        public void ImageService_ProcessAsync()
+        public void ImageService_ProcessAsync_1()
         {
             // Arrange
             var service = GetService<IImageService>();
@@ -104,6 +104,38 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
                 Assert.AreEqual(command.AmountPerAxis, result.Images.Count);
                 Assert.AreEqual(5, result.LabelCount);
                 Assert.AreEqual(expected, json);
+            }
+            finally
+            {
+                DeleteDirectory(command.DestinationPath);
+            }
+        }
+
+        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm")]
+        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar")]
+        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar.gz")]
+        public void ImageService_ProcessAsync_2(string filename)
+        {
+            // Arrange
+            var service = GetService<IImageService>();
+            var ct = new CancellationToken();
+            var command = new ProcessPathCommand()
+            {
+                AmountPerAxis = 4,
+                OutputSize = 50,
+                SourcePath = GetDataPath(filename),
+                DestinationPath = GetTempPath()
+            };
+            command.AxisTypes.Add(AxisType.Z);
+
+            try
+            {
+                // Act
+                var result = service.ProcessAsync(command, ct).Result;
+                var json = File.ReadAllText(Path.Combine(command.DestinationPath, result.JsonFilename));
+
+                // Assert
+                Assert.AreEqual(command.AmountPerAxis, result.Images.Count);
             }
             finally
             {

@@ -12,10 +12,10 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
     [TestFixture]
     public class ArchiveExtractorTests : BaseTest
     {
-        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.zip")]
-        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar")]
-        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar.gz")]
-        public void ArchiveExtractor_ExtractAsync(string filename)
+        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.zip", 10)]
+        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar", 10)]
+        [TestCase("SMIR.Brain.XX.O.CT.346124.dcm.tar.gz", 10)]
+        public void ArchiveExtractor_ExtractAsync(string filename, int expectedCount)
         {
             // Arrange
             var extractor = GetService<IArchiveExtractor>();
@@ -37,6 +37,8 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
                 Assert.IsTrue(File.Exists(Path.Combine(destinationPath, firstEntry.Key)));
                 Assert.IsNotNull(lastEntry);
                 Assert.IsTrue(File.Exists(Path.Combine(destinationPath, lastEntry.Key)));
+                Assert.AreEqual(expectedCount, result.Count);
+                Assert.AreEqual(expectedCount, Directory.GetFiles(destinationPath).Count());
             }
             finally
             {
