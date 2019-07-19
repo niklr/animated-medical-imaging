@@ -41,6 +41,24 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public IRepository<TokenEntity> TokenRepository
+        {
+            get
+            {
+                return new MockRepository<TokenEntity>(new List<TokenEntity>());
+            }
+        }
+
+        /// <inheritdoc/>
+        public IRepository<UserEntity> UserRepository
+        {
+            get
+            {
+                return new MockRepository<UserEntity>(new List<UserEntity>());
+            }
+        }
+
+        /// <inheritdoc/>
         public bool IsInTransaction => false;
 
         /// <inheritdoc/>

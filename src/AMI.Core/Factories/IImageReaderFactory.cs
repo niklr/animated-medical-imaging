@@ -3,7 +3,7 @@
 namespace AMI.Core.Factories
 {
     /// <summary>
-    /// A factory for an image reader.
+    /// A factory to create image readers.
     /// </summary>
     /// <typeparam name="T1">The type of the image reader.</typeparam>
     /// <typeparam name="T2">The type of the image.</typeparam>

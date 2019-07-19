@@ -22,5 +22,15 @@ namespace AMI.Core.Repositories
         /// Gets the task repository.
         /// </summary>
         IRepository<TaskEntity> TaskRepository { get; }
+
+        /// <summary>
+        /// Gets the token repository.
+        /// </summary>
+        IRepository<TokenEntity> TokenRepository { get; }
+
+        /// <summary>
+        /// Gets the user repository.
+        /// </summary>
+        IRepository<UserEntity> UserRepository { get; }
     }
 }

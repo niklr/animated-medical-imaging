@@ -33,6 +33,16 @@ namespace AMI.Persistence.EntityFramework.InMemory
         /// </summary>
         public DbSet<TaskEntity> Tasks { get; set; }
 
+        /// <summary>
+        /// Gets or sets the token entities.
+        /// </summary>
+        public DbSet<TokenEntity> Tokens { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user entities.
+        /// </summary>
+        public DbSet<UserEntity> Users { get; set; }
+
         /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
