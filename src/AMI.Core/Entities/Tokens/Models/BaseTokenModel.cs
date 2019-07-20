@@ -30,5 +30,10 @@
         /// Gets or sets the "issued at" claim identifying the time at which the token was issued.
         /// </summary>
         public double Iat { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this token was issued to an anonymous user.
+        /// </summary>
+        public bool IsAnon { get; set; }
     }
 }

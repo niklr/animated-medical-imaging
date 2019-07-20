@@ -42,6 +42,11 @@ namespace AMI.Domain.Entities
         public string NormalizedUsername { get; set; }
 
         /// <summary>
+        /// Gets or sets the security stamp.
+        /// </summary>
+        public string SecurityStamp { get; set; }
+
+        /// <summary>
         /// Gets or sets the email address.
         /// </summary>
         public string Email { get; set; }
@@ -57,9 +62,44 @@ namespace AMI.Domain.Entities
         public bool EmailConfirmed { get; set; }
 
         /// <summary>
+        /// Gets or sets the phone number.
+        /// </summary>
+        public string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the phone number is confirmed.
+        /// </summary>
+        public bool PhoneNumberConfirmed { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether two factor is enabled.
+        /// </summary>
+        public bool TwoFactorEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the UTC lockout end date.
+        /// </summary>
+        public DateTime? LockoutEndDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the lockout is enabled.
+        /// </summary>
+        public bool LockoutEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the access failed count.
+        /// </summary>
+        public int AccessFailedCount { get; set; }
+
+        /// <summary>
         /// Gets or sets the roles separated by a comma.
         /// </summary>
         public string Roles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password hash.
+        /// </summary>
+        public string PasswordHash { get; set; }
 
         /// <summary>
         /// Gets or sets the tokens.

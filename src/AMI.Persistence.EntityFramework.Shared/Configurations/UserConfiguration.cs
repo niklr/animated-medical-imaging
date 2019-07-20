@@ -23,6 +23,22 @@ namespace AMI.Persistence.InMemory.Configurations
 
             builder.Property(e => e.ModifiedDate)
                 .IsRequired();
+
+            builder.Property(e => e.Username)
+                .HasMaxLength(64)
+                .IsRequired();
+
+            builder.Property(e => e.NormalizedUsername)
+                .HasMaxLength(64)
+                .IsRequired();
+
+            builder.Property(e => e.Email)
+                .HasMaxLength(128)
+                .IsRequired();
+
+            builder.Property(e => e.NormalizedEmail)
+                .HasMaxLength(128)
+                .IsRequired();
         }
     }
 }

@@ -66,6 +66,7 @@ namespace AMI.NetCore.Tests
             services.AddScoped<IGatewayService, GatewayService>();
             services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();

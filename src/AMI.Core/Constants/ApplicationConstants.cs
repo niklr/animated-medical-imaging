@@ -6,6 +6,9 @@
     public class ApplicationConstants : IApplicationConstants
     {
         /// <inheritdoc/>
+        public string AnonymousUsername => "Anon";
+
+        /// <inheritdoc/>
         public string ApplicationNameShort => "AMI";
 
         /// <inheritdoc/>
