@@ -14,7 +14,7 @@ namespace AMI.Core.Entities.Models
     public abstract class BaseResultModel : IEntity
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the identifier of the result.
         /// </summary>
         public string Id { get; set; }
 

@@ -1,13 +1,32 @@
-﻿namespace AMI.Core.Entities.Models
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// The JSON Web Token (JWT) options.
     /// </summary>
     /// <seealso cref="IAuthJwtOptions" />
+    [Serializable]
     public class AuthJwtOptions : IAuthJwtOptions
     {
+        [NonSerialized]
+        private string secretKey;
+
         /// <inheritdoc/>
-        public string SecretKey { get; set; }
+        [IgnoreDataMember]
+        public string SecretKey
+        {
+            get
+            {
+                return secretKey;
+            }
+
+            set
+            {
+                secretKey = value;
+            }
+        }
 
         /// <inheritdoc/>
         public string Issuer { get; set; }

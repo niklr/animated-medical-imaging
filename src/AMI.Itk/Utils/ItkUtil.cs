@@ -260,7 +260,7 @@ namespace AMI.Itk.Utils
             Image output = filter.Execute(image);
             filter.Dispose();
 
-            return output ?? image;
+            return output;
         }
 
         /// <inheritdoc/>
@@ -319,7 +319,7 @@ namespace AMI.Itk.Utils
             Image output = filter.Execute(image);
             filter.Dispose();
 
-            return output ?? image;
+            return output;
         }
 
         /// <inheritdoc/>
@@ -363,7 +363,7 @@ namespace AMI.Itk.Utils
             Image output = filter.Execute(image);
             filter.Dispose();
 
-            return output ?? image;
+            return output;
         }
 
         /// <inheritdoc/>
@@ -429,14 +429,17 @@ namespace AMI.Itk.Utils
                 filter.SetOutputMaximum(255);
                 output = filter.Execute(image);
                 filter.Dispose();
+                image.Dispose();
             }
             catch (Exception)
             {
                 // ignore "RescaleIntensityImageFilter(000000F79D6CFC40):
                 // Minimum output value cannot be greater than Maximum output value." exceptions
+                output = new Image(image);
+                image.Dispose();
             }
 
-            return output ?? image;
+            return output;
         }
 
         private Image ApplyCastImageFilter(Image image)
@@ -463,8 +466,9 @@ namespace AMI.Itk.Utils
 
             Image output = filter.Execute(image);
             filter.Dispose();
+            image.Dispose();
 
-            return output ?? image;
+            return output;
         }
 
         private IntPtr GetBuffer(Image image)

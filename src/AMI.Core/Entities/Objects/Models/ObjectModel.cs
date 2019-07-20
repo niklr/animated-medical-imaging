@@ -21,7 +21,7 @@ namespace AMI.Core.Entities.Models
         }
 
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the identifier of the object.
         /// </summary>
         public string Id { get; set; }
 

@@ -70,10 +70,13 @@ namespace AMI.Core.Entities.Objects.Commands.Clear
             }
             else
             {
-                var directories = fileSystem.Directory.EnumerateDirectories(configuration.Options.WorkingDirectory);
-                foreach (var directory in directories)
+                if (fileSystem.Directory.Exists(configuration.Options.WorkingDirectory))
                 {
-                    fileSystem.Directory.Delete(directory, true);
+                    var directories = fileSystem.Directory.EnumerateDirectories(configuration.Options.WorkingDirectory);
+                    foreach (var directory in directories)
+                    {
+                        fileSystem.Directory.Delete(directory, true);
+                    }
                 }
             }
 

@@ -1612,6 +1612,8 @@ Automatically deletes objects older than the defined period. */
 export abstract class IAuthOptions implements IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
+    /** Gets the amount of minutes an access token remains valid (default is 60). */
+    expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */
     jwtOptions?: IAuthJwtOptions | undefined;
     /** Gets the entities allowed to authenticate. */
@@ -1629,6 +1631,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
     init(data?: any) {
         if (data) {
             this.allowAnonymous = data["allowAnonymous"];
+            this.expireAfter = data["expireAfter"];
             this.jwtOptions = data["jwtOptions"] ? IAuthJwtOptions.fromJS(data["jwtOptions"]) : <any>undefined;
             if (Array.isArray(data["entities"])) {
                 this.entities = [] as any;
@@ -1646,6 +1649,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["allowAnonymous"] = this.allowAnonymous;
+        data["expireAfter"] = this.expireAfter;
         data["jwtOptions"] = this.jwtOptions ? this.jwtOptions.toJSON() : <any>undefined;
         if (Array.isArray(this.entities)) {
             data["entities"] = [];
@@ -1660,6 +1664,8 @@ export abstract class IAuthOptions implements IIAuthOptions {
 export interface IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
+    /** Gets the amount of minutes an access token remains valid (default is 60). */
+    expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */
     jwtOptions?: IAuthJwtOptions | undefined;
     /** Gets the entities allowed to authenticate. */
@@ -2100,7 +2106,7 @@ export interface IPaginationResultModelOfObjectModel {
 
 /** A model representing an object. */
 export class ObjectModel implements IObjectModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the object. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -2166,7 +2172,7 @@ export class ObjectModel implements IObjectModel {
 
 /** A model representing an object. */
 export interface IObjectModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the object. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -2209,7 +2215,7 @@ export enum FileFormat {
 
 /** A model containing information about the task. */
 export class TaskModel implements ITaskModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the task. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -2279,7 +2285,7 @@ export class TaskModel implements ITaskModel {
 
 /** A model containing information about the task. */
 export interface ITaskModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the task. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -2567,7 +2573,7 @@ export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultM
 
 /** The base all results have in common. */
 export abstract class BaseResultModel implements IBaseResultModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the result. */
     id?: string | undefined;
 
     protected _discriminator: string;
@@ -2611,7 +2617,7 @@ export abstract class BaseResultModel implements IBaseResultModel {
 
 /** The base all results have in common. */
 export interface IBaseResultModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the result. */
     id?: string | undefined;
 }
 

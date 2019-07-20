@@ -14,7 +14,7 @@ namespace AMI.Core.Entities.Models
     public class TaskModel : IEntity
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the identifier of the task.
         /// </summary>
         public string Id { get; set; }
 

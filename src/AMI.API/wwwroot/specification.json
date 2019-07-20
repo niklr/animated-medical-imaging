@@ -1392,6 +1392,11 @@
             "type": "boolean",
             "description": "Gets a value indicating whether anonymous authentication is allowed."
           },
+          "expireAfter": {
+            "type": "integer",
+            "description": "Gets the amount of minutes an access token remains valid (default is 60).",
+            "format": "int32"
+          },
           "jwtOptions": {
             "description": "Gets the JSON Web Token (JWT) options.",
             "nullable": true,
@@ -1612,7 +1617,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Gets or sets the identifier.",
+            "description": "Gets or sets the identifier of the object.",
             "nullable": true
           },
           "createdDate": {
@@ -1716,7 +1721,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Gets or sets the identifier.",
+            "description": "Gets or sets the identifier of the task.",
             "nullable": true
           },
           "createdDate": {
@@ -2012,7 +2017,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Gets or sets the identifier.",
+            "description": "Gets or sets the identifier of the result.",
             "nullable": true
           },
           "discriminator": {

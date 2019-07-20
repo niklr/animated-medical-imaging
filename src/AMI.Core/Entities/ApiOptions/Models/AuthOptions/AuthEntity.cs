@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace AMI.Core.Entities.Models
 {
@@ -9,11 +10,26 @@ namespace AMI.Core.Entities.Models
     [Serializable]
     public class AuthEntity : IAuthEntity
     {
+        [NonSerialized]
+        private string password;
+
         /// <inheritdoc/>
         public string Username { get; set; }
 
         /// <inheritdoc/>
-        public string Password { get; set; }
+        [IgnoreDataMember]
+        public string Password
+        {
+            get
+            {
+                return password;
+            }
+
+            set
+            {
+                password = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the roles.
