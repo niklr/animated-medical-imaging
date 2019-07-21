@@ -14,6 +14,7 @@ using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Builders;
 using AMI.Core.IO.Extractors;
+using AMI.Core.IO.Generators;
 using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Uploaders;
@@ -23,11 +24,14 @@ using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
+using AMI.Domain.Entities;
 using AMI.Gif.Writers;
 using AMI.Infrastructure.IO.Builders;
+using AMI.Infrastructure.IO.Generators;
 using AMI.Infrastructure.IO.Uploaders;
 using AMI.Infrastructure.IO.Writers;
 using AMI.Infrastructure.Services;
+using AMI.Infrastructure.Stores;
 using AMI.Infrastructure.Strategies;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
@@ -36,6 +40,7 @@ using AMI.Persistence.EntityFramework.InMemory;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -63,11 +68,14 @@ namespace AMI.NetCore.Tests
             services.Configure<ApiOptions>(configuration.GetSection("ApiOptions"));
             services.AddLogging();
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
+            services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IGatewayService, GatewayService>();
-            services.AddScoped<IIdGenService, IdGenService>();
+            services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
+            services.AddScoped<IUserStore<UserEntity>, UserStore<UserEntity>>();
+            services.AddScoped<IRoleStore<RoleEntity>, RoleStore<RoleEntity>>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
@@ -86,6 +94,14 @@ namespace AMI.NetCore.Tests
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<IDefaultJsonWriter, DefaultJsonWriter>();
             services.AddTransient<IImageExtractor, ItkImageExtractor>();
+
+            services.AddIdentity<UserEntity, RoleEntity>(options => {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            });
 
             // Add MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));

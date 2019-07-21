@@ -6,6 +6,7 @@ using AMI.Core.Configurations;
 using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.IO.Generators;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -19,7 +20,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     /// <seealso cref="BaseCommandRequestHandler{CreateObjectCommand, ObjectModel}" />
     public class CreateCommandHandler : BaseCommandRequestHandler<CreateObjectCommand, ObjectModel>
     {
-        private readonly IIdGenService idGenService;
+        private readonly IIdGenerator idGenerator;
         private readonly IApplicationConstants constants;
         private readonly IAppConfiguration configuration;
         private readonly IFileSystem fileSystem;
@@ -29,20 +30,20 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
-        /// <param name="idGenService">The service to generate unique identifiers.</param>
+        /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public CreateCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
-            IIdGenService idGenService,
+            IIdGenerator idGenerator,
             IApplicationConstants constants,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
             : base(context, gateway)
         {
-            this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
+            this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
@@ -62,7 +63,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             // TODO: support custom extensions
             string fileExtension = fileSystem.Path.GetExtension(request.OriginalFilename);
 
-            Guid guid = idGenService.CreateId();
+            Guid guid = idGenerator.GenerateId();
             string path = fileSystem.Path.Combine("Binary", "Objects", guid.ToString());
             string destFilename = string.Concat(guid.ToString(), fileExtension);
             string destPath = fileSystem.Path.Combine(path, destFilename);

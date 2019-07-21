@@ -18,6 +18,7 @@ using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Builders;
 using AMI.Core.IO.Extractors;
+using AMI.Core.IO.Generators;
 using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Writers;
@@ -28,6 +29,7 @@ using AMI.Core.Strategies;
 using AMI.Domain.Enums;
 using AMI.Gif.Writers;
 using AMI.Infrastructure.IO.Builders;
+using AMI.Infrastructure.IO.Generators;
 using AMI.Infrastructure.IO.Writers;
 using AMI.Infrastructure.Services;
 using AMI.Infrastructure.Strategies;
@@ -63,8 +65,8 @@ namespace AMI.Portable
                         .AddConfiguration(configuration.GetSection("Logging"))
                         .AddConsole();
                 });
+            services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IGatewayService, GatewayService>();
-            services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
             services.AddScoped<IArchiveReader, SharpCompressReader>();

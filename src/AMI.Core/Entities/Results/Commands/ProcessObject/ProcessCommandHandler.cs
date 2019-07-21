@@ -23,7 +23,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
     /// </summary>
     public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectCommand, ProcessResultModel>
     {
-        private readonly IIdGenService idGenService;
         private readonly IDefaultJsonSerializer serializer;
         private readonly IMediator mediator;
         private readonly IAppConfiguration configuration;
@@ -36,7 +35,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
-        /// <param name="idGenService">The service to generate unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The configuration.</param>
@@ -46,7 +44,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         public ProcessCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
-            IIdGenService idGenService,
             IDefaultJsonSerializer serializer,
             IMediator mediator,
             IAppConfiguration configuration,
@@ -55,7 +52,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             IFileSystemStrategy fileSystemStrategy)
             : base(context, gateway)
         {
-            this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.IO.Generators;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
@@ -24,7 +25,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
     {
         private static Mutex processMutex;
 
-        private readonly IIdGenService idGenService;
+        private readonly IIdGenerator idGenerator;
         private readonly IDefaultJsonSerializer serializer;
         private readonly ITaskQueue queue;
 
@@ -33,18 +34,18 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
-        /// <param name="idGenService">The service to generate unique identifiers.</param>
+        /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="queue">The task queue.</param>
         public CreateCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
-            IIdGenService idGenService,
+            IIdGenerator idGenerator,
             IDefaultJsonSerializer serializer,
             ITaskQueue queue)
             : base(context, gateway)
         {
-            this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
+            this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
         }
@@ -82,7 +83,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
                 var entity = new TaskEntity()
                 {
-                    Id = idGenService.CreateId(),
+                    Id = idGenerator.GenerateId(),
                     CreatedDate = DateTime.UtcNow,
                     ModifiedDate = DateTime.UtcNow,
                     Status = (int)Domain.Enums.TaskStatus.Queued,

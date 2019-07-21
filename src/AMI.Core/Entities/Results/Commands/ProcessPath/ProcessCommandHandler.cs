@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.IO.Generators;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
@@ -16,7 +17,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
     /// </summary>
     public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessPathCommand, ProcessResultModel>
     {
-        private readonly IIdGenService idGenService;
+        private readonly IIdGenerator idGenerator;
         private readonly IDefaultJsonSerializer serializer;
         private readonly IImageService imageService;
 
@@ -25,18 +26,18 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
-        /// <param name="idGenService">The service to generate unique identifiers.</param>
+        /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="imageService">The image service.</param>
         public ProcessCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
-            IIdGenService idGenService,
+            IIdGenerator idGenerator,
             IDefaultJsonSerializer serializer,
             IImageService imageService)
             : base(context, gateway)
         {
-            this.idGenService = idGenService ?? throw new ArgumentNullException(nameof(idGenService));
+            this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
         }
@@ -48,7 +49,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessPath
 
             var entity = new ResultEntity()
             {
-                Id = idGenService.CreateId(),
+                Id = idGenerator.GenerateId(),
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow,
                 Version = result.Version,

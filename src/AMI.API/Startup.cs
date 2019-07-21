@@ -19,6 +19,7 @@ using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Factories;
 using AMI.Core.IO.Builders;
 using AMI.Core.IO.Extractors;
+using AMI.Core.IO.Generators;
 using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Uploaders;
@@ -30,6 +31,7 @@ using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Gif.Writers;
 using AMI.Infrastructure.IO.Builders;
+using AMI.Infrastructure.IO.Generators;
 using AMI.Infrastructure.IO.Uploaders;
 using AMI.Infrastructure.IO.Writers;
 using AMI.Infrastructure.Services;
@@ -118,8 +120,8 @@ namespace AMI.API
 
             // TODO: replace InMemoryUnitOfWork with SQLite
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
+            services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IGatewayService, GatewayService>();
-            services.AddScoped<IIdGenService, IdGenService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
             services.AddScoped<IArchiveReader, SharpCompressReader>();
