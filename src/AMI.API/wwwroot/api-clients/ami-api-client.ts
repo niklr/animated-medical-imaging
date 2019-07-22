@@ -1612,6 +1612,8 @@ Automatically deletes objects older than the defined period. */
 export abstract class IAuthOptions implements IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
+    /** Gets the username for anonymous users. */
+    anonymousUsername?: string | undefined;
     /** Gets the amount of minutes an access token remains valid (default is 60). */
     expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */
@@ -1631,6 +1633,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
     init(data?: any) {
         if (data) {
             this.allowAnonymous = data["allowAnonymous"];
+            this.anonymousUsername = data["anonymousUsername"];
             this.expireAfter = data["expireAfter"];
             this.jwtOptions = data["jwtOptions"] ? IAuthJwtOptions.fromJS(data["jwtOptions"]) : <any>undefined;
             if (Array.isArray(data["entities"])) {
@@ -1649,6 +1652,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["allowAnonymous"] = this.allowAnonymous;
+        data["anonymousUsername"] = this.anonymousUsername;
         data["expireAfter"] = this.expireAfter;
         data["jwtOptions"] = this.jwtOptions ? this.jwtOptions.toJSON() : <any>undefined;
         if (Array.isArray(this.entities)) {
@@ -1664,6 +1668,8 @@ export abstract class IAuthOptions implements IIAuthOptions {
 export interface IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
+    /** Gets the username for anonymous users. */
+    anonymousUsername?: string | undefined;
     /** Gets the amount of minutes an access token remains valid (default is 60). */
     expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */

@@ -1392,6 +1392,11 @@
             "type": "boolean",
             "description": "Gets a value indicating whether anonymous authentication is allowed."
           },
+          "anonymousUsername": {
+            "type": "string",
+            "description": "Gets the username for anonymous users.",
+            "nullable": true
+          },
           "expireAfter": {
             "type": "integer",
             "description": "Gets the amount of minutes an access token remains valid (default is 60).",

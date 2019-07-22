@@ -6,7 +6,6 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
     /// <summary>
     /// A validator for create command requests.
     /// </summary>
-    /// <seealso cref="AbstractValidator{CreateTaskCommand}" />
     public class CreateCommandValidator : AbstractValidator<CreateTaskCommand>
     {
         /// <summary>

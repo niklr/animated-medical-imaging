@@ -13,6 +13,11 @@ namespace AMI.Core.Entities.Models
         bool AllowAnonymous { get; }
 
         /// <summary>
+        /// Gets the username for anonymous users.
+        /// </summary>
+        string AnonymousUsername { get; }
+
+        /// <summary>
         /// Gets the amount of minutes an access token remains valid (default is 60).
         /// </summary>
         int ExpireAfter { get; }

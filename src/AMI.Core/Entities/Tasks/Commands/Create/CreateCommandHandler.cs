@@ -20,7 +20,6 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
     /// <summary>
     /// A handler for create command requests.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{CreateObjectCommand, TaskModel}" />
     public class CreateCommandHandler : BaseCommandRequestHandler<CreateTaskCommand, TaskModel>
     {
         private static Mutex processMutex;
@@ -53,8 +52,6 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// <inheritdoc/>
         protected override async Task<TaskModel> ProtectedHandleAsync(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            Context.BeginTransaction();
-
             if (request.Command.CommandType != CommandType.ProcessObjectCommand || request.Command.GetType() != typeof(ProcessObjectCommand))
             {
                 throw new NotSupportedException("The provided command type is not supported.");
@@ -64,7 +61,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
             processMutex = new Mutex(false, this.GetMethodName());
 
-            return await processMutex.Execute(new TimeSpan(0, 0, 1), async () =>
+            return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
                 Context.BeginTransaction();
 

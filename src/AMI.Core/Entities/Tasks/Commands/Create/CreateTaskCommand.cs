@@ -7,7 +7,6 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
     /// <summary>
     /// A command containing information needed to create a task.
     /// </summary>
-    /// <seealso cref="IRequest{TaskModel}" />
     public class CreateTaskCommand : IRequest<TaskModel>
     {
         /// <summary>

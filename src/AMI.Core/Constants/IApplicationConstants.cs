@@ -6,11 +6,6 @@
     public interface IApplicationConstants
     {
         /// <summary>
-        /// Gets the username for anonymous users.
-        /// </summary>
-        string AnonymousUsername { get; }
-
-        /// <summary>
         /// Gets the short version of the application name.
         /// </summary>
         string ApplicationNameShort { get; }

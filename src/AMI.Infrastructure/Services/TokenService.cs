@@ -4,12 +4,16 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Tokens.Commands.CreateRefreshToken;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Services;
+using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
 using AMI.Infrastructure.Wrappers;
 using JWT;
 using JWT.Algorithms;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Extensions.Date;
 
@@ -23,8 +27,10 @@ namespace AMI.Infrastructure.Services
         private readonly ILogger logger;
         private readonly IApplicationConstants constants;
         private readonly IApiConfiguration configuration;
+        private readonly IMediator mediator;
         private readonly IJwtEncoder encoder;
         private readonly IJwtDecoder decoder;
+        private readonly UserManager<UserEntity> userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenService"/> class.
@@ -32,16 +38,22 @@ namespace AMI.Infrastructure.Services
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The API configuration.</param>
+        /// <param name="mediator">The mediator.</param>
         /// <param name="serializer">The serializer.</param>
+        /// <param name="userManager">The user manager.</param>
         public TokenService(
             ILoggerFactory loggerFactory,
             IApplicationConstants constants,
             IApiConfiguration configuration,
-            IDefaultJsonSerializer serializer)
+            IMediator mediator,
+            IDefaultJsonSerializer serializer,
+            UserManager<UserEntity> userManager)
         {
             logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             var serializerWrapper = new JwtJsonSerializerWrapper(serializer);
             var urlEncoder = new JwtBase64UrlEncoder();
             encoder = new JwtEncoder(new HMACSHA256Algorithm(), serializerWrapper, urlEncoder);
@@ -50,9 +62,35 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public Task<TokenContainerModel> CreateAsync(string username, CancellationToken ct)
+        public async Task<TokenContainerModel> CreateAsync(string username, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentNullException(nameof(username));
+            }
+
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                throw new UnexpectedNullException("User not found.");
+            }
+
+            var result = CreateContainer(UserModel.Create(user));
+
+            var command = new CreateRefreshTokenCommand()
+            {
+                Token = result.RefreshToken,
+                UserId = user.Id.ToString()
+            };
+
+            await mediator.Send(command, ct);
+
+            return result;
         }
 
         /// <inheritdoc/>
@@ -73,8 +111,8 @@ namespace AMI.Infrastructure.Services
             var user = new UserModel()
             {
                 Id = Guid.NewGuid().ToString(),
-                Username = constants.AnonymousUsername,
-                Email = $"{constants.AnonymousUsername}@localhost".ToLowerInvariant(),
+                Username = configuration.Options.AuthOptions.AnonymousUsername,
+                Email = $"{configuration.Options.AuthOptions.AnonymousUsername}@localhost".ToLowerInvariant(),
                 EmailConfirmed = false
             };
 
@@ -86,19 +124,19 @@ namespace AMI.Infrastructure.Services
         /// <inheritdoc/>
         public AccessTokenModel DecodeAccessToken(string token)
         {
-            return decoder.DecodeToObject<AccessTokenModel>(token);
+            return Decode<AccessTokenModel>(token);
         }
 
         /// <inheritdoc/>
         public IdTokenModel DecodeIdToken(string token)
         {
-            return decoder.DecodeToObject<IdTokenModel>(token);
+            return Decode<IdTokenModel>(token);
         }
 
         /// <inheritdoc/>
         public RefreshTokenModel DecodeRefreshToken(string token)
         {
-            return decoder.DecodeToObject<RefreshTokenModel>(token);
+            return Decode<RefreshTokenModel>(token);
         }
 
         /// <inheritdoc/>
@@ -127,6 +165,11 @@ namespace AMI.Infrastructure.Services
             }
         }
 
+        private T Decode<T>(string token)
+        {
+            return decoder.DecodeToObject<T>(token, configuration.Options.AuthOptions.JwtOptions.SecretKey, true);
+        }
+
         private TokenContainerModel CreateContainer(UserModel user)
         {
             var secretKey = configuration.Options.AuthOptions.JwtOptions.SecretKey;
@@ -146,7 +189,7 @@ namespace AMI.Infrastructure.Services
             token.Aud = configuration.Options.AuthOptions.JwtOptions.Audience;
             token.Nbf = now;
             token.Iat = now;
-            token.IsAnon = user.Username == constants.AnonymousUsername;
+            token.IsAnon = user.Username == configuration.Options.AuthOptions.AnonymousUsername;
         }
 
         private AccessTokenModel CreateAccessToken(UserModel user)

@@ -18,6 +18,9 @@ namespace AMI.Core.Entities.Models
         public bool AllowAnonymous { get; set; }
 
         /// <inheritdoc/>
+        public string AnonymousUsername { get; set; } = "Anon";
+
+        /// <inheritdoc/>
         public int ExpireAfter { get; set; } = 60;
 
         /// <inheritdoc/>
