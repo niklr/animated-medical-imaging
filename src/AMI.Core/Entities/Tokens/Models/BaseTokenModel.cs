@@ -1,8 +1,12 @@
-﻿namespace AMI.Core.Entities.Models
+﻿using AMI.Core.IO.Converters;
+using Newtonsoft.Json;
+
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// The model all tokens have in common.
     /// </summary>
+    [JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
     public abstract class BaseTokenModel
     {
         /// <summary>

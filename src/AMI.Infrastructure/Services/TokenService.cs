@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
-using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Tokens.Commands.CreateRefreshToken;
+using AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
@@ -76,7 +76,7 @@ namespace AMI.Infrastructure.Services
                 throw new UnexpectedNullException("User not found.");
             }
 
-            var result = CreateContainer(UserModel.Create(user));
+            var result = await CreateContainerAsync(UserModel.Create(user), ct);
 
             var command = new CreateRefreshTokenCommand()
             {
@@ -99,22 +99,8 @@ namespace AMI.Infrastructure.Services
 
             ct.ThrowIfCancellationRequested();
 
-            if (!configuration.Options.AuthOptions.AllowAnonymous)
-            {
-                throw new AmiException("Anonymous users are not allowed.");
-            }
-
-            var user = new UserModel()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Username = configuration.Options.AuthOptions.AnonymousUsername,
-                Email = $"{configuration.Options.AuthOptions.AnonymousUsername}@localhost".ToLowerInvariant(),
-                EmailConfirmed = false
-            };
-
-            await Task.CompletedTask;
-
-            return CreateContainer(user);
+            var user = CreateAnonymousUserModel(Guid.NewGuid().ToString());
+            return await CreateContainerAsync(user, ct);
         }
 
         /// <inheritdoc/>
@@ -153,28 +139,79 @@ namespace AMI.Infrastructure.Services
 
             if (decoded.IsAnon)
             {
-                return await CreateAnonymousAsync(ct);
+                var user = CreateAnonymousUserModel(decoded.Sub);
+                var result = await CreateContainerAsync(user, ct);
+                result.RefreshToken = token;
+
+                return result;
             }
             else
             {
-                throw new NotImplementedException();
+                var user = await userManager.FindByIdAsync(decoded.Sub);
+                if (user == null)
+                {
+                    throw new UnexpectedNullException("User not found.");
+                }
+
+                var command = new UpdateRefreshTokenCommand()
+                {
+                    Token = token,
+                    UserId = user.Id.ToString()
+                };
+
+                await mediator.Send(command, ct);
+
+                var result = await CreateContainerAsync(UserModel.Create(user), ct);
+                result.RefreshToken = token;
+
+                return result;
             }
+        }
+
+        private UserModel CreateAnonymousUserModel(string userId)
+        {
+            if (!configuration.Options.AuthOptions.AllowAnonymous)
+            {
+                throw new AmiException("Anonymous users are not allowed.");
+            }
+
+            return new UserModel()
+            {
+                Id = userId,
+                Username = configuration.Options.AuthOptions.AnonymousUsername,
+                Email = $"{configuration.Options.AuthOptions.AnonymousUsername}@localhost".ToLowerInvariant(),
+                EmailConfirmed = false
+            };
         }
 
         private T Decode<T>(string token)
         {
-            return decoder.DecodeToObject<T>(token, configuration.Options.AuthOptions.JwtOptions.SecretKey, true);
+            try
+            {
+                return decoder.DecodeToObject<T>(token, configuration.Options.AuthOptions.JwtOptions.SecretKey, true);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, e.Message);
+                throw new AmiException("The provided token could not be decoded.");
+            }
         }
 
-        private TokenContainerModel CreateContainer(UserModel user)
+        private async Task<TokenContainerModel> CreateContainerAsync(UserModel user, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
+
             var secretKey = configuration.Options.AuthOptions.JwtOptions.SecretKey;
-            return new TokenContainerModel()
+            var model = new TokenContainerModel()
             {
                 AccessToken = encoder.Encode(CreateAccessToken(user), secretKey),
                 IdToken = encoder.Encode(CreateIdToken(user), secretKey),
                 RefreshToken = encoder.Encode(CreateRefreshToken(user), secretKey)
             };
+
+            await Task.CompletedTask;
+
+            return model;
         }
 
         private void SetBaseToken(BaseTokenModel token, UserModel user)

@@ -94,7 +94,7 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         /// <inheritdoc/>
         public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await GetQuery(predicate).SingleOrDefaultAsync(cancellationToken);
+            return await GetQuery(predicate).FirstOrDefaultAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
