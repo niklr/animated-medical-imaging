@@ -25,7 +25,6 @@ namespace AMI.Infrastructure.Services
     public class TokenService : ITokenService
     {
         private readonly ILogger logger;
-        private readonly IApplicationConstants constants;
         private readonly IApiConfiguration configuration;
         private readonly IMediator mediator;
         private readonly IJwtEncoder encoder;
@@ -36,21 +35,18 @@ namespace AMI.Infrastructure.Services
         /// Initializes a new instance of the <see cref="TokenService"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
-        /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The API configuration.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="serializer">The serializer.</param>
         /// <param name="userManager">The user manager.</param>
         public TokenService(
             ILoggerFactory loggerFactory,
-            IApplicationConstants constants,
             IApiConfiguration configuration,
             IMediator mediator,
             IDefaultJsonSerializer serializer,
             UserManager<UserEntity> userManager)
         {
             logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));

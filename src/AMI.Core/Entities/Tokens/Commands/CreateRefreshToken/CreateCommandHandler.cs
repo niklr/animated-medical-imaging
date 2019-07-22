@@ -62,7 +62,7 @@ namespace AMI.Core.Entities.Tokens.Commands.CreateRefreshToken
 
                 // Make sure the amount of valid refresh tokens for a single user don't exceed the limit
                 var tokens = Context.TokenRepository.GetQuery().Where(e => e.UserId == userId);
-                if (tokens.Count() >= 2)
+                if (tokens.Count() >= configuration.Options.AuthOptions.MaxRefreshTokens)
                 {
                     var unusedToken = tokens.OrderBy(e => e.LastUsedDate).FirstOrDefault();
                     Context.TokenRepository.Remove(unusedToken);

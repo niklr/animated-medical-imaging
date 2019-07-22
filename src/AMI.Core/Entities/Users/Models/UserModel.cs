@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AMI.Core.Entities.Shared.Models;
 using AMI.Domain.Entities;
 
@@ -52,7 +53,7 @@ namespace AMI.Core.Entities.Models
                 Username = entity.Username,
                 Email = entity.Email,
                 EmailConfirmed = entity.EmailConfirmed,
-                Roles = entity.Roles.Split(',')
+                Roles = string.IsNullOrWhiteSpace(entity.Roles) ? Array.Empty<string>() : entity.Roles.Split(',')
             };
 
             return model;

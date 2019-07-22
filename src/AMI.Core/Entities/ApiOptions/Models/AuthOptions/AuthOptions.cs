@@ -21,6 +21,9 @@ namespace AMI.Core.Entities.Models
         public string AnonymousUsername { get; set; } = "Anon";
 
         /// <inheritdoc/>
+        public int MaxRefreshTokens { get; set; } = 10;
+
+        /// <inheritdoc/>
         public int ExpireAfter { get; set; } = 60;
 
         /// <inheritdoc/>

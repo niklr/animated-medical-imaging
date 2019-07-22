@@ -13,9 +13,14 @@ namespace AMI.Core.Entities.Models
         bool AllowAnonymous { get; }
 
         /// <summary>
-        /// Gets the username for anonymous users.
+        /// Gets the username for anonymous users (default is Anon).
         /// </summary>
         string AnonymousUsername { get; }
+
+        /// <summary>
+        /// Gets the maximum amount of valid refresh tokens a single user is allowed to store (default is 10).
+        /// </summary>
+        int MaxRefreshTokens { get; }
 
         /// <summary>
         /// Gets the amount of minutes an access token remains valid (default is 60).

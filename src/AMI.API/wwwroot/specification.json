@@ -1394,8 +1394,13 @@
           },
           "anonymousUsername": {
             "type": "string",
-            "description": "Gets the username for anonymous users.",
+            "description": "Gets the username for anonymous users (default is Anon).",
             "nullable": true
+          },
+          "maxRefreshTokens": {
+            "type": "integer",
+            "description": "Gets the maximum amount of valid refresh tokens a single user is allowed to store (default is 10).",
+            "format": "int32"
           },
           "expireAfter": {
             "type": "integer",

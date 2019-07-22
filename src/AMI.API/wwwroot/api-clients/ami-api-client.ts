@@ -1612,8 +1612,10 @@ Automatically deletes objects older than the defined period. */
 export abstract class IAuthOptions implements IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
-    /** Gets the username for anonymous users. */
+    /** Gets the username for anonymous users (default is Anon). */
     anonymousUsername?: string | undefined;
+    /** Gets the maximum amount of valid refresh tokens a single user is allowed to store (default is 10). */
+    maxRefreshTokens?: number;
     /** Gets the amount of minutes an access token remains valid (default is 60). */
     expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */
@@ -1634,6 +1636,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
         if (data) {
             this.allowAnonymous = data["allowAnonymous"];
             this.anonymousUsername = data["anonymousUsername"];
+            this.maxRefreshTokens = data["maxRefreshTokens"];
             this.expireAfter = data["expireAfter"];
             this.jwtOptions = data["jwtOptions"] ? IAuthJwtOptions.fromJS(data["jwtOptions"]) : <any>undefined;
             if (Array.isArray(data["entities"])) {
@@ -1653,6 +1656,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
         data = typeof data === 'object' ? data : {};
         data["allowAnonymous"] = this.allowAnonymous;
         data["anonymousUsername"] = this.anonymousUsername;
+        data["maxRefreshTokens"] = this.maxRefreshTokens;
         data["expireAfter"] = this.expireAfter;
         data["jwtOptions"] = this.jwtOptions ? this.jwtOptions.toJSON() : <any>undefined;
         if (Array.isArray(this.entities)) {
@@ -1668,8 +1672,10 @@ export abstract class IAuthOptions implements IIAuthOptions {
 export interface IIAuthOptions {
     /** Gets a value indicating whether anonymous authentication is allowed. */
     allowAnonymous?: boolean;
-    /** Gets the username for anonymous users. */
+    /** Gets the username for anonymous users (default is Anon). */
     anonymousUsername?: string | undefined;
+    /** Gets the maximum amount of valid refresh tokens a single user is allowed to store (default is 10). */
+    maxRefreshTokens?: number;
     /** Gets the amount of minutes an access token remains valid (default is 60). */
     expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */
