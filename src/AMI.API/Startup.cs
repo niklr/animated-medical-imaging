@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Reflection;
+using System.Threading;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Extensions.ServiceCollectionExtensions;
 using AMI.API.Filters;
@@ -25,16 +26,19 @@ using AMI.Core.IO.Serializers;
 using AMI.Core.IO.Uploaders;
 using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
+using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
+using AMI.Domain.Entities;
 using AMI.Gif.Writers;
 using AMI.Infrastructure.IO.Builders;
 using AMI.Infrastructure.IO.Generators;
 using AMI.Infrastructure.IO.Uploaders;
 using AMI.Infrastructure.IO.Writers;
 using AMI.Infrastructure.Services;
+using AMI.Infrastructure.Stores;
 using AMI.Infrastructure.Strategies;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
@@ -45,6 +49,7 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -122,7 +127,9 @@ namespace AMI.API
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IGatewayService, GatewayService>();
+            services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IImageExtractor, ItkImageExtractor>();
             services.AddScoped<IArchiveReader, SharpCompressReader>();
             services.AddScoped<IArchiveWriter, SharpCompressWriter>();
@@ -130,7 +137,10 @@ namespace AMI.API
             services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
             services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
+            services.AddScoped<IUserStore<UserEntity>, UserStore<UserEntity>>();
+            services.AddScoped<IRoleStore<RoleEntity>, RoleStore<RoleEntity>>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
+            services.AddSingleton<ICustomPrincipalProvider, CustomPrincipalProvider>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
@@ -142,6 +152,16 @@ namespace AMI.API
             services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
+
+            // Add Identity
+            services.AddIdentity<UserEntity, RoleEntity>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            });
 
             // Add AspNetCoreRateLimit
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
@@ -251,6 +271,9 @@ namespace AMI.API
             {
                 routes.MapHub<GatewayHub>("/gateway");
             });
+
+            var identityService = serviceProvider.GetService<IIdentityService>();
+            identityService.EnsureUsersExistAsync(default(CancellationToken)).Wait();
 
             var gatewayObserverService = serviceProvider.GetService<IGatewayObserverService>();
             gatewayObserverService.Add(new GatewayObserver(gatewayHubContext));

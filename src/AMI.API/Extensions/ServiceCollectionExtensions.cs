@@ -70,6 +70,7 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
                 o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(o =>
             {
+                o.RequireHttpsMetadata = false;
                 o.Authority = jwtOptions.Issuer;
                 o.Audience = jwtOptions.Audience;
                 o.TokenValidationParameters = new TokenValidationParameters

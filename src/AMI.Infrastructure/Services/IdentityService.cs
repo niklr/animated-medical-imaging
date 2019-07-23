@@ -10,6 +10,7 @@ using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using RNS.Framework.Extensions.Reflection;
 
 namespace AMI.Infrastructure.Services
 {
@@ -48,6 +49,8 @@ namespace AMI.Infrastructure.Services
                 throw new ArgumentNullException(nameof(ct));
             }
 
+            logger.LogInformation($"{this.GetMethodName()} started");
+
             var exceptions = new List<Exception>();
 
             foreach (var identity in configuration.Options.AuthOptions.Entities)
@@ -81,6 +84,8 @@ namespace AMI.Infrastructure.Services
             {
                 throw new AggregateException(exceptions);
             }
+
+            logger.LogInformation($"{this.GetMethodName()} ended");
         }
     }
 }
