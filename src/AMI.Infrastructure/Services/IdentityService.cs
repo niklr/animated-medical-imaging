@@ -43,10 +43,17 @@ namespace AMI.Infrastructure.Services
         /// <inheritdoc/>
         public async Task EnsureUsersExistAsync(CancellationToken ct)
         {
+            if (ct == null)
+            {
+                throw new ArgumentNullException(nameof(ct));
+            }
+
             var exceptions = new List<Exception>();
 
             foreach (var identity in configuration.Options.AuthOptions.Entities)
             {
+                ct.ThrowIfCancellationRequested();
+
                 try
                 {
                     var existing = await userManager.FindByNameAsync(identity.Username);

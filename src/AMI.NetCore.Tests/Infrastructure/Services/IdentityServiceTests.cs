@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
+using AMI.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using NUnit.Framework;
 
 namespace AMI.NetCore.Tests.Infrastructure.Services
@@ -16,6 +18,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             //  Arrange
             var service = GetService<IIdentityService>();
             var context = GetService<IAmiUnitOfWork>();
+            var userManager = GetService<UserManager<UserEntity>>();
             var ct = new CancellationToken();
             string username1 = "niklr";
             string username2 = "admin";
@@ -38,6 +41,9 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.IsTrue(user2.ModifiedDate >= now);
             Assert.AreEqual(username2.ToUpper(), user2.NormalizedUsername);
             Assert.IsFalse(string.IsNullOrWhiteSpace(user2.PasswordHash));
+            Assert.IsTrue(userManager.CheckPasswordAsync(user1, "123456").Result);
+            Assert.IsTrue(userManager.CheckPasswordAsync(user2, "654321").Result);
+            Assert.IsFalse(userManager.CheckPasswordAsync(user1, "invalid").Result);
         }
     }
 }

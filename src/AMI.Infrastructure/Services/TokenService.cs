@@ -58,7 +58,7 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task<TokenContainerModel> CreateAsync(string username, CancellationToken ct)
+        public async Task<TokenContainerModel> CreateAsync(string username, string password, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(username))
             {
@@ -73,7 +73,14 @@ namespace AMI.Infrastructure.Services
             var user = await userManager.FindByNameAsync(username);
             if (user == null)
             {
-                throw new UnexpectedNullException("User not found.");
+                throw new UnexpectedNullException("Incorrect username or password.");
+            }
+
+            bool isValid = await userManager.CheckPasswordAsync(user, password);
+
+            if (!isValid)
+            {
+                throw new UnexpectedNullException("Incorrect username or password.");
             }
 
             var result = await CreateContainerAsync(UserModel.Create(user), ct);

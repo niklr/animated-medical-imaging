@@ -13,9 +13,10 @@ namespace AMI.Core.Services
         /// Creates a token container asynchronous.
         /// </summary>
         /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>The token container.</returns>
-        Task<TokenContainerModel> CreateAsync(string username, CancellationToken ct);
+        Task<TokenContainerModel> CreateAsync(string username, string password, CancellationToken ct);
 
         /// <summary>
         /// Creates a token container for an anonymous user asynchronous.

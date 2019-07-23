@@ -1472,6 +1472,351 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
     }
 }
 
+export interface ITokensAmiApiClient {
+    /**
+     * Creates tokens for the provided credentials.
+     * @param credentials The credentials.
+     * @return The container with the tokens.
+     */
+    create(credentials: CredentialsModel): Observable<TokenContainerModel>;
+    /**
+     * Updates the expired access token with a new valid access token based on the provided refresh token.
+     * @param container The container with the tokens.
+     * @return The container with the updated tokens.
+     */
+    update(container: TokenContainerModel): Observable<TokenContainerModel>;
+    /**
+     * Creates tokens for anonymous users.
+     * @return The container with the tokens.
+     */
+    createAnonymous(): Observable<TokenContainerModel>;
+}
+
+@Injectable()
+export class TokensAmiApiClient implements ITokensAmiApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Creates tokens for the provided credentials.
+     * @param credentials The credentials.
+     * @return The container with the tokens.
+     */
+    create(credentials: CredentialsModel): Observable<TokenContainerModel> {
+        let url_ = this.baseUrl + "/tokens";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(credentials);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<TokenContainerModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TokenContainerModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<TokenContainerModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TokenContainerModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TokenContainerModel>(<any>null);
+    }
+
+    /**
+     * Updates the expired access token with a new valid access token based on the provided refresh token.
+     * @param container The container with the tokens.
+     * @return The container with the updated tokens.
+     */
+    update(container: TokenContainerModel): Observable<TokenContainerModel> {
+        let url_ = this.baseUrl + "/tokens";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(container);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<TokenContainerModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TokenContainerModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<TokenContainerModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TokenContainerModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TokenContainerModel>(<any>null);
+    }
+
+    /**
+     * Creates tokens for anonymous users.
+     * @return The container with the tokens.
+     */
+    createAnonymous(): Observable<TokenContainerModel> {
+        let url_ = this.baseUrl + "/tokens/anon";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateAnonymous(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateAnonymous(<any>response_);
+                } catch (e) {
+                    return <Observable<TokenContainerModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TokenContainerModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateAnonymous(response: HttpResponseBase): Observable<TokenContainerModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TokenContainerModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TokenContainerModel>(<any>null);
+    }
+}
+
 /** A model representing an error. */
 export class ErrorModel implements IErrorModel {
     /** Gets or sets the error. */
@@ -1538,10 +1883,15 @@ export interface IErrorModel {
 
 /** The API options. */
 export class ApiOptions implements IApiOptions {
+    /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
+Automatically deletes objects older than the defined period. */
+    cleanupPeriod?: number;
     /** Gets the name of header used to identify the IP address of the connecting client. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the options used for authentication and authorization. */
+    authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
     ipRateLimiting?: IIpRateLimitOptions | undefined;
     /** Gets the policies used to limit the rate base on the IP address of the client. */
@@ -1558,8 +1908,10 @@ export class ApiOptions implements IApiOptions {
 
     init(data?: any) {
         if (data) {
+            this.cleanupPeriod = data["cleanupPeriod"];
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.isDevelopment = data["isDevelopment"];
+            this.authOptions = data["authOptions"] ? IAuthOptions.fromJS(data["authOptions"]) : <any>undefined;
             this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
             this.ipRateLimitPolicies = data["ipRateLimitPolicies"] ? IIpRateLimitPolicies.fromJS(data["ipRateLimitPolicies"]) : <any>undefined;
         }
@@ -1574,8 +1926,10 @@ export class ApiOptions implements IApiOptions {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["cleanupPeriod"] = this.cleanupPeriod;
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["isDevelopment"] = this.isDevelopment;
+        data["authOptions"] = this.authOptions ? this.authOptions.toJSON() : <any>undefined;
         data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
         data["ipRateLimitPolicies"] = this.ipRateLimitPolicies ? this.ipRateLimitPolicies.toJSON() : <any>undefined;
         return data; 
@@ -1584,14 +1938,227 @@ export class ApiOptions implements IApiOptions {
 
 /** The API options. */
 export interface IApiOptions {
+    /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
+Automatically deletes objects older than the defined period. */
+    cleanupPeriod?: number;
     /** Gets the name of header used to identify the IP address of the connecting client. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the options used for authentication and authorization. */
+    authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
     ipRateLimiting?: IIpRateLimitOptions | undefined;
     /** Gets the policies used to limit the rate base on the IP address of the client. */
     ipRateLimitPolicies?: IIpRateLimitPolicies | undefined;
+}
+
+/** An interface representing options related to authentication and authorization. */
+export abstract class IAuthOptions implements IIAuthOptions {
+    /** Gets a value indicating whether anonymous authentication is allowed. */
+    allowAnonymous?: boolean;
+    /** Gets the username for anonymous users (default is Anon). */
+    anonymousUsername?: string | undefined;
+    /** Gets the maximum amount of valid refresh tokens a single user is allowed to store (default is 10). */
+    maxRefreshTokens?: number;
+    /** Gets the amount of minutes an access token remains valid (default is 60). */
+    expireAfter?: number;
+    /** Gets the JSON Web Token (JWT) options. */
+    jwtOptions?: IAuthJwtOptions | undefined;
+    /** Gets the entities allowed to authenticate. */
+    entities?: IAuthEntity[] | undefined;
+
+    constructor(data?: IIAuthOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.allowAnonymous = data["allowAnonymous"];
+            this.anonymousUsername = data["anonymousUsername"];
+            this.maxRefreshTokens = data["maxRefreshTokens"];
+            this.expireAfter = data["expireAfter"];
+            this.jwtOptions = data["jwtOptions"] ? IAuthJwtOptions.fromJS(data["jwtOptions"]) : <any>undefined;
+            if (Array.isArray(data["entities"])) {
+                this.entities = [] as any;
+                for (let item of data["entities"])
+                    this.entities!.push(IAuthEntity.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): IAuthOptions {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IAuthOptions' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["allowAnonymous"] = this.allowAnonymous;
+        data["anonymousUsername"] = this.anonymousUsername;
+        data["maxRefreshTokens"] = this.maxRefreshTokens;
+        data["expireAfter"] = this.expireAfter;
+        data["jwtOptions"] = this.jwtOptions ? this.jwtOptions.toJSON() : <any>undefined;
+        if (Array.isArray(this.entities)) {
+            data["entities"] = [];
+            for (let item of this.entities)
+                data["entities"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+/** An interface representing options related to authentication and authorization. */
+export interface IIAuthOptions {
+    /** Gets a value indicating whether anonymous authentication is allowed. */
+    allowAnonymous?: boolean;
+    /** Gets the username for anonymous users (default is Anon). */
+    anonymousUsername?: string | undefined;
+    /** Gets the maximum amount of valid refresh tokens a single user is allowed to store (default is 10). */
+    maxRefreshTokens?: number;
+    /** Gets the amount of minutes an access token remains valid (default is 60). */
+    expireAfter?: number;
+    /** Gets the JSON Web Token (JWT) options. */
+    jwtOptions?: IAuthJwtOptions | undefined;
+    /** Gets the entities allowed to authenticate. */
+    entities?: IAuthEntity[] | undefined;
+}
+
+/** An interface representing JSON Web Token (JWT) options. */
+export abstract class IAuthJwtOptions implements IIAuthJwtOptions {
+    /** Gets the secret key used to sign created tokens and to validate received tokens. */
+    secretKey?: string | undefined;
+    /** Gets the principal that issued the JWT. */
+    issuer?: string | undefined;
+    /** Gets the recipient that the JWT is intended for. */
+    audience?: string | undefined;
+    /** Gets the claim representing the name. */
+    nameClaimType?: string | undefined;
+    /** Gets the claim representing the role. */
+    roleClaimType?: string | undefined;
+    /** Gets the claim representing the issuer. */
+    issuerClaimType?: string | undefined;
+    /** Gets the claim representing the username. */
+    usernameClaimType?: string | undefined;
+
+    constructor(data?: IIAuthJwtOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.secretKey = data["secretKey"];
+            this.issuer = data["issuer"];
+            this.audience = data["audience"];
+            this.nameClaimType = data["nameClaimType"];
+            this.roleClaimType = data["roleClaimType"];
+            this.issuerClaimType = data["issuerClaimType"];
+            this.usernameClaimType = data["usernameClaimType"];
+        }
+    }
+
+    static fromJS(data: any): IAuthJwtOptions {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IAuthJwtOptions' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["secretKey"] = this.secretKey;
+        data["issuer"] = this.issuer;
+        data["audience"] = this.audience;
+        data["nameClaimType"] = this.nameClaimType;
+        data["roleClaimType"] = this.roleClaimType;
+        data["issuerClaimType"] = this.issuerClaimType;
+        data["usernameClaimType"] = this.usernameClaimType;
+        return data; 
+    }
+}
+
+/** An interface representing JSON Web Token (JWT) options. */
+export interface IIAuthJwtOptions {
+    /** Gets the secret key used to sign created tokens and to validate received tokens. */
+    secretKey?: string | undefined;
+    /** Gets the principal that issued the JWT. */
+    issuer?: string | undefined;
+    /** Gets the recipient that the JWT is intended for. */
+    audience?: string | undefined;
+    /** Gets the claim representing the name. */
+    nameClaimType?: string | undefined;
+    /** Gets the claim representing the role. */
+    roleClaimType?: string | undefined;
+    /** Gets the claim representing the issuer. */
+    issuerClaimType?: string | undefined;
+    /** Gets the claim representing the username. */
+    usernameClaimType?: string | undefined;
+}
+
+/** An interface representing an entity related to authentication. */
+export abstract class IAuthEntity implements IIAuthEntity {
+    /** Gets the username. */
+    username?: string | undefined;
+    /** Gets the password. */
+    password?: string | undefined;
+    /** Gets the roles. */
+    roles?: string[] | undefined;
+
+    constructor(data?: IIAuthEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.username = data["username"];
+            this.password = data["password"];
+            if (Array.isArray(data["roles"])) {
+                this.roles = [] as any;
+                for (let item of data["roles"])
+                    this.roles!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): IAuthEntity {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'IAuthEntity' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["password"] = this.password;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        return data; 
+    }
+}
+
+/** An interface representing an entity related to authentication. */
+export interface IIAuthEntity {
+    /** Gets the username. */
+    username?: string | undefined;
+    /** Gets the password. */
+    password?: string | undefined;
+    /** Gets the roles. */
+    roles?: string[] | undefined;
 }
 
 /** An interface representing the options to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */
@@ -1602,7 +2169,7 @@ export abstract class IIpRateLimitOptions implements IIIpRateLimitOptions {
     clientIdHeader?: string | undefined;
     /** Gets the policy prefix, used to compose the client policy cache key */
     ipPolicyPrefix?: string | undefined;
-    /** Gets the ip whitelist. */
+    /** Gets the IP address whitelist. */
     ipWhitelist?: string[] | undefined;
 
     constructor(data?: IIIpRateLimitOptions) {
@@ -1654,7 +2221,7 @@ export interface IIIpRateLimitOptions {
     clientIdHeader?: string | undefined;
     /** Gets the policy prefix, used to compose the client policy cache key */
     ipPolicyPrefix?: string | undefined;
-    /** Gets the ip whitelist. */
+    /** Gets the IP address whitelist. */
     ipWhitelist?: string[] | undefined;
 }
 
@@ -1896,7 +2463,7 @@ export interface IPaginationResultModelOfObjectModel {
 
 /** A model representing an object. */
 export class ObjectModel implements IObjectModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the object. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -1962,7 +2529,7 @@ export class ObjectModel implements IObjectModel {
 
 /** A model representing an object. */
 export interface IObjectModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the object. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -2005,7 +2572,7 @@ export enum FileFormat {
 
 /** A model containing information about the task. */
 export class TaskModel implements ITaskModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the task. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -2075,7 +2642,7 @@ export class TaskModel implements ITaskModel {
 
 /** A model containing information about the task. */
 export interface ITaskModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the task. */
     id?: string | undefined;
     /** Gets or sets the created date. */
     createdDate?: Date;
@@ -2363,7 +2930,7 @@ export interface IProcessPathCommand extends IBaseProcessCommandOfProcessResultM
 
 /** The base all results have in common. */
 export abstract class BaseResultModel implements IBaseResultModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the result. */
     id?: string | undefined;
 
     protected _discriminator: string;
@@ -2407,7 +2974,7 @@ export abstract class BaseResultModel implements IBaseResultModel {
 
 /** The base all results have in common. */
 export interface IBaseResultModel {
-    /** Gets or sets the identifier. */
+    /** Gets or sets the identifier of the result. */
     id?: string | undefined;
 }
 
@@ -2810,6 +3377,104 @@ export class CreateTaskCommand implements ICreateTaskCommand {
 export interface ICreateTaskCommand {
     /** Gets or sets the command used to create this task. */
     command?: BaseCommand | undefined;
+}
+
+/** A model containing the access, identifier and refresh tokens. */
+export class TokenContainerModel implements ITokenContainerModel {
+    /** Gets or sets the access token. */
+    accessToken?: string | undefined;
+    /** Gets or sets the identifier token. */
+    idToken?: string | undefined;
+    /** Gets or sets the refresh token. */
+    refreshToken?: string | undefined;
+
+    constructor(data?: ITokenContainerModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.accessToken = data["accessToken"];
+            this.idToken = data["idToken"];
+            this.refreshToken = data["refreshToken"];
+        }
+    }
+
+    static fromJS(data: any): TokenContainerModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new TokenContainerModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accessToken"] = this.accessToken;
+        data["idToken"] = this.idToken;
+        data["refreshToken"] = this.refreshToken;
+        return data; 
+    }
+}
+
+/** A model containing the access, identifier and refresh tokens. */
+export interface ITokenContainerModel {
+    /** Gets or sets the access token. */
+    accessToken?: string | undefined;
+    /** Gets or sets the identifier token. */
+    idToken?: string | undefined;
+    /** Gets or sets the refresh token. */
+    refreshToken?: string | undefined;
+}
+
+/** A model containing the credentials used for login purposes. */
+export class CredentialsModel implements ICredentialsModel {
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the password. */
+    password?: string | undefined;
+
+    constructor(data?: ICredentialsModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.username = data["username"];
+            this.password = data["password"];
+        }
+    }
+
+    static fromJS(data: any): CredentialsModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CredentialsModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+/** A model containing the credentials used for login purposes. */
+export interface ICredentialsModel {
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the password. */
+    password?: string | undefined;
 }
 
 export interface FileParameter {

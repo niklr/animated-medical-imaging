@@ -91,10 +91,11 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var ct = new CancellationToken();
             await identityService.EnsureUsersExistAsync(ct);
             string username = "niklr";
+            string password = "123456";
             var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.Username == username);
 
             // Act
-            var result1 = await service.CreateAsync(username, ct);
+            var result1 = await service.CreateAsync(username, password, ct);
             var token1 = context.TokenRepository.GetFirstOrDefault(e => e.UserId == user.Id);
 
             // Assert
@@ -106,7 +107,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.IsFalse(string.IsNullOrWhiteSpace(result1.RefreshToken));
 
             // Act
-            var result2 = await service.CreateAsync(username, ct);
+            var result2 = await service.CreateAsync(username, password, ct);
             var token1NotNull = context.TokenRepository.GetFirstOrDefault(e => e.Id == token1.Id);
 
             // Assert
@@ -119,7 +120,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.IsFalse(string.IsNullOrWhiteSpace(result2.RefreshToken));
 
             // Act
-            var result3 = await service.CreateAsync(username, ct);
+            var result3 = await service.CreateAsync(username, password, ct);
             var token1Null = context.TokenRepository.GetFirstOrDefault(e => e.Id == token1.Id);
 
             // Assert
@@ -140,10 +141,11 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var service = GetService<ITokenService>();
             var ct = new CancellationToken();
             string username = "invalid";
+            string password = "invalid";
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<UnexpectedNullException>(() => service.CreateAsync(username, ct));
-            Assert.AreEqual("Unexpected null exception. User not found.", ex.Message);
+            var ex = Assert.ThrowsAsync<UnexpectedNullException>(() => service.CreateAsync(username, password, ct));
+            Assert.AreEqual("Unexpected null exception. Incorrect username or password.", ex.Message);
         }
 
         [Test]
@@ -157,8 +159,9 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var ct = new CancellationToken();
             await identityService.EnsureUsersExistAsync(ct);
             string username = "niklr";
+            string password = "123456";
             var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.Username == username);
-            var container = await service.CreateAsync(username, ct);
+            var container = await service.CreateAsync(username, password, ct);
             var token1 = await context.TokenRepository.GetFirstOrDefaultAsync(e => e.TokenValue == container.RefreshToken, ct);
             var token1LastUsedDate = token1.LastUsedDate;
             var pause = new ManualResetEvent(false);
