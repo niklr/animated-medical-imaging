@@ -380,11 +380,11 @@ export class AppOptionsAmiApiClient implements IAppOptionsAmiApiClient {
 export interface IObjectsAmiApiClient {
     /**
      * Gets a paginated list of objects.
-     * @param page The current page.
-     * @param limit The limit to constrain the number of items.
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
      * @return The list of paginated objects.
      */
-    getPaginated(page: number, limit: number): Observable<PaginationResultModelOfObjectModel>;
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfObjectModel>;
     /**
      * Gets the information of the object with the specified identifier.
      * @param id The identifier of the object.
@@ -399,16 +399,16 @@ export interface IObjectsAmiApiClient {
     deleteById(id: string | null): Observable<ObjectModel>;
     /**
      * Uploads an object.
-     * @param file The file.
-     * @param chunkNumber The chunk number.
-     * @param totalSize The total size of the upload.
-     * @param uid The unique identifier.
-     * @param filename The filename.
-     * @param relativePath The relative path.
-     * @param totalChunks The total chunks.
+     * @param file (optional) The file.
+     * @param chunkNumber (optional) The chunk number.
+     * @param totalSize (optional) The total size of the upload.
+     * @param uid (optional) The unique identifier.
+     * @param filename (optional) The filename.
+     * @param relativePath (optional) The relative path.
+     * @param totalChunks (optional) The total chunks.
      * @return The result of the resumable upload.
      */
-    upload(file: FileParameter | null, chunkNumber: number, totalSize: number, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<ObjectModel>;
+    upload(file: FileParameter | null | undefined, chunkNumber: number | undefined, totalSize: number | undefined, uid: string | null | undefined, filename: string | null | undefined, relativePath: string | null | undefined, totalChunks: number | undefined): Observable<ObjectModel>;
 }
 
 @Injectable()
@@ -424,19 +424,19 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
 
     /**
      * Gets a paginated list of objects.
-     * @param page The current page.
-     * @param limit The limit to constrain the number of items.
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
      * @return The list of paginated objects.
      */
-    getPaginated(page: number, limit: number): Observable<PaginationResultModelOfObjectModel> {
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfObjectModel> {
         let url_ = this.baseUrl + "/objects?";
-        if (page === undefined || page === null)
-            throw new Error("The parameter 'page' must be defined and cannot be null.");
-        else
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
             url_ += "page=" + encodeURIComponent("" + page) + "&"; 
-        if (limit === undefined || limit === null)
-            throw new Error("The parameter 'limit' must be defined and cannot be null.");
-        else
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
             url_ += "limit=" + encodeURIComponent("" + limit) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
@@ -745,40 +745,34 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
 
     /**
      * Uploads an object.
-     * @param file The file.
-     * @param chunkNumber The chunk number.
-     * @param totalSize The total size of the upload.
-     * @param uid The unique identifier.
-     * @param filename The filename.
-     * @param relativePath The relative path.
-     * @param totalChunks The total chunks.
+     * @param file (optional) The file.
+     * @param chunkNumber (optional) The chunk number.
+     * @param totalSize (optional) The total size of the upload.
+     * @param uid (optional) The unique identifier.
+     * @param filename (optional) The filename.
+     * @param relativePath (optional) The relative path.
+     * @param totalChunks (optional) The total chunks.
      * @return The result of the resumable upload.
      */
-    upload(file: FileParameter | null, chunkNumber: number, totalSize: number, uid: string | null, filename: string | null, relativePath: string | null, totalChunks: number): Observable<ObjectModel> {
+    upload(file: FileParameter | null | undefined, chunkNumber: number | undefined, totalSize: number | undefined, uid: string | null | undefined, filename: string | null | undefined, relativePath: string | null | undefined, totalChunks: number | undefined): Observable<ObjectModel> {
         let url_ = this.baseUrl + "/objects/upload?";
-        if (chunkNumber === undefined || chunkNumber === null)
-            throw new Error("The parameter 'chunkNumber' must be defined and cannot be null.");
-        else
+        if (chunkNumber === null)
+            throw new Error("The parameter 'chunkNumber' cannot be null.");
+        else if (chunkNumber !== undefined)
             url_ += "chunkNumber=" + encodeURIComponent("" + chunkNumber) + "&"; 
-        if (totalSize === undefined || totalSize === null)
-            throw new Error("The parameter 'totalSize' must be defined and cannot be null.");
-        else
+        if (totalSize === null)
+            throw new Error("The parameter 'totalSize' cannot be null.");
+        else if (totalSize !== undefined)
             url_ += "totalSize=" + encodeURIComponent("" + totalSize) + "&"; 
-        if (uid === undefined)
-            throw new Error("The parameter 'uid' must be defined.");
-        else
+        if (uid !== undefined)
             url_ += "uid=" + encodeURIComponent("" + uid) + "&"; 
-        if (filename === undefined)
-            throw new Error("The parameter 'filename' must be defined.");
-        else
+        if (filename !== undefined)
             url_ += "filename=" + encodeURIComponent("" + filename) + "&"; 
-        if (relativePath === undefined)
-            throw new Error("The parameter 'relativePath' must be defined.");
-        else
+        if (relativePath !== undefined)
             url_ += "relativePath=" + encodeURIComponent("" + relativePath) + "&"; 
-        if (totalChunks === undefined || totalChunks === null)
-            throw new Error("The parameter 'totalChunks' must be defined and cannot be null.");
-        else
+        if (totalChunks === null)
+            throw new Error("The parameter 'totalChunks' cannot be null.");
+        else if (totalChunks !== undefined)
             url_ += "totalChunks=" + encodeURIComponent("" + totalChunks) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 

@@ -58,9 +58,9 @@
     <ProjectReference Include="..\AMI.Persistence.EntityFramework.InMemory\AMI.Persistence.EntityFramework.InMemory.csproj" />
   </ItemGroup>
   
-  <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-    <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
-    <Exec Command="$(NSwagExe_Core22) run /variables:Configuration=$(Configuration)" />
+  <Target Name="NSwag" AfterTargets="Build">
+    <Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
+    <Exec Command="$(NSwagExe_Core22) run nswag.json /variables:Configuration=$(Configuration),OutDir=$(OutDir)" />
     <RemoveDir Directories="$(OutDir)References" />
   </Target>
 

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using AMI.Core.Extensions.StringExtensions;
 
 namespace AMI.Core.Helpers
@@ -11,9 +12,21 @@ namespace AMI.Core.Helpers
             return assembly?.GetName()?.Name;
         }
 
+        public static string GetAssemblyName(Type type)
+        {
+            var assembly = Assembly.GetAssembly(type);
+            return assembly?.GetName()?.Name;
+        }
+
         public static string GetAssemblyVersion()
         {
             var assembly = GetEntryOrCallingAssembly();
+            return assembly?.GetName()?.Name;
+        }
+
+        public static string GetAssemblyVersion(Type type)
+        {
+            var assembly = Assembly.GetAssembly(type);
             return assembly?.GetName()?.Version?.ToStringInvariant();
         }
 

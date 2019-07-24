@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
@@ -58,7 +59,9 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NSwag;
 using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
 
 namespace AMI.API
 {
@@ -76,15 +79,28 @@ namespace AMI.API
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        public Startup(IConfiguration configuration)
+        /// <param name="env">The hosting environment.</param>
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            HostingEnvironment = env;
+            AppInfo = new AppInfoFactory().Create(typeof(Program));
         }
 
         /// <summary>
         /// Gets the configuration.
         /// </summary>
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
+
+        /// <summary>
+        /// Gets the hosting environment.
+        /// </summary>
+        private IHostingEnvironment HostingEnvironment { get; }
+
+        /// <summary>
+        /// Gets the information about the application.
+        /// </summary>
+        private AppInfo AppInfo { get; }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -211,13 +227,30 @@ namespace AMI.API
             // Add AspNetCoreRateLimit configuration (resolvers, counter key builders)
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
-            services.AddCustomAuthentication(Configuration);
+            services.AddCustomAuthentication(HostingEnvironment, Configuration);
 
             // Customise default API behavior
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 // Otherwise the RequestValidationBehavior is never triggered
                 options.SuppressModelStateInvalidFilter = true;
+            });
+
+            // Customise the Swagger specification
+            var openApiSecurityScheme = new OpenApiSecurityScheme
+            {
+                Type = OpenApiSecuritySchemeType.ApiKey,
+                Name = "Authorization",
+                In = OpenApiSecurityApiKeyLocation.Header,
+                Description = "Type into the textbox: Bearer {your JWT token}."
+            };
+            services.AddOpenApiDocument(document =>
+            {
+                document.Title = AppInfo.AppName;
+                document.Version = AppInfo.AppVersion;
+                document.DocumentName = "default";
+                document.AddSecurity("JWT", Enumerable.Empty<string>(), openApiSecurityScheme);
+                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
         }
 
@@ -262,7 +295,7 @@ namespace AMI.API
             app.UseSwaggerUi3(options =>
             {
                 options.Path = "/swagger";
-                options.SwaggerRoutes.Add(new SwaggerUi3Route("v0.0.1", "/specification.json"));
+                options.SwaggerRoutes.Add(new SwaggerUi3Route($"v{AppInfo.AppVersion}", "/specification.json"));
             });
 
             app.UseMvc();

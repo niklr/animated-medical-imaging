@@ -10,6 +10,7 @@ namespace AMI.API.Controllers
     /// </summary>
     /// <seealso cref="Controller" />
     [Route("")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class HomeController : Controller
     {
         private readonly IApiConfiguration configuration;

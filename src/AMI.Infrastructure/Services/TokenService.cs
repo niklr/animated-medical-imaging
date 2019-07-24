@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
@@ -208,7 +209,7 @@ namespace AMI.Infrastructure.Services
         {
             ct.ThrowIfCancellationRequested();
 
-            var secretKey = configuration.Options.AuthOptions.JwtOptions.SecretKey;
+            var secretKey = Encoding.ASCII.GetBytes(configuration.Options.AuthOptions.JwtOptions.SecretKey);
             var model = new TokenContainerModel()
             {
                 AccessToken = encoder.Encode(CreateAccessToken(user), secretKey),

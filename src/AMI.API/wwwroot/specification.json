@@ -2,8 +2,8 @@
   "x-generator": "NSwag v13.0.4.0 (NJsonSchema v10.0.21.0 (Newtonsoft.Json v12.0.0.0))",
   "openapi": "3.0.0",
   "info": {
-    "title": "AMI API",
-    "version": "0.0.1"
+    "title": "AMI.API",
+    "version": "0.0.4"
   },
   "paths": {
     "/api-options": {
@@ -290,7 +290,6 @@
           {
             "name": "page",
             "in": "query",
-            "required": true,
             "description": "The current page.",
             "schema": {
               "type": "integer",
@@ -301,7 +300,6 @@
           {
             "name": "limit",
             "in": "query",
-            "required": true,
             "description": "The limit to constrain the number of items.",
             "schema": {
               "type": "integer",
@@ -612,7 +610,6 @@
             "type": "file",
             "name": "file",
             "in": "formData",
-            "required": true,
             "description": "The file.",
             "schema": {
               "type": "string",
@@ -624,7 +621,6 @@
           {
             "name": "chunkNumber",
             "in": "query",
-            "required": true,
             "description": "The chunk number.",
             "schema": {
               "type": "integer",
@@ -635,7 +631,6 @@
           {
             "name": "totalSize",
             "in": "query",
-            "required": true,
             "description": "The total size of the upload.",
             "schema": {
               "type": "integer",
@@ -646,7 +641,6 @@
           {
             "name": "uid",
             "in": "query",
-            "required": true,
             "description": "The unique identifier.",
             "schema": {
               "type": "string",
@@ -657,7 +651,6 @@
           {
             "name": "filename",
             "in": "query",
-            "required": true,
             "description": "The filename.",
             "schema": {
               "type": "string",
@@ -668,7 +661,6 @@
           {
             "name": "relativePath",
             "in": "query",
-            "required": true,
             "description": "The relative path.",
             "schema": {
               "type": "string",
@@ -679,7 +671,6 @@
           {
             "name": "totalChunks",
             "in": "query",
-            "required": true,
             "description": "The total chunks.",
             "schema": {
               "type": "integer",
@@ -860,7 +851,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/results/{id}": {
@@ -2661,6 +2657,19 @@
           }
         }
       }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "description": "Type into the textbox: Bearer {your JWT token}.",
+        "name": "Authorization",
+        "in": "header"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ]
 }

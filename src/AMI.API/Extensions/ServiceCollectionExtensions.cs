@@ -1,14 +1,17 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using AMI.API.Handlers;
 using AMI.Core.Entities.Models;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using RNS.Framework.Tools;
 
 namespace AMI.API.Extensions.ServiceCollectionExtensions
 {
@@ -21,18 +24,13 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
         /// Extension method used to add the custom authentication.
         /// </summary>
         /// <param name="services">The service collection.</param>
+        /// <param name="environment">The hosting environment.</param>
         /// <param name="configuration">The configuration.</param>
-        public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCustomAuthentication(this IServiceCollection services, IHostingEnvironment environment, IConfiguration configuration)
         {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+            Ensure.ArgumentNotNull(services, nameof(services));
+            Ensure.ArgumentNotNull(environment, nameof(environment));
+            Ensure.ArgumentNotNull(configuration, nameof(configuration));
 
             var jwtOptions = new AuthJwtOptions();
             configuration.GetSection("ApiOptions:AuthOptions:JwtOptions").Bind(jwtOptions);
@@ -63,6 +61,17 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
                 throw new UnexpectedNullException(string.Format(exceptionMessage, nameof(jwtOptions.RoleClaimType)));
             }
 
+            if (environment.IsDevelopment())
+            {
+                IdentityModelEventSource.ShowPII = true;
+            }
+
+            // Avoid System.ArgumentOutOfRangeException: IDX10603: Decryption failed. Keys tried: 'HS256'.
+            if (jwtOptions.SecretKey.Length < 16)
+            {
+                throw new AmiException("JWT secret key must consist of minimum 16 characters.");
+            }
+
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -71,7 +80,6 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
             }).AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
-                o.Authority = jwtOptions.Issuer;
                 o.Audience = jwtOptions.Audience;
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
