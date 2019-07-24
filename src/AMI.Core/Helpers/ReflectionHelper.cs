@@ -8,25 +8,31 @@ namespace AMI.Core.Helpers
     {
         public static string GetAssemblyName()
         {
-            var assembly = GetEntryOrCallingAssembly();
-            return assembly?.GetName()?.Name;
+            return GetAssemblyName(GetEntryOrCallingAssembly());
         }
 
         public static string GetAssemblyName(Type type)
         {
-            var assembly = Assembly.GetAssembly(type);
-            return assembly?.GetName()?.Name;
+            return GetAssemblyName(Assembly.GetAssembly(type));
         }
 
         public static string GetAssemblyVersion()
         {
-            var assembly = GetEntryOrCallingAssembly();
-            return assembly?.GetName()?.Name;
+            return GetAssemblyVersion(GetEntryOrCallingAssembly());
         }
 
         public static string GetAssemblyVersion(Type type)
         {
-            var assembly = Assembly.GetAssembly(type);
+            return GetAssemblyVersion(Assembly.GetAssembly(type));
+        }
+
+        private static string GetAssemblyName(Assembly assembly)
+        {
+            return assembly?.GetName()?.Name;
+        }
+
+        private static string GetAssemblyVersion(Assembly assembly)
+        {
             return assembly?.GetName()?.Version?.ToStringInvariant();
         }
 

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using AMI.API.Handlers;
 using AMI.Core.Entities.Models;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

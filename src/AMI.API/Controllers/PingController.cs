@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Models = AMI.Core.Entities.Models;
 
 namespace AMI.API.Controllers
@@ -18,6 +19,7 @@ namespace AMI.API.Controllers
         /// <returns>The test value if successful.</returns>
         [HttpGet]
         [Authorize]
+        [OpenApiTag("General")]
         [ProducesResponseType(typeof(Models.PongModel), (int)HttpStatusCode.OK)]
         public IActionResult Get()
         {

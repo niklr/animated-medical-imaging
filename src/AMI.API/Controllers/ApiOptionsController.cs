@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AMI.Core.Entities.ApiOptions.Queries;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using Models = AMI.Core.Entities.Models;
 
 namespace AMI.API.Controllers
@@ -18,6 +19,7 @@ namespace AMI.API.Controllers
         /// </summary>
         /// <returns>The API options.</returns>
         [HttpGet]
+        [OpenApiTag("General")]
         [ProducesResponseType(typeof(Models.ApiOptions), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
