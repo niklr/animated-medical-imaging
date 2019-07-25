@@ -8,7 +8,7 @@ representing a multi-dimensional medical image and combining the subset to an an
 Supported file formats:
 * Analyze (.hdr, .img)
 * MetaImage (.mha, .mhd, .raw)
-* Multi-frame DICOM (.dcm)
+* Single-frame and multi-frame DICOM (.dcm)
 * Nifti (.nii)
 
 Table of Content:

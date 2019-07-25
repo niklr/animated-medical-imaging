@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AMI.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "--SourcePath=SMIR.Brain.XX.O.CT.346124.dcm.zip --DestinationPath=temp"
+    }
+  }
+}

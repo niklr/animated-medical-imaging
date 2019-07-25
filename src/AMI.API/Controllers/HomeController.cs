@@ -31,7 +31,7 @@ namespace AMI.API.Controllers
         /// <returns>The default page.</returns>
         public IActionResult Index()
         {
-            return Redirect("/redoc");
+            return Redirect("/swagger");
         }
 
         /// <summary>

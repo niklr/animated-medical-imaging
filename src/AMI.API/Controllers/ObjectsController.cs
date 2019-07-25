@@ -91,6 +91,8 @@ namespace AMI.API.Controllers
         /// <param name="totalChunks">The total chunks.</param>
         /// <remarks>
         /// With this POST request you can upload a file in chunks in order to create an object.
+        /// If the file format consists of multiple files (e.g. Analyze or single-frame DICOM)
+        /// they have to be uploaded as single-file archive (.tar, tar.gz, .zip, .7z).
         /// </remarks>
         /// <returns>A model containing the result of the resumable upload.</returns>
         [HttpPost("upload")]

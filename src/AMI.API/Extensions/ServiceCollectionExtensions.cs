@@ -153,7 +153,7 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
                 document.DocumentName = "default";
                 document.AddSecurity("JWT", Enumerable.Empty<string>(), openApiSecurityScheme);
                 document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
-                document.Description = @"REST service for Animated Medical Imaging (AMI)
+                document.Description = @"REST service for [Animated Medical Imaging](https://github.com/niklr/animated-medical-imaging) (AMI)
 
 ## Introduction
 Integrating this Application Programming Interface (API) is the easiest way to submit data to AMI. 
