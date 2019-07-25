@@ -14,9 +14,13 @@ namespace AMI.API.Controllers
     public class PingController : BaseController
     {
         /// <summary>
-        /// Gets a test value to verify the connection and authentication.
+        /// Get test value
         /// </summary>
-        /// <returns>The test value if successful.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain a test value to verify the connection and authentication.
+        /// If the ping is successful you will receive a pong in the form of a JSON response.
+        /// </remarks>
+        /// <returns>A model containing the test value.</returns>
         [HttpGet]
         [Authorize]
         [OpenApiTag("General")]

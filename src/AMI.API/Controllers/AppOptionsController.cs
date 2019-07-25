@@ -15,9 +15,14 @@ namespace AMI.API.Controllers
     public class AppOptionsController : BaseController
     {
         /// <summary>
-        /// Gets the application options.
+        /// Get application options
         /// </summary>
-        /// <returns>The application options.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain the options used to configure the application.
+        /// It contains options such as the timeout in milliseconds before a request is canceled,
+        /// the maximum amount of entries an archive is allowed to have, and others.
+        /// </remarks>
+        /// <returns>A model containing the application options.</returns>
         [HttpGet]
         [OpenApiTag("General")]
         [ProducesResponseType(typeof(Models.AppOptions), (int)HttpStatusCode.OK)]

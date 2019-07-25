@@ -3,7 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "AMI API",
-    "description": "REST service for Animated Medical Imaging (AMI)\r\n\r\n## Introduction\r\nIntegrating this Application Programming Interface (API) is the easiest way to submit data to AMI. \r\nThe following documentation will help you to get full advantage of the API by understanding and implementing all endpoints. \r\nWith AMI API you will be able to upload files and submit tasks containing information needed for processing and receive the processed results. \r\nRequests with a body are sent in JavaScript Object Notation (JSON) format over HTTP(S), using the PUT or POST method.\r\n\r\nPlease, feel free to ask any questions, report bugs, suggest new features, and more on [GitHub](https://github.com/niklr/animated-medical-imaging/issues)\r\n\r\n## Authentication\r\nAuthentication of requests is accomplished by using JSON Web Tokens (JWT). Tokens can be obtained by providing your credentials to the tokens API endpoint.\r\nIf you don't have a registered account, you still can obtain tokens with the special API endpoint for anonymous users. \r\nThe response of the tokens API endpoint contains 3 different tokens: \r\n\r\n- **Access Token**: An authorization credential that can be used by the application to access the API.\r\n- **ID Token**: Contains user profile information (such as the user's name and email) which is represented in the form of claims.\r\n- **Refresh Token**: Contains the information required to obtain a new Access Token or ID Token.\r\n\r\nFor each API request you need to include the JWT Access Token with a \"Bearer\" prefix.\r\n\r\n## Requests, Responses, and Errors\r\nStatus codes are issued by the API in response to a client's request made to the API.\r\n\r\n> A **successful** completion of a request returns one of three possible status codes.\r\n\r\nStatus code | Name | Description\r\n---- |  ---- | ----\r\n200 | OK | The default status code for successful requests.\r\n201 | Created | Returned on successful POST requests when one or more new entities have been created.\r\n204 | No Content | Returned on successful DELETE requests.\r\n\r\n> An **unsuccessful** completion of a request returns one of the following status codes.\r\n\r\nStatus code | Name | Description\r\n---- |  ---- | ----\r\n400 | Bad Request | The format of the URL and/or of values in the parameter list is not valid.\r\n401 | Unauthorized | Usually caused by using a wrong/expired access token or by not using one at all.\r\n403 | Forbidden | The request was valid, but insufficient permissions for the resource.\r\n404 | Not Found | The requested entity does not (or no longer) exist.\r\n409 | Conflict | Indicates a mismatch in the current state of the resource.\r\n429 | Too Many Requests | Indicates that the rate limit has been reached.\r\n500 | Internal Server Error | An exception occurred that has no adequate handling.\r\n\r\n## HTTP method definitions\r\nThe Hypertext Transfer Protocol (HTTP) defines a set of request methods to indicate the desired action to be performed for a given resource/endpoint. \r\nAlthough they can also be nouns, these request methods are sometimes referred as HTTP verbs.\r\nAn idempotent HTTP method can be called many times without different outcomes.\r\nAMI API makes use of the following HTTP methods:\r\n\r\nMethod | Description\r\n---- |  ----\r\nGET | Getting a resource. (e.g. GET *.../objects/23* without body)\r\nPOST | Creating a resource. (e.g. POST *.../tasks* with a body containing JSON data)\r\nPUT | Updating a resource. (e.g. PUT *.../tasks/7* with a body containing JSON data)\r\nDELETE | Deleting a resource. (e.g. DELETE *.../objects/23* without body)\r\n\r\n## Rate Limits\r\nRequests are limited on a 60 seconds basis to provide equal access to the API for everyone.\r\nThe rate limit information is indicated in the header of the response e.g.\r\n\r\n- X-Rate-Limit-Limit: 1m\r\n- X-Rate-Limit-Remaining: 56\r\n- X-Rate-Limit-Reset: 2019-07-25T09:44:13.4658862Z\r\n\r\n## Pagination\r\nAll endpoints returning a list of entities are paginated by default.\r\nReturning a limited amount of entities is easier to handle, instead of hundreds or thousands.\r\n\r\nOption | Description\r\n---- |  ---- \r\nlimit | Defines the limit to constrain the number of items. (Allowed values: 10, 25, 50)\r\npage | Defines the current page number. (Allowed values: 0, 1, 2, ...)\r\n\r\n### Date format\r\nAll dates are in UTC (Universal Time Coordinated) and represented in ISO 8601 format (International Organization for Standardization). Example:\r\n\r\n> 2019-04-17T07:52:41.4700000Z\r\n\r\n",
+    "description": "REST service for Animated Medical Imaging (AMI)\r\n\r\n## Introduction\r\nIntegrating this Application Programming Interface (API) is the easiest way to submit data to AMI. \r\nThe following documentation will help you to get full advantage of the API by understanding and implementing all endpoints. \r\nWith AMI API you will be able to upload files and submit tasks containing information needed for processing and receive the processed results. \r\nRequests with a body are sent in JavaScript Object Notation (JSON) format over HTTP(S), using the PUT or POST method.\r\n\r\nPlease, feel free to ask any questions, report bugs, suggest new features, and more on [GitHub](https://github.com/niklr/animated-medical-imaging/issues)\r\n\r\n## Authentication\r\nAuthentication of requests is accomplished by using JSON Web Tokens (JWT). Tokens can be obtained by providing your credentials to the tokens API endpoint.\r\nIf you don't have a registered account, you still can obtain tokens with the special API endpoint for anonymous users. \r\nThe response of the tokens API endpoint contains 3 different tokens: \r\n\r\n- **Access Token**: An authorization credential that can be used by the application to access the API.\r\n- **ID Token**: Contains user profile information (such as the user's name and email) which is represented in the form of claims.\r\n- **Refresh Token**: Contains the information required to obtain a new Access Token or ID Token.\r\n\r\nFor each API request you need to include the JWT Access Token with a \"Bearer\" prefix.\r\n\r\n## Requests, Responses, and Errors\r\nStatus codes are issued by the API in response to a client's request made to the API.\r\n\r\n> A **successful** completion of a request returns one of three possible status codes.\r\n\r\nStatus code | Name | Description\r\n---- | ---- | ----\r\n200 | OK | The default status code for successful requests.\r\n201 | Created | Returned on successful POST requests when one or more new entities have been created.\r\n204 | No Content | Returned on successful DELETE requests.\r\n\r\n> An **unsuccessful** completion of a request returns one of the following status codes.\r\n\r\nStatus code | Name | Description\r\n---- | ---- | ----\r\n400 | Bad Request | The format of the URL and/or of values in the parameter list is not valid.\r\n401 | Unauthorized | Usually caused by using a wrong/expired access token or by not using one at all.\r\n403 | Forbidden | The request was valid, but insufficient permissions for the resource.\r\n404 | Not Found | The requested entity does not (or no longer) exist.\r\n409 | Conflict | Indicates a mismatch in the current state of the resource.\r\n429 | Too Many Requests | Indicates that the rate limit has been reached.\r\n500 | Internal Server Error | An exception occurred that has no adequate handling.\r\n\r\n## HTTP method definitions\r\nThe Hypertext Transfer Protocol (HTTP) defines a set of request methods to indicate the desired action to be performed for a given resource/endpoint. \r\nAlthough they can also be nouns, these request methods are sometimes referred as HTTP verbs.\r\nAn idempotent HTTP method can be called many times without different outcomes.\r\nAMI API makes use of the following HTTP methods:\r\n\r\nMethod | Description\r\n---- | ----\r\nGET | Getting a resource. (e.g. GET *https://localhost/objects/23* without body)\r\nPOST | Creating a resource. (e.g. POST *https://localhost/tasks* with a body containing JSON data)\r\nPUT | Updating a resource. (e.g. PUT *https://localhost/tasks/7* with a body containing JSON data)\r\nDELETE | Deleting a resource. (e.g. DELETE *https://localhost/objects/23* without body)\r\n\r\n## Rate Limits\r\nRequests are limited on a 60 seconds basis to provide equal access to the API for everyone.\r\nThe rate limit information is indicated in the header of the response e.g.\r\n\r\n- X-Rate-Limit-Limit: 1m\r\n- X-Rate-Limit-Remaining: 56\r\n- X-Rate-Limit-Reset: 2019-07-25T09:44:13.4658862Z\r\n\r\n## Pagination\r\nAll endpoints returning a list of entities are paginated by default.\r\nReturning a limited amount of entities is easier to handle, instead of hundreds or thousands.\r\n\r\nOption | Description\r\n---- | ---- \r\nlimit | Defines the limit to constrain the number of items. (Allowed values: 10, 25, 50)\r\npage | Defines the current page number. (Allowed values: 0, 1, 2, ...)\r\n\r\n### Date format\r\nAll dates are in UTC (Universal Time Coordinated) and represented in ISO 8601 format (International Organization for Standardization). Example:\r\n\r\n> 2019-04-17T07:52:41.4700000Z\r\n\r\n",
     "version": "0.0.4"
   },
   "paths": {
@@ -12,7 +12,8 @@
         "tags": [
           "General"
         ],
-        "summary": "Gets the API options.",
+        "summary": "Get API options",
+        "description": "With this GET request you can obtain the options used to configure the API.\nIt contains options related to authentication and authorization, rate limiting and others.",
         "operationId": "ApiOptions_Get",
         "responses": {
           "500": {
@@ -26,7 +27,7 @@
             }
           },
           "200": {
-            "description": "The API options.",
+            "description": "A model containing the API options.",
             "content": {
               "application/json": {
                 "schema": {
@@ -43,7 +44,8 @@
         "tags": [
           "General"
         ],
-        "summary": "Gets the application information.",
+        "summary": "Get application information",
+        "description": "With this GET request you can obtain information about the application (e.g. application name and current version).",
         "operationId": "AppInfo_Get",
         "responses": {
           "500": {
@@ -57,7 +59,7 @@
             }
           },
           "200": {
-            "description": "The application information.",
+            "description": "A model containing the application information.",
             "content": {
               "application/json": {
                 "schema": {
@@ -74,7 +76,8 @@
         "tags": [
           "General"
         ],
-        "summary": "Gets the application options.",
+        "summary": "Get application options",
+        "description": "With this GET request you can obtain the options used to configure the application.\nIt contains options such as the timeout in milliseconds before a request is canceled,\nthe maximum amount of entries an archive is allowed to have, and others.",
         "operationId": "AppOptions_Get",
         "responses": {
           "500": {
@@ -88,7 +91,7 @@
             }
           },
           "200": {
-            "description": "The application options.",
+            "description": "A model containing the application options.",
             "content": {
               "application/json": {
                 "schema": {
@@ -105,7 +108,8 @@
         "tags": [
           "Objects"
         ],
-        "summary": "Gets a paginated list of objects.",
+        "summary": "Get paginated list of objects",
+        "description": "With this GET request you can obtain a paginated list of objects.\nThe objects are sorted in descending order by creation date.",
         "operationId": "Objects_GetPaginated",
         "parameters": [
           {
@@ -141,7 +145,7 @@
             }
           },
           "200": {
-            "description": "The list of paginated objects.",
+            "description": "A model containing a list of paginated objects.",
             "content": {
               "application/json": {
                 "schema": {
@@ -158,7 +162,8 @@
         "tags": [
           "Objects"
         ],
-        "summary": "Gets the information of the object with the specified identifier.",
+        "summary": "Get object by id",
+        "description": "With this GET request you can obtain information about the object with the specified identifier.\nAn object is an abstraction for an uploaded file and can be processed by creating one or multiple tasks.",
         "operationId": "Objects_GetById",
         "parameters": [
           {
@@ -185,7 +190,7 @@
             }
           },
           "200": {
-            "description": "The information of the object.",
+            "description": "A model containing the specified object.",
             "content": {
               "application/json": {
                 "schema": {
@@ -200,7 +205,8 @@
         "tags": [
           "Objects"
         ],
-        "summary": "Deletes the object with the specified identifier.",
+        "summary": "Delete object by id",
+        "description": "With this DELETE request you can delete the object with the specified identifier.",
         "operationId": "Objects_DeleteById",
         "parameters": [
           {
@@ -244,7 +250,8 @@
         "tags": [
           "Objects"
         ],
-        "summary": "Uploads an object.",
+        "summary": "Upload an object",
+        "description": "With this POST request you can upload a file in chunks in order to create an object.",
         "operationId": "Objects_Upload",
         "parameters": [
           {
@@ -332,7 +339,7 @@
             }
           },
           "200": {
-            "description": "The result of the resumable upload.",
+            "description": "A model containing the result of the resumable upload.",
             "content": {
               "application/json": {
                 "schema": {
@@ -349,7 +356,8 @@
         "tags": [
           "General"
         ],
-        "summary": "Gets a test value to verify the connection and authentication.",
+        "summary": "Get test value",
+        "description": "With this GET request you can obtain a test value to verify the connection and authentication.\nIf the ping is successful you will receive a pong in the form of a JSON response.",
         "operationId": "Ping_Get",
         "responses": {
           "500": {
@@ -363,7 +371,7 @@
             }
           },
           "200": {
-            "description": "The test value if successful.",
+            "description": "A model containing the test value.",
             "content": {
               "application/json": {
                 "schema": {
@@ -385,7 +393,8 @@
         "tags": [
           "Results"
         ],
-        "summary": "Gets the information of the result with the specified identifier.",
+        "summary": "Get result by id",
+        "description": "With this GET request you can obtain information about the result with the specified identifier.\nA result is an abstraction for the outcome of a finished task.",
         "operationId": "Results_GetById",
         "parameters": [
           {
@@ -412,7 +421,7 @@
             }
           },
           "200": {
-            "description": "The information of the result.",
+            "description": "A model containing the specified result.",
             "content": {
               "application/json": {
                 "schema": {
@@ -429,7 +438,8 @@
         "tags": [
           "Results"
         ],
-        "summary": "Gets the image of the result with the specified identifier.",
+        "summary": "Get image of result",
+        "description": "With this GET request you can obtain a specific image of the result with the specified identifier.",
         "operationId": "Results_GetImage",
         "parameters": [
           {
@@ -467,7 +477,7 @@
             }
           },
           "200": {
-            "description": "The information of the object.",
+            "description": "A stream containing the image.",
             "content": {
               "application/json": {
                 "schema": {
@@ -484,7 +494,8 @@
         "tags": [
           "Results"
         ],
-        "summary": "Downloads the result with the specified identifier as a ZIP.",
+        "summary": "Download result",
+        "description": "With this GET request you can download the result with the specified identifier as an archive.",
         "operationId": "Results_DownloadById",
         "parameters": [
           {
@@ -511,7 +522,7 @@
             }
           },
           "200": {
-            "description": "The result as a ZIP.",
+            "description": "A stream containing the result as an archive.",
             "content": {
               "application/json": {
                 "schema": {
@@ -528,7 +539,8 @@
         "tags": [
           "Tasks"
         ],
-        "summary": "Gets the information of the task with the specified identifier.",
+        "summary": "Get task by id",
+        "description": "With this GET request you can obtain information about the task with the specified identifier.\nA task is an abstraction for job being processed in the background.",
         "operationId": "Tasks_GetById",
         "parameters": [
           {
@@ -555,7 +567,7 @@
             }
           },
           "200": {
-            "description": "The information of the task.",
+            "description": "A model containing the specified task.",
             "content": {
               "application/json": {
                 "schema": {
@@ -572,7 +584,8 @@
         "tags": [
           "Tasks"
         ],
-        "summary": "Creates a new task.",
+        "summary": "Create task",
+        "description": "With this POST request you can create a task being processed in the background.",
         "operationId": "Tasks_Create",
         "requestBody": {
           "x-name": "command",
@@ -599,7 +612,7 @@
             }
           },
           "201": {
-            "description": "The created task.",
+            "description": "A model containing the created task.",
             "content": {
               "application/json": {
                 "schema": {
@@ -616,7 +629,8 @@
         "tags": [
           "Tokens"
         ],
-        "summary": "Creates tokens for the provided credentials.",
+        "summary": "Create tokens",
+        "description": "With this POST request you can obtain tokens with your credentials.\nTokens are used for authentication and authorization purposes.",
         "operationId": "Tokens_Create",
         "requestBody": {
           "x-name": "credentials",
@@ -643,7 +657,7 @@
             }
           },
           "200": {
-            "description": "The container with the tokens.",
+            "description": "A model containing the tokens.",
             "content": {
               "application/json": {
                 "schema": {
@@ -658,7 +672,8 @@
         "tags": [
           "Tokens"
         ],
-        "summary": "Updates the expired access token with a new valid access token based on the provided refresh token.",
+        "summary": "Update tokens",
+        "description": "With this PUT request you can update an expired access token with a new valid access token based on the provided refresh token.",
         "operationId": "Tokens_Update",
         "requestBody": {
           "x-name": "container",
@@ -685,7 +700,7 @@
             }
           },
           "200": {
-            "description": "The container with the updated tokens.",
+            "description": "A model containing the updated tokens.",
             "content": {
               "application/json": {
                 "schema": {
@@ -702,7 +717,8 @@
         "tags": [
           "Tokens"
         ],
-        "summary": "Creates tokens for anonymous users.",
+        "summary": "Create anonymous tokens",
+        "description": "With this POST request you can obtain tokens as anonymous user.\nTokens are used for authentication and authorization purposes.",
         "operationId": "Tokens_CreateAnonymous",
         "responses": {
           "500": {
@@ -716,7 +732,7 @@
             }
           },
           "200": {
-            "description": "The container with the tokens.",
+            "description": "A model containing the tokens.",
             "content": {
               "application/json": {
                 "schema": {

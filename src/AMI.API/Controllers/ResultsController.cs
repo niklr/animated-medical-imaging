@@ -12,16 +12,19 @@ namespace AMI.API.Controllers
     /// <summary>
     /// The endpoints related to results.
     /// </summary>
-    /// <seealso cref="BaseController" />
     [ApiController]
     [Route("results")]
     public class ResultsController : BaseController
     {
         /// <summary>
-        /// Gets the information of the result with the specified identifier.
+        /// Get result by id
         /// </summary>
         /// <param name="id">The identifier of the result.</param>
-        /// <returns>The information of the result.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain information about the result with the specified identifier.
+        /// A result is an abstraction for the outcome of a finished task.
+        /// </remarks>
+        /// <returns>A model containing the specified result.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Models.ResultModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
@@ -30,11 +33,14 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Gets the image of the result with the specified identifier.
+        /// Get image of result
         /// </summary>
         /// <param name="id">The identifier of the object.</param>
         /// <param name="filename">The name of the file.</param>
-        /// <returns>The information of the object.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain a specific image of the result with the specified identifier.
+        /// </remarks>
+        /// <returns>A stream containing the image.</returns>
         [HttpGet("{id}/images/{filename}")]
         [ProducesResponseType(typeof(Stream), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetImage(string id, string filename)
@@ -44,10 +50,13 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Downloads the result with the specified identifier as a ZIP.
+        /// Download result
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns>The result as a ZIP.</returns>
+        /// <remarks>
+        /// With this GET request you can download the result with the specified identifier as an archive.
+        /// </remarks>
+        /// <returns>A stream containing the result as an archive.</returns>
         [HttpGet("{id}/download")]
         [ProducesResponseType(typeof(Stream), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DownloadById(string id)

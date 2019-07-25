@@ -26,10 +26,14 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Creates tokens for the provided credentials.
+        /// Create tokens
         /// </summary>
         /// <param name="credentials">The credentials.</param>
-        /// <returns>The container with the tokens.</returns>
+        /// <remarks>
+        /// With this POST request you can obtain tokens with your credentials.
+        /// Tokens are used for authentication and authorization purposes.
+        /// </remarks>
+        /// <returns>A model containing the tokens.</returns>
         [HttpPost]
         [ProducesResponseType(typeof(Models.TokenContainerModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Create([FromBody] Models.CredentialsModel credentials)
@@ -38,9 +42,13 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Creates tokens for anonymous users.
+        /// Create anonymous tokens
         /// </summary>
-        /// <returns>The container with the tokens.</returns>
+        /// <remarks>
+        /// With this POST request you can obtain tokens as anonymous user.
+        /// Tokens are used for authentication and authorization purposes.
+        /// </remarks>
+        /// <returns>A model containing the tokens.</returns>
         [HttpPost("anon")]
         [ProducesResponseType(typeof(Models.TokenContainerModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CreateAnonymous()
@@ -49,10 +57,13 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Updates the expired access token with a new valid access token based on the provided refresh token.
+        /// Update tokens
         /// </summary>
         /// <param name="container">The container with the tokens.</param>
-        /// <returns>The container with the updated tokens.</returns>
+        /// <remarks>
+        /// With this PUT request you can update an expired access token with a new valid access token based on the provided refresh token.
+        /// </remarks>
+        /// <returns>A model containing the updated tokens.</returns>
         [HttpPut]
         [ProducesResponseType(typeof(Models.TokenContainerModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Update([FromBody] Models.TokenContainerModel container)

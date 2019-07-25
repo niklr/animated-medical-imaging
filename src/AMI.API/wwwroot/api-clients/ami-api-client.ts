@@ -16,8 +16,8 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IApiOptionsAmiApiClient {
     /**
-     * Gets the API options.
-     * @return The API options.
+     * Get API options
+     * @return A model containing the API options.
      */
     get(): Observable<ApiOptions>;
 }
@@ -34,8 +34,8 @@ export class ApiOptionsAmiApiClient implements IApiOptionsAmiApiClient {
     }
 
     /**
-     * Gets the API options.
-     * @return The API options.
+     * Get API options
+     * @return A model containing the API options.
      */
     get(): Observable<ApiOptions> {
         let url_ = this.baseUrl + "/api-options";
@@ -95,8 +95,8 @@ export class ApiOptionsAmiApiClient implements IApiOptionsAmiApiClient {
 
 export interface IAppInfoAmiApiClient {
     /**
-     * Gets the application information.
-     * @return The application information.
+     * Get application information
+     * @return A model containing the application information.
      */
     get(): Observable<AppInfo>;
 }
@@ -113,8 +113,8 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
     }
 
     /**
-     * Gets the application information.
-     * @return The application information.
+     * Get application information
+     * @return A model containing the application information.
      */
     get(): Observable<AppInfo> {
         let url_ = this.baseUrl + "/app-info";
@@ -174,8 +174,8 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
 
 export interface IAppOptionsAmiApiClient {
     /**
-     * Gets the application options.
-     * @return The application options.
+     * Get application options
+     * @return A model containing the application options.
      */
     get(): Observable<AppOptions>;
 }
@@ -192,8 +192,8 @@ export class AppOptionsAmiApiClient implements IAppOptionsAmiApiClient {
     }
 
     /**
-     * Gets the application options.
-     * @return The application options.
+     * Get application options
+     * @return A model containing the application options.
      */
     get(): Observable<AppOptions> {
         let url_ = this.baseUrl + "/app-options";
@@ -253,26 +253,26 @@ export class AppOptionsAmiApiClient implements IAppOptionsAmiApiClient {
 
 export interface IObjectsAmiApiClient {
     /**
-     * Gets a paginated list of objects.
+     * Get paginated list of objects
      * @param page (optional) The current page.
      * @param limit (optional) The limit to constrain the number of items.
-     * @return The list of paginated objects.
+     * @return A model containing a list of paginated objects.
      */
     getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfObjectModel>;
     /**
-     * Gets the information of the object with the specified identifier.
+     * Get object by id
      * @param id The identifier of the object.
-     * @return The information of the object.
+     * @return A model containing the specified object.
      */
     getById(id: string | null): Observable<ObjectModel>;
     /**
-     * Deletes the object with the specified identifier.
+     * Delete object by id
      * @param id The identifier of the object.
      * @return No content.
      */
     deleteById(id: string | null): Observable<ObjectModel>;
     /**
-     * Uploads an object.
+     * Upload an object
      * @param file (optional) The file.
      * @param chunkNumber (optional) The chunk number.
      * @param totalSize (optional) The total size of the upload.
@@ -280,7 +280,7 @@ export interface IObjectsAmiApiClient {
      * @param filename (optional) The filename.
      * @param relativePath (optional) The relative path.
      * @param totalChunks (optional) The total chunks.
-     * @return The result of the resumable upload.
+     * @return A model containing the result of the resumable upload.
      */
     upload(file: FileParameter | null | undefined, chunkNumber: number | undefined, totalSize: number | undefined, uid: string | null | undefined, filename: string | null | undefined, relativePath: string | null | undefined, totalChunks: number | undefined): Observable<ObjectModel>;
 }
@@ -297,10 +297,10 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     }
 
     /**
-     * Gets a paginated list of objects.
+     * Get paginated list of objects
      * @param page (optional) The current page.
      * @param limit (optional) The limit to constrain the number of items.
-     * @return The list of paginated objects.
+     * @return A model containing a list of paginated objects.
      */
     getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfObjectModel> {
         let url_ = this.baseUrl + "/objects?";
@@ -366,9 +366,9 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     }
 
     /**
-     * Gets the information of the object with the specified identifier.
+     * Get object by id
      * @param id The identifier of the object.
-     * @return The information of the object.
+     * @return A model containing the specified object.
      */
     getById(id: string | null): Observable<ObjectModel> {
         let url_ = this.baseUrl + "/objects/{id}";
@@ -429,7 +429,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     }
 
     /**
-     * Deletes the object with the specified identifier.
+     * Delete object by id
      * @param id The identifier of the object.
      * @return No content.
      */
@@ -492,7 +492,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
     }
 
     /**
-     * Uploads an object.
+     * Upload an object
      * @param file (optional) The file.
      * @param chunkNumber (optional) The chunk number.
      * @param totalSize (optional) The total size of the upload.
@@ -500,7 +500,7 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
      * @param filename (optional) The filename.
      * @param relativePath (optional) The relative path.
      * @param totalChunks (optional) The total chunks.
-     * @return The result of the resumable upload.
+     * @return A model containing the result of the resumable upload.
      */
     upload(file: FileParameter | null | undefined, chunkNumber: number | undefined, totalSize: number | undefined, uid: string | null | undefined, filename: string | null | undefined, relativePath: string | null | undefined, totalChunks: number | undefined): Observable<ObjectModel> {
         let url_ = this.baseUrl + "/objects/upload?";
@@ -583,8 +583,8 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
 
 export interface IPingAmiApiClient {
     /**
-     * Gets a test value to verify the connection and authentication.
-     * @return The test value if successful.
+     * Get test value
+     * @return A model containing the test value.
      */
     get(): Observable<PongModel>;
 }
@@ -601,8 +601,8 @@ export class PingAmiApiClient implements IPingAmiApiClient {
     }
 
     /**
-     * Gets a test value to verify the connection and authentication.
-     * @return The test value if successful.
+     * Get test value
+     * @return A model containing the test value.
      */
     get(): Observable<PongModel> {
         let url_ = this.baseUrl + "/ping";
@@ -662,22 +662,22 @@ export class PingAmiApiClient implements IPingAmiApiClient {
 
 export interface IResultsAmiApiClient {
     /**
-     * Gets the information of the result with the specified identifier.
+     * Get result by id
      * @param id The identifier of the result.
-     * @return The information of the result.
+     * @return A model containing the specified result.
      */
     getById(id: string | null): Observable<ResultModel>;
     /**
-     * Gets the image of the result with the specified identifier.
+     * Get image of result
      * @param id The identifier of the object.
      * @param filename The name of the file.
-     * @return The information of the object.
+     * @return A stream containing the image.
      */
     getImage(id: string | null, filename: string | null): Observable<Stream>;
     /**
-     * Downloads the result with the specified identifier as a ZIP.
+     * Download result
      * @param id The identifier.
-     * @return The result as a ZIP.
+     * @return A stream containing the result as an archive.
      */
     downloadById(id: string | null): Observable<Stream>;
 }
@@ -694,9 +694,9 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
     }
 
     /**
-     * Gets the information of the result with the specified identifier.
+     * Get result by id
      * @param id The identifier of the result.
-     * @return The information of the result.
+     * @return A model containing the specified result.
      */
     getById(id: string | null): Observable<ResultModel> {
         let url_ = this.baseUrl + "/results/{id}";
@@ -757,10 +757,10 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
     }
 
     /**
-     * Gets the image of the result with the specified identifier.
+     * Get image of result
      * @param id The identifier of the object.
      * @param filename The name of the file.
-     * @return The information of the object.
+     * @return A stream containing the image.
      */
     getImage(id: string | null, filename: string | null): Observable<Stream> {
         let url_ = this.baseUrl + "/results/{id}/images/{filename}";
@@ -824,9 +824,9 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
     }
 
     /**
-     * Downloads the result with the specified identifier as a ZIP.
+     * Download result
      * @param id The identifier.
-     * @return The result as a ZIP.
+     * @return A stream containing the result as an archive.
      */
     downloadById(id: string | null): Observable<Stream> {
         let url_ = this.baseUrl + "/results/{id}/download";
@@ -889,15 +889,15 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
 
 export interface ITasksAmiApiClient {
     /**
-     * Gets the information of the task with the specified identifier.
+     * Get task by id
      * @param id The identifier of the task.
-     * @return The information of the task.
+     * @return A model containing the specified task.
      */
     getById(id: string | null): Observable<TaskModel>;
     /**
-     * Creates a new task.
+     * Create task
      * @param command The command to create a new task.
-     * @return The created task.
+     * @return A model containing the created task.
      */
     create(command: CreateTaskCommand): Observable<TaskModel>;
 }
@@ -914,9 +914,9 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
     }
 
     /**
-     * Gets the information of the task with the specified identifier.
+     * Get task by id
      * @param id The identifier of the task.
-     * @return The information of the task.
+     * @return A model containing the specified task.
      */
     getById(id: string | null): Observable<TaskModel> {
         let url_ = this.baseUrl + "/tasks/{id}";
@@ -977,9 +977,9 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
     }
 
     /**
-     * Creates a new task.
+     * Create task
      * @param command The command to create a new task.
-     * @return The created task.
+     * @return A model containing the created task.
      */
     create(command: CreateTaskCommand): Observable<TaskModel> {
         let url_ = this.baseUrl + "/tasks";
@@ -1043,20 +1043,20 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
 
 export interface ITokensAmiApiClient {
     /**
-     * Creates tokens for the provided credentials.
+     * Create tokens
      * @param credentials The credentials.
-     * @return The container with the tokens.
+     * @return A model containing the tokens.
      */
     create(credentials: CredentialsModel): Observable<TokenContainerModel>;
     /**
-     * Updates the expired access token with a new valid access token based on the provided refresh token.
+     * Update tokens
      * @param container The container with the tokens.
-     * @return The container with the updated tokens.
+     * @return A model containing the updated tokens.
      */
     update(container: TokenContainerModel): Observable<TokenContainerModel>;
     /**
-     * Creates tokens for anonymous users.
-     * @return The container with the tokens.
+     * Create anonymous tokens
+     * @return A model containing the tokens.
      */
     createAnonymous(): Observable<TokenContainerModel>;
 }
@@ -1073,9 +1073,9 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
     }
 
     /**
-     * Creates tokens for the provided credentials.
+     * Create tokens
      * @param credentials The credentials.
-     * @return The container with the tokens.
+     * @return A model containing the tokens.
      */
     create(credentials: CredentialsModel): Observable<TokenContainerModel> {
         let url_ = this.baseUrl + "/tokens";
@@ -1137,9 +1137,9 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
     }
 
     /**
-     * Updates the expired access token with a new valid access token based on the provided refresh token.
+     * Update tokens
      * @param container The container with the tokens.
-     * @return The container with the updated tokens.
+     * @return A model containing the updated tokens.
      */
     update(container: TokenContainerModel): Observable<TokenContainerModel> {
         let url_ = this.baseUrl + "/tokens";
@@ -1201,8 +1201,8 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
     }
 
     /**
-     * Creates tokens for anonymous users.
-     * @return The container with the tokens.
+     * Create anonymous tokens
+     * @return A model containing the tokens.
      */
     createAnonymous(): Observable<TokenContainerModel> {
         let url_ = this.baseUrl + "/tokens/anon";

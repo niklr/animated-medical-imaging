@@ -15,7 +15,6 @@ namespace AMI.API.Controllers
     /// <summary>
     /// The endpoints related to objects.
     /// </summary>
-    /// <seealso cref="BaseController" />
     [ApiController]
     [Route("objects")]
     public class ObjectsController : BaseController
@@ -32,11 +31,15 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Gets a paginated list of objects.
+        /// Get paginated list of objects
         /// </summary>
         /// <param name="page">The current page.</param>
         /// <param name="limit">The limit to constrain the number of items.</param>
-        /// <returns>The list of paginated objects.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain a paginated list of objects.
+        /// The objects are sorted in descending order by creation date.
+        /// </remarks>
+        /// <returns>A model containing a list of paginated objects.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(Models.PaginationResultModel<Models.ObjectModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetPaginatedAsync(int page, int limit)
@@ -45,10 +48,14 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Gets the information of the object with the specified identifier.
+        /// Get object by id
         /// </summary>
         /// <param name="id">The identifier of the object.</param>
-        /// <returns>The information of the object.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain information about the object with the specified identifier.
+        /// An object is an abstraction for an uploaded file and can be processed by creating one or multiple tasks.
+        /// </remarks>
+        /// <returns>A model containing the specified object.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
@@ -57,9 +64,12 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Deletes the object with the specified identifier.
+        /// Delete object by id
         /// </summary>
         /// <param name="id">The identifier of the object.</param>
+        /// <remarks>
+        /// With this DELETE request you can delete the object with the specified identifier.
+        /// </remarks>
         /// <returns>No content.</returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.NoContent)]
@@ -70,7 +80,7 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Uploads an object.
+        /// Upload an object
         /// </summary>
         /// <param name="file">The file.</param>
         /// <param name="chunkNumber">The chunk number.</param>
@@ -79,7 +89,10 @@ namespace AMI.API.Controllers
         /// <param name="filename">The filename.</param>
         /// <param name="relativePath">The relative path.</param>
         /// <param name="totalChunks">The total chunks.</param>
-        /// <returns>The result of the resumable upload.</returns>
+        /// <remarks>
+        /// With this POST request you can upload a file in chunks in order to create an object.
+        /// </remarks>
+        /// <returns>A model containing the result of the resumable upload.</returns>
         [HttpPost("upload")]
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> UploadAsync(

@@ -15,9 +15,12 @@ namespace AMI.API.Controllers
     public class AppInfoController : BaseController
     {
         /// <summary>
-        /// Gets the application information.
+        /// Get application information
         /// </summary>
-        /// <returns>The application information.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain information about the application (e.g. application name and current version).
+        /// </remarks>
+        /// <returns>A model containing the application information.</returns>
         [HttpGet]
         [OpenApiTag("General")]
         [ProducesResponseType(typeof(Models.AppInfo), (int)HttpStatusCode.OK)]

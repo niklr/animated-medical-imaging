@@ -10,16 +10,19 @@ namespace AMI.API.Controllers
     /// <summary>
     /// The endpoints related to tasks.
     /// </summary>
-    /// <seealso cref="BaseController" />
     [ApiController]
     [Route("tasks")]
     public class TasksController : BaseController
     {
         /// <summary>
-        /// Gets the information of the task with the specified identifier.
+        /// Get task by id
         /// </summary>
         /// <param name="id">The identifier of the task.</param>
-        /// <returns>The information of the task.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain information about the task with the specified identifier.
+        /// A task is an abstraction for job being processed in the background.
+        /// </remarks>
+        /// <returns>A model containing the specified task.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Models.TaskModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
@@ -28,10 +31,13 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Creates a new task.
+        /// Create task
         /// </summary>
         /// <param name="command">The command to create a new task.</param>
-        /// <returns>The created task.</returns>
+        /// <remarks>
+        /// With this POST request you can create a task being processed in the background.
+        /// </remarks>
+        /// <returns>A model containing the created task.</returns>
         [HttpPost]
         [ProducesResponseType(typeof(Models.TaskModel), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] CreateTaskCommand command)

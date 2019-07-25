@@ -180,7 +180,7 @@ Status codes are issued by the API in response to a client's request made to the
 > A **successful** completion of a request returns one of three possible status codes.
 
 Status code | Name | Description
----- |  ---- | ----
+---- | ---- | ----
 200 | OK | The default status code for successful requests.
 201 | Created | Returned on successful POST requests when one or more new entities have been created.
 204 | No Content | Returned on successful DELETE requests.
@@ -188,7 +188,7 @@ Status code | Name | Description
 > An **unsuccessful** completion of a request returns one of the following status codes.
 
 Status code | Name | Description
----- |  ---- | ----
+---- | ---- | ----
 400 | Bad Request | The format of the URL and/or of values in the parameter list is not valid.
 401 | Unauthorized | Usually caused by using a wrong/expired access token or by not using one at all.
 403 | Forbidden | The request was valid, but insufficient permissions for the resource.
@@ -204,11 +204,11 @@ An idempotent HTTP method can be called many times without different outcomes.
 AMI API makes use of the following HTTP methods:
 
 Method | Description
----- |  ----
-GET | Getting a resource. (e.g. GET *.../objects/23* without body)
-POST | Creating a resource. (e.g. POST *.../tasks* with a body containing JSON data)
-PUT | Updating a resource. (e.g. PUT *.../tasks/7* with a body containing JSON data)
-DELETE | Deleting a resource. (e.g. DELETE *.../objects/23* without body)
+---- | ----
+GET | Getting a resource. (e.g. GET *https://localhost/objects/23* without body)
+POST | Creating a resource. (e.g. POST *https://localhost/tasks* with a body containing JSON data)
+PUT | Updating a resource. (e.g. PUT *https://localhost/tasks/7* with a body containing JSON data)
+DELETE | Deleting a resource. (e.g. DELETE *https://localhost/objects/23* without body)
 
 ## Rate Limits
 Requests are limited on a 60 seconds basis to provide equal access to the API for everyone.
@@ -223,7 +223,7 @@ All endpoints returning a list of entities are paginated by default.
 Returning a limited amount of entities is easier to handle, instead of hundreds or thousands.
 
 Option | Description
----- |  ---- 
+---- | ---- 
 limit | Defines the limit to constrain the number of items. (Allowed values: 10, 25, 50)
 page | Defines the current page number. (Allowed values: 0, 1, 2, ...)
 

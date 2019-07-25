@@ -15,9 +15,13 @@ namespace AMI.API.Controllers
     public class ApiOptionsController : BaseController
     {
         /// <summary>
-        /// Gets the API options.
+        /// Get API options
         /// </summary>
-        /// <returns>The API options.</returns>
+        /// <remarks>
+        /// With this GET request you can obtain the options used to configure the API.
+        /// It contains options related to authentication and authorization, rate limiting and others.
+        /// </remarks>
+        /// <returns>A model containing the API options.</returns>
         [HttpGet]
         [OpenApiTag("General")]
         [ProducesResponseType(typeof(Models.ApiOptions), (int)HttpStatusCode.OK)]

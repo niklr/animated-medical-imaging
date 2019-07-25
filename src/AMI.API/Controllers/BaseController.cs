@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using AMI.Core.Configurations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,21 @@ namespace AMI.API.Controllers
         /// <summary>
         /// Gets the cancellation token.
         /// </summary>
-        protected CancellationToken CancellationToken => HttpContext?.RequestAborted ?? CancellationToken.None;
+        protected CancellationToken CancellationToken
+        {
+            get
+            {
+                IAppConfiguration configuration = HttpContext.RequestServices.GetService<IAppConfiguration>();
+                CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(
+                    HttpContext?.RequestAborted ?? default(CancellationToken));
+
+                if (configuration?.Options?.TimeoutMilliseconds > 0)
+                {
+                    cts.CancelAfter(configuration.Options.TimeoutMilliseconds);
+                }
+
+                return cts.Token;
+            }
+        }
     }
 }
