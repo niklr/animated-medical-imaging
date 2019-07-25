@@ -476,12 +476,12 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             result500 = ErrorModel.fromJS(resultData500);
             return throwException("A server error occurred.", status, _responseText, _headers, result500);
             }));
-        } else if (status === 200) {
+        } else if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ObjectModel.fromJS(resultData200);
-            return _observableOf(result200);
+            let result204: any = null;
+            let resultData204 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result204 = ObjectModel.fromJS(resultData204);
+            return _observableOf(result204);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {

@@ -62,7 +62,7 @@ namespace AMI.API.Controllers
         /// <param name="id">The identifier of the object.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteById(string id)
         {
             await Mediator.Send(new DeleteObjectCommand { Id = id }, CancellationToken);

@@ -17,8 +17,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
     /// <summary>
     /// A handler for delete command requests.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{DeleteObjectCommand, ObjectModel}" />
-    public class DeleteCommandHandler : BaseCommandRequestHandler<DeleteObjectCommand, ObjectModel>
+    public class DeleteCommandHandler : BaseCommandRequestHandler<DeleteObjectCommand, bool>
     {
         private readonly IAppConfiguration configuration;
         private readonly IFileSystem fileSystem;
@@ -48,7 +47,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         }
 
         /// <inheritdoc/>
-        protected override async Task<ObjectModel> ProtectedHandleAsync(DeleteObjectCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ProtectedHandleAsync(DeleteObjectCommand request, CancellationToken cancellationToken)
         {
             Context.BeginTransaction();
 
@@ -57,7 +56,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
 
             if (entity == null)
             {
-                throw new NotFoundException(nameof(ObjectEntity), request.Id);
+                return true;
             }
 
             Context.ObjectRepository.Remove(entity);
@@ -86,7 +85,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
                 result,
                 cancellationToken);
 
-            return result;
+            return true;
         }
     }
 }

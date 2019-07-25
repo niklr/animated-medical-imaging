@@ -231,21 +231,7 @@ namespace AMI.API
             });
 
             // Customise the Swagger specification
-            var openApiSecurityScheme = new OpenApiSecurityScheme
-            {
-                Type = OpenApiSecuritySchemeType.ApiKey,
-                Name = "Authorization",
-                In = OpenApiSecurityApiKeyLocation.Header,
-                Description = "Type into the textbox: Bearer {your JWT token}."
-            };
-            services.AddOpenApiDocument(document =>
-            {
-                document.Title = AppInfo.AppName;
-                document.Version = AppInfo.AppVersion;
-                document.DocumentName = "default";
-                document.AddSecurity("JWT", Enumerable.Empty<string>(), openApiSecurityScheme);
-                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
-            });
+            services.AddCustomOpenApiDocument(AppInfo);
         }
 
         /// <summary>
