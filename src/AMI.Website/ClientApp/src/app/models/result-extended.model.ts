@@ -5,7 +5,7 @@ import {
   PositionAxisContainerModelOfString
 } from '../../app/clients/ami-api-client';
 
-export interface ProcessResultModelExtended extends ProcessResultModel {
+export class ProcessResultModelExtended extends ProcessResultModel {
   combinedGifExtended: ContainerModelExtended;
   showCombinedGif: boolean;
   xAxisGif: AxisContainerModelOfString & ContainerModelExtended;

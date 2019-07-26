@@ -26,25 +26,12 @@ namespace AMI.Core.Services
         Task<TokenContainerModel> CreateAnonymousAsync(CancellationToken ct);
 
         /// <summary>
-        /// Decodes the specified access token.
+        /// Decodes the specified token.
         /// </summary>
-        /// <param name="token">The value of the access token.</param>
-        /// <returns>The decoded access token.</returns>
-        AccessTokenModel DecodeAccessToken(string token);
-
-        /// <summary>
-        /// Decodes the specified identity token.
-        /// </summary>
-        /// <param name="token">The value of the identity token.</param>
-        /// <returns>The decoded identity token.</returns>
-        IdTokenModel DecodeIdToken(string token);
-
-        /// <summary>
-        /// Decodes the specified refresh token.
-        /// </summary>
-        /// <param name="token">The value of the refresh token.</param>
-        /// <returns>The decoded refresh token.</returns>
-        RefreshTokenModel DecodeRefreshToken(string token);
+        /// <param name="token">The value of the token.</param>
+        /// <param name="ct">The cancellation token.</param>
+        /// <returns>The decoded token.</returns>
+        Task<BaseTokenModel> DecodeAsync(string token, CancellationToken ct);
 
         /// <summary>
         /// Uses the refresh token to get a new token container asynchronous.

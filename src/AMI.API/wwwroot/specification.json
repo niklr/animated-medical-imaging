@@ -477,14 +477,7 @@
             }
           },
           "200": {
-            "description": "A stream containing the image.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Stream"
-                }
-              }
-            }
+            "description": "A stream containing the image."
           }
         }
       }
@@ -522,14 +515,7 @@
             }
           },
           "200": {
-            "description": "A stream containing the result as an archive.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Stream"
-                }
-              }
-            }
+            "description": "A stream containing the result as an archive."
           }
         }
       }
@@ -737,6 +723,50 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TokenContainerModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tokens/decode": {
+      "post": {
+        "tags": [
+          "Tokens"
+        ],
+        "summary": "Decode tokens",
+        "description": "With this POST request you can decode a token.\nTokens are used for authentication and authorization purposes.",
+        "operationId": "Tokens_Decode",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "The token.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A model containing the decoded token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseTokenModel"
                 }
               }
             }
@@ -1629,36 +1659,6 @@
           }
         }
       },
-      "Stream": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/MarshalByRefObject"
-          },
-          {
-            "type": "object",
-            "x-abstract": true,
-            "additionalProperties": false,
-            "properties": {
-              "canTimeout": {
-                "type": "boolean"
-              },
-              "readTimeout": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "writeTimeout": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          }
-        ]
-      },
-      "MarshalByRefObject": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false
-      },
       "CreateTaskCommand": {
         "type": "object",
         "description": "A command containing information needed to create a task.",
@@ -1713,6 +1713,124 @@
             "nullable": true
           }
         }
+      },
+      "BaseTokenModel": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "discriminator",
+          "mapping": {
+            "AccessTokenModel": "#/components/schemas/AccessTokenModel",
+            "IdTokenModel": "#/components/schemas/IdTokenModel",
+            "RefreshTokenModel": "#/components/schemas/RefreshTokenModel"
+          }
+        },
+        "description": "The model all tokens have in common.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "required": [
+          "discriminator"
+        ],
+        "properties": {
+          "sub": {
+            "type": "string",
+            "description": "Gets or sets the subject claim identifying the principal that is the subject of the token.",
+            "nullable": true
+          },
+          "iss": {
+            "type": "string",
+            "description": "Gets or sets the issuer claim identifying the principal that issued the token.",
+            "nullable": true
+          },
+          "aud": {
+            "type": "string",
+            "description": "Gets or sets the audience claim identifying the recipients that the token is intended for.",
+            "nullable": true
+          },
+          "nbf": {
+            "type": "number",
+            "description": "Gets or sets the \"not before\" claim identifying the time before which\nthe token MUST NOT be accepted for processing.",
+            "format": "double"
+          },
+          "iat": {
+            "type": "number",
+            "description": "Gets or sets the \"issued at\" claim identifying the time at which the token was issued.",
+            "format": "double"
+          },
+          "isAnon": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether this token was issued to an anonymous user."
+          },
+          "discriminator": {
+            "type": "string"
+          }
+        }
+      },
+      "AccessTokenModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTokenModel"
+          },
+          {
+            "type": "object",
+            "description": "The model containing information about the access token.",
+            "additionalProperties": false,
+            "properties": {
+              "exp": {
+                "type": "number",
+                "description": "Gets or sets the \"expiration time\" claim identifying the expiration time on\nor after which the token MUST NOT be accepted for processing.",
+                "format": "double"
+              }
+            }
+          }
+        ]
+      },
+      "IdTokenModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTokenModel"
+          },
+          {
+            "type": "object",
+            "description": "The model containing information about the identity token.",
+            "additionalProperties": false,
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "Gets or sets the email address.",
+                "nullable": true
+              },
+              "emailConfirmed": {
+                "type": "boolean",
+                "description": "Gets or sets a value indicating whether the email address is confirmed."
+              },
+              "username": {
+                "type": "string",
+                "description": "Gets or sets the username.",
+                "nullable": true
+              },
+              "roles": {
+                "type": "array",
+                "description": "Gets or sets the roles.",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "RefreshTokenModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTokenModel"
+          },
+          {
+            "type": "object",
+            "description": "The model containing information about the refresh token.",
+            "additionalProperties": false
+          }
+        ]
       }
     },
     "securitySchemes": {

@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AppInfoAmiApiClient, AppInfo } from '../clients/ami-api-client';
 import { BaseProxy } from './base.proxy';
+import { AuthService } from '../services/auth.service';
 import { ConfigService } from '../services/config.service';
 import { LoggerService } from '../services/logger.service';
 
 @Injectable()
 export class AppProxy extends BaseProxy {
 
-  constructor(private appInfoClient: AppInfoAmiApiClient, private logger: LoggerService) {
-    super();
+  constructor(authService: AuthService, private appInfoClient: AppInfoAmiApiClient, private logger: LoggerService) {
+    super(authService);
   }
 
   public init(retryCounter: number): void {

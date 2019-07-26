@@ -6,13 +6,14 @@ import {
   PaginationResultModelOfObjectModel
 } from '../clients/ami-api-client';
 import { BaseProxy } from './base.proxy';
+import { AuthService } from '../services/auth.service';
 import { ConfigService } from '../services/config.service';
 
 @Injectable()
 export class ObjectProxy extends BaseProxy {
 
-  constructor(private objectsClient: ObjectsAmiApiClient) {
-    super();
+  constructor(authService: AuthService, private objectsClient: ObjectsAmiApiClient) {
+    super(authService);
   }
 
   public getObjects(page: number, limit: number): Observable<PaginationResultModelOfObjectModel> {

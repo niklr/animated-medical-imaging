@@ -42,7 +42,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A stream containing the image.</returns>
         [HttpGet("{id}/images/{filename}")]
-        [ProducesResponseType(typeof(Stream), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetImage(string id, string filename)
         {
             var result = await Mediator.Send(new GetImageQuery { Id = id, Filename = filename }, CancellationToken);
@@ -58,7 +58,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A stream containing the result as an archive.</returns>
         [HttpGet("{id}/download")]
-        [ProducesResponseType(typeof(Stream), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> DownloadById(string id)
         {
             var result = await Mediator.Send(new GetZipQuery { Id = id }, CancellationToken);

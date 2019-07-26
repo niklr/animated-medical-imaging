@@ -7,12 +7,13 @@ import {
   TasksAmiApiClient
 } from '../clients/ami-api-client';
 import { BaseProxy } from './base.proxy';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class TaskProxy extends BaseProxy {
 
-  constructor(private tasksClient: TasksAmiApiClient) {
-    super();
+  constructor(authService: AuthService, private tasksClient: TasksAmiApiClient) {
+    super(authService);
   }
 
   public create(id: string, settings: ProcessObjectCommand): Observable<TaskModel> {

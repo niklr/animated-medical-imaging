@@ -17,6 +17,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Extensions.Date;
+using RNS.Framework.Tools;
 
 namespace AMI.Infrastructure.Services
 {
@@ -28,6 +29,7 @@ namespace AMI.Infrastructure.Services
         private readonly ILogger logger;
         private readonly IApiConfiguration configuration;
         private readonly IMediator mediator;
+        private readonly IDefaultJsonSerializer serializer;
         private readonly IJwtEncoder encoder;
         private readonly IJwtDecoder decoder;
         private readonly UserManager<UserEntity> userManager;
@@ -51,6 +53,7 @@ namespace AMI.Infrastructure.Services
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             var serializerWrapper = new JwtJsonSerializerWrapper(serializer);
             var urlEncoder = new JwtBase64UrlEncoder();
             encoder = new JwtEncoder(new HMACSHA256Algorithm(), serializerWrapper, urlEncoder);
@@ -61,15 +64,11 @@ namespace AMI.Infrastructure.Services
         /// <inheritdoc/>
         public async Task<TokenContainerModel> CreateAsync(string username, string password, CancellationToken ct)
         {
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                throw new ArgumentNullException(nameof(username));
-            }
+            Ensure.ArgumentNotNull(username, nameof(username));
+            Ensure.ArgumentNotNull(password, nameof(password));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            ct.ThrowIfCancellationRequested();
 
             var user = await userManager.FindByNameAsync(username);
             if (user == null)
@@ -100,10 +99,7 @@ namespace AMI.Infrastructure.Services
         /// <inheritdoc/>
         public async Task<TokenContainerModel> CreateAnonymousAsync(CancellationToken ct)
         {
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             ct.ThrowIfCancellationRequested();
 
@@ -112,35 +108,37 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public AccessTokenModel DecodeAccessToken(string token)
+        public async Task<BaseTokenModel> DecodeAsync(string token, CancellationToken ct)
         {
-            return Decode<AccessTokenModel>(token);
-        }
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
-        /// <inheritdoc/>
-        public IdTokenModel DecodeIdToken(string token)
-        {
-            return Decode<IdTokenModel>(token);
-        }
+            ct.ThrowIfCancellationRequested();
 
-        /// <inheritdoc/>
-        public RefreshTokenModel DecodeRefreshToken(string token)
-        {
-            return Decode<RefreshTokenModel>(token);
+            try
+            {
+                var decoded = decoder.Decode(token, configuration.Options.AuthOptions.JwtOptions.SecretKey, true);
+                var result = serializer.Deserialize<BaseTokenModel>(decoded);
+
+                await Task.CompletedTask;
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, e.Message);
+                throw new AmiException("The provided token could not be decoded.");
+            }
         }
 
         /// <inheritdoc/>
         public async Task<TokenContainerModel> UseRefreshTokenAsync(string token, CancellationToken ct)
         {
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             ct.ThrowIfCancellationRequested();
 
-            var decoded = DecodeRefreshToken(token);
-            if (decoded == null)
+            var decoded = await DecodeAsync(token, ct);
+            if (decoded == null || !(decoded is RefreshTokenModel))
             {
                 throw new UnexpectedNullException("The provided refresh token could not be decoded.");
             }
@@ -190,19 +188,6 @@ namespace AMI.Infrastructure.Services
                 Email = $"{configuration.Options.AuthOptions.AnonymousUsername}@localhost".ToLowerInvariant(),
                 EmailConfirmed = false
             };
-        }
-
-        private T Decode<T>(string token)
-        {
-            try
-            {
-                return decoder.DecodeToObject<T>(token, configuration.Options.AuthOptions.JwtOptions.SecretKey, true);
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, e.Message);
-                throw new AmiException("The provided token could not be decoded.");
-            }
         }
 
         private async Task<TokenContainerModel> CreateContainerAsync(UserModel user, CancellationToken ct)

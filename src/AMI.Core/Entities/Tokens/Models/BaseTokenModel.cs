@@ -1,4 +1,5 @@
-﻿using AMI.Core.IO.Converters;
+﻿using System.Runtime.Serialization;
+using AMI.Core.IO.Converters;
 using Newtonsoft.Json;
 
 namespace AMI.Core.Entities.Models
@@ -7,6 +8,9 @@ namespace AMI.Core.Entities.Models
     /// The model all tokens have in common.
     /// </summary>
     [JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
+    [KnownType(typeof(AccessTokenModel))]
+    [KnownType(typeof(IdTokenModel))]
+    [KnownType(typeof(RefreshTokenModel))]
     public abstract class BaseTokenModel
     {
         /// <summary>

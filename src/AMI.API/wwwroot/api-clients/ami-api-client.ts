@@ -673,13 +673,13 @@ export interface IResultsAmiApiClient {
      * @param filename The name of the file.
      * @return A stream containing the image.
      */
-    getImage(id: string | null, filename: string | null): Observable<Stream>;
+    getImage(id: string | null, filename: string | null): Observable<void>;
     /**
      * Download result
      * @param id The identifier.
      * @return A stream containing the result as an archive.
      */
-    downloadById(id: string | null): Observable<Stream>;
+    downloadById(id: string | null): Observable<void>;
 }
 
 @Injectable()
@@ -762,7 +762,7 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
      * @param filename The name of the file.
      * @return A stream containing the image.
      */
-    getImage(id: string | null, filename: string | null): Observable<Stream> {
+    getImage(id: string | null, filename: string | null): Observable<void> {
         let url_ = this.baseUrl + "/results/{id}/images/{filename}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -776,7 +776,6 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/json"
             })
         };
 
@@ -787,14 +786,14 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
                 try {
                     return this.processGetImage(<any>response_);
                 } catch (e) {
-                    return <Observable<Stream>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<Stream>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetImage(response: HttpResponseBase): Observable<Stream> {
+    protected processGetImage(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -810,17 +809,14 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Stream.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<Stream>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 
     /**
@@ -828,7 +824,7 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
      * @param id The identifier.
      * @return A stream containing the result as an archive.
      */
-    downloadById(id: string | null): Observable<Stream> {
+    downloadById(id: string | null): Observable<void> {
         let url_ = this.baseUrl + "/results/{id}/download";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -839,7 +835,6 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/json"
             })
         };
 
@@ -850,14 +845,14 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
                 try {
                     return this.processDownloadById(<any>response_);
                 } catch (e) {
-                    return <Observable<Stream>><any>_observableThrow(e);
+                    return <Observable<void>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<Stream>><any>_observableThrow(response_);
+                return <Observable<void>><any>_observableThrow(response_);
         }));
     }
 
-    protected processDownloadById(response: HttpResponseBase): Observable<Stream> {
+    protected processDownloadById(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -873,17 +868,14 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Stream.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf<void>(<any>null);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<Stream>(<any>null);
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -1059,6 +1051,12 @@ export interface ITokensAmiApiClient {
      * @return A model containing the tokens.
      */
     createAnonymous(): Observable<TokenContainerModel>;
+    /**
+     * Decode tokens
+     * @param token (optional) The token.
+     * @return A model containing the decoded token.
+     */
+    decode(token: string | null | undefined): Observable<BaseTokenModel>;
 }
 
 @Injectable()
@@ -1257,6 +1255,68 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
             }));
         }
         return _observableOf<TokenContainerModel>(<any>null);
+    }
+
+    /**
+     * Decode tokens
+     * @param token (optional) The token.
+     * @return A model containing the decoded token.
+     */
+    decode(token: string | null | undefined): Observable<BaseTokenModel> {
+        let url_ = this.baseUrl + "/tokens/decode?";
+        if (token !== undefined)
+            url_ += "token=" + encodeURIComponent("" + token) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDecode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDecode(<any>response_);
+                } catch (e) {
+                    return <Observable<BaseTokenModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<BaseTokenModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDecode(response: HttpResponseBase): Observable<BaseTokenModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BaseTokenModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<BaseTokenModel>(<any>null);
     }
 }
 
@@ -2727,73 +2787,6 @@ export interface IPongModel {
     pong?: string | undefined;
 }
 
-export abstract class MarshalByRefObject implements IMarshalByRefObject {
-
-    constructor(data?: IMarshalByRefObject) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-    }
-
-    static fromJS(data: any): MarshalByRefObject {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'MarshalByRefObject' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
-}
-
-export interface IMarshalByRefObject {
-}
-
-export abstract class Stream extends MarshalByRefObject implements IStream {
-    canTimeout?: boolean;
-    readTimeout?: number;
-    writeTimeout?: number;
-
-    constructor(data?: IStream) {
-        super(data);
-    }
-
-    init(data?: any) {
-        super.init(data);
-        if (data) {
-            this.canTimeout = data["canTimeout"];
-            this.readTimeout = data["readTimeout"];
-            this.writeTimeout = data["writeTimeout"];
-        }
-    }
-
-    static fromJS(data: any): Stream {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'Stream' cannot be instantiated.");
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["canTimeout"] = this.canTimeout;
-        data["readTimeout"] = this.readTimeout;
-        data["writeTimeout"] = this.writeTimeout;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IStream extends IMarshalByRefObject {
-    canTimeout?: boolean;
-    readTimeout?: number;
-    writeTimeout?: number;
-}
-
 /** A command containing information needed to create a task. */
 export class CreateTaskCommand implements ICreateTaskCommand {
     /** Gets or sets the command used to create this task. */
@@ -2930,6 +2923,229 @@ export interface ICredentialsModel {
     username?: string | undefined;
     /** Gets or sets the password. */
     password?: string | undefined;
+}
+
+/** The model all tokens have in common. */
+export abstract class BaseTokenModel implements IBaseTokenModel {
+    /** Gets or sets the subject claim identifying the principal that is the subject of the token. */
+    sub?: string | undefined;
+    /** Gets or sets the issuer claim identifying the principal that issued the token. */
+    iss?: string | undefined;
+    /** Gets or sets the audience claim identifying the recipients that the token is intended for. */
+    aud?: string | undefined;
+    /** Gets or sets the "not before" claim identifying the time before which
+the token MUST NOT be accepted for processing. */
+    nbf?: number;
+    /** Gets or sets the "issued at" claim identifying the time at which the token was issued. */
+    iat?: number;
+    /** Gets or sets a value indicating whether this token was issued to an anonymous user. */
+    isAnon?: boolean;
+
+    protected _discriminator: string;
+
+    constructor(data?: IBaseTokenModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "BaseTokenModel";
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.sub = data["sub"];
+            this.iss = data["iss"];
+            this.aud = data["aud"];
+            this.nbf = data["nbf"];
+            this.iat = data["iat"];
+            this.isAnon = data["isAnon"];
+        }
+    }
+
+    static fromJS(data: any): BaseTokenModel {
+        data = typeof data === 'object' ? data : {};
+        if (data["discriminator"] === "AccessTokenModel") {
+            let result = new AccessTokenModel();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "IdTokenModel") {
+            let result = new IdTokenModel();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "RefreshTokenModel") {
+            let result = new RefreshTokenModel();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'BaseTokenModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["discriminator"] = this._discriminator; 
+        data["sub"] = this.sub;
+        data["iss"] = this.iss;
+        data["aud"] = this.aud;
+        data["nbf"] = this.nbf;
+        data["iat"] = this.iat;
+        data["isAnon"] = this.isAnon;
+        return data; 
+    }
+}
+
+/** The model all tokens have in common. */
+export interface IBaseTokenModel {
+    /** Gets or sets the subject claim identifying the principal that is the subject of the token. */
+    sub?: string | undefined;
+    /** Gets or sets the issuer claim identifying the principal that issued the token. */
+    iss?: string | undefined;
+    /** Gets or sets the audience claim identifying the recipients that the token is intended for. */
+    aud?: string | undefined;
+    /** Gets or sets the "not before" claim identifying the time before which
+the token MUST NOT be accepted for processing. */
+    nbf?: number;
+    /** Gets or sets the "issued at" claim identifying the time at which the token was issued. */
+    iat?: number;
+    /** Gets or sets a value indicating whether this token was issued to an anonymous user. */
+    isAnon?: boolean;
+}
+
+/** The model containing information about the access token. */
+export class AccessTokenModel extends BaseTokenModel implements IAccessTokenModel {
+    /** Gets or sets the "expiration time" claim identifying the expiration time on
+or after which the token MUST NOT be accepted for processing. */
+    exp?: number;
+
+    constructor(data?: IAccessTokenModel) {
+        super(data);
+        this._discriminator = "AccessTokenModel";
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.exp = data["exp"];
+        }
+    }
+
+    static fromJS(data: any): AccessTokenModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AccessTokenModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["exp"] = this.exp;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** The model containing information about the access token. */
+export interface IAccessTokenModel extends IBaseTokenModel {
+    /** Gets or sets the "expiration time" claim identifying the expiration time on
+or after which the token MUST NOT be accepted for processing. */
+    exp?: number;
+}
+
+/** The model containing information about the identity token. */
+export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
+    /** Gets or sets the email address. */
+    email?: string | undefined;
+    /** Gets or sets a value indicating whether the email address is confirmed. */
+    emailConfirmed?: boolean;
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the roles. */
+    roles?: string[] | undefined;
+
+    constructor(data?: IIdTokenModel) {
+        super(data);
+        this._discriminator = "IdTokenModel";
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.email = data["email"];
+            this.emailConfirmed = data["emailConfirmed"];
+            this.username = data["username"];
+            if (Array.isArray(data["roles"])) {
+                this.roles = [] as any;
+                for (let item of data["roles"])
+                    this.roles!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): IdTokenModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new IdTokenModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["emailConfirmed"] = this.emailConfirmed;
+        data["username"] = this.username;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** The model containing information about the identity token. */
+export interface IIdTokenModel extends IBaseTokenModel {
+    /** Gets or sets the email address. */
+    email?: string | undefined;
+    /** Gets or sets a value indicating whether the email address is confirmed. */
+    emailConfirmed?: boolean;
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the roles. */
+    roles?: string[] | undefined;
+}
+
+/** The model containing information about the refresh token. */
+export class RefreshTokenModel extends BaseTokenModel implements IRefreshTokenModel {
+
+    constructor(data?: IRefreshTokenModel) {
+        super(data);
+        this._discriminator = "RefreshTokenModel";
+    }
+
+    init(data?: any) {
+        super.init(data);
+    }
+
+    static fromJS(data: any): RefreshTokenModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new RefreshTokenModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** The model containing information about the refresh token. */
+export interface IRefreshTokenModel extends IBaseTokenModel {
 }
 
 export interface FileParameter {

@@ -7,14 +7,14 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class BaseService {
 
-    protected readonly baseUrl: string;
+  protected readonly baseUrl: string;
 
-    constructor(protected gc: GarbageCollector, protected notificationService: NotificationService, protected logger: LoggerService) {
+  constructor(protected gc: GarbageCollector, protected notification: NotificationService, protected logger: LoggerService) {
 
-    }
+  }
 
-    public handleError(response: any) {
-        const errorMessage = this.notificationService.handleError(response);
-        return Observable.throw(errorMessage);
-    }
+  public handleError(response: any) {
+    const errorMessage = this.notification.handleError(response);
+    return Observable.throw(errorMessage);
+  }
 }
