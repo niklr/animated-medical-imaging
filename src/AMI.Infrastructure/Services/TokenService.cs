@@ -87,7 +87,7 @@ namespace AMI.Infrastructure.Services
 
             var command = new CreateRefreshTokenCommand()
             {
-                Token = result.RefreshToken,
+                Token = result.RefreshTokenEncoded,
                 UserId = user.Id.ToString()
             };
 
@@ -147,7 +147,7 @@ namespace AMI.Infrastructure.Services
             {
                 var user = CreateAnonymousUserModel(decoded.Sub);
                 var result = await CreateContainerAsync(user, ct);
-                result.RefreshToken = token;
+                result.RefreshTokenEncoded = token;
 
                 return result;
             }
@@ -168,7 +168,7 @@ namespace AMI.Infrastructure.Services
                 await mediator.Send(command, ct);
 
                 var result = await CreateContainerAsync(UserModel.Create(user), ct);
-                result.RefreshToken = token;
+                result.RefreshTokenEncoded = token;
 
                 return result;
             }
@@ -195,11 +195,17 @@ namespace AMI.Infrastructure.Services
             ct.ThrowIfCancellationRequested();
 
             var secretKey = Encoding.ASCII.GetBytes(configuration.Options.AuthOptions.JwtOptions.SecretKey);
+            var accessToken = CreateAccessToken(user);
+            var idToken = CreateIdToken(user);
+            var refreshToken = CreateRefreshToken(user);
             var model = new TokenContainerModel()
             {
-                AccessToken = encoder.Encode(CreateAccessToken(user), secretKey),
-                IdToken = encoder.Encode(CreateIdToken(user), secretKey),
-                RefreshToken = encoder.Encode(CreateRefreshToken(user), secretKey)
+                AccessToken = accessToken,
+                AccessTokenEncoded = encoder.Encode(accessToken, secretKey),
+                IdToken = idToken,
+                IdTokenEncoded = encoder.Encode(idToken, secretKey),
+                RefreshToken = refreshToken,
+                RefreshTokenEncoded = encoder.Encode(refreshToken, secretKey)
             };
 
             await Task.CompletedTask;

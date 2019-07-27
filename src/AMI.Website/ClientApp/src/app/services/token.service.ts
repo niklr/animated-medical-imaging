@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
-import { GarbageCollector } from '../utils';
 import { NotificationService } from './notification.service';
 import { LoggerService } from './logger.service';
+import { TokenContainerModel } from '../clients/ami-api-client';
+import { TokenProxy } from '../proxies/token.proxy';
+import { GarbageCollector } from '../utils';
 
 @Injectable()
 export class TokenService extends BaseService {
@@ -10,8 +12,9 @@ export class TokenService extends BaseService {
   private _isInitialized: boolean;
   private _refreshRetryCount = 0;
 
-  constructor(gc: GarbageCollector, notification: NotificationService, logger: LoggerService) {
-    super(gc, notification, logger);
+  constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
+    private tokenProxy: TokenProxy) {
+    super(gc, notificationService, logger);
 
     this._isInitialized = false;
 
@@ -23,6 +26,7 @@ export class TokenService extends BaseService {
 
   private clear(): void {
     this._isInitialized = false;
+    this.clearLocalStorage();
   }
 
   public getAccessTokenExpiration(): number {
@@ -47,5 +51,23 @@ export class TokenService extends BaseService {
         reject(error);
       }
     });
+  }
+
+  private setLocalStorage(container: TokenContainerModel) {
+    if (container) {
+      localStorage.setItem('tokenContainer', JSON.stringify(container));
+    }
+  }
+
+  private readLocalStorage(): TokenContainerModel {
+    try {
+      return JSON.parse(localStorage.getItem('tokenContainer'));
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  private clearLocalStorage(): void {
+    localStorage.removeItem('tokenContainer');
   }
 }

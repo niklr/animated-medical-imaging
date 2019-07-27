@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import {
+  ApiOptionsAmiApiClient,
+  AppOptionsAmiApiClient,
   AppInfoAmiApiClient,
   ObjectsAmiApiClient,
-  TasksAmiApiClient
+  TasksAmiApiClient,
+  TokensAmiApiClient
 } from './ami-api-client';
 
 @NgModule({
@@ -13,9 +16,12 @@ import {
 
   ],
   providers: [
+    ApiOptionsAmiApiClient,
+    AppOptionsAmiApiClient,
     AppInfoAmiApiClient,
     ObjectsAmiApiClient,
-    TasksAmiApiClient
+    TasksAmiApiClient,
+    TokensAmiApiClient
   ]
 })
 export class AmiApiClientModule { }

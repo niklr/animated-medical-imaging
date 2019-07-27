@@ -4,6 +4,7 @@ import { GarbageCollector, MomentUtil } from '../utils';
 import { NotificationService } from './notification.service';
 import { LoggerService } from './logger.service';
 import { TokenService } from './token.service';
+import { IdentityModel } from '../models/identity.model';
 
 @Injectable()
 export class AuthService extends BaseService {
@@ -11,9 +12,11 @@ export class AuthService extends BaseService {
   private _isInitialized: boolean;
   private _refreshRetryCount = 0;
 
-  constructor(gc: GarbageCollector, notification: NotificationService, logger: LoggerService,
+  public user: IdentityModel;
+
+  constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
     private tokenService: TokenService, private momentUtil: MomentUtil) {
-    super(gc, notification, logger);
+    super(gc, notificationService, logger);
 
     this._isInitialized = false;
 
@@ -90,7 +93,7 @@ export class AuthService extends BaseService {
     if (!!e && !!e.error && !!e.error.error_description) {
       message = e.error.error_description;
     }
-    this.notification.raiseError(message, e);
+    this.notificationService.raiseError(message, e);
     this.logger.error(e);
   }
 }

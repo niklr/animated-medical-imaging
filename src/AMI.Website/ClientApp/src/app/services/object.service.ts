@@ -34,11 +34,10 @@ export class ObjectService {
 
   public processObject(id: string, callbackWrapper: CallbackWrapper): void {
     var settings = this.objectStore.settings;
-    this.taskProxy.create(id, settings).subscribe(result => {
+    this.taskProxy.create(id, settings).then(result => {
     }, error => {
       this.notificationService.handleError(error);
-    }).add(() => {
-      // finally block
+    }).finally(() => {
       if (callbackWrapper) {
         callbackWrapper.invokeCallbackFn();
       }

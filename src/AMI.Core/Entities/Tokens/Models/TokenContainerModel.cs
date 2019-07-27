@@ -8,16 +8,31 @@
         /// <summary>
         /// Gets or sets the access token.
         /// </summary>
-        public string AccessToken { get; set; }
+        public AccessTokenModel AccessToken { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier token.
+        /// Gets or sets the endcoded access token.
         /// </summary>
-        public string IdToken { get; set; }
+        public string AccessTokenEncoded { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identity token.
+        /// </summary>
+        public IdTokenModel IdToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the endcoded identity token.
+        /// </summary>
+        public string IdTokenEncoded { get; set; }
 
         /// <summary>
         /// Gets or sets the refresh token.
         /// </summary>
-        public string RefreshToken { get; set; }
+        public RefreshTokenModel RefreshToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the encoded refresh token.
+        /// </summary>
+        public string RefreshTokenEncoded { get; set; }
     }
 }

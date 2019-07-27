@@ -23,16 +23,21 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var container = await service.CreateAnonymousAsync(ct);
 
             // Act
-            var decoded = await service.DecodeAsync(container.AccessToken, ct) as AccessTokenModel;
+            var decoded = await service.DecodeAsync(container.AccessTokenEncoded, ct) as AccessTokenModel;
 
             // Assert
             Assert.IsFalse(string.IsNullOrWhiteSpace(decoded.Sub));
+            Assert.AreEqual(container.AccessToken.Sub, decoded.Sub);
             Assert.AreEqual(configuration.Options.AuthOptions.JwtOptions.Issuer, decoded.Iss);
             Assert.AreEqual(configuration.Options.AuthOptions.JwtOptions.Audience, decoded.Aud);
             Assert.IsTrue(decoded.Nbf > 0);
+            Assert.AreEqual(container.AccessToken.Nbf, decoded.Nbf);
             Assert.IsTrue(decoded.Iat > 0);
+            Assert.AreEqual(container.AccessToken.Iat, decoded.Iat);
             Assert.IsTrue(decoded.IsAnon);
+            Assert.AreEqual(container.AccessToken.IsAnon, decoded.IsAnon);
             Assert.IsTrue(decoded.Exp > 0);
+            Assert.AreEqual(container.AccessToken.Exp, decoded.Exp);
         }
 
         [Test]
@@ -45,19 +50,27 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var container = await service.CreateAnonymousAsync(ct);
 
             // Act
-            var decoded = await service.DecodeAsync(container.IdToken, ct) as IdTokenModel;
+            var decoded = await service.DecodeAsync(container.IdTokenEncoded, ct) as IdTokenModel;
 
             // Assert
             Assert.IsFalse(string.IsNullOrWhiteSpace(decoded.Sub));
+            Assert.AreEqual(container.IdToken.Sub, decoded.Sub);
             Assert.AreEqual(configuration.Options.AuthOptions.JwtOptions.Issuer, decoded.Iss);
             Assert.AreEqual(configuration.Options.AuthOptions.JwtOptions.Audience, decoded.Aud);
             Assert.IsTrue(decoded.Nbf > 0);
+            Assert.AreEqual(container.IdToken.Nbf, decoded.Nbf);
             Assert.IsTrue(decoded.Iat > 0);
+            Assert.AreEqual(container.IdToken.Iat, decoded.Iat);
             Assert.IsTrue(decoded.IsAnon);
+            Assert.AreEqual(container.IdToken.IsAnon, decoded.IsAnon);
             Assert.AreEqual("Anon", decoded.Username);
+            Assert.AreEqual(container.IdToken.Username, decoded.Username);
             Assert.AreEqual("anon@localhost", decoded.Email);
+            Assert.AreEqual(container.IdToken.Email, decoded.Email);
             Assert.IsFalse(decoded.EmailConfirmed);
+            Assert.AreEqual(container.IdToken.EmailConfirmed, decoded.EmailConfirmed);
             Assert.AreEqual(0, decoded.Roles.Count);
+            Assert.AreEqual(container.IdToken.Roles.Count, decoded.Roles.Count);
         }
 
         [Test]
@@ -70,15 +83,19 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var container = await service.CreateAnonymousAsync(ct);
 
             // Act
-            var decoded = await service.DecodeAsync(container.RefreshToken, ct) as RefreshTokenModel;
+            var decoded = await service.DecodeAsync(container.RefreshTokenEncoded, ct) as RefreshTokenModel;
 
             // Assert
             Assert.IsFalse(string.IsNullOrWhiteSpace(decoded.Sub));
+            Assert.AreEqual(container.RefreshToken.Sub, decoded.Sub);
             Assert.AreEqual(configuration.Options.AuthOptions.JwtOptions.Issuer, decoded.Iss);
             Assert.AreEqual(configuration.Options.AuthOptions.JwtOptions.Audience, decoded.Aud);
             Assert.IsTrue(decoded.Nbf > 0);
+            Assert.AreEqual(container.RefreshToken.Nbf, decoded.Nbf);
             Assert.IsTrue(decoded.Iat > 0);
+            Assert.AreEqual(container.RefreshToken.Iat, decoded.Iat);
             Assert.IsTrue(decoded.IsAnon);
+            Assert.AreEqual(container.RefreshToken.IsAnon, decoded.IsAnon);
         }
 
         [Test]
@@ -103,9 +120,9 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.IsNotNull(token1);
             Assert.AreEqual(1, context.TokenRepository.GetQuery(e => e.UserId == user.Id).Count());
             Assert.IsNotNull(result1);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result1.AccessToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result1.IdToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result1.RefreshToken));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result1.AccessTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result1.IdTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result1.RefreshTokenEncoded));
 
             // Act
             var result2 = await service.CreateAsync(username, password, ct);
@@ -116,9 +133,9 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.IsNotNull(token1NotNull);
             Assert.AreEqual(2, context.TokenRepository.GetQuery(e => e.UserId == user.Id).Count());
             Assert.IsNotNull(result2);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result2.AccessToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result2.IdToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result2.RefreshToken));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result2.AccessTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result2.IdTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result2.RefreshTokenEncoded));
 
             // Act
             var result3 = await service.CreateAsync(username, password, ct);
@@ -130,9 +147,9 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             // The amount of valid refresh tokens for a single user should not exceed the limit
             Assert.AreEqual(configuration.Options.AuthOptions.MaxRefreshTokens, context.TokenRepository.GetQuery(e => e.UserId == user.Id).Count());
             Assert.IsNotNull(result3);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result3.AccessToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result3.IdToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result3.RefreshToken));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result3.AccessTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result3.IdTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result3.RefreshTokenEncoded));
         }
 
         [Test]
@@ -163,25 +180,25 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             string password = "123456";
             var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.Username == username);
             var container = await service.CreateAsync(username, password, ct);
-            var token1 = await context.TokenRepository.GetFirstOrDefaultAsync(e => e.TokenValue == container.RefreshToken, ct);
+            var token1 = await context.TokenRepository.GetFirstOrDefaultAsync(e => e.TokenValue == container.RefreshTokenEncoded, ct);
             var token1LastUsedDate = token1.LastUsedDate;
             var pause = new ManualResetEvent(false);
 
             // Act
             pause.WaitOne(1000);
-            var result = await service.UseRefreshTokenAsync(container.RefreshToken, ct);
-            var token2 = await context.TokenRepository.GetFirstOrDefaultAsync(e => e.TokenValue == container.RefreshToken, ct);
-            var decoded1 = await service.DecodeAsync(container.RefreshToken, ct) as RefreshTokenModel;
-            var decoded2 = await service.DecodeAsync(result.RefreshToken, ct) as RefreshTokenModel;
+            var result = await service.UseRefreshTokenAsync(container.RefreshTokenEncoded, ct);
+            var token2 = await context.TokenRepository.GetFirstOrDefaultAsync(e => e.TokenValue == container.RefreshTokenEncoded, ct);
+            var decoded1 = await service.DecodeAsync(container.RefreshTokenEncoded, ct) as RefreshTokenModel;
+            var decoded2 = await service.DecodeAsync(result.RefreshTokenEncoded, ct) as RefreshTokenModel;
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AccessToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.IdToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.RefreshToken));
-            Assert.AreNotEqual(container.AccessToken, result.AccessToken);
-            Assert.AreNotEqual(container.IdToken, result.IdToken);
-            Assert.AreEqual(container.RefreshToken, result.RefreshToken);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AccessTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.IdTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.RefreshTokenEncoded));
+            Assert.AreNotEqual(container.AccessTokenEncoded, result.AccessTokenEncoded);
+            Assert.AreNotEqual(container.IdTokenEncoded, result.IdTokenEncoded);
+            Assert.AreEqual(container.RefreshTokenEncoded, result.RefreshTokenEncoded);
             // Subjects should be equal
             Assert.AreEqual(decoded1.Sub, decoded2.Sub);
             // Tokens should be equal
@@ -201,18 +218,18 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
 
             // Act
             pause.WaitOne(1000);
-            var result = await service.UseRefreshTokenAsync(container.RefreshToken, ct);
-            var decoded1 = await service.DecodeAsync(container.RefreshToken, ct) as RefreshTokenModel;
-            var decoded2 = await service.DecodeAsync(result.RefreshToken, ct) as RefreshTokenModel;
+            var result = await service.UseRefreshTokenAsync(container.RefreshTokenEncoded, ct);
+            var decoded1 = await service.DecodeAsync(container.RefreshTokenEncoded, ct) as RefreshTokenModel;
+            var decoded2 = await service.DecodeAsync(result.RefreshTokenEncoded, ct) as RefreshTokenModel;
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AccessToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.IdToken));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.RefreshToken));
-            Assert.AreNotEqual(container.AccessToken, result.AccessToken);
-            Assert.AreNotEqual(container.IdToken, result.IdToken);
-            Assert.AreEqual(container.RefreshToken, result.RefreshToken);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.AccessTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.IdTokenEncoded));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.RefreshTokenEncoded));
+            Assert.AreNotEqual(container.AccessTokenEncoded, result.AccessTokenEncoded);
+            Assert.AreNotEqual(container.IdTokenEncoded, result.IdTokenEncoded);
+            Assert.AreEqual(container.RefreshTokenEncoded, result.RefreshTokenEncoded);
             // Subjects should be equal
             Assert.AreEqual(decoded1.Sub, decoded2.Sub);
         }
@@ -254,7 +271,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var container = await service.CreateAnonymousAsync(ct);
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<UnexpectedNullException>(() => service.UseRefreshTokenAsync(container.AccessToken, ct));
+            var ex = Assert.ThrowsAsync<UnexpectedNullException>(() => service.UseRefreshTokenAsync(container.AccessTokenEncoded, ct));
             Assert.IsNotNull(ex);
             Assert.AreEqual("Unexpected null exception. The provided refresh token could not be decoded.", ex.Message);
         }
@@ -268,7 +285,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var container = await service.CreateAnonymousAsync(ct);
 
             // Act & Assert
-            var ex = Assert.ThrowsAsync<UnexpectedNullException>(() => service.UseRefreshTokenAsync(container.IdToken, ct));
+            var ex = Assert.ThrowsAsync<UnexpectedNullException>(() => service.UseRefreshTokenAsync(container.IdTokenEncoded, ct));
             Assert.IsNotNull(ex);
             Assert.AreEqual("Unexpected null exception. The provided refresh token could not be decoded.", ex.Message);
         }

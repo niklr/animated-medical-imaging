@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { TimeoutInterceptor, DEFAULT_TIMEOUT } from './interceptors';
 import { GatewayHub } from './hubs';
 import { AppProxy } from './proxies/app.proxy';
+import { TokenProxy } from './proxies/token.proxy';
 import { AuthService } from './services/auth.service';
 import { ConfigService } from './services/config.service';
 import { ConsoleLoggerService } from './services/console-logger.service';
@@ -17,8 +18,14 @@ import { PubSubService } from './services/pubsub.service';
 import { TokenService } from './services/token.service';
 import { BackgroundWorker, GarbageCollector, MomentUtil } from './utils';
 
+/*
+ * Bootstrap:
+ * 1. Retrieve options from HomeController and initialize ConfigService.
+ * 2. Provide API_BASE_URL to auto-generated OpenAPI/Swagger client.
+ */
+
 export function initConfig(configService: ConfigService) {
-  return () => configService.load();
+  return () => configService.init();
 }
 
 export function initBaseAmiApi() {
@@ -38,6 +45,7 @@ export function initBaseAmiApi() {
   providers: [
     GatewayHub,
     AppProxy,
+    TokenProxy,
     AuthService,
     ConfigService,
     NotificationService,

@@ -1051,12 +1051,6 @@ export interface ITokensAmiApiClient {
    * @return A model containing the tokens.
    */
   createAnonymous(): Observable<TokenContainerModel>;
-  /**
-   * Decode tokens
-   * @param token (optional) The token.
-   * @return A model containing the decoded token.
-   */
-  decode(token: string | null | undefined): Observable<BaseTokenModel>;
 }
 
 @Injectable()
@@ -1255,68 +1249,6 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
       }));
     }
     return _observableOf<TokenContainerModel>(<any>null);
-  }
-
-  /**
-   * Decode tokens
-   * @param token (optional) The token.
-   * @return A model containing the decoded token.
-   */
-  decode(token: string | null | undefined): Observable<BaseTokenModel> {
-    let url_ = this.baseUrl + "/tokens/decode?";
-    if (token !== undefined)
-      url_ += "token=" + encodeURIComponent("" + token) + "&";
-    url_ = url_.replace(/[?&]$/, "");
-
-    let options_: any = {
-      observe: "response",
-      responseType: "blob",
-      headers: new HttpHeaders({
-        "Accept": "application/json"
-      })
-    };
-
-    return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_: any) => {
-      return this.processDecode(response_);
-    })).pipe(_observableCatch((response_: any) => {
-      if (response_ instanceof HttpResponseBase) {
-        try {
-          return this.processDecode(<any>response_);
-        } catch (e) {
-          return <Observable<BaseTokenModel>><any>_observableThrow(e);
-        }
-      } else
-        return <Observable<BaseTokenModel>><any>_observableThrow(response_);
-    }));
-  }
-
-  protected processDecode(response: HttpResponseBase): Observable<BaseTokenModel> {
-    const status = response.status;
-    const responseBlob =
-      response instanceof HttpResponse ? response.body :
-        (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-    let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
-    if (status === 500) {
-      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-        let result500: any = null;
-        let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-        result500 = ErrorModel.fromJS(resultData500);
-        return throwException("A server error occurred.", status, _responseText, _headers, result500);
-      }));
-    } else if (status === 200) {
-      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-        let result200: any = null;
-        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-        result200 = BaseTokenModel.fromJS(resultData200);
-        return _observableOf(result200);
-      }));
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-      }));
-    }
-    return _observableOf<BaseTokenModel>(<any>null);
   }
 }
 
@@ -2830,11 +2762,17 @@ export interface ICreateTaskCommand {
 /** A model containing the access, identifier and refresh tokens. */
 export class TokenContainerModel implements ITokenContainerModel {
   /** Gets or sets the access token. */
-  accessToken?: string | undefined;
-  /** Gets or sets the identifier token. */
-  idToken?: string | undefined;
+  accessToken?: AccessTokenModel | undefined;
+  /** Gets or sets the endcoded access token. */
+  accessTokenEncoded?: string | undefined;
+  /** Gets or sets the identity token. */
+  idToken?: IdTokenModel | undefined;
+  /** Gets or sets the endcoded identity token. */
+  idTokenEncoded?: string | undefined;
   /** Gets or sets the refresh token. */
-  refreshToken?: string | undefined;
+  refreshToken?: RefreshTokenModel | undefined;
+  /** Gets or sets the encoded refresh token. */
+  refreshTokenEncoded?: string | undefined;
 
   constructor(data?: ITokenContainerModel) {
     if (data) {
@@ -2847,9 +2785,12 @@ export class TokenContainerModel implements ITokenContainerModel {
 
   init(data?: any) {
     if (data) {
-      this.accessToken = data["accessToken"];
-      this.idToken = data["idToken"];
-      this.refreshToken = data["refreshToken"];
+      this.accessToken = data["accessToken"] ? AccessTokenModel.fromJS(data["accessToken"]) : <any>undefined;
+      this.accessTokenEncoded = data["accessTokenEncoded"];
+      this.idToken = data["idToken"] ? IdTokenModel.fromJS(data["idToken"]) : <any>undefined;
+      this.idTokenEncoded = data["idTokenEncoded"];
+      this.refreshToken = data["refreshToken"] ? RefreshTokenModel.fromJS(data["refreshToken"]) : <any>undefined;
+      this.refreshTokenEncoded = data["refreshTokenEncoded"];
     }
   }
 
@@ -2862,9 +2803,12 @@ export class TokenContainerModel implements ITokenContainerModel {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data["accessToken"] = this.accessToken;
-    data["idToken"] = this.idToken;
-    data["refreshToken"] = this.refreshToken;
+    data["accessToken"] = this.accessToken ? this.accessToken.toJSON() : <any>undefined;
+    data["accessTokenEncoded"] = this.accessTokenEncoded;
+    data["idToken"] = this.idToken ? this.idToken.toJSON() : <any>undefined;
+    data["idTokenEncoded"] = this.idTokenEncoded;
+    data["refreshToken"] = this.refreshToken ? this.refreshToken.toJSON() : <any>undefined;
+    data["refreshTokenEncoded"] = this.refreshTokenEncoded;
     return data;
   }
 }
@@ -2872,57 +2816,17 @@ export class TokenContainerModel implements ITokenContainerModel {
 /** A model containing the access, identifier and refresh tokens. */
 export interface ITokenContainerModel {
   /** Gets or sets the access token. */
-  accessToken?: string | undefined;
-  /** Gets or sets the identifier token. */
-  idToken?: string | undefined;
+  accessToken?: AccessTokenModel | undefined;
+  /** Gets or sets the endcoded access token. */
+  accessTokenEncoded?: string | undefined;
+  /** Gets or sets the identity token. */
+  idToken?: IdTokenModel | undefined;
+  /** Gets or sets the endcoded identity token. */
+  idTokenEncoded?: string | undefined;
   /** Gets or sets the refresh token. */
-  refreshToken?: string | undefined;
-}
-
-/** A model containing the credentials for login purposes. */
-export class CredentialsModel implements ICredentialsModel {
-  /** Gets or sets the username. */
-  username?: string | undefined;
-  /** Gets or sets the password. */
-  password?: string | undefined;
-
-  constructor(data?: ICredentialsModel) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(data?: any) {
-    if (data) {
-      this.username = data["username"];
-      this.password = data["password"];
-    }
-  }
-
-  static fromJS(data: any): CredentialsModel {
-    data = typeof data === 'object' ? data : {};
-    let result = new CredentialsModel();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["username"] = this.username;
-    data["password"] = this.password;
-    return data;
-  }
-}
-
-/** A model containing the credentials for login purposes. */
-export interface ICredentialsModel {
-  /** Gets or sets the username. */
-  username?: string | undefined;
-  /** Gets or sets the password. */
-  password?: string | undefined;
+  refreshToken?: RefreshTokenModel | undefined;
+  /** Gets or sets the encoded refresh token. */
+  refreshTokenEncoded?: string | undefined;
 }
 
 /** The model all tokens have in common. */
@@ -3146,6 +3050,52 @@ export class RefreshTokenModel extends BaseTokenModel implements IRefreshTokenMo
 
 /** The model containing information about the refresh token. */
 export interface IRefreshTokenModel extends IBaseTokenModel {
+}
+
+/** A model containing the credentials for login purposes. */
+export class CredentialsModel implements ICredentialsModel {
+  /** Gets or sets the username. */
+  username?: string | undefined;
+  /** Gets or sets the password. */
+  password?: string | undefined;
+
+  constructor(data?: ICredentialsModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.username = data["username"];
+      this.password = data["password"];
+    }
+  }
+
+  static fromJS(data: any): CredentialsModel {
+    data = typeof data === 'object' ? data : {};
+    let result = new CredentialsModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["username"] = this.username;
+    data["password"] = this.password;
+    return data;
+  }
+}
+
+/** A model containing the credentials for login purposes. */
+export interface ICredentialsModel {
+  /** Gets or sets the username. */
+  username?: string | undefined;
+  /** Gets or sets the password. */
+  password?: string | undefined;
 }
 
 export interface FileParameter {

@@ -172,7 +172,7 @@ The response of the tokens API endpoint contains 3 different tokens:
 - **ID Token**: Contains user profile information (such as the user's name and email) which is represented in the form of claims.
 - **Refresh Token**: Contains the information required to obtain a new Access Token or ID Token.
 
-For each API request you need to include the JWT Access Token with a ""Bearer"" prefix.
+For each API request you need to include the encoded JWT Access Token with a ""Bearer"" prefix.
 
 ## Requests, Responses, and Errors
 Status codes are issued by the API in response to a client's request made to the API.

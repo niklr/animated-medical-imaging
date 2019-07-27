@@ -68,23 +68,7 @@ namespace AMI.API.Controllers
         [ProducesResponseType(typeof(Models.TokenContainerModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Update([FromBody] Models.TokenContainerModel container)
         {
-            return Ok(await tokenService.UseRefreshTokenAsync(container.RefreshToken, CancellationToken));
-        }
-
-        /// <summary>
-        /// Decode tokens
-        /// </summary>
-        /// <param name="token">The token.</param>
-        /// <remarks>
-        /// With this POST request you can decode a token.
-        /// Tokens are used for authentication and authorization purposes.
-        /// </remarks>
-        /// <returns>A model containing the decoded token.</returns>
-        [HttpPost("decode")]
-        [ProducesResponseType(typeof(Models.BaseTokenModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Decode(string token)
-        {
-            return Ok(await tokenService.DecodeAsync(token, CancellationToken));
+            return Ok(await tokenService.UseRefreshTokenAsync(container.RefreshTokenEncoded, CancellationToken));
         }
     }
 }

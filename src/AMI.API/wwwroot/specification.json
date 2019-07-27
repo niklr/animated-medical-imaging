@@ -3,7 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "AMI API",
-    "description": "REST service for [Animated Medical Imaging](https://github.com/niklr/animated-medical-imaging) (AMI)\r\n\r\n## Introduction\r\nIntegrating this Application Programming Interface (API) is the easiest way to submit data to AMI. \r\nThe following documentation will help you to get full advantage of the API by understanding and implementing all endpoints. \r\nWith AMI API you will be able to upload files and submit tasks containing information needed for processing and receive the processed results. \r\nRequests with a body are sent in JavaScript Object Notation (JSON) format over HTTP(S), using the PUT or POST method.\r\n\r\nPlease, feel free to ask any questions, report bugs, suggest new features, and more on [GitHub](https://github.com/niklr/animated-medical-imaging/issues)\r\n\r\n## Authentication\r\nAuthentication of requests is accomplished by using JSON Web Tokens (JWT). Tokens can be obtained by providing your credentials to the tokens API endpoint.\r\nIf you don't have a registered account, you still can obtain tokens with the special API endpoint for anonymous users. \r\nThe response of the tokens API endpoint contains 3 different tokens: \r\n\r\n- **Access Token**: An authorization credential that can be used by the application to access the API.\r\n- **ID Token**: Contains user profile information (such as the user's name and email) which is represented in the form of claims.\r\n- **Refresh Token**: Contains the information required to obtain a new Access Token or ID Token.\r\n\r\nFor each API request you need to include the JWT Access Token with a \"Bearer\" prefix.\r\n\r\n## Requests, Responses, and Errors\r\nStatus codes are issued by the API in response to a client's request made to the API.\r\n\r\n> A **successful** completion of a request returns one of three possible status codes.\r\n\r\nStatus code | Name | Description\r\n---- | ---- | ----\r\n200 | OK | The default status code for successful requests.\r\n201 | Created | Returned on successful POST requests when one or more new entities have been created.\r\n204 | No Content | Returned on successful DELETE requests.\r\n\r\n> An **unsuccessful** completion of a request returns one of the following status codes.\r\n\r\nStatus code | Name | Description\r\n---- | ---- | ----\r\n400 | Bad Request | The format of the URL and/or of values in the parameter list is not valid.\r\n401 | Unauthorized | Usually caused by using a wrong/expired access token or by not using one at all.\r\n403 | Forbidden | The request was valid, but insufficient permissions for the resource.\r\n404 | Not Found | The requested entity does not (or no longer) exist.\r\n409 | Conflict | Indicates a mismatch in the current state of the resource.\r\n429 | Too Many Requests | Indicates that the rate limit has been reached.\r\n500 | Internal Server Error | An exception occurred that has no adequate handling.\r\n\r\n## HTTP method definitions\r\nThe Hypertext Transfer Protocol (HTTP) defines a set of request methods to indicate the desired action to be performed for a given resource/endpoint. \r\nAlthough they can also be nouns, these request methods are sometimes referred as HTTP verbs.\r\nAn idempotent HTTP method can be called many times without different outcomes.\r\nAMI API makes use of the following HTTP methods:\r\n\r\nMethod | Description\r\n---- | ----\r\nGET | Getting a resource. (e.g. GET *https://localhost/objects/23* without body)\r\nPOST | Creating a resource. (e.g. POST *https://localhost/tasks* with a body containing JSON data)\r\nPUT | Updating a resource. (e.g. PUT *https://localhost/tasks/7* with a body containing JSON data)\r\nDELETE | Deleting a resource. (e.g. DELETE *https://localhost/objects/23* without body)\r\n\r\n## Rate Limits\r\nRequests are limited on a 60 seconds basis to provide equal access to the API for everyone.\r\nThe rate limit information is indicated in the header of the response e.g.\r\n\r\n- X-Rate-Limit-Limit: 1m\r\n- X-Rate-Limit-Remaining: 56\r\n- X-Rate-Limit-Reset: 2019-07-25T09:44:13.4658862Z\r\n\r\n## Pagination\r\nAll endpoints returning a list of entities are paginated by default.\r\nReturning a limited amount of entities is easier to handle, instead of hundreds or thousands.\r\n\r\nOption | Description\r\n---- | ---- \r\nlimit | Defines the limit to constrain the number of items. (Allowed values: 10, 25, 50)\r\npage | Defines the current page number. (Allowed values: 0, 1, 2, ...)\r\n\r\n### Date format\r\nAll dates are in UTC (Universal Time Coordinated) and represented in ISO 8601 format (International Organization for Standardization). Example:\r\n\r\n> 2019-04-17T07:52:41.4700000Z\r\n\r\n",
+    "description": "REST service for [Animated Medical Imaging](https://github.com/niklr/animated-medical-imaging) (AMI)\r\n\r\n## Introduction\r\nIntegrating this Application Programming Interface (API) is the easiest way to submit data to AMI. \r\nThe following documentation will help you to get full advantage of the API by understanding and implementing all endpoints. \r\nWith AMI API you will be able to upload files and submit tasks containing information needed for processing and receive the processed results. \r\nRequests with a body are sent in JavaScript Object Notation (JSON) format over HTTP(S), using the PUT or POST method.\r\n\r\nPlease, feel free to ask any questions, report bugs, suggest new features, and more on [GitHub](https://github.com/niklr/animated-medical-imaging/issues)\r\n\r\n## Authentication\r\nAuthentication of requests is accomplished by using JSON Web Tokens (JWT). Tokens can be obtained by providing your credentials to the tokens API endpoint.\r\nIf you don't have a registered account, you still can obtain tokens with the special API endpoint for anonymous users. \r\nThe response of the tokens API endpoint contains 3 different tokens: \r\n\r\n- **Access Token**: An authorization credential that can be used by the application to access the API.\r\n- **ID Token**: Contains user profile information (such as the user's name and email) which is represented in the form of claims.\r\n- **Refresh Token**: Contains the information required to obtain a new Access Token or ID Token.\r\n\r\nFor each API request you need to include the encoded JWT Access Token with a \"Bearer\" prefix.\r\n\r\n## Requests, Responses, and Errors\r\nStatus codes are issued by the API in response to a client's request made to the API.\r\n\r\n> A **successful** completion of a request returns one of three possible status codes.\r\n\r\nStatus code | Name | Description\r\n---- | ---- | ----\r\n200 | OK | The default status code for successful requests.\r\n201 | Created | Returned on successful POST requests when one or more new entities have been created.\r\n204 | No Content | Returned on successful DELETE requests.\r\n\r\n> An **unsuccessful** completion of a request returns one of the following status codes.\r\n\r\nStatus code | Name | Description\r\n---- | ---- | ----\r\n400 | Bad Request | The format of the URL and/or of values in the parameter list is not valid.\r\n401 | Unauthorized | Usually caused by using a wrong/expired access token or by not using one at all.\r\n403 | Forbidden | The request was valid, but insufficient permissions for the resource.\r\n404 | Not Found | The requested entity does not (or no longer) exist.\r\n409 | Conflict | Indicates a mismatch in the current state of the resource.\r\n429 | Too Many Requests | Indicates that the rate limit has been reached.\r\n500 | Internal Server Error | An exception occurred that has no adequate handling.\r\n\r\n## HTTP method definitions\r\nThe Hypertext Transfer Protocol (HTTP) defines a set of request methods to indicate the desired action to be performed for a given resource/endpoint. \r\nAlthough they can also be nouns, these request methods are sometimes referred as HTTP verbs.\r\nAn idempotent HTTP method can be called many times without different outcomes.\r\nAMI API makes use of the following HTTP methods:\r\n\r\nMethod | Description\r\n---- | ----\r\nGET | Getting a resource. (e.g. GET *https://localhost/objects/23* without body)\r\nPOST | Creating a resource. (e.g. POST *https://localhost/tasks* with a body containing JSON data)\r\nPUT | Updating a resource. (e.g. PUT *https://localhost/tasks/7* with a body containing JSON data)\r\nDELETE | Deleting a resource. (e.g. DELETE *https://localhost/objects/23* without body)\r\n\r\n## Rate Limits\r\nRequests are limited on a 60 seconds basis to provide equal access to the API for everyone.\r\nThe rate limit information is indicated in the header of the response e.g.\r\n\r\n- X-Rate-Limit-Limit: 1m\r\n- X-Rate-Limit-Remaining: 56\r\n- X-Rate-Limit-Reset: 2019-07-25T09:44:13.4658862Z\r\n\r\n## Pagination\r\nAll endpoints returning a list of entities are paginated by default.\r\nReturning a limited amount of entities is easier to handle, instead of hundreds or thousands.\r\n\r\nOption | Description\r\n---- | ---- \r\nlimit | Defines the limit to constrain the number of items. (Allowed values: 10, 25, 50)\r\npage | Defines the current page number. (Allowed values: 0, 1, 2, ...)\r\n\r\n### Date format\r\nAll dates are in UTC (Universal Time Coordinated) and represented in ISO 8601 format (International Organization for Standardization). Example:\r\n\r\n> 2019-04-17T07:52:41.4700000Z\r\n\r\n",
     "version": "0.0.5"
   },
   "paths": {
@@ -723,50 +723,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TokenContainerModel"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tokens/decode": {
-      "post": {
-        "tags": [
-          "Tokens"
-        ],
-        "summary": "Decode tokens",
-        "description": "With this POST request you can decode a token.\nTokens are used for authentication and authorization purposes.",
-        "operationId": "Tokens_Decode",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "query",
-            "description": "The token.",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "500": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorModel"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "A model containing the decoded token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseTokenModel"
                 }
               }
             }
@@ -1681,47 +1637,76 @@
         "additionalProperties": false,
         "properties": {
           "accessToken": {
-            "type": "string",
             "description": "Gets or sets the access token.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AccessTokenModel"
+              }
+            ]
+          },
+          "accessTokenEncoded": {
+            "type": "string",
+            "description": "Gets or sets the endcoded access token.",
             "nullable": true
           },
           "idToken": {
+            "description": "Gets or sets the identity token.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IdTokenModel"
+              }
+            ]
+          },
+          "idTokenEncoded": {
             "type": "string",
-            "description": "Gets or sets the identifier token.",
+            "description": "Gets or sets the endcoded identity token.",
             "nullable": true
           },
           "refreshToken": {
-            "type": "string",
             "description": "Gets or sets the refresh token.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RefreshTokenModel"
+              }
+            ]
+          },
+          "refreshTokenEncoded": {
+            "type": "string",
+            "description": "Gets or sets the encoded refresh token.",
             "nullable": true
           }
         }
       },
-      "CredentialsModel": {
-        "type": "object",
-        "description": "A model containing the credentials for login purposes.",
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "Gets or sets the username.",
-            "nullable": true
+      "AccessTokenModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTokenModel"
           },
-          "password": {
-            "type": "string",
-            "description": "Gets or sets the password.",
-            "nullable": true
+          {
+            "type": "object",
+            "description": "The model containing information about the access token.",
+            "additionalProperties": false,
+            "properties": {
+              "exp": {
+                "type": "number",
+                "description": "Gets or sets the \"expiration time\" claim identifying the expiration time on\nor after which the token MUST NOT be accepted for processing.",
+                "format": "double"
+              }
+            }
           }
-        }
+        ]
       },
       "BaseTokenModel": {
         "type": "object",
         "discriminator": {
           "propertyName": "discriminator",
           "mapping": {
-            "AccessTokenModel": "#/components/schemas/AccessTokenModel",
             "IdTokenModel": "#/components/schemas/IdTokenModel",
-            "RefreshTokenModel": "#/components/schemas/RefreshTokenModel"
+            "RefreshTokenModel": "#/components/schemas/RefreshTokenModel",
+            "AccessTokenModel": "#/components/schemas/AccessTokenModel"
           }
         },
         "description": "The model all tokens have in common.",
@@ -1764,25 +1749,6 @@
             "type": "string"
           }
         }
-      },
-      "AccessTokenModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseTokenModel"
-          },
-          {
-            "type": "object",
-            "description": "The model containing information about the access token.",
-            "additionalProperties": false,
-            "properties": {
-              "exp": {
-                "type": "number",
-                "description": "Gets or sets the \"expiration time\" claim identifying the expiration time on\nor after which the token MUST NOT be accepted for processing.",
-                "format": "double"
-              }
-            }
-          }
-        ]
       },
       "IdTokenModel": {
         "allOf": [
@@ -1831,6 +1797,23 @@
             "additionalProperties": false
           }
         ]
+      },
+      "CredentialsModel": {
+        "type": "object",
+        "description": "A model containing the credentials for login purposes.",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Gets or sets the username.",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "description": "Gets or sets the password.",
+            "nullable": true
+          }
+        }
       }
     },
     "securitySchemes": {
