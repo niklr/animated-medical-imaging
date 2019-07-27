@@ -14,7 +14,7 @@ export class ConfigService {
     this.baseUrl = this.removeTrailingSlash(baseUrl);
   }
 
-  public init() {
+  public init(): Promise<void> {
     // Everything loaded before calling resolve can be accessed in a non-deferred manner.
     return new Promise<void>((resolve, reject) => {
       const handleError = (error: any) => {
@@ -25,12 +25,12 @@ export class ConfigService {
         }
         reject(message);
       };
-      this.http.get<IClientOptions>(this.baseUrl + '/options').subscribe(result => {
-        ConfigService.options = result;
+      this.http.get<IClientOptions>(this.baseUrl + '/options').subscribe(result1 => {
+        ConfigService.options = result1;
         ConfigService.options.isDevelopment = !environment.production;
         ConfigService.options.apiEndpoint = this.removeTrailingSlash(ConfigService.options.apiEndpoint);
-        this.http.get<IApiOptions>(ConfigService.options.apiEndpoint + '/api-options').subscribe(result => {
-          ConfigService.apiOptions = result;
+        this.http.get<IApiOptions>(ConfigService.options.apiEndpoint + '/api-options').subscribe(result2 => {
+          ConfigService.apiOptions = result2;
           resolve();
         }, error => {
           handleError(error);
@@ -41,7 +41,7 @@ export class ConfigService {
     });
   }
 
-  private removeTrailingSlash(url: string) {
-    return url.replace(/\/$/, "");
+  private removeTrailingSlash(url: string): string {
+    return url.replace(/\/$/, '');
   }
 }

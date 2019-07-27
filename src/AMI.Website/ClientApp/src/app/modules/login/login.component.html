@@ -1,0 +1,25 @@
+<div class="login-page">
+    <div class="content">
+        <div class="card login-card">
+            <div class="card-content mb-0">
+                <form (keydown.enter)="login($event)" [formGroup]="loginFormGroup">
+                    <div class="center">
+                        <img class="responsive-img" src="assets/images/ami_logo_combined.png" width="600" />
+                    </div>
+                    <div class="input-field">
+                        <input id="username" type="text" class="validate" autocomplete="off" formControlName="username">
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="password" type="password" class="validate" autocomplete="off"
+                            formControlName="password">
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="mt-10">
+                        <input class="btn full-width" type="submit" value="Log In" (click)="login($event)">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

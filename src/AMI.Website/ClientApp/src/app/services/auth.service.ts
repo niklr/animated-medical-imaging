@@ -9,25 +9,24 @@ import { IdentityModel } from '../models/identity.model';
 @Injectable()
 export class AuthService extends BaseService {
 
-  private _isInitialized: boolean;
-  private _refreshRetryCount = 0;
+  private isInitialized: boolean;
+  private refreshRetryCount = 0;
 
   public user: IdentityModel;
 
   constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
-    private tokenService: TokenService, private momentUtil: MomentUtil) {
+              private tokenService: TokenService, private momentUtil: MomentUtil) {
     super(gc, notificationService, logger);
 
-    this._isInitialized = false;
+    this.isInitialized = false;
 
-    gc.attach(function () {
-      const that = this as AuthService;
-      that.clear();
-    }.bind(this));
+    gc.attach(() => {
+      this.clear();
+    });
   }
 
   private clear(): void {
-    this._isInitialized = false;
+    this.isInitialized = false;
   }
 
   private setUser(): boolean {
@@ -35,7 +34,7 @@ export class AuthService extends BaseService {
   }
 
   public get isAuthenticated(): boolean {
-    return false;
+    return true;
   }
 
   public get isExpired(): boolean {
@@ -51,8 +50,34 @@ export class AuthService extends BaseService {
     }
   }
 
+  public async login(username: string, password: string): Promise<void> {
+    this.gc.notify();
+    const message = 'Login failed.';
+    return this.init();
+  }
+
   public logout(): void {
     this.gc.notify();
+  }
+
+  public async init(): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        if (this.isInitialized) {
+          resolve();
+        } else {
+          const extendedResolve = () => {
+            this.isInitialized = true;
+            resolve();
+          };
+
+          extendedResolve();
+        }
+      } catch (error) {
+        this.notificationService.handleError(error);
+        reject();
+      }
+    });
   }
 
   public async refresh(): Promise<boolean> {
@@ -67,7 +92,7 @@ export class AuthService extends BaseService {
       }).then(
         (s) => {
           if (this.setUser()) {
-            this._refreshRetryCount = 0;
+            this.refreshRetryCount = 0;
             return true;
           } else {
             throw new Error(defaultMessage);
@@ -77,11 +102,11 @@ export class AuthService extends BaseService {
           this.handleAuthError(e, defaultMessage);
           // 400: stale refresh token / invalid_grant
           if (!!e.status && e.status === 400) {
-            if (this._refreshRetryCount >= 3) {
-              this._refreshRetryCount = 0;
+            if (this.refreshRetryCount >= 3) {
+              this.refreshRetryCount = 0;
               this.logout();
             } else {
-              this._refreshRetryCount += 1;
+              this.refreshRetryCount += 1;
             }
           }
           throw e;

@@ -7,14 +7,14 @@ const noop = (): any => undefined;
 @Injectable()
 export class ConsoleLoggerService implements Logger {
 
-    private _isEnabled = false;
+    private isEnabled = false;
 
     constructor() {
-        this._isEnabled = ConfigService.options.enableConsoleOutput;
+        this.isEnabled = ConfigService.options.enableConsoleOutput;
     }
 
     get info() {
-        if (this._isEnabled) {
+        if (this.isEnabled) {
             // tslint:disable-next-line:no-console
             return console.info.bind(console);
         } else {
@@ -23,7 +23,7 @@ export class ConsoleLoggerService implements Logger {
     }
 
     get warn() {
-        if (this._isEnabled) {
+        if (this.isEnabled) {
             return console.warn.bind(console);
         } else {
             return noop;
@@ -31,7 +31,7 @@ export class ConsoleLoggerService implements Logger {
     }
 
     get error() {
-        if (this._isEnabled) {
+        if (this.isEnabled) {
             return console.error.bind(console);
         } else {
             return noop;
@@ -39,7 +39,7 @@ export class ConsoleLoggerService implements Logger {
     }
 
     invokeConsoleMethod(type: string, args?: any): void {
-        const logFn: Function = (console)[type] || console.log || noop;
+        const logFn = (console)[type] || console.log || noop;
         logFn.apply(console, [args]);
     }
 }
