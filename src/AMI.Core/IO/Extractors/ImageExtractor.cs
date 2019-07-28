@@ -16,6 +16,7 @@ using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Security;
+using RNS.Framework.Tools;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace AMI.Core.IO.Extractors
@@ -39,13 +40,6 @@ namespace AMI.Core.IO.Extractors
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         /// <param name="readerFactory">The image reader factory.</param>
-        /// <exception cref="ArgumentNullException">
-        /// loggerFactory
-        /// or
-        /// fileSystemStrategy
-        /// or
-        /// readerFactory
-        /// </exception>
         public ImageExtractor(
             ILoggerFactory loggerFactory,
             IFileSystemStrategy fileSystemStrategy,
@@ -61,41 +55,11 @@ namespace AMI.Core.IO.Extractors
             this.readerFactory = readerFactory ?? throw new ArgumentNullException(nameof(readerFactory));
         }
 
-        /// <summary>
-        /// Processes the images asynchronous.
-        /// </summary>
-        /// <param name="command">The command information.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// The result of the image processing.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// command
-        /// or
-        /// ct
-        /// </exception>
-        /// <exception cref="UnexpectedNullException">
-        /// Image file extension could not be determined.
-        /// or
-        /// Filesystem could not be created based on the destination path.
-        /// or
-        /// Image reader could not be created.
-        /// or
-        /// Watermark could not be read.
-        /// or
-        /// Bitmap could not be centered.
-        /// </exception>
+        /// <inheritdoc/>
         public async Task<ProcessResultModel> ProcessAsync(ProcessPathCommand command, CancellationToken ct)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException(nameof(command));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNull(command, nameof(command));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             var result = new ProcessResultModel();
             var imageFormat = GetImageFormat(command.ImageFormat);
@@ -126,7 +90,6 @@ namespace AMI.Core.IO.Extractors
             result.LabelCount = Convert.ToInt32(reader.GetLabelCount());
 
             ISet<AxisType> axisTypes = new HashSet<AxisType>(command.AxisTypes);
-
             if (axisTypes.Count == 0)
             {
                 axisTypes = reader.GetRecommendedAxisTypes();
@@ -152,6 +115,7 @@ namespace AMI.Core.IO.Extractors
                 for (int i = 0; i < command.AmountPerAxis; i++)
                 {
                     ct.ThrowIfCancellationRequested();
+
                     string filename = $"{axisType}_{i}{imageExtension}";
                     var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), Convert.ToUInt32(command.OutputSize));
                     if (bitmap != null)
@@ -189,10 +153,7 @@ namespace AMI.Core.IO.Extractors
 
         private void PreProcess(IImageReader<T2> reader, ImageFormat imageFormat, uint amount, uint? outputSize)
         {
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
+            Ensure.ArgumentNotNull(reader, nameof(reader));
 
             if (amount > 1)
             {
@@ -284,11 +245,6 @@ namespace AMI.Core.IO.Extractors
             }
         }
 
-        /// <summary>
-        /// Gets the image format.
-        /// </summary>
-        /// <param name="imageFormat">The image format.</param>
-        /// <returns>The <see cref="ImageFormat"/>.</returns>
         private ImageFormat GetImageFormat(Domain.Enums.ImageFormat imageFormat)
         {
             switch (imageFormat)

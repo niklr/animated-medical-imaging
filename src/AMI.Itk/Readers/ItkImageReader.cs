@@ -9,6 +9,7 @@ using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using AMI.Itk.Utils;
 using itk.simple;
+using RNS.Framework.Tools;
 
 namespace AMI.Itk.Readers
 {
@@ -40,38 +41,28 @@ namespace AMI.Itk.Readers
             itkUtil = new ItkUtil(fileSystemStrategy, fileExtensionMapper);
         }
 
-        /// <summary>
-        /// Gets the image.
-        /// </summary>
+        /// <inheritdoc/>
         public Image Image { get; private set; }
 
-        /// <summary>
-        /// Gets the image width.
-        /// </summary>
+        /// <inheritdoc/>
         public uint Width
         {
             get { return size[0]; }
         }
 
-        /// <summary>
-        /// Gets the image height.
-        /// </summary>
+        /// <inheritdoc/>
         public uint Height
         {
             get { return size[1]; }
         }
 
-        /// <summary>
-        /// Gets the image depth.
-        /// </summary>
+        /// <inheritdoc/>
         public uint Depth
         {
             get { return size[2]; }
         }
 
-        /// <summary>
-        /// Gets or sets the axis position mapper.
-        /// </summary>
+        /// <inheritdoc/>
         public IAxisPositionMapper Mapper { get; set; }
 
         /// <inheritdoc/>
@@ -88,34 +79,16 @@ namespace AMI.Itk.Readers
                 {
                     axisImage.Value.Dispose();
                 }
+
+                axisImages = new Dictionary<AxisType, Image>();
             }
         }
 
-        /// <summary>
-        /// Initializes the reader asynchronous.
-        /// </summary>
-        /// <param name="path">The location of the image.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// A <see cref="Task" /> representing the asynchronous operation.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// path
-        /// or
-        /// ct
-        /// </exception>
-        /// <exception cref="AmiException">The ITK image could not be read.</exception>
+        /// <inheritdoc/>
         public async Task InitAsync(string path, CancellationToken ct)
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNull(path, nameof(path));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             await SemaphoreSlim.WaitAsync();
             try
@@ -135,10 +108,7 @@ namespace AMI.Itk.Readers
             }
         }
 
-        /// <summary>
-        /// Gets the recommended axis types.
-        /// </summary>
-        /// <returns>The recommended axis types.</returns>
+        /// <inheritdoc/>
         public ISet<AxisType> GetRecommendedAxisTypes()
         {
             var defaultAxisTypes = new HashSet<AxisType>() { AxisType.X, AxisType.Y, AxisType.Z };
@@ -174,13 +144,7 @@ namespace AMI.Itk.Readers
             }
         }
 
-        /// <summary>
-        /// Extracts the specified position as bitmap.
-        /// </summary>
-        /// <param name="axisType">Type of the axis.</param>
-        /// <param name="position">The position.</param>
-        /// <param name="size">The desired output size.</param>
-        /// <returns>The extracted position as bitmap.</returns>
+        /// <inheritdoc/>
         public System.Drawing.Bitmap ExtractPosition(AxisType axisType, uint position, uint? size)
         {
             Validate();
@@ -195,6 +159,7 @@ namespace AMI.Itk.Readers
                     var filter = new AddImageFilter();
                     axisImage = filter.Execute(axisImage, image);
                     axisImages[axisType] = axisImage;
+                    filter.Dispose();
                 }
                 else
                 {
@@ -215,10 +180,7 @@ namespace AMI.Itk.Readers
             }
         }
 
-        /// <summary>
-        /// Gets the label count.
-        /// </summary>
-        /// <returns>The label count.</returns>
+        /// <inheritdoc/>
         public ulong GetLabelCount()
         {
             try

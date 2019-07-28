@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using AMI.Core.Wrappers;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.Extensions.Drawing
 {
@@ -22,10 +23,7 @@ namespace AMI.Core.Extensions.Drawing
         /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap ToGrayscale(this Bitmap original)
         {
-            if (original == null)
-            {
-                throw new ArgumentNullException(nameof(original));
-            }
+            Ensure.ArgumentNotNull(original, nameof(original));
 
             // create a blank bitmap the same size as original
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);
@@ -77,10 +75,7 @@ namespace AMI.Core.Extensions.Drawing
         /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap To8bppIndexedGrayscale(this Bitmap original)
         {
-            if (original == null)
-            {
-                throw new ArgumentNullException(nameof(original));
-            }
+            Ensure.ArgumentNotNull(original, nameof(original));
 
             // Set pixel format as 8-bit grayscale
             PixelFormat format = PixelFormat.Format8bppIndexed;
@@ -117,10 +112,7 @@ namespace AMI.Core.Extensions.Drawing
         /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap Resize(this Bitmap original, uint? size)
         {
-            if (original == null)
-            {
-                throw new ArgumentNullException(nameof(original));
-            }
+            Ensure.ArgumentNotNull(original, nameof(original));
 
             if (size.HasValue && size.Value > 0)
             {
@@ -185,10 +177,7 @@ namespace AMI.Core.Extensions.Drawing
         /// <exception cref="ArgumentNullException">original</exception>
         public static Bitmap ToCenter(this Bitmap original, uint? size, Color color)
         {
-            if (original == null)
-            {
-                throw new ArgumentNullException(nameof(original));
-            }
+            Ensure.ArgumentNotNull(original, nameof(original));
 
             if (size.HasValue && size.Value > 0)
             {
@@ -229,15 +218,8 @@ namespace AMI.Core.Extensions.Drawing
         /// </exception>
         public static Bitmap AppendWatermark(this Bitmap original, BitmapWrapper watermark)
         {
-            if (original == null)
-            {
-                throw new ArgumentNullException(nameof(original));
-            }
-
-            if (watermark == null)
-            {
-                throw new ArgumentNullException(nameof(watermark));
-            }
+            Ensure.ArgumentNotNull(original, nameof(original));
+            Ensure.ArgumentNotNull(watermark, nameof(watermark));
 
             var destRect = new Rectangle(0, 0, original.Width, original.Height);
             var destImage = new Bitmap(original.Width, original.Height);

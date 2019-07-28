@@ -8,9 +8,9 @@ namespace AMI.Core.Mappers
     public interface IAxisPositionMapper
     {
         /// <summary>Calculates the mapped position (default is 0).</summary>
-        /// <param name="amount">The amount.</param>
-        /// <param name="length">The length.</param>
-        /// <param name="position">The position.</param>
+        /// <param name="amount">The amount of images.</param>
+        /// <param name="length">The length of the current axis.</param>
+        /// <param name="position">The current position.</param>
         /// <returns>The mapped position (default is 0).</returns>
         uint CalculateMappedPosition(uint amount, uint length, uint position);
 

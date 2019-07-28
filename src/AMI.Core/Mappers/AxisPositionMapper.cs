@@ -34,11 +34,7 @@ namespace AMI.Core.Mappers
             Init(amount, width, height, depth);
         }
 
-        /// <summary>Calculates the mapped position (default is 0).</summary>
-        /// <param name="amount">The amount of images.</param>
-        /// <param name="length">The length of the current axis.</param>
-        /// <param name="position">The current position.</param>
-        /// <returns>The mapped position (default is 0).</returns>
+        /// <inheritdoc/>
         public uint CalculateMappedPosition(uint amount, uint length, uint position)
         {
             uint stepSize = Math.Max(length / amount, 1);
@@ -51,12 +47,7 @@ namespace AMI.Core.Mappers
             return mappedPosition;
         }
 
-        /// <summary>
-        /// Gets the mapped position.
-        /// </summary>
-        /// <param name="axisType">Type of the axis.</param>
-        /// <param name="position">The position.</param>
-        /// <returns>The mapped position.</returns>
+        /// <inheritdoc/>
         public uint GetMappedPosition(AxisType axisType, uint position)
         {
             if (map != null)

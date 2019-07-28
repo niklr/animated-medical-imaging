@@ -10,6 +10,7 @@ using AMI.Core.Strategies;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using itk.simple;
+using RNS.Framework.Tools;
 
 [assembly: InternalsVisibleTo("AMI.NetCore.Tests")]
 [assembly: InternalsVisibleTo("AMI.NetFramework.Tests")]
@@ -120,14 +121,11 @@ namespace AMI.Itk.Utils
         /// <inheritdoc/>
         public async Task<Image> ReadImageAsync(string path, CancellationToken ct)
         {
+            Ensure.ArgumentNotNull(ct, nameof(ct));
+
             if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException(nameof(path));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
             }
 
             var reader = CreateImageReader(path);
@@ -170,10 +168,8 @@ namespace AMI.Itk.Utils
         /// <inheritdoc/>
         public async Task WriteImageAsync(Image image, string path, string filename, CancellationToken ct)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -183,11 +179,6 @@ namespace AMI.Itk.Utils
             if (string.IsNullOrWhiteSpace(filename))
             {
                 throw new ArgumentNullException(nameof(filename));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
             }
 
             var fs = fileSystemStrategy.Create(path);
@@ -227,10 +218,7 @@ namespace AMI.Itk.Utils
         /// <inheritdoc/>
         public Image ExtractPosition(Image image, AxisType axisType, uint index)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             var size = image.GetSize();
             var indexVector = new VectorInt32 { 0, 0, 0 };
@@ -266,10 +254,7 @@ namespace AMI.Itk.Utils
         /// <inheritdoc/>
         public Image ResampleImage2D(Image image, uint outputSize)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             var dimension = image.GetDimension();
             if (dimension != 2)
@@ -325,10 +310,7 @@ namespace AMI.Itk.Utils
         /// <inheritdoc/>
         public Image ResampleImage3D(Image image, uint outputSize)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             var dimension = image.GetDimension();
             if (dimension != 3)
@@ -369,10 +351,7 @@ namespace AMI.Itk.Utils
         /// <inheritdoc/>
         public ulong GetLabelCount(Image image)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             ulong labelCount = 0;
 
@@ -395,10 +374,7 @@ namespace AMI.Itk.Utils
         /// <inheritdoc/>
         public System.Drawing.Bitmap ToBitmap(Image image)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             var dimension = image.GetDimension();
             if (dimension != 2)
@@ -414,10 +390,7 @@ namespace AMI.Itk.Utils
 
         private Image ApplyRescaleIntensityImageFilter(Image image)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             Image output = null;
 
@@ -444,10 +417,7 @@ namespace AMI.Itk.Utils
 
         private Image ApplyCastImageFilter(Image image)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             // TODO: find mapping between itk.simple.PixelIDValueEnum and System.Drawing.Imaging.PixelFormat
             // see https://github.com/SimpleITK/SimpleITK/issues/582
@@ -473,10 +443,7 @@ namespace AMI.Itk.Utils
 
         private IntPtr GetBuffer(Image image)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
+            Ensure.ArgumentNotNull(image, nameof(image));
 
             PixelIDValueEnum imageType = PixelIDValueEnum.swigToEnum(image.GetPixelIDValue());
             int swigValue = imageType.swigValue;
