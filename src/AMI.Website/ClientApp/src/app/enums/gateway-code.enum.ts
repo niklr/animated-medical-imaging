@@ -1,3 +1,3 @@
 export enum GatewayOpCode {
-    Dispatch = 0
+    Dispatch = 'Dispatch'
 }

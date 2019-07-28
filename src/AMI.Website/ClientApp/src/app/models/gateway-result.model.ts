@@ -1,11 +1,11 @@
 export interface IGatewayResult<T> {
-    op: number;
+    op: string;
     t: string;
     d: T;
 }
 
 export class GatewayResult<T> implements IGatewayResult<T> {
-    public op: number;
+    public op: string;
     public t: string;
     public d: T;
 

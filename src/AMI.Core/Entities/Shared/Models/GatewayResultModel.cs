@@ -1,4 +1,6 @@
-﻿namespace AMI.Core.Entities.Models
+﻿using AMI.Domain.Enums;
+
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// A model containing the result of a gateway notification.
@@ -10,12 +12,12 @@
         /// <summary>
         /// Gets or sets opcode for the payload.
         /// </summary>
-        public int op { get; set; }
+        public GatewayOpCode op { get; set; }
 
         /// <summary>
         /// Gets or sets the event name for this payload.
         /// </summary>
-        public string t { get; set; }
+        public GatewayEvent t { get; set; }
 
         /// <summary>
         /// Gets or sets event data.

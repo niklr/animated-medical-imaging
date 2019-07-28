@@ -29,11 +29,11 @@ export class GatewayHub extends BaseHub {
   }
 
   public on(event: string, callback: (data: any) => void): void {
-    this.events.push(event.toLowerCase(), callback);
+    this.events.push(event, callback);
   }
 
   protected fire(...args: any[]): void {
-    const event = args[0].toLowerCase();
+    const event = args[0];
     // Find event listeners, and support pseudo-event `catchAll`
     for (let i = 0; i <= this.events.length; i += 2) {
       if (this.events[i] === event) {

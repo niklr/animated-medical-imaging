@@ -44,8 +44,8 @@ namespace AMI.Infrastructure.Services
             var result = new GatewayResultModel<T>()
             {
                 d = data,
-                op = (int)gatewayOpCode,
-                t = gatewayEvent.ToString()
+                op = gatewayOpCode,
+                t = gatewayEvent
             };
 
             return gatewayObserverService.NotifyAsync(groupName, result, ct);
