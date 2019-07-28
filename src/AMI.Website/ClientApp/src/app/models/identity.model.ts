@@ -4,24 +4,26 @@ export class IdentityModel {
   public sub: string;
   public username: string;
 
-  private _roles: IKeyedCollection<string> = new KeyedCollection<string>();
+  private rolesCollection: IKeyedCollection<string> = new KeyedCollection<string>();
 
   public constructor(init?: Partial<IdentityModel>) {
     Object.assign(this, init);
   }
 
   public get roles(): string[] {
-    return this._roles.values();
+    return this.rolesCollection.values();
   }
 
   public set roles(roles: string[]) {
-    this._roles = new KeyedCollection<string>();
-    roles.forEach((role) => {
-      this._roles.add(role, role);
-    });
+    this.rolesCollection = new KeyedCollection<string>();
+    if (roles) {
+      roles.forEach((role) => {
+        this.rolesCollection.add(role, role);
+      });
+    }
   }
 
   public isInRole(role: string) {
-    return this._roles.containsKey(role);
+    return this.rolesCollection.containsKey(role);
   }
 }

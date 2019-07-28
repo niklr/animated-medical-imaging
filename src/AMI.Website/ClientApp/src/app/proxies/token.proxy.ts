@@ -13,14 +13,17 @@ export class TokenProxy {
   }
 
   public create(username: string, password: string): Observable<TokenContainerModel> {
-    var credentials = new CredentialsModel({
-      username: username,
-      password: password
-    });
+    const credentials = new CredentialsModel();
+    credentials.username = username;
+    credentials.password = password;
     return this.tokensClient.create(credentials);
   }
-  
+
   public createAnon(): Observable<TokenContainerModel> {
     return this.tokensClient.createAnonymous();
+  }
+
+  public update(container: TokenContainerModel): Observable<TokenContainerModel> {
+    return this.tokensClient.update(container);
   }
 }

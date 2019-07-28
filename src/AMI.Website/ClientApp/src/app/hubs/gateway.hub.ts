@@ -17,20 +17,18 @@ export class GatewayHub extends BaseHub {
 
   constructor(private gc: GarbageCollector, private worker: BackgroundWorker, private logger: LoggerService) {
     super();
-    this.gc.attach(function () {
-      const that = this as GatewayHub;
-      that.stop();
-      that.token = undefined;
-      that.connection = undefined;
-    }.bind(this));
+    this.gc.attach(() => {
+      this.stop();
+      this.token = undefined;
+      this.connection = undefined;
+    });
 
-    this.worker.attach(function () {
-      const that = this as GatewayHub;
-      that.restart();
-    }.bind(this));
+    this.worker.attach(() => {
+      this.restart();
+    });
   }
 
-  public on(event: string, callback: Function): void {
+  public on(event: string, callback: (data: any) => void): void {
     this.events.push(event.toLowerCase(), callback);
   }
 
@@ -63,7 +61,7 @@ export class GatewayHub extends BaseHub {
     this.connection = connectionBuilder.build();
 
     this.connection.on('notify', (result: any) => {
-      const gatewayResult = <IGatewayResult<any>>result;
+      const gatewayResult = result as IGatewayResult<any>;
       switch (gatewayResult.op) {
         case GatewayOpCode.Dispatch:
           this.fire(gatewayResult.t, gatewayResult.d);

@@ -24,13 +24,13 @@ import {
 })
 export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  private _subs: string[] = [];
+  private subs: string[] = [];
 
-  public isChecked: boolean = true;
+  public isChecked = true;
   public pageEvent: PageEvent;
 
   constructor(public objectService: ObjectService, public objectStore: ObjectStore, private notificationService: NotificationService,
-    private pubSubService: PubSubService, private objectProxy: ObjectProxy) {
+              private pubSubService: PubSubService, private objectProxy: ObjectProxy) {
     this.pageEvent = this.objectStore.pageEvent;
   }
 
@@ -42,26 +42,25 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._subs.forEach(sub => {
+    this.subs.forEach(sub => {
       this.pubSubService.unsubscribe(sub);
     });
-    this._subs = [];
+    this.subs = [];
   }
 
   private initDropdown(): void {
     setTimeout(() => {
-      var options = {};
-      var elem = document.querySelector('#objectActionsDropdownButton');
-      var instance = M.Dropdown.init(elem, options);
+      const options = {};
+      const elem = document.querySelector('#objectActionsDropdownButton');
+      const instance = M.Dropdown.init(elem, options);
     });
   }
 
   private init(): void {
-    const sub1 = this.pubSubService.subscribe(PubSubTopic.OBJECTS_INIT_TOPIC, function (msg, data) {
-      const that = this as ObjectsComponent;
-      that.refresh();
-    }.bind(this));
-    this._subs.push(sub1);
+    const sub1 = this.pubSubService.subscribe(PubSubTopic.OBJECTS_INIT_TOPIC, (msg, data) => {
+      this.refresh();
+    });
+    this.subs.push(sub1);
 
     // this.initDemoObjects();
     this.setPage(this.pageEvent);
@@ -71,17 +70,16 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initDropdown();
     // Mark all objects as checked by default
     this.isChecked = true;
-    var items = this.objectStore.getItems();
+    const items = this.objectStore.getItems();
     if (items) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
+      for (const item of items) {
         item.isChecked = true;
       }
     }
   }
 
   private initDemoObjects(): void {
-    var object1 = new ObjectModel({
+    const object1 = new ObjectModel({
       id: '19f06aa9-1856-4cc9-ba30-1ea0483fc154',
       originalFilename: 'SMIR.Brain.XX.O.MR_Flair.36620.mha',
       modifiedDate: new Date('2019-05-21T14:05:25.3100000Z'),
@@ -95,7 +93,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     });
 
-    var object2 = new ObjectModel({
+    const object2 = new ObjectModel({
       id: 'a8bfea94-614b-466c-9400-3ace2d5e4f06',
       originalFilename: 'SMIR.Brain.XX.O.CT.346124.nii',
       modifiedDate: new Date('2019-04-17T07:52:41.4700000Z'),
@@ -108,23 +106,23 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     });
 
-    var object3 = new ObjectModel({
+    const object3 = new ObjectModel({
       id: 'a8bfea94-614b-466c-9400-3ace2d5e4f06',
       originalFilename: 'SMIR.Brain.XX.O.CT.346124.nii',
       modifiedDate: new Date('2019-04-17T07:52:41.4700000Z')
     });
 
     setTimeout(() => {
-      var items = [object1, object2, object3] as ObjectModelExtended[];
+      const items = [object1, object2, object3] as ObjectModelExtended[];
       this.objectStore.setItems(items);
       this.afterInit();
     });
   }
 
   private createDemoResult(): ProcessResultModel {
-    var result = new ProcessResultModel();
-    var example1 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/';
-    var example2 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/';
+    const result = new ProcessResultModel();
+    const example1 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/';
+    const example2 = 'https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/';
     result.labelCount = 4;
     result.combinedGif = example1 + 'Z.gif';
     result.gifs = [
@@ -144,15 +142,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     result.images = [];
 
-    for (var i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       result.images.push(this.createDemoResultItem(AxisType.X, example1, i));
     }
 
-    for (var i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       result.images.push(this.createDemoResultItem(AxisType.Y, example2, i));
     }
 
-    for (var i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       result.images.push(this.createDemoResultItem(AxisType.Z, example1, i));
     }
 
@@ -161,18 +159,17 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private createDemoResultItem(axisType: AxisType, basePath: string, position: number): PositionAxisContainerModelOfString {
     return new PositionAxisContainerModelOfString({
-      axisType: axisType,
+      axisType,
       entity: basePath + 'Z_' + position + '.png',
-      position: position
+      position
     });
   }
 
   public toggleCheckbox(): void {
     this.isChecked = !this.isChecked;
-    var items = this.objectStore.getItems();
+    const items = this.objectStore.getItems();
     if (items) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
+      for (const item of items) {
         item.isChecked = this.isChecked;
       }
     }
@@ -181,7 +178,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
   public setPage(event: PageEvent): void {
     this.objectStore.pageEvent = event;
     this.pageEvent = this.objectStore.pageEvent;
-    this.objectProxy.getObjects(this.pageEvent.pageIndex, this.pageEvent.pageSize).subscribe(result => {
+    this.objectProxy.getObjects(this.pageEvent.pageIndex, this.pageEvent.pageSize).then(result => {
       this.pageEvent.previousPageIndex = this.pageEvent.pageIndex;
       this.pageEvent.pageIndex = result.pagination.page;
       this.pageEvent.pageSize = result.pagination.limit;

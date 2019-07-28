@@ -22,23 +22,21 @@ export class ObjectStore {
   }
 
   private initGateway(): void {
-    this.gateway.on(GatewayEvent[GatewayEvent.UpdateTask], function (data: TaskModel) {
-      const that = this as ObjectStore;
+    this.gateway.on(GatewayEvent[GatewayEvent.UpdateTask], (data: TaskModel) => {
       if (data && data.object && data.object.id) {
-        var index = that.items.findIndex((item) => {
+        const index = this.items.findIndex((item) => {
           return item.id === data.object.id;
         });
         if (index >= 0) {
-          that.items[index].latestTask = data;
+          this.items[index].latestTask = data;
         }
       }
-    }.bind(this));
-    this.gateway.on(GatewayEvent[GatewayEvent.DeleteObject], function (data: ObjectModel) {
-      const that = this as ObjectStore;
+    });
+    this.gateway.on(GatewayEvent[GatewayEvent.DeleteObject], (data: ObjectModel) => {
       if (data && data.id) {
-        that.deleteById(data.id);
+        this.deleteById(data.id);
       }
-    }.bind(this));
+    });
   }
 
   private updateCount(): void {

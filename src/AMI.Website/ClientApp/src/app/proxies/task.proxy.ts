@@ -13,14 +13,15 @@ import { NotificationService } from '../services/notification.service';
 @Injectable()
 export class TaskProxy extends BaseProxy {
 
-  constructor(authService: AuthService, private logger: LoggerService, private notificationService: NotificationService, private tasksClient: TasksAmiApiClient) {
+  constructor(authService: AuthService, private logger: LoggerService, private notificationService: NotificationService,
+              private tasksClient: TasksAmiApiClient) {
     super(authService);
   }
 
   public create(id: string, settings: ProcessObjectCommand): Promise<TaskModel> {
-    var commandCopy = new ProcessObjectCommand(settings);
+    const commandCopy = new ProcessObjectCommand(settings);
     commandCopy.id = id;
-    var command = new CreateTaskCommand({
+    const command = new CreateTaskCommand({
       command: commandCopy
     });
     return new Promise<TaskModel>((resolve, reject) => {

@@ -20,16 +20,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+    }
 
     ngAfterViewInit() {
-        setTimeout(async () => {
-            this.authService.init().then(() => {
-                if (this.authService.isAuthenticated) {
-                    // this.router.navigate(['/']);
-                }
-            }, () => { });
-        });
     }
 
     login($event: any): void {

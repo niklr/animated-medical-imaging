@@ -4,19 +4,19 @@ import { ErrorModel, IErrorModel } from '../clients/ami-api-client';
 @Injectable()
 export class NotificationService {
 
-  private _lastMessage: string;
-  private _lastMessageDate: Date;
+  private lastMessage: string;
+  private lastMessageDate: Date;
 
   constructor() {
-    this._lastMessageDate = new Date();
+    this.lastMessageDate = new Date();
   }
 
   public raiseMessage(message: string): void {
-    if (this._lastMessage === message && Date.now() - this._lastMessageDate.getTime() < 1000) {
+    if (this.lastMessage === message && Date.now() - this.lastMessageDate.getTime() < 1000) {
       // Don't display message if the last message is equal and less than 1 second have passed.
     } else {
-      this._lastMessage = message;
-      this._lastMessageDate = new Date();
+      this.lastMessage = message;
+      this.lastMessageDate = new Date();
       M.toast({ html: message, classes: 'rounded' });
     }
   }

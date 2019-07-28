@@ -9,17 +9,16 @@ import { CallbackWrapper } from '../wrappers/callback.wrapper';
 export class ObjectService {
 
   constructor(private notificationService: NotificationService, private objectStore: ObjectStore,
-    private objectProxy: ObjectProxy, private taskProxy: TaskProxy) {
+              private objectProxy: ObjectProxy, private taskProxy: TaskProxy) {
 
   }
 
   public processSelectedObjects = (callbackFn) => {
-    var callbackWrapper = new CallbackWrapper(callbackFn);
+    const callbackWrapper = new CallbackWrapper(callbackFn);
 
-    var items = this.objectStore.getItems();
+    const items = this.objectStore.getItems();
     if (items) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
+      for (const item of items) {
         if (item.isChecked) {
           callbackWrapper.counter++;
           this.processObject(item.id, callbackWrapper);
@@ -33,7 +32,7 @@ export class ObjectService {
   }
 
   public processObject(id: string, callbackWrapper: CallbackWrapper): void {
-    var settings = this.objectStore.settings;
+    const settings = this.objectStore.settings;
     this.taskProxy.create(id, settings).then(result => {
     }, error => {
       this.notificationService.handleError(error);
@@ -45,12 +44,11 @@ export class ObjectService {
   }
 
   public downloadSelectedObjects = (callbackFn) => {
-    var callbackWrapper = new CallbackWrapper(callbackFn);
+    const callbackWrapper = new CallbackWrapper(callbackFn);
 
-    var items = this.objectStore.getItems();
+    const items = this.objectStore.getItems();
     if (items) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
+      for (const item of items) {
         if (item.isChecked) {
           callbackWrapper.counter++;
           this.downloadObject(item, callbackWrapper);
@@ -71,11 +69,10 @@ export class ObjectService {
   }
 
   public deleteSelectedObjects = (callbackFn) => {
-    var callbackWrapper = new CallbackWrapper(callbackFn);
+    const callbackWrapper = new CallbackWrapper(callbackFn);
 
-    var items = this.objectStore.getItems();
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
+    const items = this.objectStore.getItems();
+    for (const item of items) {
       if (item.isChecked) {
         callbackWrapper.counter++;
         this.deleteObject(item.id, callbackWrapper);
@@ -88,12 +85,11 @@ export class ObjectService {
   }
 
   public deleteObject(id: string, callbackWrapper: CallbackWrapper): void {
-    this.objectProxy.deleteObject(id).subscribe(result => {
+    this.objectProxy.deleteObject(id).then(result => {
       this.objectStore.deleteById(id);
     }, error => {
       this.notificationService.handleError(error);
-    }).add(() => {
-      // finally block
+    }).finally(() => {
       if (callbackWrapper) {
         callbackWrapper.invokeCallbackFn();
       }

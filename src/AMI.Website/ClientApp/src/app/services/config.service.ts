@@ -28,6 +28,7 @@ export class ConfigService {
       this.http.get<IClientOptions>(this.baseUrl + '/options').subscribe(result1 => {
         ConfigService.options = result1;
         ConfigService.options.isDevelopment = !environment.production;
+        ConfigService.options.enableConsoleOutput = !environment.production;
         ConfigService.options.apiEndpoint = this.removeTrailingSlash(ConfigService.options.apiEndpoint);
         this.http.get<IApiOptions>(ConfigService.options.apiEndpoint + '/api-options').subscribe(result2 => {
           ConfigService.apiOptions = result2;
