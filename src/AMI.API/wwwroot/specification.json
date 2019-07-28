@@ -1110,7 +1110,7 @@
         }
       },
       "DataType": {
-        "type": "integer",
+        "type": "string",
         "description": "A type to describe the data.",
         "x-enumNames": [
           "Unknown",
@@ -1118,13 +1118,13 @@
           "SegmentationImage"
         ],
         "enum": [
-          0,
-          1,
-          2
+          "Unknown",
+          "RawImage",
+          "SegmentationImage"
         ]
       },
       "FileFormat": {
-        "type": "integer",
+        "type": "string",
         "description": "A type to describe the file format.",
         "x-enumNames": [
           "Unknown",
@@ -1139,16 +1139,16 @@
           "GZip"
         ],
         "enum": [
-          0,
-          10,
-          20,
-          30,
-          40,
-          50,
-          51,
-          52,
-          53,
-          54
+          "Unknown",
+          "Dicom",
+          "Analyze",
+          "MetaImage",
+          "Nifti",
+          "Rar",
+          "Zip",
+          "Tar",
+          "SevenZip",
+          "GZip"
         ]
       },
       "TaskModel": {
@@ -1224,7 +1224,7 @@
         }
       },
       "TaskStatus": {
-        "type": "integer",
+        "type": "string",
         "description": "The different states of a task.",
         "x-enumNames": [
           "Created",
@@ -1235,12 +1235,12 @@
           "Finished"
         ],
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
+          "Created",
+          "Queued",
+          "Processing",
+          "Canceled",
+          "Failed",
+          "Finished"
         ]
       },
       "BaseCommand": {
@@ -1293,7 +1293,7 @@
         ]
       },
       "CommandType": {
-        "type": "integer",
+        "type": "string",
         "description": "A type to describe the command.",
         "x-enumNames": [
           "Unknown",
@@ -1301,9 +1301,9 @@
           "ProcessObjectCommand"
         ],
         "enum": [
-          0,
-          1,
-          2
+          "Unknown",
+          "ProcessPathCommand",
+          "ProcessObjectCommand"
         ]
       },
       "BaseProcessCommandOfProcessResultModel": {
@@ -1348,7 +1348,7 @@
         ]
       },
       "AxisType": {
-        "type": "integer",
+        "type": "string",
         "description": "The different axis types of the coordinate system.",
         "x-enumNames": [
           "X",
@@ -1356,13 +1356,13 @@
           "Z"
         ],
         "enum": [
-          0,
-          1,
-          2
+          "X",
+          "Y",
+          "Z"
         ]
       },
       "ImageFormat": {
-        "type": "integer",
+        "type": "string",
         "description": "A type to describe the image format.",
         "x-enumNames": [
           "Unknown",
@@ -1370,13 +1370,13 @@
           "Png"
         ],
         "enum": [
-          0,
-          1,
-          2
+          "Unknown",
+          "Jpeg",
+          "Png"
         ]
       },
       "BezierEasingType": {
-        "type": "integer",
+        "type": "string",
         "description": "A type to describe the Bézier curve easing.",
         "x-enumNames": [
           "None",
@@ -1389,14 +1389,14 @@
           "EaseInOutQuart"
         ],
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
+          "None",
+          "Linear",
+          "EaseInCubic",
+          "EaseOutCubic",
+          "EaseInOutCubic",
+          "EaseInQuart",
+          "EaseOutQuart",
+          "EaseInOutQuart"
         ]
       },
       "ProcessPathCommand": {
@@ -1506,15 +1506,15 @@
         ]
       },
       "ResultType": {
-        "type": "integer",
+        "type": "string",
         "description": "A type to describe the command.",
         "x-enumNames": [
           "Unknown",
           "ProcessResult"
         ],
         "enum": [
-          0,
-          1
+          "Unknown",
+          "ProcessResult"
         ]
       },
       "PositionAxisContainerModelOfString": {

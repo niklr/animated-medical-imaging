@@ -23,9 +23,9 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   public settings: ProcessObjectCommand;
 
   public axisTypeContainers: AxisTypeContainer[] = [
-    new AxisTypeContainer({ displayName: "X-Axis", enum: AxisType.X, checked: true }),
-    new AxisTypeContainer({ displayName: "Y-Axis", enum: AxisType.Y, checked: true }),
-    new AxisTypeContainer({ displayName: "Z-Axis", enum: AxisType.Z, checked: true })
+    new AxisTypeContainer({ displayName: 'X-Axis', enum: AxisType.X, checked: true }),
+    new AxisTypeContainer({ displayName: 'Y-Axis', enum: AxisType.Y, checked: true }),
+    new AxisTypeContainer({ displayName: 'Z-Axis', enum: AxisType.Z, checked: true })
   ];
 
   constructor(public objectStore: ObjectStore, public objectService: ObjectService, private pubSubService: PubSubService) {
@@ -34,16 +34,15 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.setAxisTypes();
-    document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', function (item) {
+    document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', (item: any) => {
       try {
-        let that = this as SettingsComponent;
-        let result = ObjectModel.fromJS(JSON.parse(item.detail.message));
+        const result = ObjectModel.fromJS(JSON.parse(item.detail.message));
         if (result && result.id) {
-          that.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
-          that.objectService.processObject(result.id, undefined);
+          this.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
+          this.objectService.processObject(result.id, undefined);
         }
       } catch (e) { }
-    }.bind(this));
+    });
   }
 
   ngAfterViewInit(): void {
@@ -56,8 +55,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
   public setAxisTypes(): void {
     this.settings.axisTypes = [];
-    for (var i = 0; i < this.axisTypeContainers.length; i++) {
-      var axisTypeContainer = this.axisTypeContainers[i];
+    for (const axisTypeContainer of this.axisTypeContainers) {
       if (axisTypeContainer.checked) {
         this.settings.axisTypes.push(axisTypeContainer.enum);
       }

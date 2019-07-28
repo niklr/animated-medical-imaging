@@ -1986,23 +1986,23 @@ export interface IObjectModel {
 
 /** A type to describe the data. */
 export enum DataType {
-    Unknown = 0,
-    RawImage = 1,
-    SegmentationImage = 2,
+    Unknown = "Unknown",
+    RawImage = "RawImage",
+    SegmentationImage = "SegmentationImage",
 }
 
 /** A type to describe the file format. */
 export enum FileFormat {
-    Unknown = 0,
-    Dicom = 10,
-    Analyze = 20,
-    MetaImage = 30,
-    Nifti = 40,
-    Rar = 50,
-    Zip = 51,
-    Tar = 52,
-    SevenZip = 53,
-    GZip = 54,
+    Unknown = "Unknown",
+    Dicom = "Dicom",
+    Analyze = "Analyze",
+    MetaImage = "MetaImage",
+    Nifti = "Nifti",
+    Rar = "Rar",
+    Zip = "Zip",
+    Tar = "Tar",
+    SevenZip = "SevenZip",
+    GZip = "GZip",
 }
 
 /** A model containing information about the task. */
@@ -2101,12 +2101,12 @@ export interface ITaskModel {
 
 /** The different states of a task. */
 export enum TaskStatus {
-    Created = 0,
-    Queued = 1,
-    Processing = 2,
-    Canceled = 3,
-    Failed = 4,
-    Finished = 5,
+    Created = "Created",
+    Queued = "Queued",
+    Processing = "Processing",
+    Canceled = "Canceled",
+    Failed = "Failed",
+    Finished = "Finished",
 }
 
 /** The base all commands have in common. */
@@ -2276,35 +2276,35 @@ export interface IProcessObjectCommand extends IBaseProcessCommandOfProcessResul
 
 /** A type to describe the command. */
 export enum CommandType {
-    Unknown = 0,
-    ProcessPathCommand = 1,
-    ProcessObjectCommand = 2,
+    Unknown = "Unknown",
+    ProcessPathCommand = "ProcessPathCommand",
+    ProcessObjectCommand = "ProcessObjectCommand",
 }
 
 /** The different axis types of the coordinate system. */
 export enum AxisType {
-    X = 0,
-    Y = 1,
-    Z = 2,
+    X = "X",
+    Y = "Y",
+    Z = "Z",
 }
 
 /** A type to describe the image format. */
 export enum ImageFormat {
-    Unknown = 0,
-    Jpeg = 1,
-    Png = 2,
+    Unknown = "Unknown",
+    Jpeg = "Jpeg",
+    Png = "Png",
 }
 
 /** A type to describe the Bézier curve easing. */
 export enum BezierEasingType {
-    None = 0,
-    Linear = 1,
-    EaseInCubic = 2,
-    EaseOutCubic = 3,
-    EaseInOutCubic = 4,
-    EaseInQuart = 5,
-    EaseOutQuart = 6,
-    EaseInOutQuart = 7,
+    None = "None",
+    Linear = "Linear",
+    EaseInCubic = "EaseInCubic",
+    EaseOutCubic = "EaseOutCubic",
+    EaseInOutCubic = "EaseInOutCubic",
+    EaseInQuart = "EaseInQuart",
+    EaseOutQuart = "EaseOutQuart",
+    EaseInOutQuart = "EaseInOutQuart",
 }
 
 /** A command containing information needed to process paths (directory, file, url, etc.). */
@@ -2550,8 +2550,8 @@ export interface IProcessResultModel extends IResultModel {
 
 /** A type to describe the command. */
 export enum ResultType {
-    Unknown = 0,
-    ProcessResult = 1,
+    Unknown = "Unknown",
+    ProcessResult = "ProcessResult",
 }
 
 export class AxisContainerModelOfString implements IAxisContainerModelOfString {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace AMI.Core.IO.Serializers
@@ -38,6 +39,7 @@ namespace AMI.Core.IO.Serializers
 
             settings.Formatting = Formatting.Indented;
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            settings.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>

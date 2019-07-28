@@ -30,9 +30,9 @@ export class TaskComponent implements OnInit, AfterViewInit {
         if (this.task.command instanceof ProcessObjectCommand) {
           this.command = this.task.command;
           if (this.task.command.axisTypes) {
-            var tempAxisTypes: string[] = [];
-            for (var i = 0; i < this.task.command.axisTypes.length; i++) {
-              tempAxisTypes.push(AxisType[this.task.command.axisTypes[i]]);
+            const tempAxisTypes: string[] = [];
+            for (const axisType of this.task.command.axisTypes) {
+              tempAxisTypes.push(AxisType[axisType]);
             }
             this.displayAxisTypes = tempAxisTypes.join(', ');
           }
