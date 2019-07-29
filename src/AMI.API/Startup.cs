@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using System.Threading;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
@@ -9,9 +8,7 @@ using AMI.API.Handlers;
 using AMI.API.Hubs;
 using AMI.API.Observers;
 using AMI.API.Providers;
-using AMI.Compress.Extractors;
-using AMI.Compress.Readers;
-using AMI.Compress.Writers;
+using AMI.Compress.Extensions.ServiceCollectionExtensions;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
@@ -19,30 +16,17 @@ using AMI.Core.Entities.AppInfo.Queries;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Factories;
-using AMI.Core.IO.Builders;
-using AMI.Core.IO.Extractors;
-using AMI.Core.IO.Generators;
-using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
-using AMI.Core.IO.Uploaders;
-using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
 using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
-using AMI.Core.Strategies;
 using AMI.Domain.Entities;
-using AMI.Gif.Writers;
-using AMI.Infrastructure.IO.Builders;
-using AMI.Infrastructure.IO.Generators;
-using AMI.Infrastructure.IO.Uploaders;
-using AMI.Infrastructure.IO.Writers;
+using AMI.Gif.Extensions.ServiceCollectionExtensions;
+using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Services;
-using AMI.Infrastructure.Stores;
-using AMI.Infrastructure.Strategies;
-using AMI.Itk.Extractors;
-using AMI.Itk.Factories;
+using AMI.Itk.Extensions.ServiceCollectionExtensions;
 using AMI.Persistence.EntityFramework.InMemory;
 using AspNetCoreRateLimit;
 using FluentValidation.AspNetCore;
@@ -50,7 +34,6 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -59,9 +42,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NSwag;
 using NSwag.AspNetCore;
-using NSwag.Generation.Processors.Security;
 
 namespace AMI.API
 {
@@ -139,33 +120,27 @@ namespace AMI.API
             services.AddHostedService<ProcessTaskHostedService>();
             services.AddHostedService<CleanupHostedService>();
 
+            // Add infrastructure services
+            services.AddDefaultInfrastructure();
+
+            // Add compress services
+            services.AddDefaultCompress();
+
+            // Add GIF services
+            services.AddDefaultGif();
+
+            // Add ITK services
+            services.AddDefaultItk();
+
             // TODO: replace InMemoryUnitOfWork with SQLite
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
-            services.AddScoped<IIdGenerator, IdGenerator>();
-            services.AddScoped<IGatewayService, GatewayService>();
-            services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IImageExtractor, ItkImageExtractor>();
-            services.AddScoped<IArchiveReader, SharpCompressReader>();
-            services.AddScoped<IArchiveWriter, SharpCompressWriter>();
-            services.AddScoped<IArchiveExtractor, SharpCompressExtractor>();
-            services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
-            services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
-            services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
-            services.AddScoped<IUserStore<UserEntity>, UserStore<UserEntity>>();
-            services.AddScoped<IRoleStore<RoleEntity>, RoleStore<RoleEntity>>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ICustomPrincipalProvider, CustomPrincipalProvider>();
-            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
-            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
-            services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
-            services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
             services.AddTransient<ICustomExceptionHandler, CustomExceptionHandler>();
 

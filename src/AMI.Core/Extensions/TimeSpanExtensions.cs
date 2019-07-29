@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AMI.Core.Extensions.Time
+namespace AMI.Core.Extensions.TimeSpanExtensions
 {
     /// <summary>
     /// Extensions related to time spans.

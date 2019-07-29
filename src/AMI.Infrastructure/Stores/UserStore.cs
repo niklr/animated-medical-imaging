@@ -161,15 +161,15 @@ namespace AMI.Infrastructure.Stores
         /// <inheritdoc/>
         public Task<IList<TUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
-            if (!Enum.TryParse(roleName, true, out RoleType roleType))
+            IList<TUser> result = result = new List<TUser>();
+
+            if (Enum.TryParse(roleName, true, out RoleType roleType))
             {
-                throw new NotSupportedException("The provided role is not supported.");
+                var internalRoleName = GenerateInternalRoleName(roleType);
+                result = repository.GetQuery(e => !string.IsNullOrWhiteSpace(e.Roles) && e.Roles.Contains(internalRoleName)).ToList();
             }
 
-            var internalRoleName = GenerateInternalRoleName(roleType);
-            IList<TUser> users = repository.GetQuery(e => e.Roles.Contains(internalRoleName)).ToList();
-
-            return Task.FromResult(users);
+            return Task.FromResult(result);
         }
 
         /// <inheritdoc/>
@@ -183,11 +183,9 @@ namespace AMI.Infrastructure.Stores
         /// <inheritdoc/>
         public Task<bool> IsInRoleAsync(TUser user, string roleName, CancellationToken cancellationToken)
         {
-            Ensure.ArgumentNotNull(user, nameof(user));
-
-            if (!Enum.TryParse(roleName, true, out RoleType roleType))
+            if (user == null || !Enum.TryParse(roleName, true, out RoleType roleType))
             {
-                throw new NotSupportedException("The provided role is not supported.");
+                return Task.FromResult(false);
             }
 
             var internalRoleName = GenerateInternalRoleName(roleType);

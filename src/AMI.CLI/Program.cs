@@ -4,36 +4,22 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Compress.Extractors;
-using AMI.Compress.Readers;
-using AMI.Compress.Writers;
+using AMI.Compress.Extensions.ServiceCollectionExtensions;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
-using AMI.Core.Extensions.Time;
+using AMI.Core.Extensions.TimeSpanExtensions;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
-using AMI.Core.IO.Builders;
-using AMI.Core.IO.Extractors;
-using AMI.Core.IO.Generators;
-using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
-using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
 using AMI.Core.Repositories;
-using AMI.Core.Services;
-using AMI.Core.Strategies;
 using AMI.Domain.Enums;
-using AMI.Gif.Writers;
-using AMI.Infrastructure.IO.Builders;
-using AMI.Infrastructure.IO.Generators;
-using AMI.Infrastructure.IO.Writers;
-using AMI.Infrastructure.Services;
-using AMI.Infrastructure.Strategies;
-using AMI.Itk.Extractors;
-using AMI.Itk.Factories;
+using AMI.Gif.Extensions.ServiceCollectionExtensions;
+using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
+using AMI.Itk.Extensions.ServiceCollectionExtensions;
 using CommandLine;
 using FluentValidation;
 using MediatR;
@@ -70,24 +56,24 @@ namespace AMI.CLI
                         .AddConfiguration(configuration.GetSection("Logging"))
                         .AddConsole();
                 });
-            services.AddScoped<IIdGenerator, IdGenerator>();
-            services.AddScoped<IGatewayService, GatewayService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<IImageExtractor, ItkImageExtractor>();
-            services.AddScoped<IArchiveReader, SharpCompressReader>();
-            services.AddScoped<IArchiveWriter, SharpCompressWriter>();
-            services.AddScoped<IArchiveExtractor, SharpCompressExtractor>();
-            services.AddScoped<IGifImageWriter, AnimatedGifImageWriter>();
-            services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();
+
+            // Add infrastructure services
+            services.AddDefaultInfrastructure();
+
+            // Add compress services
+            services.AddDefaultCompress();
+
+            // Add GIF services
+            services.AddDefaultGif();
+
+            // Add ITK services
+            services.AddDefaultItk();
+
             services.AddSingleton<IAmiUnitOfWork, MockUnitOfWork>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
-            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
-            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
-            services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
-            services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
 
             // Add MediatR

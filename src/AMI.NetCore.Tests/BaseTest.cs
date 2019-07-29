@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using AMI.Compress.Extractors;
-using AMI.Compress.Readers;
-using AMI.Compress.Writers;
+using AMI.Compress.Extensions.ServiceCollectionExtensions;
 using AMI.Core.Behaviors;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
@@ -12,35 +10,19 @@ using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Factories;
 using AMI.Core.Helpers;
-using AMI.Core.IO.Builders;
-using AMI.Core.IO.Extractors;
-using AMI.Core.IO.Generators;
-using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
-using AMI.Core.IO.Uploaders;
-using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
-using AMI.Core.Services;
-using AMI.Core.Strategies;
 using AMI.Domain.Entities;
-using AMI.Gif.Writers;
-using AMI.Infrastructure.IO.Builders;
-using AMI.Infrastructure.IO.Generators;
-using AMI.Infrastructure.IO.Uploaders;
-using AMI.Infrastructure.IO.Writers;
-using AMI.Infrastructure.Services;
-using AMI.Infrastructure.Stores;
-using AMI.Infrastructure.Strategies;
-using AMI.Itk.Extractors;
-using AMI.Itk.Factories;
+using AMI.Gif.Extensions.ServiceCollectionExtensions;
+using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
+using AMI.Itk.Extensions.ServiceCollectionExtensions;
 using AMI.NetCore.Tests.Mocks.Core.Factories;
 using AMI.Persistence.EntityFramework.InMemory;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -67,33 +49,28 @@ namespace AMI.NetCore.Tests
             services.Configure<AppOptions>(configuration.GetSection("AppOptions"));
             services.Configure<ApiOptions>(configuration.GetSection("ApiOptions"));
             services.AddLogging();
+
+            // Add infrastructure services
+            services.AddDefaultInfrastructure();
+
+            // Add compress services
+            services.AddDefaultCompress();
+
+            // Add GIF services
+            services.AddDefaultGif();
+
+            // Add ITK services
+            services.AddDefaultItk();
+
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
-            services.AddScoped<IIdGenerator, IdGenerator>();
-            services.AddScoped<IGatewayService, GatewayService>();
-            services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IChunkedObjectUploader, ChunkedObjectUploader>();
-            services.AddScoped<IUserStore<UserEntity>, UserStore<UserEntity>>();
-            services.AddScoped<IRoleStore<RoleEntity>, RoleStore<RoleEntity>>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
-            services.AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
-            services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<ITaskQueue, TaskQueue>();
-            services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
-            services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
-            services.AddTransient<IArchiveReader, SharpCompressReader>();
-            services.AddTransient<IArchiveWriter, SharpCompressWriter>();
-            services.AddTransient<IArchiveExtractor, SharpCompressExtractor>();
-            services.AddTransient<IGifImageWriter, AnimatedGifImageWriter>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
-            services.AddTransient<IDefaultJsonWriter, DefaultJsonWriter>();
-            services.AddTransient<IImageExtractor, ItkImageExtractor>();
 
             services.AddIdentity<UserEntity, RoleEntity>(options => {
                 options.Password.RequireDigit = false;
