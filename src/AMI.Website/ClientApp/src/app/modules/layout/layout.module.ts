@@ -4,11 +4,13 @@ import { RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout.component';
 import { TopnavComponent } from './components/topnav/topnav.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { SharedCommonModule } from '../common/common.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    SharedCommonModule
   ],
   declarations: [
     LayoutComponent,

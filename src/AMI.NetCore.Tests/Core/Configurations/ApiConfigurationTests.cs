@@ -42,7 +42,8 @@ namespace AMI.NetCore.Tests.Core.Configurations
             Assert.AreEqual("admin", authEntity1.Username);
             Assert.AreEqual("654321", authEntity1.Password);
             Assert.IsNotNull(authEntity1.Roles);
-            Assert.AreEqual(1, authEntity1.Roles.Count);
+            Assert.AreEqual(2, authEntity1.Roles.Count);
+            Assert.IsTrue(authEntity1.Roles.Contains(RoleType.Unknown.ToString()));
             Assert.IsTrue(authEntity1.Roles.Contains(RoleType.Administrator.ToString()));
 
             Assert.IsNotNull(configuration.Options.IpRateLimiting);

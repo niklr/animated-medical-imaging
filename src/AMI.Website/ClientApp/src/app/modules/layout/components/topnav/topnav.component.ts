@@ -1,5 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { IIdTokenModel } from '../../../../clients/ami-api-client';
+import { RoleType } from '../../../../enums';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-topnav',
@@ -8,8 +11,7 @@ import { Router } from '@angular/router';
 })
 export class TopnavComponent implements OnInit, AfterViewInit {
 
-  constructor(public router: Router) {
-
+  constructor(public router: Router, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -17,14 +19,38 @@ export class TopnavComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initSidenav();
+    this.initMaterialize();
   }
 
-  private initSidenav(): void {
+  private initMaterialize(): void {
     setTimeout(() => {
-      var elems = document.querySelectorAll('.sidenav');
-      var options = {};
-      var instances = M.Sidenav.init(elems, options);
+      M.Sidenav.init(document.querySelectorAll('.sidenav'), {});
+      M.Dropdown.init(document.querySelector('#dropdown-account-button'), { alignment: 'right' });
     });
+  }
+
+  public get identity(): IIdTokenModel {
+    return this.authService.user;
+  }
+
+  public get isAdmin(): boolean {
+    return !!this.authService.user && this.authService.user.isInRole(RoleType.Administrator);
+  }
+
+  public get isAuthenticated(): boolean {
+    return this.authService.isAuthenticated;
+  }
+
+  public get showLogout(): boolean {
+    return this.authService.isAuthenticated && !this.authService.user.isAnon;
+  }
+
+  public get showLogin(): boolean {
+    return !this.authService.isAuthenticated || this.authService.user.isAnon;
+  }
+
+  public logout(): void {
+    this.authService.logout();
+    this.authService.init();
   }
 }

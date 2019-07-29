@@ -3,6 +3,7 @@ import { KeyedCollection, IKeyedCollection } from '../extensions';
 export class IdentityModel {
   public sub: string;
   public username: string;
+  public isAnon: boolean;
 
   private rolesCollection: IKeyedCollection<string> = new KeyedCollection<string>();
 

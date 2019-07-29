@@ -22,10 +22,12 @@ export class TokenService extends BaseService {
 
   private clear(): void {
     this.logger.info('TokenService.clear() called');
+    this.container = undefined;
     this.clearLocalStorage();
   }
 
   public getAccessToken(): string {
+    this.loadTokenContainer();
     if (this.container) {
       return this.container.accessTokenEncoded;
     } else {
@@ -34,6 +36,7 @@ export class TokenService extends BaseService {
   }
 
   public getIdentityClaims(): object {
+    this.loadTokenContainer();
     if (this.container) {
       return this.container.idToken;
     } else {
@@ -42,6 +45,7 @@ export class TokenService extends BaseService {
   }
 
   public getRefreshToken(): string {
+    this.loadTokenContainer();
     if (this.container) {
       return this.container.refreshTokenEncoded;
     } else {
@@ -50,10 +54,17 @@ export class TokenService extends BaseService {
   }
 
   public getAccessTokenExpiration(): number {
+    this.loadTokenContainer();
     if (this.container && this.container.accessToken) {
       return this.container.accessToken.exp;
     } else {
       return 0;
+    }
+  }
+
+  private loadTokenContainer(): void {
+    if (!this.container) {
+      this.container = this.readLocalStorage();
     }
   }
 
@@ -70,7 +81,7 @@ export class TokenService extends BaseService {
   public fetchTokenUsingAnonymousFlow(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        this.container = this.readLocalStorage();
+        this.loadTokenContainer();
         if (this.container && this.container.idToken && this.container.idToken.isAnon) {
           // Use existing token that is an anonymous user otherwise fetch new token
           resolve();
@@ -91,18 +102,12 @@ export class TokenService extends BaseService {
   public fetchTokenUsingPasswordFlow(username: string, password: string): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        this.container = this.readLocalStorage();
-        if (this.container && this.container.idToken && !this.container.idToken.isAnon) {
-          // Use existing token that is NOT an anonymous user otherwise fetch new token
+        this.tokenProxy.create(username, password).subscribe(result => {
+          this.setTokenContainer(result);
           resolve();
-        } else {
-          this.tokenProxy.create(username, password).subscribe(result => {
-            this.setTokenContainer(result);
-            resolve();
-          }, error => {
-            reject(error);
-          });
-        }
+        }, error => {
+          reject(error);
+        });
       } catch (error) {
         reject(error);
       }
@@ -112,7 +117,7 @@ export class TokenService extends BaseService {
   public refreshToken(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        this.container = this.readLocalStorage();
+        this.loadTokenContainer();
         if (this.container) {
           this.tokenProxy.update(this.container).subscribe(result => {
             this.setTokenContainer(result);

@@ -68,7 +68,20 @@ namespace AMI.Infrastructure.Services
                             Email = $"{identity.Username}@localhost"
                         };
                         var result = await userManager.CreateAsync(user, identity.Password);
-                        if (!result.Succeeded)
+                        if (result.Succeeded)
+                        {
+                            var userEntity = await userManager.FindByNameAsync(identity.Username);
+                            if (userEntity == null)
+                            {
+                                throw new UnexpectedNullException("User not found after creation.");
+                            }
+
+                            if (identity.Roles?.Count > 0)
+                            {
+                                await userManager.AddToRolesAsync(userEntity, identity.Roles);
+                            }
+                        }
+                        else
                         {
                             throw new AmiException(string.Join(" ", result.Errors.Select(x => x.Description)));
                         }

@@ -35,13 +35,14 @@ export class AuthService extends BaseService {
   private setUser(): void {
     // Using the loaded user data
     const claims: any = this.tokenService.getIdentityClaims();
-    // console.log(claims);
+    console.log(claims);
 
     if (claims) {
       // TODO: read claims based on names defined in the API options
       this.user = new IdentityModel();
       this.user.sub = claims.sub;
       this.user.username = claims.username;
+      this.user.isAnon = claims.isAnon;
       this.user.roles = claims.roles;
       this.gateway.start(this.tokenService.getAccessToken());
     } else {
@@ -67,7 +68,6 @@ export class AuthService extends BaseService {
   }
 
   public async login(username: string, password: string): Promise<void> {
-    this.gc.notify();
     const message = 'Login failed.';
     return this.init().then(async () => {
       return this.tokenService.fetchTokenUsingPasswordFlow(username, password).then(
@@ -107,18 +107,19 @@ export class AuthService extends BaseService {
             this.isInitialized = true;
             resolve();
           };
-          // Check if anonymous users are allowed
-          if (ConfigService.apiOptions && ConfigService.apiOptions.authOptions && ConfigService.apiOptions.authOptions.allowAnonymous) {
-            // Login as anonymous user
-            return this.tokenService.fetchTokenUsingAnonymousFlow().then(() => {
-              this.setUser();
+          // Check if refresh token is existing
+          if (this.tokenService.getRefreshToken()) {
+            return this.refresh().then(() => {
               extendedResolve();
             }, (e) => {
               extendedReject(e);
             });
           } else {
-            if (this.tokenService.getRefreshToken()) {
-              return this.refresh().then(() => {
+            // Check if anonymous users are allowed
+            if (ConfigService.apiOptions && ConfigService.apiOptions.authOptions && ConfigService.apiOptions.authOptions.allowAnonymous) {
+              // Login as anonymous user
+              return this.tokenService.fetchTokenUsingAnonymousFlow().then(() => {
+                this.setUser();
                 extendedResolve();
               }, (e) => {
                 extendedReject(e);
