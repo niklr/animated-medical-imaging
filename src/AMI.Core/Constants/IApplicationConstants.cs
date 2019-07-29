@@ -24,5 +24,10 @@
         /// Gets the allowed values of the limit pagination parameter.
         /// </summary>
         int[] AllowedPaginationLimitValues { get; }
+
+        /// <summary>
+        /// Gets the character used to separate the role names.
+        /// </summary>
+        string RoleNameSeparator { get; }
     }
 }

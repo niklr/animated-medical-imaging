@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AMI.Core.Constants;
 using AMI.Core.Entities.Shared.Models;
 using AMI.Domain.Entities;
 
@@ -39,8 +40,9 @@ namespace AMI.Core.Entities.Models
         /// Creates a model based on the given domain entity.
         /// </summary>
         /// <param name="entity">The domain entity.</param>
+        /// <param name="constants">The application constants.</param>
         /// <returns>The domain entity as a model.</returns>
-        public static UserModel Create(UserEntity entity)
+        public static UserModel Create(UserEntity entity, IApplicationConstants constants)
         {
             if (entity == null)
             {
@@ -53,7 +55,8 @@ namespace AMI.Core.Entities.Models
                 Username = entity.Username,
                 Email = entity.Email,
                 EmailConfirmed = entity.EmailConfirmed,
-                Roles = string.IsNullOrWhiteSpace(entity.Roles) ? Array.Empty<string>() : entity.Roles.Split(',')
+                Roles = string.IsNullOrWhiteSpace(entity.Roles) ?
+                    Array.Empty<string>() : entity.Roles.Replace(constants.RoleNameSeparator, string.Empty).Split(',')
             };
 
             return model;

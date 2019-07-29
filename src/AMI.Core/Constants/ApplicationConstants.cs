@@ -16,5 +16,8 @@
 
         /// <inheritdoc/>
         public int[] AllowedPaginationLimitValues => new int[] { 10, 25, 50 };
+
+        /// <inheritdoc/>
+        public string RoleNameSeparator => "#";
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Constants;
 using AMI.Core.IO.Generators;
 using AMI.Core.Repositories;
 using AMI.Domain.Entities;
@@ -23,18 +24,20 @@ namespace AMI.Infrastructure.Stores
         where TUser : UserEntity
     {
         private readonly IAmiUnitOfWork context;
+        private readonly IApplicationConstants constants;
         private readonly IIdGenerator idGenerator;
         private readonly IRepository<TUser> repository;
-        private readonly string roleNameSeparator = "#";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserStore{TUser}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
+        /// <param name="constants">The application constants.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
-        public UserStore(IAmiUnitOfWork context, IIdGenerator idGenerator)
+        public UserStore(IAmiUnitOfWork context, IApplicationConstants constants, IIdGenerator idGenerator)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
 
             repository = context.UserRepository as IRepository<TUser>;
@@ -132,12 +135,8 @@ namespace AMI.Infrastructure.Stores
         {
             Ensure.ArgumentNotNull(user, nameof(user));
 
-            IList<string> roles = new List<string>();
-
-            foreach (var internalRoleName in GetRoles(user))
-            {
-                roles.Add(internalRoleName.Replace(roleNameSeparator, string.Empty));
-            }
+            IList<string> roles = string.IsNullOrWhiteSpace(user.Roles) ?
+                    Array.Empty<string>() : user.Roles.Replace(constants.RoleNameSeparator, string.Empty).Split(',');
 
             return Task.FromResult(roles);
         }
@@ -244,7 +243,7 @@ namespace AMI.Infrastructure.Stores
 
         private string GenerateInternalRoleName(RoleType roleType)
         {
-            return $"{roleNameSeparator}{roleType.ToString()}{roleNameSeparator}";
+            return $"{constants.RoleNameSeparator}{roleType.ToString()}{constants.RoleNameSeparator}";
         }
 
         private HashSet<string> GetRoles(TUser user)

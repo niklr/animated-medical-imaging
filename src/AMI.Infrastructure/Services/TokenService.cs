@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
+using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Tokens.Commands.CreateRefreshToken;
 using AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken;
@@ -28,6 +29,7 @@ namespace AMI.Infrastructure.Services
     {
         private readonly ILogger logger;
         private readonly IApiConfiguration configuration;
+        private readonly IApplicationConstants constants;
         private readonly IMediator mediator;
         private readonly IDefaultJsonSerializer serializer;
         private readonly IJwtEncoder encoder;
@@ -39,18 +41,21 @@ namespace AMI.Infrastructure.Services
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="configuration">The API configuration.</param>
+        /// <param name="constants">The application constants.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="serializer">The serializer.</param>
         /// <param name="userManager">The user manager.</param>
         public TokenService(
             ILoggerFactory loggerFactory,
             IApiConfiguration configuration,
+            IApplicationConstants constants,
             IMediator mediator,
             IDefaultJsonSerializer serializer,
             UserManager<UserEntity> userManager)
         {
             logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
@@ -83,7 +88,7 @@ namespace AMI.Infrastructure.Services
                 throw new UnexpectedNullException("Incorrect username or password.");
             }
 
-            var result = await CreateContainerAsync(UserModel.Create(user), ct);
+            var result = await CreateContainerAsync(UserModel.Create(user, constants), ct);
 
             var command = new CreateRefreshTokenCommand()
             {
@@ -167,7 +172,7 @@ namespace AMI.Infrastructure.Services
 
                 await mediator.Send(command, ct);
 
-                var result = await CreateContainerAsync(UserModel.Create(user), ct);
+                var result = await CreateContainerAsync(UserModel.Create(user, constants), ct);
                 result.RefreshTokenEncoded = token;
 
                 return result;
