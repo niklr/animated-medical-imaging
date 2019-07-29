@@ -35,7 +35,7 @@ export class AuthService extends BaseService {
   private setUser(): void {
     // Using the loaded user data
     const claims: any = this.tokenService.getIdentityClaims();
-    console.log(claims);
+    this.logger.info(claims);
 
     if (claims) {
       // TODO: read claims based on names defined in the API options
@@ -68,6 +68,7 @@ export class AuthService extends BaseService {
   }
 
   public async login(username: string, password: string): Promise<void> {
+    this.gc.notify();
     const message = 'Login failed.';
     return this.init().then(async () => {
       return this.tokenService.fetchTokenUsingPasswordFlow(username, password).then(

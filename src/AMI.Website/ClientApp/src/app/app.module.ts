@@ -8,14 +8,18 @@ import { AppComponent } from './app.component';
 import { TimeoutInterceptor, DEFAULT_TIMEOUT } from './interceptors';
 import { GatewayHub } from './hubs';
 import { AppProxy } from './proxies/app.proxy';
+import { ObjectProxy } from './proxies/object.proxy';
+import { TaskProxy } from './proxies/task.proxy';
 import { TokenProxy } from './proxies/token.proxy';
 import { AuthService } from './services/auth.service';
 import { ConfigService } from './services/config.service';
 import { ConsoleLoggerService } from './services/console-logger.service';
 import { LoggerService } from './services/logger.service';
 import { NotificationService } from './services/notification.service';
+import { ObjectService } from './services/object.service';
 import { PubSubService } from './services/pubsub.service';
 import { TokenService } from './services/token.service';
+import { ObjectStore } from './stores/object.store';
 import { BackgroundWorker, GarbageCollector, MomentUtil } from './utils';
 
 /*
@@ -45,12 +49,16 @@ export function initBaseAmiApi() {
   providers: [
     GatewayHub,
     AppProxy,
+    ObjectProxy,
+    TaskProxy,
     TokenProxy,
     AuthService,
     ConfigService,
     NotificationService,
+    ObjectService,
     PubSubService,
     TokenService,
+    ObjectStore,
     BackgroundWorker,
     GarbageCollector,
     MomentUtil,

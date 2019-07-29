@@ -7,9 +7,6 @@ import { ObjectsComponent } from './objects/objects.component';
 import { ResultComponent } from './result/result.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TaskComponent } from './task/task.component';
-import { ObjectProxy, TaskProxy } from '../../proxies';
-import { ObjectService } from '../../services/object.service';
-import { ObjectStore } from '../../stores/object.store';
 import { ClipboardUtil, GuidUtil, MomentUtil } from '../../utils';
 
 @NgModule({
@@ -26,10 +23,6 @@ import { ClipboardUtil, GuidUtil, MomentUtil } from '../../utils';
     TaskComponent
   ],
   providers: [
-    ObjectProxy,
-    TaskProxy,
-    ObjectService,
-    ObjectStore,
     ClipboardUtil,
     GuidUtil,
     MomentUtil

@@ -1,9 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { PubSubTopic } from '../../../enums';
 import { ObjectService } from '../../../services/object.service';
-import { PubSubService } from '../../../services/pubsub.service';
 import { ObjectStore } from '../../../stores/object.store';
-import { AxisType, ProcessObjectCommand, ObjectModel } from '../../../clients/ami-api-client';
+import { AxisType, ProcessObjectCommand } from '../../../clients/ami-api-client';
 
 class AxisTypeContainer {
   displayName: string;
@@ -28,21 +26,12 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     new AxisTypeContainer({ displayName: 'Z-Axis', enum: AxisType.Z, checked: true })
   ];
 
-  constructor(public objectStore: ObjectStore, public objectService: ObjectService, private pubSubService: PubSubService) {
+  constructor(public objectStore: ObjectStore, public objectService: ObjectService) {
     this.settings = this.objectStore.settings;
   }
 
   ngOnInit() {
     this.setAxisTypes();
-    document.addEventListener('github:niklr/angular-material-datatransfer.item-completed', (item: any) => {
-      try {
-        const result = ObjectModel.fromJS(JSON.parse(item.detail.message));
-        if (result && result.id) {
-          this.pubSubService.publish(PubSubTopic.OBJECTS_INIT_TOPIC, undefined);
-          this.objectService.processObject(result.id, undefined);
-        }
-      } catch (e) { }
-    });
   }
 
   ngAfterViewInit(): void {
