@@ -24,5 +24,15 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets a value indicating whether the email address is confirmed.
         /// </summary>
         public bool EmailConfirmed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the username.
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// Gets or sets the roles.
+        /// </summary>
+        public IList<string> RoleClaims { get; set; } = new List<string>();
     }
 }

@@ -4,10 +4,10 @@ import { PageEvent } from '../../../events/page.event';
 import { ObjectModelExtended } from '../../../models/object-extended.model';
 import { ObjectProxy } from '../../../proxies';
 import { ObjectStore } from '../../../stores/object.store';
+import { ConfigService } from '../../../services/config.service';
 import { NotificationService } from '../../../services/notification.service';
 import { ObjectService } from '../../../services/object.service';
 import { PubSubService } from '../../../services/pubsub.service';
-import { CallbackWrapper } from '../../../wrappers/callback.wrapper';
 import {
   AxisContainerModelOfString,
   AxisType,
@@ -163,6 +163,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
       entity: basePath + 'Z_' + position + '.png',
       position
     });
+  }
+
+  public get cleanupPeriod(): number {
+    return ConfigService.apiOptions.cleanupPeriod;
   }
 
   public toggleCheckbox(): void {

@@ -1835,6 +1835,19 @@
               "emailConfirmed": {
                 "type": "boolean",
                 "description": "Gets or sets a value indicating whether the email address is confirmed."
+              },
+              "username": {
+                "type": "string",
+                "description": "Gets or sets the username.",
+                "nullable": true
+              },
+              "roleClaims": {
+                "type": "array",
+                "description": "Gets or sets the roles.",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }

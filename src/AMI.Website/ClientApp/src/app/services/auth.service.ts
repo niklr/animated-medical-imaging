@@ -43,7 +43,7 @@ export class AuthService extends BaseService {
       this.user.sub = claims.sub;
       this.user.username = claims.username;
       this.user.isAnon = claims.isAnon;
-      this.user.roles = claims.roles;
+      this.user.roles = claims.roleClaims;
       this.gateway.start(this.tokenService.getAccessToken());
     } else {
       throw new Error('Identity claims could not be loaded.');

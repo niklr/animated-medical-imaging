@@ -248,7 +248,9 @@ namespace AMI.Infrastructure.Services
             var token = new IdTokenModel()
             {
                 Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed
+                EmailConfirmed = user.EmailConfirmed,
+                Username = user.Username,
+                RoleClaims = user.Roles
             };
 
             SetBaseToken(token, user);

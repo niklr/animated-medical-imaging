@@ -71,6 +71,10 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.AreEqual(container.IdToken.Email, decoded.Email);
             Assert.IsFalse(decoded.EmailConfirmed);
             Assert.AreEqual(container.IdToken.EmailConfirmed, decoded.EmailConfirmed);
+            Assert.AreEqual("Anon", decoded.Username);
+            Assert.AreEqual(container.AccessToken.Username, decoded.Username);
+            Assert.AreEqual(0, decoded.RoleClaims.Count);
+            Assert.AreEqual(container.AccessToken.RoleClaims.Count, decoded.RoleClaims.Count);
         }
 
         [Test]

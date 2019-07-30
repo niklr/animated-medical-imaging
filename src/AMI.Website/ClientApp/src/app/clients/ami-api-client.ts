@@ -172,6 +172,97 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
     }
 }
 
+export interface IAppLogsAmiApiClient {
+    /**
+     * Get paginated list of application logs
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated application logs.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfObjectModel>;
+}
+
+@Injectable()
+export class AppLogsAmiApiClient implements IAppLogsAmiApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Get paginated list of application logs
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated application logs.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfObjectModel> {
+        let url_ = this.baseUrl + "/app-logs?";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&"; 
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaginated(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaginated(<any>response_);
+                } catch (e) {
+                    return <Observable<PaginationResultModelOfObjectModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PaginationResultModelOfObjectModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPaginated(response: HttpResponseBase): Observable<PaginationResultModelOfObjectModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginationResultModelOfObjectModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PaginationResultModelOfObjectModel>(<any>null);
+    }
+}
+
 export interface IAppOptionsAmiApiClient {
     /**
      * Get application options
@@ -1790,64 +1881,6 @@ export interface IAppInfo {
     appVersion?: string | undefined;
 }
 
-/** The application options. */
-export class AppOptions implements IAppOptions {
-    /** Gets the maximum size in kilobytes. */
-    maxSizeKilobytes?: number;
-    /** Gets the maximum of archived entries. */
-    maxArchivedEntries?: number;
-    /** Gets the timeout in milliseconds. */
-    timeoutMilliseconds?: number;
-    /** Gets the working directory. */
-    workingDirectory?: string | undefined;
-
-    constructor(data?: IAppOptions) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.maxSizeKilobytes = data["maxSizeKilobytes"];
-            this.maxArchivedEntries = data["maxArchivedEntries"];
-            this.timeoutMilliseconds = data["timeoutMilliseconds"];
-            this.workingDirectory = data["workingDirectory"];
-        }
-    }
-
-    static fromJS(data: any): AppOptions {
-        data = typeof data === 'object' ? data : {};
-        let result = new AppOptions();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["maxSizeKilobytes"] = this.maxSizeKilobytes;
-        data["maxArchivedEntries"] = this.maxArchivedEntries;
-        data["timeoutMilliseconds"] = this.timeoutMilliseconds;
-        data["workingDirectory"] = this.workingDirectory;
-        return data; 
-    }
-}
-
-/** The application options. */
-export interface IAppOptions {
-    /** Gets the maximum size in kilobytes. */
-    maxSizeKilobytes?: number;
-    /** Gets the maximum of archived entries. */
-    maxArchivedEntries?: number;
-    /** Gets the timeout in milliseconds. */
-    timeoutMilliseconds?: number;
-    /** Gets the working directory. */
-    workingDirectory?: string | undefined;
-}
-
 export class PaginationResultModelOfObjectModel implements IPaginationResultModelOfObjectModel {
     items?: ObjectModel[] | undefined;
     pagination?: PaginationModel | undefined;
@@ -2679,6 +2712,64 @@ export interface IPaginationModel {
     page?: number;
 }
 
+/** The application options. */
+export class AppOptions implements IAppOptions {
+    /** Gets the maximum size in kilobytes. */
+    maxSizeKilobytes?: number;
+    /** Gets the maximum of archived entries. */
+    maxArchivedEntries?: number;
+    /** Gets the timeout in milliseconds. */
+    timeoutMilliseconds?: number;
+    /** Gets the working directory. */
+    workingDirectory?: string | undefined;
+
+    constructor(data?: IAppOptions) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.maxSizeKilobytes = data["maxSizeKilobytes"];
+            this.maxArchivedEntries = data["maxArchivedEntries"];
+            this.timeoutMilliseconds = data["timeoutMilliseconds"];
+            this.workingDirectory = data["workingDirectory"];
+        }
+    }
+
+    static fromJS(data: any): AppOptions {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppOptions();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["maxSizeKilobytes"] = this.maxSizeKilobytes;
+        data["maxArchivedEntries"] = this.maxArchivedEntries;
+        data["timeoutMilliseconds"] = this.timeoutMilliseconds;
+        data["workingDirectory"] = this.workingDirectory;
+        return data; 
+    }
+}
+
+/** The application options. */
+export interface IAppOptions {
+    /** Gets the maximum size in kilobytes. */
+    maxSizeKilobytes?: number;
+    /** Gets the maximum of archived entries. */
+    maxArchivedEntries?: number;
+    /** Gets the timeout in milliseconds. */
+    timeoutMilliseconds?: number;
+    /** Gets the working directory. */
+    workingDirectory?: string | undefined;
+}
+
 /** A model containing test information */
 export class PongModel implements IPongModel {
     /** Gets or sets the pong value. */
@@ -2923,6 +3014,10 @@ export class AccessTokenModel extends BaseTokenModel implements IAccessTokenMode
     /** Gets or sets the "expiration time" claim identifying the expiration time on
 or after which the token MUST NOT be accepted for processing. */
     exp?: number;
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the roles. */
+    roleClaims?: string[] | undefined;
 
     constructor(data?: IAccessTokenModel) {
         super(data);
@@ -2933,6 +3028,12 @@ or after which the token MUST NOT be accepted for processing. */
         super.init(data);
         if (data) {
             this.exp = data["exp"];
+            this.username = data["username"];
+            if (Array.isArray(data["roleClaims"])) {
+                this.roleClaims = [] as any;
+                for (let item of data["roleClaims"])
+                    this.roleClaims!.push(item);
+            }
         }
     }
 
@@ -2946,6 +3047,12 @@ or after which the token MUST NOT be accepted for processing. */
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["exp"] = this.exp;
+        data["username"] = this.username;
+        if (Array.isArray(this.roleClaims)) {
+            data["roleClaims"] = [];
+            for (let item of this.roleClaims)
+                data["roleClaims"].push(item);
+        }
         super.toJSON(data);
         return data; 
     }
@@ -2956,6 +3063,10 @@ export interface IAccessTokenModel extends IBaseTokenModel {
     /** Gets or sets the "expiration time" claim identifying the expiration time on
 or after which the token MUST NOT be accepted for processing. */
     exp?: number;
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the roles. */
+    roleClaims?: string[] | undefined;
 }
 
 /** The model containing information about the identity token. */
@@ -2967,7 +3078,7 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
     /** Gets or sets the username. */
     username?: string | undefined;
     /** Gets or sets the roles. */
-    roles?: string[] | undefined;
+    roleClaims?: string[] | undefined;
 
     constructor(data?: IIdTokenModel) {
         super(data);
@@ -2980,10 +3091,10 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
             this.email = data["email"];
             this.emailConfirmed = data["emailConfirmed"];
             this.username = data["username"];
-            if (Array.isArray(data["roles"])) {
-                this.roles = [] as any;
-                for (let item of data["roles"])
-                    this.roles!.push(item);
+            if (Array.isArray(data["roleClaims"])) {
+                this.roleClaims = [] as any;
+                for (let item of data["roleClaims"])
+                    this.roleClaims!.push(item);
             }
         }
     }
@@ -3000,10 +3111,10 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
         data["email"] = this.email;
         data["emailConfirmed"] = this.emailConfirmed;
         data["username"] = this.username;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item);
+        if (Array.isArray(this.roleClaims)) {
+            data["roleClaims"] = [];
+            for (let item of this.roleClaims)
+                data["roleClaims"].push(item);
         }
         super.toJSON(data);
         return data; 
@@ -3019,7 +3130,7 @@ export interface IIdTokenModel extends IBaseTokenModel {
     /** Gets or sets the username. */
     username?: string | undefined;
     /** Gets or sets the roles. */
-    roles?: string[] | undefined;
+    roleClaims?: string[] | undefined;
 }
 
 /** The model containing information about the refresh token. */

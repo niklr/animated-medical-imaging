@@ -1,7 +1,7 @@
 <div *ngIf="objectStore.count <= 0; else showObjectResultsBlock">
   <div class="card">
     <div class="card-content">
-      <p class="caption wrapword full-width" style="line-height: 36px;">
+      <p class="caption wrapword full-width custom-card-content-caption">
         <i class="fas fa-info-circle"></i> No results found. Start by uploading files.
         <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
           <i class="fas fa-redo-alt"></i>
@@ -22,17 +22,22 @@
             </label>
           </th>
           <th class="column-main">
-            <button id="objectActionsDropdownButton"
-                    class="custom-fas-btn dropdown-trigger btn grey lighten-1"
-                    data-target="objectActionsDropdownTarget">
+            <button id="objectActionsDropdownButton" class="custom-fas-btn dropdown-trigger btn grey lighten-1"
+              data-target="objectActionsDropdownTarget">
               Actions <i class="fas fa-caret-down"></i>
             </button>
             <!-- Dropdown Structure -->
             <ul id="objectActionsDropdownTarget" class="dropdown-content">
-              <li (click)="objectService.processSelectedObjects()"><a href="javascript:void(0)"><i class="fas fa-rocket"></i> Process selected</a></li>
-              <li (click)="objectService.downloadSelectedObjects()"><a href="javascript:void(0)"><i class="fas fa-file-download"></i> Download selected</a></li>
+              <li (click)="objectService.processSelectedObjects()"><a href="javascript:void(0)">
+                  <i class="fas fa-rocket"></i> Process selected</a>
+              </li>
+              <li (click)="objectService.downloadSelectedObjects()"><a href="javascript:void(0)">
+                  <i class="fas fa-file-download"></i> Download selected</a>
+              </li>
               <li class="divider" tabindex="-1"></li>
-              <li (click)="objectService.deleteSelectedObjects()"><a href="javascript:void(0)" class="red-text"><i class="far fa-trash-alt"></i> Delete selectd</a></li>
+              <li (click)="objectService.deleteSelectedObjects()"><a href="javascript:void(0)" class="red-text">
+                  <i class="far fa-trash-alt"></i> Delete selectd</a>
+              </li>
             </ul>
           </th>
           <th class="column-last">
@@ -48,11 +53,21 @@
     </table>
   </div>
   <div class="row mt-2 right-align">
-    <paginator [pageIndex]="pageEvent.pageIndex" [length]="pageEvent.length" [pageSize]="pageEvent.pageSize" (page)="setPage($event)"></paginator>
+    <paginator [pageIndex]="pageEvent.pageIndex" [length]="pageEvent.length" [pageSize]="pageEvent.pageSize"
+      (page)="setPage($event)"></paginator>
+  </div>
+  <div class="card" *ngIf="cleanupPeriod > 0">
+    <div class="card-content">
+      <p class="caption wrapword full-width custom-card-content-caption">
+        <i class="fas fa-info-circle"></i>
+        Results are deleted automatically older than {{cleanupPeriod}} minutes (based on their creation date).
+      </p>
+    </div>
   </div>
   <div class="row mt-2 mb-0">
     <div class="col s12 m6 offset-m3">
-      <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn" [clickFn]="objectService.downloadSelectedObjects" appClickOnce>
+      <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn"
+        [clickFn]="objectService.downloadSelectedObjects" appClickOnce>
         <i class="fas fa-download"></i> DOWNLOAD
       </button>
     </div>

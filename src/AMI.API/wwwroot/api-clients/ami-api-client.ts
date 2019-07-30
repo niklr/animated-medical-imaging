@@ -3075,6 +3075,10 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
     email?: string | undefined;
     /** Gets or sets a value indicating whether the email address is confirmed. */
     emailConfirmed?: boolean;
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the roles. */
+    roleClaims?: string[] | undefined;
 
     constructor(data?: IIdTokenModel) {
         super(data);
@@ -3086,6 +3090,12 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
         if (data) {
             this.email = data["email"];
             this.emailConfirmed = data["emailConfirmed"];
+            this.username = data["username"];
+            if (Array.isArray(data["roleClaims"])) {
+                this.roleClaims = [] as any;
+                for (let item of data["roleClaims"])
+                    this.roleClaims!.push(item);
+            }
         }
     }
 
@@ -3100,6 +3110,12 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
         data = typeof data === 'object' ? data : {};
         data["email"] = this.email;
         data["emailConfirmed"] = this.emailConfirmed;
+        data["username"] = this.username;
+        if (Array.isArray(this.roleClaims)) {
+            data["roleClaims"] = [];
+            for (let item of this.roleClaims)
+                data["roleClaims"].push(item);
+        }
         super.toJSON(data);
         return data; 
     }
@@ -3111,6 +3127,10 @@ export interface IIdTokenModel extends IBaseTokenModel {
     email?: string | undefined;
     /** Gets or sets a value indicating whether the email address is confirmed. */
     emailConfirmed?: boolean;
+    /** Gets or sets the username. */
+    username?: string | undefined;
+    /** Gets or sets the roles. */
+    roleClaims?: string[] | undefined;
 }
 
 /** The model containing information about the refresh token. */
