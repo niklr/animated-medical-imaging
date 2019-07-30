@@ -233,7 +233,9 @@ namespace AMI.Infrastructure.Services
         {
             var token = new AccessTokenModel()
             {
-                Exp = DateTime.Now.AddMinutes(configuration.Options.AuthOptions.ExpireAfter).ToUnix()
+                Exp = DateTime.Now.AddMinutes(configuration.Options.AuthOptions.ExpireAfter).ToUnix(),
+                Username = user.Username,
+                RoleClaims = user.Roles
             };
 
             SetBaseToken(token, user);
@@ -246,9 +248,7 @@ namespace AMI.Infrastructure.Services
             var token = new IdTokenModel()
             {
                 Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed,
-                Username = user.Username,
-                Roles = user.Roles
+                EmailConfirmed = user.EmailConfirmed
             };
 
             SetBaseToken(token, user);

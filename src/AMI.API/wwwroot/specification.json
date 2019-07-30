@@ -71,6 +71,60 @@
         }
       }
     },
+    "/app-logs": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get paginated list of application logs",
+        "description": "With this GET request you can obtain a paginated list of application logs.\nThe application logs are sorted in descending order by creation date.",
+        "operationId": "AppLogs_GetPaginated",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The current page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The limit to constrain the number of items.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A model containing a list of paginated application logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResultModelOfObjectModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/app-options": {
       "get": {
         "tags": [
@@ -999,33 +1053,6 @@
           }
         }
       },
-      "AppOptions": {
-        "type": "object",
-        "description": "The application options.",
-        "additionalProperties": false,
-        "properties": {
-          "maxSizeKilobytes": {
-            "type": "integer",
-            "description": "Gets the maximum size in kilobytes.",
-            "format": "int32"
-          },
-          "maxArchivedEntries": {
-            "type": "integer",
-            "description": "Gets the maximum of archived entries.",
-            "format": "int32"
-          },
-          "timeoutMilliseconds": {
-            "type": "integer",
-            "description": "Gets the timeout in milliseconds.",
-            "format": "int32"
-          },
-          "workingDirectory": {
-            "type": "string",
-            "description": "Gets the working directory.",
-            "nullable": true
-          }
-        }
-      },
       "PaginationResultModelOfObjectModel": {
         "type": "object",
         "additionalProperties": false,
@@ -1603,6 +1630,33 @@
           }
         }
       },
+      "AppOptions": {
+        "type": "object",
+        "description": "The application options.",
+        "additionalProperties": false,
+        "properties": {
+          "maxSizeKilobytes": {
+            "type": "integer",
+            "description": "Gets the maximum size in kilobytes.",
+            "format": "int32"
+          },
+          "maxArchivedEntries": {
+            "type": "integer",
+            "description": "Gets the maximum of archived entries.",
+            "format": "int32"
+          },
+          "timeoutMilliseconds": {
+            "type": "integer",
+            "description": "Gets the timeout in milliseconds.",
+            "format": "int32"
+          },
+          "workingDirectory": {
+            "type": "string",
+            "description": "Gets the working directory.",
+            "nullable": true
+          }
+        }
+      },
       "PongModel": {
         "type": "object",
         "description": "A model containing test information",
@@ -1694,6 +1748,19 @@
                 "type": "number",
                 "description": "Gets or sets the \"expiration time\" claim identifying the expiration time on\nor after which the token MUST NOT be accepted for processing.",
                 "format": "double"
+              },
+              "username": {
+                "type": "string",
+                "description": "Gets or sets the username.",
+                "nullable": true
+              },
+              "roleClaims": {
+                "type": "array",
+                "description": "Gets or sets the roles.",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -1768,19 +1835,6 @@
               "emailConfirmed": {
                 "type": "boolean",
                 "description": "Gets or sets a value indicating whether the email address is confirmed."
-              },
-              "username": {
-                "type": "string",
-                "description": "Gets or sets the username.",
-                "nullable": true
-              },
-              "roles": {
-                "type": "array",
-                "description": "Gets or sets the roles.",
-                "nullable": true,
-                "items": {
-                  "type": "string"
-                }
               }
             }
           }

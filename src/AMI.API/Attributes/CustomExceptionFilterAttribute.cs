@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AMI.API.Handlers;
-using AMI.Core.Configurations;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace AMI.API.Filters
+namespace AMI.API.Attributes
 {
     /// <summary>
     /// CustomExceptionFilterAttribute
@@ -17,10 +16,9 @@ namespace AMI.API.Filters
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomExceptionFilterAttribute"/> class.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
         /// <param name="handler">The exception handler.</param>
         /// <exception cref="ArgumentNullException">handler</exception>
-        public CustomExceptionFilterAttribute(IAppConfiguration configuration, ICustomExceptionHandler handler)
+        public CustomExceptionFilterAttribute(ICustomExceptionHandler handler)
             : base()
         {
             this.handler = handler ?? throw new ArgumentNullException(nameof(handler));

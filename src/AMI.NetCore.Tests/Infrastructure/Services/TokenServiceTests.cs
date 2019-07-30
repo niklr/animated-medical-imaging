@@ -38,6 +38,10 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.AreEqual(container.AccessToken.IsAnon, decoded.IsAnon);
             Assert.IsTrue(decoded.Exp > 0);
             Assert.AreEqual(container.AccessToken.Exp, decoded.Exp);
+            Assert.AreEqual("Anon", decoded.Username);
+            Assert.AreEqual(container.AccessToken.Username, decoded.Username);
+            Assert.AreEqual(0, decoded.RoleClaims.Count);
+            Assert.AreEqual(container.AccessToken.RoleClaims.Count, decoded.RoleClaims.Count);
         }
 
         [Test]
@@ -63,14 +67,10 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.AreEqual(container.IdToken.Iat, decoded.Iat);
             Assert.IsTrue(decoded.IsAnon);
             Assert.AreEqual(container.IdToken.IsAnon, decoded.IsAnon);
-            Assert.AreEqual("Anon", decoded.Username);
-            Assert.AreEqual(container.IdToken.Username, decoded.Username);
             Assert.AreEqual("anon@localhost", decoded.Email);
             Assert.AreEqual(container.IdToken.Email, decoded.Email);
             Assert.IsFalse(decoded.EmailConfirmed);
             Assert.AreEqual(container.IdToken.EmailConfirmed, decoded.EmailConfirmed);
-            Assert.AreEqual(0, decoded.Roles.Count);
-            Assert.AreEqual(container.IdToken.Roles.Count, decoded.Roles.Count);
         }
 
         [Test]

@@ -38,12 +38,13 @@ namespace AMI.Core.Entities.Models
         public string NameClaimType { get; set; } = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 
         /// <inheritdoc/>
-        public string RoleClaimType { get; set; } = "user_client_roles";
+        /// <remarks>Roles are not mapped correctly if RoleClaimType = "roles"</remarks>
+        public string RoleClaimType { get; set; } = "roleClaims";
 
         /// <inheritdoc/>
         public string IssuerClaimType { get; set; } = "iss";
 
         /// <inheritdoc/>
-        public string UsernameClaimType { get; set; } = "preferred_username";
+        public string UsernameClaimType { get; set; } = "username";
     }
 }

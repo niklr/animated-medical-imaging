@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Reflection;
 using System.Threading;
+using AMI.API.Attributes;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Extensions.ServiceCollectionExtensions;
-using AMI.API.Filters;
 using AMI.API.Handlers;
 using AMI.API.Hubs;
 using AMI.API.Observers;

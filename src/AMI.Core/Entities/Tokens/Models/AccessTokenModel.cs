@@ -1,4 +1,6 @@
-﻿namespace AMI.Core.Entities.Models
+﻿using System.Collections.Generic;
+
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// The model containing information about the access token.
@@ -18,5 +20,15 @@
         /// or after which the token MUST NOT be accepted for processing.
         /// </summary>
         public double Exp { get; set; }
+
+        /// <summary>
+        /// Gets or sets the username.
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// Gets or sets the roles.
+        /// </summary>
+        public IList<string> RoleClaims { get; set; } = new List<string>();
     }
 }
