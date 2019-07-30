@@ -1,5 +1,4 @@
-﻿using AMI.Domain.Entities;
-using AMI.Persistence.EntityFramework.Shared;
+﻿using AMI.Persistence.EntityFramework.Shared;
 using AMI.Persistence.EntityFramework.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 

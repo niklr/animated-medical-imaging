@@ -1,7 +1,7 @@
 ﻿using AMI.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AMI.Persistence.EntityFramework.SQLite.Extensions
+namespace AMI.Persistence.EntityFramework.SQLite.Extensions.ServiceCollectionExtensions
 {
     /// <summary>
     /// Extensions related to <see cref="IServiceCollection"/>

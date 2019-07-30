@@ -27,7 +27,7 @@ using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Services;
 using AMI.Itk.Extensions.ServiceCollectionExtensions;
-using AMI.Persistence.EntityFramework.SQLite.Extensions;
+using AMI.Persistence.EntityFramework.SQLite.Extensions.ServiceCollectionExtensions;
 using AspNetCoreRateLimit;
 using FluentValidation.AspNetCore;
 using MediatR;
