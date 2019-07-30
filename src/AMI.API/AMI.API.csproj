@@ -56,6 +56,7 @@
     <ProjectReference Include="..\AMI.Infrastructure\AMI.Infrastructure.csproj" />
     <ProjectReference Include="..\AMI.Itk\AMI.Itk.csproj" />
     <ProjectReference Include="..\AMI.Persistence.EntityFramework.InMemory\AMI.Persistence.EntityFramework.InMemory.csproj" />
+    <ProjectReference Include="..\AMI.Persistence.EntityFramework.SQLite\AMI.Persistence.EntityFramework.SQLite.csproj" />
   </ItemGroup>
   
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">

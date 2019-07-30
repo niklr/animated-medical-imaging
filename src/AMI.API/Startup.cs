@@ -27,7 +27,7 @@ using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Services;
 using AMI.Itk.Extensions.ServiceCollectionExtensions;
-using AMI.Persistence.EntityFramework.InMemory;
+using AMI.Persistence.EntityFramework.SQLite.Extensions;
 using AspNetCoreRateLimit;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -36,9 +36,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -51,11 +48,6 @@ namespace AMI.API
     /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// Acts as a root for all in-memory databases such that they will be available across context instances and service providers.
-        /// </summary>
-        public static readonly InMemoryDatabaseRoot InMemoryDatabaseRoot = new InMemoryDatabaseRoot();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -132,8 +124,7 @@ namespace AMI.API
             // Add ITK services
             services.AddDefaultItk();
 
-            // TODO: replace InMemoryUnitOfWork with SQLite
-            services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
+            // Add other services
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ICustomPrincipalProvider, CustomPrincipalProvider>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
@@ -165,11 +156,7 @@ namespace AMI.API
             services.AddMediatR(typeof(GetQueryHandler).GetTypeInfo().Assembly);
 
             // Add DbContext
-            services.AddDbContext<InMemoryDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("AmiInMemoryDb", InMemoryDatabaseRoot);
-                options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)); // remove when not using InMemory context
-            });
+            services.AddSqliteDbContext();
 
             services.AddMvc(options =>
                 {
@@ -228,6 +215,10 @@ namespace AMI.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Migrate/create the DbContext
+            var context = serviceProvider.GetRequiredService<IAmiUnitOfWork>();
+            context.Migrate();
 
             app.UseThrottleMiddleware();
 

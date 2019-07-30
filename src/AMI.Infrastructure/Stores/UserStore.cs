@@ -20,7 +20,8 @@ namespace AMI.Infrastructure.Stores
     public class UserStore<TUser> : IUserStore<TUser>,
         IUserPasswordStore<TUser>,
         IUserRoleStore<TUser>,
-        IQueryableUserStore<TUser>
+        IQueryableUserStore<TUser>,
+        IUserEmailStore<TUser>
         where TUser : UserEntity
     {
         private readonly IAmiUnitOfWork context;
@@ -95,6 +96,12 @@ namespace AMI.Infrastructure.Stores
         }
 
         /// <inheritdoc/>
+        public async Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            return await repository.GetFirstOrDefaultAsync(e => e.NormalizedEmail == normalizedEmail, cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public async Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             if (Guid.TryParse(userId, out Guid guid))
@@ -112,6 +119,30 @@ namespace AMI.Infrastructure.Stores
         public async Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             return await repository.GetFirstOrDefaultAsync(e => e.NormalizedUsername == normalizedUserName, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken)
+        {
+            Ensure.ArgumentNotNull(user, nameof(user));
+
+            return Task.FromResult(user.Email);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken cancellationToken)
+        {
+            Ensure.ArgumentNotNull(user, nameof(user));
+
+            return Task.FromResult(user.EmailConfirmed);
+        }
+
+        /// <inheritdoc/>
+        public Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken)
+        {
+            Ensure.ArgumentNotNull(user, nameof(user));
+
+            return Task.FromResult(user.NormalizedEmail);
         }
 
         /// <inheritdoc/>
@@ -199,6 +230,33 @@ namespace AMI.Infrastructure.Stores
             Ensure.ArgumentNotNull(user, nameof(user));
 
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task SetEmailAsync(TUser user, string email, CancellationToken cancellationToken)
+        {
+            Ensure.ArgumentNotNull(user, nameof(user));
+
+            user.Email = email;
+            await Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public async Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            Ensure.ArgumentNotNull(user, nameof(user));
+
+            user.EmailConfirmed = confirmed;
+            await Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public async Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            Ensure.ArgumentNotNull(user, nameof(user));
+
+            user.NormalizedEmail = normalizedEmail;
+            await Task.CompletedTask;
         }
 
         /// <inheritdoc/>

@@ -32,5 +32,11 @@ namespace AMI.Core.Repositories
         /// Gets the user repository.
         /// </summary>
         IRepository<UserEntity> UserRepository { get; }
+
+        /// <summary>
+        /// Applies any pending migrations for the context to the database.
+        /// Will create the database if it does not already exist.
+        /// </summary>
+        void Migrate();
     }
 }

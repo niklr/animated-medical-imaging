@@ -84,6 +84,11 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public void Migrate()
+        {
+        }
+
+        /// <inheritdoc/>
         public void RollBackTransaction()
         {
         }

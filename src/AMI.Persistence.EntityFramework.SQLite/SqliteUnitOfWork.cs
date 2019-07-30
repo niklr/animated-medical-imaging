@@ -1,23 +1,24 @@
 ﻿using AMI.Core.Repositories;
 using AMI.Domain.Entities;
 using AMI.Persistence.EntityFramework.Shared.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-namespace AMI.Persistence.EntityFramework.InMemory
+namespace AMI.Persistence.EntityFramework.SQLite
 {
     /// <summary>
-    /// The EntityFramework InMemory implementation of the Unit of Work pattern.
+    /// The EntityFramework SQLite implementation of the Unit of Work pattern.
     /// </summary>
     /// <seealso cref="UnitOfWork" />
     /// <seealso cref="IAmiUnitOfWork" />
-    public class InMemoryUnitOfWork : UnitOfWork, IAmiUnitOfWork
+    public class SqliteUnitOfWork : UnitOfWork, IAmiUnitOfWork
     {
-        private readonly InMemoryDbContext context;
+        private readonly SqliteDbContext context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryUnitOfWork"/> class.
+        /// Initializes a new instance of the <see cref="SqliteUnitOfWork"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public InMemoryUnitOfWork(InMemoryDbContext context)
+        public SqliteUnitOfWork(SqliteDbContext context)
             : base(context)
         {
             this.context = context;
@@ -71,6 +72,7 @@ namespace AMI.Persistence.EntityFramework.InMemory
         /// <inheritdoc/>
         public void Migrate()
         {
+            context.Database.Migrate();
         }
     }
 }
