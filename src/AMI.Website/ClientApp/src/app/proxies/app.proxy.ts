@@ -16,15 +16,18 @@ export class AppProxy extends BaseProxy {
     if (!retryCounter || retryCounter < 0) {
       retryCounter = 0;
     }
-    this.appInfoClient.get().subscribe((result: AppInfo) => {
-      ConfigService.options.version = result.appVersion;
-    }, error => {
-      if (retryCounter <= 3) {
-        setTimeout(() => {
-          this.logger.info('AppProxy.init retryCounter: ' + retryCounter);
-          this.init(++retryCounter);
-        }, 5000);
-      }
+    super.preflight().then(() => {
+      this.appInfoClient.get().subscribe((result: AppInfo) => {
+        ConfigService.options.version = result.appVersion;
+      }, error => {
+        if (retryCounter <= 3) {
+          setTimeout(() => {
+            this.logger.info('AppProxy.init retryCounter: ' + retryCounter);
+            this.init(++retryCounter);
+          }, 5000);
+        }
+      });
     });
+
   }
 }

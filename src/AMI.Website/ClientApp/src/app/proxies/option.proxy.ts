@@ -4,14 +4,27 @@ import {
   ApiOptionsAmiApiClient,
   IApiOptions
 } from '../clients/ami-api-client';
+import { BaseProxy } from './base.proxy';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class OptionProxy {
+export class OptionProxy extends BaseProxy {
 
-  constructor(private apiOptionsClient: ApiOptionsAmiApiClient) {
+  constructor(authService: AuthService, private apiOptionsClient: ApiOptionsAmiApiClient) {
+    super(authService);
   }
 
-  public getApiOptions(): Observable<IApiOptions> {
-    return this.apiOptionsClient.get();
+  public getApiOptions(): Promise<IApiOptions> {
+    return new Promise<IApiOptions>((resolve, reject) => {
+      super.preflight().then(() => {
+        return this.apiOptionsClient.get().subscribe(result => {
+          resolve(result);
+        }, error => {
+          reject(error);
+        });
+      }, error => {
+        reject(error);
+      });
+    });
   }
 }

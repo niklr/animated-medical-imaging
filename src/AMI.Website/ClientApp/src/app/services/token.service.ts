@@ -11,6 +11,7 @@ import { GarbageCollector } from '../utils';
 export class TokenService extends BaseService {
 
   private container: TokenContainerModel;
+  private isRefreshing: boolean = false;
 
   constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
               private tokenStore: TokenStore, private tokenProxy: TokenProxy) {
@@ -101,23 +102,32 @@ export class TokenService extends BaseService {
   }
 
   public refreshToken(): Promise<void> {
-    return new Promise<void>(async (resolve, reject) => {
-      try {
-        this.loadTokenContainer();
-        if (this.container) {
-          this.tokenProxy.update(this.container).subscribe(result => {
-            this.setTokenContainer(result);
-            resolve();
-          }, error => {
-            reject(error);
-          });
-        } else {
-          throw new Error('TokenService.refreshToken failed.');
+    if (this.isRefreshing) {
+      return new Promise<void>(async (resolve, reject) => {
+        resolve();
+      });
+    } else {
+      return new Promise<void>(async (resolve, reject) => {
+        try {
+          this.isRefreshing = true;
+          this.loadTokenContainer();
+          if (this.container) {
+            this.tokenProxy.update(this.container).subscribe(result => {
+              this.setTokenContainer(result);
+              resolve();
+            }, error => {
+              reject(error);
+            });
+          } else {
+            throw new Error('TokenService.refreshToken failed.');
+          }
+        } catch (error) {
+          reject(error);
         }
-      } catch (error) {
-        reject(error);
-      }
-    });
+      }).finally(() => {
+        this.isRefreshing = false;
+      });
+    }
   }
 
   public loadUserProfile(): Promise<void> {

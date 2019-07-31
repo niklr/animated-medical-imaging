@@ -7,6 +7,7 @@ import { IClientOptions } from '../models/client-options.model';
 @Injectable()
 export class ConfigService {
 
+  static isInitialized: boolean = false;
   static options: IClientOptions;
   static apiOptions: IApiOptions;
 
@@ -32,6 +33,7 @@ export class ConfigService {
         ConfigService.options.apiEndpoint = this.removeTrailingSlash(ConfigService.options.apiEndpoint);
         this.http.get<IApiOptions>(ConfigService.options.apiEndpoint + '/api-options').subscribe(result2 => {
           ConfigService.apiOptions = result2;
+          ConfigService.isInitialized = true;
           resolve();
         }, error => {
           handleError(error);
