@@ -43,7 +43,7 @@ namespace AMI.API.Attributes
 
             foreach (var role in requirement.RequiredRoles)
             {
-                if (principal.IsInRole(role.ToString()))
+                if (principal.IsInRole(role))
                 {
                     isAuthorized = true;
                     break;

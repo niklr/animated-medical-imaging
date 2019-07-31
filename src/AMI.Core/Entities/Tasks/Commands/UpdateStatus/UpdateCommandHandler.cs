@@ -5,6 +5,7 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Entities.Tasks.Queries.GetById;
 using AMI.Core.IO.Serializers;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
@@ -28,14 +29,16 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="mediator">The mediator.</param>
         public UpdateCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider,
             IDefaultJsonSerializer serializer,
             IMediator mediator)
-            : base(context, gateway)
+            : base(context, gateway, principalProvider)
         {
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

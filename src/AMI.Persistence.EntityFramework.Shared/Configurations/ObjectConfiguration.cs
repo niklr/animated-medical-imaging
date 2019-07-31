@@ -23,6 +23,19 @@ namespace AMI.Persistence.InMemory.Configurations
 
             builder.Property(e => e.ModifiedDate)
                 .IsRequired();
+
+            builder.Property(e => e.OriginalFilename)
+                .IsRequired();
+
+            builder.Property(e => e.SourcePath)
+                .IsRequired();
+
+            builder.Property(e => e.UserId)
+                .IsRequired();
+
+            // Indexes
+            builder.HasIndex(e => e.CreatedDate);
+            builder.HasIndex(e => e.UserId);
         }
     }
 }

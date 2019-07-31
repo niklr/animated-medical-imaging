@@ -5,7 +5,6 @@
     <LangVersion>7.1</LangVersion>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <CodeAnalysisRuleSet>..\RnsCodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <Platforms>AnyCPU;x86;x64</Platforms> 	
   </PropertyGroup>
 
@@ -24,16 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>  
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\RnsCodeAnalysis.ruleset" Link="Properties\RnsCodeAnalysis.ruleset" />
-    <AdditionalFiles Include="..\StyleCop.json" Link="Properties\StyleCop.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs" Link="SharedAssemblyInfo.cs" />

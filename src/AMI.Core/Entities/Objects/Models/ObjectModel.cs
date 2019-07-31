@@ -61,6 +61,11 @@ namespace AMI.Core.Entities.Models
         public string ExtractedPath { get; set; }
 
         /// <summary>
+        /// Gets or sets the user identifier.
+        /// </summary>
+        public string UserId { get; set; }
+
+        /// <summary>
         /// Gets or sets the latest task.
         /// </summary>
         public TaskModel LatestTask { get; set; }
@@ -86,7 +91,8 @@ namespace AMI.Core.Entities.Models
                 FileFormat = Enum.TryParse(entity.FileFormat.ToString(), out FileFormat fileFormat) ? fileFormat : FileFormat.Unknown,
                 OriginalFilename = entity.OriginalFilename,
                 SourcePath = entity.SourcePath,
-                ExtractedPath = entity.ExtractedPath
+                ExtractedPath = entity.ExtractedPath,
+                UserId = entity.UserId
             };
         }
 

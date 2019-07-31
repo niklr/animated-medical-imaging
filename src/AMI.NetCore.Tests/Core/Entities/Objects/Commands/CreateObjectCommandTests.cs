@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 using AMI.Core.Entities.Objects.Commands.Create;
+using AMI.Core.Providers;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using MediatR;
@@ -16,6 +17,8 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
         {
             // Arrange
             var mediator = GetService<IMediator>();
+            var principalProvider = GetService<ICustomPrincipalProvider>();
+            var principal = principalProvider.GetPrincipal();
             var ct = new CancellationToken();
             string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
             string dataPath = GetDataPath(filename);
@@ -43,6 +46,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
                 Assert.IsTrue(File.Exists(fullSourcePath));
                 Assert.IsFalse(File.Exists(command.SourcePath));
                 Assert.AreEqual(new FileInfo(dataPath).Length, new FileInfo(fullSourcePath).Length);
+                Assert.AreEqual(principal.Identity.Name, result.UserId);
 
                 DeleteObject(result.Id);
                 Assert.IsFalse(File.Exists(fullSourcePath));

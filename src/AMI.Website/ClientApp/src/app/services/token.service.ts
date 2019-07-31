@@ -4,6 +4,7 @@ import { NotificationService } from './notification.service';
 import { LoggerService } from './logger.service';
 import { TokenContainerModel } from '../clients/ami-api-client';
 import { TokenProxy } from '../proxies/token.proxy';
+import { TokenStore } from '../stores';
 import { GarbageCollector } from '../utils';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class TokenService extends BaseService {
   private container: TokenContainerModel;
 
   constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
-              private tokenProxy: TokenProxy) {
+              private tokenStore: TokenStore, private tokenProxy: TokenProxy) {
     super(gc, notificationService, logger);
 
     gc.attach(() => {
@@ -23,34 +24,19 @@ export class TokenService extends BaseService {
   private clear(): void {
     this.logger.info('TokenService.clear() called');
     this.container = undefined;
-    this.clearLocalStorage();
+    this.tokenStore.clear();
   }
 
   public getAccessToken(): string {
-    this.loadTokenContainer();
-    if (this.container) {
-      return this.container.accessTokenEncoded;
-    } else {
-      return undefined;
-    }
+    return this.tokenStore.getAccessToken();
   }
 
   public getIdentityClaims(): object {
-    this.loadTokenContainer();
-    if (this.container) {
-      return this.container.idToken;
-    } else {
-      return undefined;
-    }
+    return this.tokenStore.getIdentityClaims();
   }
 
   public getRefreshToken(): string {
-    this.loadTokenContainer();
-    if (this.container) {
-      return this.container.refreshTokenEncoded;
-    } else {
-      return undefined;
-    }
+    return this.tokenStore.getRefreshToken();
   }
 
   public getAccessTokenExpiration(): number {
@@ -64,7 +50,7 @@ export class TokenService extends BaseService {
 
   private loadTokenContainer(): void {
     if (!this.container) {
-      this.container = this.readLocalStorage();
+      this.container = this.tokenStore.loadTokenContainer();
     }
   }
 
@@ -72,7 +58,7 @@ export class TokenService extends BaseService {
     this.logger.info(container);
     if (container) {
       this.container = container;
-      this.setLocalStorage(container);
+      this.tokenStore.setTokenContainer(container);
     } else {
       throw new Error('TokenService.setTokenContainer failed.');
     }
@@ -137,29 +123,11 @@ export class TokenService extends BaseService {
   public loadUserProfile(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
-        this.container = this.readLocalStorage();
+        this.container = this.tokenStore.loadTokenContainer();
         resolve();
       } catch (error) {
         reject(error);
       }
     });
-  }
-
-  private setLocalStorage(container: TokenContainerModel) {
-    if (container) {
-      localStorage.setItem('tokenContainer', JSON.stringify(container));
-    }
-  }
-
-  private readLocalStorage(): TokenContainerModel {
-    try {
-      return JSON.parse(localStorage.getItem('tokenContainer'));
-    } catch (e) {
-      return undefined;
-    }
-  }
-
-  private clearLocalStorage(): void {
-    localStorage.removeItem('tokenContainer');
   }
 }

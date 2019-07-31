@@ -7,10 +7,12 @@ using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Generators;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
+using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Entities.Objects.Commands.Create
 {
@@ -30,6 +32,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The configuration.</param>
@@ -37,11 +40,12 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         public CreateCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider,
             IIdGenerator idGenerator,
             IApplicationConstants constants,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway)
+            : base(context, gateway, principalProvider)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
@@ -58,6 +62,12 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// <inheritdoc/>
         protected override async Task<ObjectModel> ProtectedHandleAsync(CreateObjectCommand request, CancellationToken cancellationToken)
         {
+            var principal = PrincipalProvider.GetPrincipal();
+            if (principal == null)
+            {
+                throw new ForbiddenException("Not authenticated");
+            }
+
             Context.BeginTransaction();
 
             // TODO: support custom extensions
@@ -77,7 +87,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow,
                 OriginalFilename = request.OriginalFilename,
-                SourcePath = destPath
+                SourcePath = destPath,
+                UserId = principal.Identity.Name
             };
 
             Context.ObjectRepository.Add(entity);

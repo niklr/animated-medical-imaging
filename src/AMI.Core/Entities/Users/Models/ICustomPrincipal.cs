@@ -1,4 +1,6 @@
-﻿namespace AMI.Core.Entities.Models
+﻿using AMI.Domain.Enums;
+
+namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// An interface representing an abstraction that encapsulates an identity and roles.
@@ -17,6 +19,6 @@
         /// <returns>
         ///   <c>true</c> if the user is in the specified role; otherwise, <c>false</c>.
         /// </returns>
-        bool IsInRole(string role);
+        bool IsInRole(RoleType role);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using AMI.Domain.Enums;
 using RNS.Framework.Tools;
 
 namespace AMI.Core.Entities.Models
@@ -35,9 +36,9 @@ namespace AMI.Core.Entities.Models
         public ICustomIdentity Identity { get; }
 
         /// <inheritdoc/>
-        public bool IsInRole(string role)
+        public bool IsInRole(RoleType role)
         {
-            return principal.IsInRole(role);
+            return principal.IsInRole(role.ToString());
         }
     }
 }

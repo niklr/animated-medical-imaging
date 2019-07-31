@@ -5,6 +5,7 @@ using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Objects.Queries.GetById;
 using AMI.Core.Entities.Objects.Queries.GetObjects;
 using AMI.Core.IO.Uploaders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RNS.Framework.Threading;
@@ -41,6 +42,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A model containing a list of paginated objects.</returns>
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(Models.PaginationResultModel<Models.ObjectModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetPaginatedAsync(int page, int limit)
         {
@@ -57,6 +59,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A model containing the specified object.</returns>
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
         {
@@ -72,6 +75,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>No content.</returns>
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteById(string id)
         {
@@ -96,6 +100,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A model containing the result of the resumable upload.</returns>
         [HttpPost("upload")]
+        [Authorize]
         [ProducesResponseType(typeof(Models.ObjectModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> UploadAsync(
             IFormFile file,

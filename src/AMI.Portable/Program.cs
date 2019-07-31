@@ -16,6 +16,7 @@ using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Mappers;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Domain.Enums;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
@@ -66,6 +67,7 @@ namespace AMI.Portable
 
             services.AddSingleton<IAmiUnitOfWork, MockUnitOfWork>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
+            services.AddSingleton<ICustomPrincipalProvider, MockPrincipalProvider>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();

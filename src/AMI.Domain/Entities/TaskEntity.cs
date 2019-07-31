@@ -53,6 +53,11 @@ namespace AMI.Domain.Entities
         public string CommandSerialized { get; set; }
 
         /// <summary>
+        /// Gets or sets the user identifier.
+        /// </summary>
+        public string UserId { get; set; }
+
+        /// <summary>
         /// Gets or sets the object identifier.
         /// </summary>
         public Guid? ObjectId { get; set; }

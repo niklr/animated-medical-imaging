@@ -24,10 +24,21 @@ namespace AMI.Persistence.InMemory.Configurations
             builder.Property(e => e.LastUsedDate)
                 .IsRequired();
 
+            builder.Property(e => e.TokenValue)
+                .IsRequired();
+
+            builder.Property(e => e.UserId)
+                .IsRequired();
+
             builder.HasOne(e => e.User)
                 .WithMany(e => e.Tokens)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Indexes
+            builder.HasIndex(e => e.CreatedDate);
+            builder.HasIndex(e => e.LastUsedDate);
+            builder.HasIndex(e => e.UserId);
         }
     }
 }

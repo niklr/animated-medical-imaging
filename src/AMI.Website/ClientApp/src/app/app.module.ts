@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AmiApiClientModule } from './clients/ami-api-client.module';
 import { API_BASE_URL } from './clients/ami-api-client';
 import { AppComponent } from './app.component';
-import { TimeoutInterceptor, DEFAULT_TIMEOUT } from './interceptors';
+import { TimeoutInterceptor, DEFAULT_TIMEOUT, TokenInterceptor } from './interceptors';
 import { GatewayHub } from './hubs';
 import { AppProxy } from './proxies/app.proxy';
 import { ObjectProxy } from './proxies/object.proxy';
@@ -19,7 +19,7 @@ import { NotificationService } from './services/notification.service';
 import { ObjectService } from './services/object.service';
 import { PubSubService } from './services/pubsub.service';
 import { TokenService } from './services/token.service';
-import { ObjectStore } from './stores/object.store';
+import { ObjectStore, TokenStore } from './stores';
 import { BackgroundWorker, GarbageCollector, MomentUtil } from './utils';
 
 /*
@@ -59,6 +59,7 @@ export function initBaseAmiApi() {
     PubSubService,
     TokenService,
     ObjectStore,
+    TokenStore,
     BackgroundWorker,
     GarbageCollector,
     MomentUtil,
@@ -68,18 +69,26 @@ export function initBaseAmiApi() {
       multi: true
     },
     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      deps: [TokenStore],
+      multi: true
+    },
+    {
       provide: DEFAULT_TIMEOUT,
       useValue: 10000
     },
     {
       provide: APP_INITIALIZER,
       useFactory: initConfig,
-      deps: [ConfigService], multi: true
+      deps: [ConfigService],
+      multi: true
     },
     {
       provide: API_BASE_URL,
       useFactory: initBaseAmiApi,
-      deps: [ConfigService], multi: true
+      deps: [ConfigService],
+      multi: true
     },
     {
       provide: LoggerService,

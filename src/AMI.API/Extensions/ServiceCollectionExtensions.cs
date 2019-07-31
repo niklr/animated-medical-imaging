@@ -227,10 +227,15 @@ Option | Description
 limit | Defines the limit to constrain the number of items. (Allowed values: 10, 25, 50)
 page | Defines the current page number. (Allowed values: 0, 1, 2, ...)
 
-### Date format
-All dates are in UTC (Universal Time Coordinated) and represented in ISO 8601 format (International Organization for Standardization). Example:
+## Date format
+All dates are in UTC (Universal Time Coordinated) and represented in ISO 8601 format (International Organization for Standardization).
 
 > 2019-04-17T07:52:41.4700000Z
+
+## Webhooks
+After we process and complete your request you will be notified via webhook depending on the type of request.
+Dedicated resources enable you to specify new webhooks, get missed webhooks and clear missed webhooks.
+For testing purposes you can use a service like [hookbin.com](https://hookbin.com/).
 
 ";
             });

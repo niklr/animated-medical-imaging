@@ -9,10 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190730132140_Initial")]
+    [Migration("20190731102932_Initial")]
     partial class Initial
     {
-        /// <inheritdoc/>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -33,11 +32,20 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.Property<DateTime>("ModifiedDate");
 
-                    b.Property<string>("OriginalFilename");
+                    b.Property<string>("OriginalFilename")
+                        .IsRequired();
 
-                    b.Property<string>("SourcePath");
+                    b.Property<string>("SourcePath")
+                        .IsRequired();
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Objects");
                 });
@@ -106,11 +114,20 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.Property<int>("Status");
 
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectId");
+                    b.HasIndex("CreatedDate");
 
                     b.HasIndex("ResultId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ObjectId", "Status");
 
                     b.ToTable("Tasks");
                 });
@@ -123,11 +140,16 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.Property<DateTime>("LastUsedDate");
 
-                    b.Property<string>("TokenValue");
+                    b.Property<string>("TokenValue")
+                        .IsRequired();
 
                     b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("LastUsedDate");
 
                     b.HasIndex("UserId");
 
@@ -179,6 +201,20 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("NormalizedEmail")
+                        .IsUnique();
+
+                    b.HasIndex("NormalizedUsername")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

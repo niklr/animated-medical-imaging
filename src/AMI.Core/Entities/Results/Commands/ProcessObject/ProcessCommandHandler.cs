@@ -9,6 +9,7 @@ using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Extractors;
 using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -35,6 +36,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The configuration.</param>
@@ -44,13 +46,14 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         public ProcessCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider,
             IDefaultJsonSerializer serializer,
             IMediator mediator,
             IAppConfiguration configuration,
             IArchiveReader archiveReader,
             IArchiveExtractor archiveExtractor,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway)
+            : base(context, gateway, principalProvider)
         {
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

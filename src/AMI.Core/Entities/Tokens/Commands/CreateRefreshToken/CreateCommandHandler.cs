@@ -6,6 +6,7 @@ using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Generators;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
@@ -30,14 +31,16 @@ namespace AMI.Core.Entities.Tokens.Commands.CreateRefreshToken
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="configuration">The API configuration.</param>
         public CreateCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider,
             IIdGenerator idGenerator,
             IApiConfiguration configuration)
-            : base(context, gateway)
+            : base(context, gateway, principalProvider)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Exceptions;
@@ -19,10 +20,12 @@ namespace AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         public UpdateCommandHandler(
             IAmiUnitOfWork context,
-            IGatewayService gateway)
-            : base(context, gateway)
+            IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider)
+            : base(context, gateway, principalProvider)
         {
         }
 

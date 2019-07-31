@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -27,14 +28,16 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public DeleteCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway)
+            : base(context, gateway, principalProvider)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 

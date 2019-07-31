@@ -12,6 +12,7 @@ using AMI.Core.Factories;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Mappers;
+using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Domain.Entities;
@@ -64,6 +65,7 @@ namespace AMI.NetCore.Tests
 
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
+            services.AddSingleton<ICustomPrincipalProvider, MockPrincipalProvider>();
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();

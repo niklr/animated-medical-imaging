@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
@@ -27,16 +28,18 @@ namespace AMI.Core.Entities.Objects.Commands.Clear
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public ClearCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider,
             IMediator mediator,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway)
+            : base(context, gateway, principalProvider)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

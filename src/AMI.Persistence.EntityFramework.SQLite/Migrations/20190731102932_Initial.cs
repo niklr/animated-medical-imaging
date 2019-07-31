@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
-    /// <inheritdoc/>
     public partial class Initial : Migration
     {
-        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -18,9 +16,10 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                     ModifiedDate = table.Column<DateTime>(nullable: false),
                     DataType = table.Column<int>(nullable: false),
                     FileFormat = table.Column<int>(nullable: false),
-                    OriginalFilename = table.Column<string>(nullable: true),
-                    SourcePath = table.Column<string>(nullable: true),
-                    ExtractedPath = table.Column<string>(nullable: true)
+                    OriginalFilename = table.Column<string>(nullable: false),
+                    SourcePath = table.Column<string>(nullable: false),
+                    ExtractedPath = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,6 +97,7 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                     Progress = table.Column<int>(nullable: false),
                     CommandType = table.Column<int>(nullable: false),
                     CommandSerialized = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false),
                     ObjectId = table.Column<Guid>(nullable: true),
                     ResultId = table.Column<Guid>(nullable: true)
                 },
@@ -125,7 +125,7 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     LastUsedDate = table.Column<DateTime>(nullable: false),
-                    TokenValue = table.Column<string>(nullable: true),
+                    TokenValue = table.Column<string>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -140,9 +140,19 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_ObjectId",
+                name: "IX_Objects_CreatedDate",
+                table: "Objects",
+                column: "CreatedDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Objects_UserId",
+                table: "Objects",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_CreatedDate",
                 table: "Tasks",
-                column: "ObjectId");
+                column: "CreatedDate");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_ResultId",
@@ -150,12 +160,65 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 column: "ResultId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tasks_Status",
+                table: "Tasks",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_UserId",
+                table: "Tasks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_ObjectId_Status",
+                table: "Tasks",
+                columns: new[] { "ObjectId", "Status" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_CreatedDate",
+                table: "Tokens",
+                column: "CreatedDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_LastUsedDate",
+                table: "Tokens",
+                column: "LastUsedDate");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tokens_UserId",
                 table: "Tokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_CreatedDate",
+                table: "Users",
+                column: "CreatedDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_NormalizedEmail",
+                table: "Users",
+                column: "NormalizedEmail",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_NormalizedUsername",
+                table: "Users",
+                column: "NormalizedUsername",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Username",
+                table: "Users",
+                column: "Username",
+                unique: true);
         }
 
-        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

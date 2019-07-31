@@ -49,6 +49,11 @@ namespace AMI.Core.Entities.Models
         public int Progress { get; set; }
 
         /// <summary>
+        /// Gets or sets the user identifier.
+        /// </summary>
+        public string UserId { get; set; }
+
+        /// <summary>
         /// Gets or sets the command used to create this task.
         /// </summary>
         public BaseCommand Command { get; set; }
@@ -84,7 +89,8 @@ namespace AMI.Core.Entities.Models
                 Status = Enum.TryParse(entity.Status.ToString(), out TaskStatus status) ? status : TaskStatus.Created,
                 Message = entity.Message,
                 Position = entity.Position,
-                Progress = entity.Progress
+                Progress = entity.Progress,
+                UserId = entity.UserId
             };
 
             if (Enum.TryParse(entity.CommandType.ToString(), out CommandType commandType))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using MediatR;
@@ -21,10 +22,12 @@ namespace AMI.Core.Entities.Shared.Commands
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
-        public BaseCommandRequestHandler(IAmiUnitOfWork context, IGatewayService gateway)
+        /// <param name="principalProvider">The principal provider.</param>
+        public BaseCommandRequestHandler(IAmiUnitOfWork context, IGatewayService gateway, ICustomPrincipalProvider principalProvider)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Gateway = gateway ?? throw new ArgumentNullException(nameof(gateway));
+            PrincipalProvider = principalProvider ?? throw new ArgumentNullException(nameof(principalProvider));
         }
 
         /// <summary>
@@ -36,6 +39,11 @@ namespace AMI.Core.Entities.Shared.Commands
         /// Gets the gateway service.
         /// </summary>
         protected IGatewayService Gateway { get; private set; }
+
+        /// <summary>
+        /// Gets the principal provider.
+        /// </summary>
+        protected ICustomPrincipalProvider PrincipalProvider { get; private set; }
 
         /// <summary>
         /// Asynchronously handles the command request.

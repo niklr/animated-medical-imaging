@@ -1947,6 +1947,8 @@ export class ObjectModel implements IObjectModel {
     sourcePath?: string | undefined;
     /** Gets or sets the extracted/uncompressed path (directory). */
     extractedPath?: string | undefined;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the latest task. */
     latestTask?: TaskModel | undefined;
 
@@ -1969,6 +1971,7 @@ export class ObjectModel implements IObjectModel {
             this.originalFilename = data["originalFilename"];
             this.sourcePath = data["sourcePath"];
             this.extractedPath = data["extractedPath"];
+            this.userId = data["userId"];
             this.latestTask = data["latestTask"] ? TaskModel.fromJS(data["latestTask"]) : <any>undefined;
         }
     }
@@ -1990,6 +1993,7 @@ export class ObjectModel implements IObjectModel {
         data["originalFilename"] = this.originalFilename;
         data["sourcePath"] = this.sourcePath;
         data["extractedPath"] = this.extractedPath;
+        data["userId"] = this.userId;
         data["latestTask"] = this.latestTask ? this.latestTask.toJSON() : <any>undefined;
         return data; 
     }
@@ -2013,6 +2017,8 @@ export interface IObjectModel {
     sourcePath?: string | undefined;
     /** Gets or sets the extracted/uncompressed path (directory). */
     extractedPath?: string | undefined;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the latest task. */
     latestTask?: TaskModel | undefined;
 }
@@ -2054,6 +2060,8 @@ export class TaskModel implements ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the command used to create this task. */
     command?: BaseCommand | undefined;
     /** Gets or sets the result associated with this task. */
@@ -2079,6 +2087,7 @@ export class TaskModel implements ITaskModel {
             this.message = data["message"];
             this.position = data["position"];
             this.progress = data["progress"];
+            this.userId = data["userId"];
             this.command = data["command"] ? BaseCommand.fromJS(data["command"]) : <any>undefined;
             this.result = data["result"] ? BaseResultModel.fromJS(data["result"]) : <any>undefined;
             this.object = data["object"] ? ObjectModel.fromJS(data["object"]) : <any>undefined;
@@ -2101,6 +2110,7 @@ export class TaskModel implements ITaskModel {
         data["message"] = this.message;
         data["position"] = this.position;
         data["progress"] = this.progress;
+        data["userId"] = this.userId;
         data["command"] = this.command ? this.command.toJSON() : <any>undefined;
         data["result"] = this.result ? this.result.toJSON() : <any>undefined;
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
@@ -2124,6 +2134,8 @@ export interface ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the command used to create this task. */
     command?: BaseCommand | undefined;
     /** Gets or sets the result associated with this task. */

@@ -57,6 +57,11 @@ namespace AMI.Domain.Entities
         public string ExtractedPath { get; set; }
 
         /// <summary>
+        /// Gets or sets the user identifier.
+        /// </summary>
+        public string UserId { get; set; }
+
+        /// <summary>
         /// Gets or sets the tasks.
         /// </summary>
         public ICollection<TaskEntity> Tasks { get; set; }

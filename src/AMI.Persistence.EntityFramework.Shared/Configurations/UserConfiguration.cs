@@ -39,6 +39,13 @@ namespace AMI.Persistence.InMemory.Configurations
             builder.Property(e => e.NormalizedEmail)
                 .HasMaxLength(128)
                 .IsRequired();
+
+            // Indexes
+            builder.HasIndex(e => e.CreatedDate);
+            builder.HasIndex(e => e.Username).IsUnique();
+            builder.HasIndex(e => e.NormalizedUsername).IsUnique();
+            builder.HasIndex(e => e.Email).IsUnique();
+            builder.HasIndex(e => e.NormalizedEmail).IsUnique();
         }
     }
 }

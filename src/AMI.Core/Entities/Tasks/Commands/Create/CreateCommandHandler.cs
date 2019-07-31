@@ -6,6 +6,7 @@ using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Generators;
 using AMI.Core.IO.Serializers;
+using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
@@ -33,16 +34,18 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="gateway">The gateway service.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="queue">The task queue.</param>
         public CreateCommandHandler(
             IAmiUnitOfWork context,
             IGatewayService gateway,
+            ICustomPrincipalProvider principalProvider,
             IIdGenerator idGenerator,
             IDefaultJsonSerializer serializer,
             ITaskQueue queue)
-            : base(context, gateway)
+            : base(context, gateway, principalProvider)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
@@ -52,6 +55,12 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// <inheritdoc/>
         protected override async Task<TaskModel> ProtectedHandleAsync(CreateTaskCommand request, CancellationToken cancellationToken)
         {
+            var principal = PrincipalProvider.GetPrincipal();
+            if (principal == null)
+            {
+                throw new ForbiddenException("Not authenticated");
+            }
+
             if (request.Command.CommandType != CommandType.ProcessObjectCommand || request.Command.GetType() != typeof(ProcessObjectCommand))
             {
                 throw new NotSupportedException("The provided command type is not supported.");
@@ -88,6 +97,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
                     Position = queue.Count,
                     CommandType = (int)CommandType.ProcessObjectCommand,
                     CommandSerialized = serializer.Serialize(command),
+                    UserId = principal.Identity.Name,
                     ObjectId = objectId
                 };
 

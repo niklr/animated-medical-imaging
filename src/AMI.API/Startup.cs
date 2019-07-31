@@ -58,22 +58,16 @@ namespace AMI.API
             Configuration = configuration;
             HostingEnvironment = env;
             AppInfo = new AppInfoFactory().Create(typeof(Program));
+            Serializer = new DefaultJsonSerializer();
         }
 
-        /// <summary>
-        /// Gets the configuration.
-        /// </summary>
         private IConfiguration Configuration { get; }
 
-        /// <summary>
-        /// Gets the hosting environment.
-        /// </summary>
         private IHostingEnvironment HostingEnvironment { get; }
 
-        /// <summary>
-        /// Gets the information about the application.
-        /// </summary>
         private AppInfo AppInfo { get; }
+
+        private IDefaultJsonSerializer Serializer { get; }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -81,8 +75,8 @@ namespace AMI.API
         /// <param name="services">The service collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add cross-origin resource sharing services
             var allowedCorsOrigins = Configuration["AllowedCorsOrigins"]?.Split(',') ?? new string[0];
-
             services.AddCors(options =>
             {
                 options.AddPolicy(
@@ -90,17 +84,17 @@ namespace AMI.API
                     builder => builder.WithOrigins(allowedCorsOrigins).AllowCredentials().AllowAnyMethod().AllowAnyHeader());
             });
 
-            var defaultSerializer = new DefaultJsonSerializer();
-
+            // Add services related to options and configure them
             services.AddOptions();
             services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
             services.Configure<ApiOptions>(Configuration.GetSection("ApiOptions"));
             services.Configure<AspNetCoreRateLimit.IpRateLimitOptions>(Configuration.GetSection("ApiOptions:IpRateLimiting"));
             services.Configure<AspNetCoreRateLimit.IpRateLimitPolicies>(Configuration.GetSection("ApiOptions:IpRateLimitPolicies"));
 
-            // needed to store rate limit counters and ip rules
+            // Store rate limit counters and IP rules
             services.AddMemoryCache();
 
+            // Add logging services
             services.AddLogging(builder =>
             {
                 builder
@@ -158,6 +152,7 @@ namespace AMI.API
             // Add DbContext
             services.AddSqliteDbContext();
 
+            // Add MVC
             services.AddMvc(options =>
                 {
                     options.Filters.Add(typeof(CustomExceptionFilterAttribute));
@@ -167,14 +162,14 @@ namespace AMI.API
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ProcessCommandValidator>())
                 .AddJsonOptions(options =>
                 {
-                    defaultSerializer.OverrideJsonSerializerSettings(options.SerializerSettings);
+                    Serializer.OverrideJsonSerializerSettings(options.SerializerSettings);
                 });
 
             // Add SignalR
             services.AddSignalR()
                 .AddJsonProtocol(options =>
                 {
-                    defaultSerializer.OverrideJsonSerializerSettings(options.PayloadSerializerSettings);
+                    Serializer.OverrideJsonSerializerSettings(options.PayloadSerializerSettings);
                 });
 
             // AddSignalR must be called before registering custom SignalR services.
@@ -183,6 +178,7 @@ namespace AMI.API
             // Add AspNetCoreRateLimit configuration (resolvers, counter key builders)
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
+            // Add JWT authentication
             services.AddCustomAuthentication(HostingEnvironment, Configuration);
 
             // Customise default API behavior
