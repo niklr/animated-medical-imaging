@@ -1,4 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ConnectionState } from '../../enums';
+import { GatewayHub } from '../../hubs';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
-  constructor() { }
+  constructor(private gateway: GatewayHub) { }
 
   ngOnInit() {
   }
@@ -17,12 +19,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private initCollapsible(): void {
     setTimeout(() => {
-      var options = {
+      const options = {
         accordion: false
       };
-      var elem = document.querySelector('.collapsible.expandable');
-      var instance = M.Collapsible.init(elem, options);
+      const elem = document.querySelector('.collapsible.expandable');
+      const instance = M.Collapsible.init(elem, options);
     });
+  }
+
+  public get connectionState(): ConnectionState {
+    return this.gateway.connectionState;
   }
 
 }

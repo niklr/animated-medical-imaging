@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Principal;
+using AMI.Core.Entities.Models;
 using AMI.Domain.Enums;
 
-namespace AMI.Core.Entities.Models
+namespace AMI.NetCore.Tests.Mocks.Core
 {
     /// <summary>
     /// An abstraction that encapsulates an identity and roles.
     /// </summary>
     public class MockPrincipal : ICustomPrincipal
     {
+        private readonly HashSet<RoleType> roles;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MockPrincipal"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
-        public MockPrincipal(string name)
+        /// <param name="roles">The roles.</param>
+        public MockPrincipal(string name, RoleType[] roles = null)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -24,6 +29,8 @@ namespace AMI.Core.Entities.Models
             {
                 Name = name
             };
+
+            this.roles = roles == null ? new HashSet<RoleType>() : new HashSet<RoleType>(roles);
         }
 
         /// <inheritdoc/>
@@ -34,13 +41,17 @@ namespace AMI.Core.Entities.Models
         /// <inheritdoc/>
         public bool IsInRole(RoleType role)
         {
-            return true;
+            return roles.Contains(role);
         }
 
-        /// <inheritdoc/>
         public bool IsInRole(string role)
         {
-            return true;
+            if (Enum.TryParse(role, out RoleType roleType))
+            {
+                return IsInRole(roleType);
+            }
+
+            return false;
         }
     }
 }

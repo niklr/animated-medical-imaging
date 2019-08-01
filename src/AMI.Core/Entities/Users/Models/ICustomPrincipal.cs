@@ -1,16 +1,17 @@
-﻿using AMI.Domain.Enums;
+﻿using System.Security.Principal;
+using AMI.Domain.Enums;
 
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// An interface representing an abstraction that encapsulates an identity and roles.
     /// </summary>
-    public interface ICustomPrincipal
+    public interface ICustomPrincipal : IPrincipal
     {
         /// <summary>
         /// Gets the identity.
         /// </summary>
-        ICustomIdentity Identity { get; }
+        new ICustomIdentity Identity { get; }
 
         /// <summary>
         /// Determines whether the user is in the specified role.

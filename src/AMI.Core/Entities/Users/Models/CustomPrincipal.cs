@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
+using System.Security.Principal;
 using AMI.Domain.Enums;
 using RNS.Framework.Tools;
 
@@ -35,10 +37,23 @@ namespace AMI.Core.Entities.Models
         /// <inheritdoc/>
         public ICustomIdentity Identity { get; }
 
+        IIdentity IPrincipal.Identity => Identity;
+
         /// <inheritdoc/>
         public bool IsInRole(RoleType role)
         {
             return principal.IsInRole(role.ToString());
+        }
+
+        /// <inheritdoc/>
+        public bool IsInRole(string role)
+        {
+            if (Enum.TryParse(role, out RoleType roleType))
+            {
+                return IsInRole(roleType);
+            }
+
+            return false;
         }
     }
 }

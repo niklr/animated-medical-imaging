@@ -3,6 +3,15 @@
     <img class="responsive-img" src="assets/images/ami_logo_combined.png" width="600" />
   </div>
 </div>
+<div class="custom-section" *ngIf="connectionState !== 'Connected'">
+  <div class="card">
+    <div class="card-content">
+      <p class="caption wrapword full-width custom-card-content-caption">
+        <i class="fas fa-info-circle"></i> Server is not reachable.
+      </p>
+    </div>
+  </div>
+</div>
 <div class="custom-section">
   <ul class="collapsible expandable custom-collapsible">
     <li class="active">
@@ -11,7 +20,7 @@
         <i class="material-icons caret right">keyboard_arrow_right</i>
       </div>
       <div class="collapsible-body">
-        <app-processing-settings></app-processing-settings>
+        <app-processing-settings *ngIf="connectionState === 'Connected'"></app-processing-settings>
       </div>
     </li>
     <li class="active">
@@ -20,7 +29,7 @@
         <i class="material-icons caret right">keyboard_arrow_right</i>
       </div>
       <div class="collapsible-body">
-        <app-processing-objects></app-processing-objects>
+        <app-processing-objects *ngIf="connectionState === 'Connected'"></app-processing-objects>
       </div>
     </li>
     <li class="active">
@@ -29,7 +38,7 @@
         <i class="material-icons caret right">keyboard_arrow_right</i>
       </div>
       <div class="collapsible-body">
-        <app-datatransfer></app-datatransfer>
+        <app-datatransfer *ngIf="connectionState === 'Connected'"></app-datatransfer>
       </div>
     </li>
   </ul>

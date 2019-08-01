@@ -9,6 +9,7 @@ using AMI.Core.IO.Writers;
 using AMI.Core.Strategies;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
+using RNS.Framework.Tools;
 using SharpCompress.Archives.Zip;
 
 namespace AMI.Compress.Writers
@@ -39,30 +40,11 @@ namespace AMI.Compress.Writers
             IZipArchive archive,
             CancellationToken ct)
         {
-            if (items == null)
-            {
-                throw new ArgumentNullException(nameof(items));
-            }
-
-            if (diskFilePathFunc == null)
-            {
-                throw new ArgumentNullException(nameof(diskFilePathFunc));
-            }
-
-            if (entryNameFunc == null)
-            {
-                throw new ArgumentNullException(nameof(entryNameFunc));
-            }
-
-            if (archive == null)
-            {
-                throw new ArgumentNullException(nameof(archive));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNull(items, nameof(items));
+            Ensure.ArgumentNotNull(diskFilePathFunc, nameof(diskFilePathFunc));
+            Ensure.ArgumentNotNull(entryNameFunc, nameof(entryNameFunc));
+            Ensure.ArgumentNotNull(archive, nameof(archive));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             foreach (T item in items)
             {

@@ -5,12 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.IO.Generators;
+using AMI.Core.Providers;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Extensions.Reflection;
+using RNS.Framework.Tools;
 
 namespace AMI.Infrastructure.Services
 {
@@ -21,6 +24,7 @@ namespace AMI.Infrastructure.Services
     {
         private readonly ILogger logger;
         private readonly IApiConfiguration configuration;
+        private readonly ICustomPrincipalProvider principalProvider;
         private readonly UserManager<UserEntity> userManager;
 
         /// <summary>
@@ -29,25 +33,25 @@ namespace AMI.Infrastructure.Services
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="configuration">The API configuration.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
+        /// <param name="principalProvider">The principal provider.</param>
         /// <param name="userManager">The user manager.</param>
         public IdentityService(
             ILoggerFactory loggerFactory,
             IApiConfiguration configuration,
             IIdGenerator idGenerator,
+            ICustomPrincipalProvider principalProvider,
             UserManager<UserEntity> userManager)
         {
             logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.principalProvider = principalProvider ?? throw new ArgumentNullException(nameof(principalProvider));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         /// <inheritdoc/>
         public async Task EnsureUsersExistAsync(CancellationToken ct)
         {
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             logger.LogInformation($"{this.GetMethodName()} started");
 
@@ -99,6 +103,35 @@ namespace AMI.Infrastructure.Services
             }
 
             logger.LogInformation($"{this.GetMethodName()} ended");
+        }
+
+        /// <inheritdoc/>
+        public bool IsAuthorized(string ownerId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(ownerId))
+                {
+                    throw new ArgumentNullException(nameof(ownerId));
+                }
+
+                var principal = principalProvider.GetPrincipal();
+                if (principal == null)
+                {
+                    throw new UnexpectedNullException("Principal could not be retrieved.");
+                }
+
+                if (ownerId.Equals(principal.Identity.Name) || principal.IsInRole(RoleType.Administrator))
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, e.Message);
+            }
+
+            return false;
         }
     }
 }

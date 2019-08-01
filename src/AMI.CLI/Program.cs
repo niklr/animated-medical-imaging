@@ -20,6 +20,7 @@ using AMI.Core.Repositories;
 using AMI.Domain.Enums;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
+using AMI.Infrastructure.Providers;
 using AMI.Itk.Extensions.ServiceCollectionExtensions;
 using CommandLine;
 using FluentValidation;

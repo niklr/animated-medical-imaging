@@ -5,7 +5,7 @@
       <i class="fab fa-github"></i>
     </a>
     <ul class="right hide-on-med-and-down">
-      <ng-template [ngTemplateOutlet]="TopnavEntries"></ng-template>
+      <ng-template [ngTemplateOutlet]="showTopnavEntriesBlock"></ng-template>
       <li>
         <a id="dropdown-account-button" class="dropdown-trigger" data-target="dropdown-account-target">
           <i class="fas fa-user"></i>
@@ -13,9 +13,9 @@
       </li>
     </ul>
     <ul id="nav-mobile" class="sidenav" style="transform: translateX(-105%);">
-      <ng-template [ngTemplateOutlet]="TopnavEntries"></ng-template>
+      <ng-template [ngTemplateOutlet]="showTopnavEntriesBlock"></ng-template>
       <li><a class="subheader">Account</a></li>
-      <ng-template [ngTemplateOutlet]="AccountEntries"></ng-template>
+      <ng-template [ngTemplateOutlet]="showAccountEntriesBlock"></ng-template>
     </ul>
     <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
   </div>
@@ -23,10 +23,10 @@
 
 <!-- Dropdown Structure -->
 <ul id="dropdown-account-target" class="dropdown-content">
-  <ng-template [ngTemplateOutlet]="AccountEntries"></ng-template>
+  <ng-template [ngTemplateOutlet]="showAccountEntriesBlock"></ng-template>
 </ul>
 
-<ng-template #TopnavEntries>
+<ng-template #showTopnavEntriesBlock>
   <li *ngIf="isAdmin">
     <a [routerLink]="['/admin/logs']">Admin</a>
   </li>
@@ -37,7 +37,7 @@
   </li>
 </ng-template>
 
-<ng-template #AccountEntries>
+<ng-template #showAccountEntriesBlock>
   <li *ngIf="isAuthenticated" class="disabled">
     <a>
       &nbsp;{{identity.username}}

@@ -13,5 +13,11 @@
 
         /// <inheritdoc/>
         public string Domain { get; set; }
+
+        /// <inheritdoc/>
+        public string AuthenticationType => string.Empty;
+
+        /// <inheritdoc/>
+        public bool IsAuthenticated => true;
     }
 }

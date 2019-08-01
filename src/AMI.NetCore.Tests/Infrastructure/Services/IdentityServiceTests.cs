@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
+using AMI.NetCore.Tests.Mocks.Core;
 using Microsoft.AspNetCore.Identity;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace AMI.NetCore.Tests.Infrastructure.Services
 {
@@ -35,6 +38,37 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             Assert.IsFalse(string.IsNullOrWhiteSpace(user.PasswordHash));
             Assert.IsTrue(userManager.CheckPasswordAsync(user, password).Result);
             Assert.IsFalse(userManager.CheckPasswordAsync(user, "invalid").Result);
+        }
+
+        [TestCase("00000000-0000-0000-0000-000000000000", false)]
+        [TestCase("11111111-1111-1111-1111-111111111111", true)]
+        [TestCase("22222222-2222-2222-2222-222222222222", false)]
+        [TestCase("33333333-3333-3333-3333-333333333333", false)]
+        public void IdentityService_IsAuthorized(string ownerId, bool expected)
+        {
+            //  Arrange
+            var service = GetService<IIdentityService>();
+
+            // Act
+            bool actual = service.IsAuthorized(ownerId);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void IdentityService_IsAuthorized_Administrator()
+        {
+            //  Arrange
+            var service = GetService<IIdentityService>();
+            TestExecutionContext.CurrentContext.CurrentPrincipal = new MockPrincipal(
+                "22222222-2222-2222-2222-222222222222", new RoleType[] { RoleType.Administrator });
+
+            // Act
+            bool actual = service.IsAuthorized("33333333-3333-3333-3333-333333333333");
+
+            // Assert
+            Assert.AreEqual(true, actual);
         }
     }
 }

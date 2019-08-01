@@ -20,6 +20,7 @@ using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Itk.Extensions.ServiceCollectionExtensions;
 using AMI.NetCore.Tests.Mocks.Core.Factories;
+using AMI.NetCore.Tests.Mocks.Core.Providers;
 using AMI.Persistence.EntityFramework.InMemory;
 using FluentValidation;
 using MediatR;
