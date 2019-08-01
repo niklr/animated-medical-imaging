@@ -4,12 +4,14 @@ import { AuthService } from '../services/auth.service';
 @Injectable()
 export class BaseProxy {
 
-  constructor(private authService: AuthService) {
+  constructor(protected authService: AuthService) {
   }
 
   public preflight(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
+        // console.log('authService.isAuthenticated: ' + this.authService.isAuthenticated);
+        // console.log('authService.isExpired: ' + this.authService.isExpired);
         if (this.authService.isAuthenticated && this.authService.isExpired) {
           this.authService.refresh().then(() => {
             resolve();

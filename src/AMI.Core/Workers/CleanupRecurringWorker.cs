@@ -47,7 +47,7 @@ namespace AMI.Core.Workers
 
             if (configuration.Options.CleanupPeriod > 0)
             {
-                await CleanupOnStartupAsync(cancellationToken);
+                // await CleanupOnStartupAsync(cancellationToken);
                 Schedule(cancellationToken);
             }
 

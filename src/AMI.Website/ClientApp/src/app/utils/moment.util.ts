@@ -24,6 +24,10 @@ export class MomentUtil {
     return this.getLocal(date).format('L');
   }
 
+  public getDiffInSeconds(date) {
+    return moment().diff(date, 'seconds');
+  }
+
   public getDiffInMinutes(date) {
     return moment().diff(date, 'minutes');
   }

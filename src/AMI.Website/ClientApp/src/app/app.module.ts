@@ -71,7 +71,7 @@ export function initBaseAmiApi() {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      deps: [TokenStore],
+      deps: [TokenStore, MomentUtil],
       multi: true
     },
     {

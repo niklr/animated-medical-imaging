@@ -28,14 +28,14 @@
             </button>
             <!-- Dropdown Structure -->
             <ul id="objectActionsDropdownTarget" class="dropdown-content">
-              <li (click)="objectService.processSelectedObjects()"><a href="javascript:void(0)">
+              <li (click)="objectService.processSelectedObjects()"><a>
                   <i class="fas fa-rocket"></i> Process selected</a>
               </li>
-              <li (click)="objectService.downloadSelectedObjects()"><a href="javascript:void(0)">
+              <li (click)="objectService.downloadSelectedObjects()"><a>
                   <i class="fas fa-file-download"></i> Download selected</a>
               </li>
               <li class="divider" tabindex="-1"></li>
-              <li (click)="objectService.deleteSelectedObjects()"><a href="javascript:void(0)" class="red-text">
+              <li (click)="objectService.deleteSelectedObjects()"><a class="red-text">
                   <i class="far fa-trash-alt"></i> Delete selectd</a>
               </li>
             </ul>
@@ -60,7 +60,7 @@
     <div class="card-content">
       <p class="caption wrapword full-width custom-card-content-caption">
         <i class="fas fa-info-circle"></i>
-        Results are deleted automatically older than {{cleanupPeriod}} minutes (based on their creation date).
+        Results older than {{cleanupPeriod}} minutes are deleted automatically (based on the creation date).
       </p>
     </div>
   </div>

@@ -7,8 +7,7 @@
     <ul class="right hide-on-med-and-down">
       <ng-template [ngTemplateOutlet]="TopnavEntries"></ng-template>
       <li>
-        <a id="dropdown-account-button" class="dropdown-trigger" href="javascript:void(0)"
-          data-target="dropdown-account-target">
+        <a id="dropdown-account-button" class="dropdown-trigger" data-target="dropdown-account-target">
           <i class="fas fa-user"></i>
         </a>
       </li>
@@ -32,7 +31,7 @@
     <a [routerLink]="['/admin/logs']">Admin</a>
   </li>
   <li *ngIf="isAuthenticated">
-    <a href="javascript:void(0)">
+    <a>
       <app-common-guid-badge [guid]="identity.sub"></app-common-guid-badge>
     </a>
   </li>
@@ -40,12 +39,12 @@
 
 <ng-template #AccountEntries>
   <li *ngIf="isAuthenticated" class="disabled">
-    <a href="javascript:void(0)">
+    <a>
       &nbsp;{{identity.username}}
     </a>
   </li>
   <li (click)="logout()" *ngIf="showLogout">
-    <a href="javascript:void(0)">
+    <a>
       <i class="fas fa-power-off"></i>&nbsp;Logout
     </a>
   </li>

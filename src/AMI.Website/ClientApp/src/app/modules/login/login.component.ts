@@ -44,4 +44,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
+    anonymous($event: any): void {
+        $event.preventDefault();
+        this.authService.logout();
+        this.authService.init().then(
+            (s) => {
+                setTimeout(() => {
+                    this.router.navigate(['/']);
+                }, 100);
+            },
+            (e) => {
+                this.loginFormGroup.reset();
+            });
+    }
 }

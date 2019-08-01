@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { IIdTokenModel } from '../../../../clients/ami-api-client';
 import { RoleType } from '../../../../enums';
 import { AuthService } from '../../../../services/auth.service';
+import { LoggerService } from '../../../../services/logger.service';
 
 @Component({
   selector: 'app-topnav',
@@ -11,7 +12,7 @@ import { AuthService } from '../../../../services/auth.service';
 })
 export class TopnavComponent implements OnInit, AfterViewInit {
 
-  constructor(public router: Router, private authService: AuthService) {
+  constructor(public router: Router, private authService: AuthService, private logger: LoggerService) {
   }
 
   ngOnInit() {
@@ -51,6 +52,9 @@ export class TopnavComponent implements OnInit, AfterViewInit {
 
   public logout(): void {
     this.authService.logout();
-    this.authService.init();
+    this.authService.init().then(() => {
+    }, (e) => {
+      this.logger.error(e);
+    });
   }
 }

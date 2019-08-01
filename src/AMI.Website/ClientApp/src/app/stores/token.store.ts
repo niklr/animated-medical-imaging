@@ -1,18 +1,32 @@
 import { Injectable } from '@angular/core';
 import { TokenContainerModel } from '../clients/ami-api-client';
+import { MomentUtil } from '../utils';
 
 @Injectable()
 export class TokenStore {
 
     private container: TokenContainerModel;
 
-    constructor() {
+    constructor(private momentUtil: MomentUtil) {
     }
 
     public clear(): void {
         this.container = undefined;
         localStorage.removeItem('tokenContainer');
     }
+
+    public get isExpired(): boolean {
+        try {
+          const exp = this.getAccessTokenExpiration();
+          if (!!exp && exp > 0) {
+            const diff = this.momentUtil.getDiffInSeconds(this.momentUtil.getFromUnix(exp));
+            return diff >= 0;
+          }
+          return true;
+        } catch (error) {
+          return true;
+        }
+      }
 
     public getAccessToken(): string {
         this.loadTokenContainer();

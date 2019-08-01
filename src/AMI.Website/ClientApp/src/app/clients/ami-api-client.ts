@@ -70,7 +70,49 @@ export class ApiOptionsAmiApiClient implements IApiOptionsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -149,7 +191,49 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -240,7 +324,49 @@ export class AppLogsAmiApiClient implements IAppLogsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -319,7 +445,49 @@ export class AppOptionsAmiApiClient implements IAppOptionsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -434,7 +602,49 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -497,7 +707,49 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -560,7 +812,49 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -649,7 +943,49 @@ export class ObjectsAmiApiClient implements IObjectsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -728,7 +1064,49 @@ export class PingAmiApiClient implements IPingAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -825,7 +1203,49 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -891,7 +1311,49 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -950,7 +1412,49 @@ export class ResultsAmiApiClient implements IResultsAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -1037,7 +1541,49 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -1101,7 +1647,49 @@ export class TasksAmiApiClient implements ITasksAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -1197,7 +1785,49 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -1261,7 +1891,49 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -1320,7 +1992,49 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 500) {
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result500: any = null;
             let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
@@ -1947,6 +2661,8 @@ export class ObjectModel implements IObjectModel {
     sourcePath?: string | undefined;
     /** Gets or sets the extracted/uncompressed path (directory). */
     extractedPath?: string | undefined;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the latest task. */
     latestTask?: TaskModel | undefined;
 
@@ -1969,6 +2685,7 @@ export class ObjectModel implements IObjectModel {
             this.originalFilename = data["originalFilename"];
             this.sourcePath = data["sourcePath"];
             this.extractedPath = data["extractedPath"];
+            this.userId = data["userId"];
             this.latestTask = data["latestTask"] ? TaskModel.fromJS(data["latestTask"]) : <any>undefined;
         }
     }
@@ -1990,6 +2707,7 @@ export class ObjectModel implements IObjectModel {
         data["originalFilename"] = this.originalFilename;
         data["sourcePath"] = this.sourcePath;
         data["extractedPath"] = this.extractedPath;
+        data["userId"] = this.userId;
         data["latestTask"] = this.latestTask ? this.latestTask.toJSON() : <any>undefined;
         return data; 
     }
@@ -2013,6 +2731,8 @@ export interface IObjectModel {
     sourcePath?: string | undefined;
     /** Gets or sets the extracted/uncompressed path (directory). */
     extractedPath?: string | undefined;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the latest task. */
     latestTask?: TaskModel | undefined;
 }
@@ -2054,6 +2774,8 @@ export class TaskModel implements ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the command used to create this task. */
     command?: BaseCommand | undefined;
     /** Gets or sets the result associated with this task. */
@@ -2079,6 +2801,7 @@ export class TaskModel implements ITaskModel {
             this.message = data["message"];
             this.position = data["position"];
             this.progress = data["progress"];
+            this.userId = data["userId"];
             this.command = data["command"] ? BaseCommand.fromJS(data["command"]) : <any>undefined;
             this.result = data["result"] ? BaseResultModel.fromJS(data["result"]) : <any>undefined;
             this.object = data["object"] ? ObjectModel.fromJS(data["object"]) : <any>undefined;
@@ -2101,6 +2824,7 @@ export class TaskModel implements ITaskModel {
         data["message"] = this.message;
         data["position"] = this.position;
         data["progress"] = this.progress;
+        data["userId"] = this.userId;
         data["command"] = this.command ? this.command.toJSON() : <any>undefined;
         data["result"] = this.result ? this.result.toJSON() : <any>undefined;
         data["object"] = this.object ? this.object.toJSON() : <any>undefined;
@@ -2124,6 +2848,8 @@ export interface ITaskModel {
     position?: number;
     /** Gets or sets the progress (0-100). */
     progress?: number;
+    /** Gets or sets the user identifier. */
+    userId?: string | undefined;
     /** Gets or sets the command used to create this task. */
     command?: BaseCommand | undefined;
     /** Gets or sets the result associated with this task. */

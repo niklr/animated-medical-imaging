@@ -7,7 +7,7 @@ import { IClientOptions } from '../models/client-options.model';
 @Injectable()
 export class ConfigService {
 
-  static isInitialized: boolean = false;
+  static isInitialized = false;
   static options: IClientOptions;
   static apiOptions: IApiOptions;
 

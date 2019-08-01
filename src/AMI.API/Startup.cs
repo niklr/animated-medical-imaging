@@ -156,6 +156,12 @@ namespace AMI.API
             services.AddMvc(options =>
                 {
                     options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.BadRequest));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.Unauthorized));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.Forbidden));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.NotFound));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.Conflict));
+                    options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.TooManyRequests));
                     options.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorModel), (int)HttpStatusCode.InternalServerError));
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)

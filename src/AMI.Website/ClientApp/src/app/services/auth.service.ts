@@ -12,7 +12,6 @@ import { GarbageCollector, MomentUtil } from '../utils';
 export class AuthService extends BaseService {
 
   private isInitialized: boolean;
-  private refreshRetryCount = 0;
 
   public user: IdentityModel;
 
@@ -55,16 +54,7 @@ export class AuthService extends BaseService {
   }
 
   public get isExpired(): boolean {
-    try {
-      const exp = this.tokenService.getAccessTokenExpiration();
-      if (!!exp && exp > 0) {
-        const diff = this.momentUtil.getDiffInMinutes(this.momentUtil.getFromUnix(exp));
-        return diff >= -2;
-      }
-      return true;
-    } catch (error) {
-      return true;
-    }
+    return this.tokenService.isExpired;
   }
 
   public async login(username: string, password: string): Promise<void> {
@@ -87,6 +77,8 @@ export class AuthService extends BaseService {
             this.handleAuthError(e, message);
             throw e;
           });
+    }, (e) => {
+      this.logger.error(e);
     });
   }
 
@@ -148,19 +140,9 @@ export class AuthService extends BaseService {
       }).then(
         (s) => {
           this.setUser();
-          this.refreshRetryCount = 0;
         },
         (e) => {
           this.handleAuthError(e, defaultMessage);
-          // 400: stale refresh token / invalid_grant
-          if (!!e.status && e.status === 400) {
-            if (this.refreshRetryCount >= 3) {
-              this.refreshRetryCount = 0;
-              this.logout();
-            } else {
-              this.refreshRetryCount += 1;
-            }
-          }
           throw e;
         });
   }

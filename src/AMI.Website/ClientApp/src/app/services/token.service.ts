@@ -11,7 +11,7 @@ import { GarbageCollector } from '../utils';
 export class TokenService extends BaseService {
 
   private container: TokenContainerModel;
-  private isRefreshing: boolean = false;
+  private refreshingPromise: Promise<void>;
 
   constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
               private tokenStore: TokenStore, private tokenProxy: TokenProxy) {
@@ -26,6 +26,10 @@ export class TokenService extends BaseService {
     this.logger.info('TokenService.clear() called');
     this.container = undefined;
     this.tokenStore.clear();
+  }
+
+  public get isExpired(): boolean {
+    return this.tokenStore.isExpired;
   }
 
   public getAccessToken(): string {
@@ -102,14 +106,12 @@ export class TokenService extends BaseService {
   }
 
   public refreshToken(): Promise<void> {
-    if (this.isRefreshing) {
-      return new Promise<void>(async (resolve, reject) => {
-        resolve();
-      });
+    this.logger.info('TokenService.refreshToken isRefreshing: ' + !!this.refreshingPromise);
+    if (!!this.refreshingPromise) {
+      return this.refreshingPromise;
     } else {
-      return new Promise<void>(async (resolve, reject) => {
+      this.refreshingPromise = new Promise<void>(async (resolve, reject) => {
         try {
-          this.isRefreshing = true;
           this.loadTokenContainer();
           if (this.container) {
             this.tokenProxy.update(this.container).subscribe(result => {
@@ -125,8 +127,9 @@ export class TokenService extends BaseService {
           reject(error);
         }
       }).finally(() => {
-        this.isRefreshing = false;
+        this.refreshingPromise = undefined;
       });
+      return this.refreshingPromise;
     }
   }
 

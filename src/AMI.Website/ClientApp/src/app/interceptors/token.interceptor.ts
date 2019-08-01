@@ -16,9 +16,9 @@ constructor(public tokenStore: TokenStore) {}
  */
 intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // Exclude interceptor for api-options requests on startup 
+    // Exclude interceptor on startup or if token is expired
     // to prevent expired token exception
-    if (ConfigService.isInitialized) {
+    if (ConfigService.isInitialized && !this.tokenStore.isExpired) {
         const token = this.tokenStore.getAccessToken();
         if (token) {
             request = request.clone({

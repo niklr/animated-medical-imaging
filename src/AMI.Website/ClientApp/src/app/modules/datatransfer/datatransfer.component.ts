@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ConfigService } from '../../services/config.service';
+import { LoggerService } from '../../services/logger.service';
 import { TokenService } from '../../services/token.service';
 
 @Component({
@@ -9,18 +10,18 @@ import { TokenService } from '../../services/token.service';
 })
 export class DatatransferComponent implements OnInit {
 
-  constructor(private authService: AuthService, private tokenService: TokenService) { }
+  constructor( private authService: AuthService, private logger: LoggerService, private tokenService: TokenService) { }
 
   ngOnInit() {
-    var config = {
+    const config = {
       core: {
         showUploadDropzone: true,
         paginationRppOptions: [5, 10, 25],
         preprocessHashEnabled: false,
         preprocessHashChecked: false,
-        parseMessageCallback: function (message) {
+        parseMessageCallback: (message: any) => {
           try {
-            var result = JSON.parse(message);
+            const result = JSON.parse(message);
             return result.id;
           } catch (e) {
             return message;
@@ -49,17 +50,20 @@ export class DatatransferComponent implements OnInit {
         }.bind(this)
       }
     };
-    var event = new CustomEvent('github:niklr/angular-material-datatransfer.create', { 'detail': config });
+    const event = new CustomEvent('github:niklr/angular-material-datatransfer.create', { detail: config });
     document.dispatchEvent(event);
   }
 
   private get getHeaders(): any {
     if (this.authService.isAuthenticated && this.authService.isExpired) {
-      this.authService.refresh();
+      this.authService.refresh().then(() => {
+      }, (e) => {
+        this.logger.error(e);
+      });
     }
 
     const bearerHeader = {
-      'Authorization': `Bearer ${this.tokenService.getAccessToken()}`,
+      Authorization: `Bearer ${this.tokenService.getAccessToken()}`,
     };
     return bearerHeader;
   }
