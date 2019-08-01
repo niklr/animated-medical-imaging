@@ -24,12 +24,17 @@ export class ObjectStore {
   private initGateway(): void {
     this.gateway.on(GatewayEvent[GatewayEvent.UpdateTask], (data: TaskModel) => {
       if (data && data.object && data.object.id) {
-        const index = this.items.findIndex((item) => {
-          return item.id === data.object.id;
+        const index = this.items.findIndex((current) => {
+          return current.id === data.object.id;
         });
         if (index >= 0) {
           this.items[index].latestTask = data;
         }
+      }
+    });
+    this.gateway.on(GatewayEvent[GatewayEvent.CreateObject], (data: ObjectModel) => {
+      if (data && data.id) {
+        this.addItem(data as ObjectModelExtended);
       }
     });
     this.gateway.on(GatewayEvent[GatewayEvent.DeleteObject], (data: ObjectModel) => {
@@ -41,6 +46,16 @@ export class ObjectStore {
 
   private updateCount(): void {
     this.count = this.items.length;
+  }
+
+  private addItem(item: ObjectModelExtended): void {
+    const index = this.items.findIndex((current) => {
+      return current.id === item.id;
+    });
+    if (index < 0) {
+      this.items.unshift(item);
+      this.updateCount();
+    }
   }
 
   public getItems(): ObjectModelExtended[] {

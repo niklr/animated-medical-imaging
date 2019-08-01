@@ -6,9 +6,16 @@
     public interface IGatewayGroupNameBuilder
     {
         /// <summary>
-        /// Builds the default name of the gateway group.
+        /// Builds the gateway group name for administrators.
         /// </summary>
-        /// <returns>The name of the default gateway group.</returns>
-        string BuildDefaultGroupName();
+        /// <returns>The gateway group name for administrators.</returns>
+        string BuildAdministratorGroupName();
+
+        /// <summary>
+        /// Builds the gateway group name for the specified user identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns>The gateway group name for the specified user identifier.</returns>
+        string BuildUserIdGroupName(string userId);
     }
 }

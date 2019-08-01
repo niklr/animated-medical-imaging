@@ -1104,7 +1104,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/results/{id}/images/{filename}": {
@@ -1311,7 +1316,12 @@
           "200": {
             "description": "A stream containing the result as an archive."
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/tasks/{id}": {
@@ -1416,7 +1426,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/tasks": {
@@ -1521,7 +1536,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
       }
     },
     "/tokens": {

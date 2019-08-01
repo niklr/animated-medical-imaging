@@ -20,7 +20,7 @@
         <i class="material-icons caret right">keyboard_arrow_right</i>
       </div>
       <div class="collapsible-body">
-        <app-processing-settings *ngIf="connectionState === 'Connected'"></app-processing-settings>
+        <app-processing-settings></app-processing-settings>
       </div>
     </li>
     <li class="active">
@@ -29,7 +29,7 @@
         <i class="material-icons caret right">keyboard_arrow_right</i>
       </div>
       <div class="collapsible-body">
-        <app-processing-objects *ngIf="connectionState === 'Connected'"></app-processing-objects>
+        <app-processing-objects></app-processing-objects>
       </div>
     </li>
     <li class="active">
@@ -38,7 +38,7 @@
         <i class="material-icons caret right">keyboard_arrow_right</i>
       </div>
       <div class="collapsible-body">
-        <app-datatransfer *ngIf="connectionState === 'Connected'"></app-datatransfer>
+        <app-datatransfer></app-datatransfer>
       </div>
     </li>
   </ul>

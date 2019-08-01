@@ -8,9 +8,15 @@ namespace AMI.Infrastructure.IO.Builders
     public class GatewayGroupNameBuilder : IGatewayGroupNameBuilder
     {
         /// <inheritdoc/>
-        public string BuildDefaultGroupName()
+        public string BuildAdministratorGroupName()
         {
-            return "DefaultGatewayGroup";
+            return "AdministratorGatewayGroup";
+        }
+
+        /// <inheritdoc/>
+        public string BuildUserIdGroupName(string userId)
+        {
+            return $"UserIdGatewayGroup_{userId}";
         }
     }
 }

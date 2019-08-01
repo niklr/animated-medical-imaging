@@ -12,6 +12,7 @@ using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Entities.Objects.Commands.Create
@@ -97,7 +98,11 @@ namespace AMI.Core.Entities.Objects.Commands.Create
 
             Context.CommitTransaction();
 
-            return ObjectModel.Create(entity);
+            var result = ObjectModel.Create(entity);
+
+            await Gateway.NotifyGroupsAsync(entity.UserId, GatewayOpCode.Dispatch, GatewayEvent.CreateObject, result, cancellationToken);
+
+            return result;
         }
     }
 }

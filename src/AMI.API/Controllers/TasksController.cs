@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AMI.Core.Entities.Tasks.Commands.Create;
 using AMI.Core.Entities.Tasks.Queries.GetById;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models = AMI.Core.Entities.Models;
 
@@ -24,6 +25,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A model containing the specified task.</returns>
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Models.TaskModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
         {
@@ -39,6 +41,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A model containing the created task.</returns>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(Models.TaskModel), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] CreateTaskCommand command)
         {

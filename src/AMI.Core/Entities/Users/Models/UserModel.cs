@@ -44,7 +44,7 @@ namespace AMI.Core.Entities.Models
         /// <returns>The domain entity as a model.</returns>
         public static UserModel Create(UserEntity entity, IApplicationConstants constants)
         {
-            if (entity == null)
+            if (entity == null || constants == null)
             {
                 return null;
             }

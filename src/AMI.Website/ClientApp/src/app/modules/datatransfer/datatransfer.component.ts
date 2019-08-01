@@ -56,7 +56,7 @@ export class DatatransferComponent implements OnInit {
 
   private get getHeaders(): any {
     if (this.authService.isAuthenticated && this.authService.isExpired) {
-      this.authService.refresh().then(() => {
+      this.authService.refresh(false).then(() => {
       }, (e) => {
         this.logger.error(e);
       });

@@ -6,7 +6,7 @@ import { LoggerService } from './logger.service';
 import { TokenService } from './token.service';
 import { GatewayHub } from '../hubs';
 import { IdentityModel } from '../models/identity.model';
-import { GarbageCollector, MomentUtil } from '../utils';
+import { GarbageCollector, BackgroundWorker } from '../utils';
 
 @Injectable()
 export class AuthService extends BaseService {
@@ -16,13 +16,22 @@ export class AuthService extends BaseService {
   public user: IdentityModel;
 
   constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
-              private gateway: GatewayHub, private tokenService: TokenService, private momentUtil: MomentUtil) {
+              private worker: BackgroundWorker, private gateway: GatewayHub, private tokenService: TokenService) {
     super(gc, notificationService, logger);
 
     this.isInitialized = false;
 
-    gc.attach(() => {
+    this.gc.attach(() => {
       this.clear();
+    });
+
+    this.worker.attach(() => {
+      if (this.isAuthenticated && this.isExpired) {
+        this.refresh(true).then(() => {
+        }, (e) => {
+          this.logger.error(e);
+        });
+      }
     });
   }
 
@@ -102,7 +111,7 @@ export class AuthService extends BaseService {
           };
           // Check if refresh token is existing
           if (this.tokenService.getRefreshToken()) {
-            return this.refresh().then(() => {
+            return this.refresh(false).then(() => {
               extendedResolve();
             }, (e) => {
               extendedReject(e);
@@ -128,7 +137,7 @@ export class AuthService extends BaseService {
     });
   }
 
-  public async refresh(): Promise<void> {
+  public async refresh(silent: boolean): Promise<void> {
     const defaultMessage = 'Refreshing authentication failed. Try to logout and login again.';
     return this.tokenService.refreshToken().then(
       (s) => {
@@ -142,7 +151,9 @@ export class AuthService extends BaseService {
           this.setUser();
         },
         (e) => {
-          this.handleAuthError(e, defaultMessage);
+          if (!silent) {
+            this.handleAuthError(e, defaultMessage);
+          }
           throw e;
         });
   }

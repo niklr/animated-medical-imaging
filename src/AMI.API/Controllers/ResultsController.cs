@@ -1,9 +1,9 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Results.Queries.GetById;
 using AMI.Core.Entities.Results.Queries.GetImage;
 using AMI.Core.Entities.Results.Queries.GetZip;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models = AMI.Core.Entities.Models;
 
@@ -26,6 +26,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A model containing the specified result.</returns>
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Models.ResultModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
         {
@@ -58,6 +59,7 @@ namespace AMI.API.Controllers
         /// </remarks>
         /// <returns>A stream containing the result as an archive.</returns>
         [HttpGet("{id}/download")]
+        [Authorize]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> DownloadById(string id)
         {

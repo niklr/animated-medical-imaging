@@ -48,11 +48,16 @@ namespace AMI.Core.Workers
 
                 StartWatch();
 
-                await UpdateStatus(item, Domain.Enums.TaskStatus.Processing, string.Empty, ct);
-                await UpdatePositionsAsync();
-
-                if (item.Command != null)
+                if (item.Command == null)
                 {
+                    await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
+                    await UpdatePositionsAsync();
+                }
+                else
+                {
+                    await UpdateStatus(item, Domain.Enums.TaskStatus.Processing, string.Empty, ct);
+                    await UpdatePositionsAsync();
+
                     switch (item.Command.CommandType)
                     {
                         case CommandType.ProcessObjectCommand:
