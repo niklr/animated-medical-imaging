@@ -1,9 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Queries;
 using AMI.Core.Modules;
+using AMI.Domain.Entities;
+using AMI.Domain.Enums;
+using AMI.Domain.Exceptions;
+using RNS.Framework.Search;
 
 namespace AMI.Core.Entities.Objects.Queries.GetObjects
 {
@@ -24,10 +30,22 @@ namespace AMI.Core.Entities.Objects.Queries.GetObjects
         /// <inheritdoc/>
         protected override async Task<PaginationResultModel<ObjectModel>> ProtectedHandleAsync(GetObjectsQuery request, CancellationToken cancellationToken)
         {
+            var principal = PrincipalProvider.GetPrincipal();
+            if (principal == null)
+            {
+                throw new ForbiddenException("Not authenticated");
+            }
+
+            Expression<Func<ObjectEntity, bool>> expression = PredicateBuilder.True<ObjectEntity>();
+            if (!principal.IsInRole(RoleType.Administrator))
+            {
+                expression = expression.And(e => e.UserId == principal.Identity.Name);
+            }
+
             int total = await Context.ObjectRepository.CountAsync(cancellationToken);
 
             var query = Context.ObjectRepository
-                .GetQuery()
+                .GetQuery(expression)
                 .Select(e => new
                 {
                     Object = e,

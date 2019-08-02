@@ -48,6 +48,11 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
                 throw new NotFoundException(nameof(TaskEntity), request.Id);
             }
 
+            if (!IdentityService.IsAuthorized(entity.UserId))
+            {
+                throw new ForbiddenException("Not authorized");
+            }
+
             entity.ModifiedDate = DateTime.UtcNow;
             entity.Status = (int)request.Status;
             entity.Message = request.Message;

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Queries;
 using AMI.Core.Modules;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
+using RNS.Framework.Search;
 
 namespace AMI.Core.Entities.Objects.Queries.GetById
 {
@@ -27,9 +30,23 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
         /// <inheritdoc/>
         protected override async Task<ObjectModel> ProtectedHandleAsync(GetByIdQuery request, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var principal = PrincipalProvider.GetPrincipal();
+            if (principal == null)
+            {
+                throw new ForbiddenException("Not authenticated");
+            }
+
+            Expression<Func<ObjectEntity, bool>> expression = PredicateBuilder.Create<ObjectEntity>(e => e.Id == Guid.Parse(request.Id));
+            if (!principal.IsInRole(RoleType.Administrator))
+            {
+                expression = expression.And(e => e.UserId == principal.Identity.Name);
+            }
+
             var result = Context.ObjectRepository
                 .GetQuery()
-                .Where(e => e.Id == Guid.Parse(request.Id))
+                .Where(expression)
                 .Select(e => new
                 {
                     Object = e,

@@ -31,7 +31,13 @@ namespace AMI.API.Providers
         /// <inheritdoc/>
         public ICustomPrincipal GetPrincipal()
         {
-            return new CustomPrincipal(configuration?.Options?.AuthOptions?.JwtOptions, accessor?.HttpContext?.User);
+            if (accessor.HttpContext == null)
+            {
+                // If the HttpContext is null the request was initiated by a background worker.
+                return new WorkerPrincipal();
+            }
+
+            return new CustomPrincipal(configuration.Options?.AuthOptions?.JwtOptions, accessor.HttpContext?.User);
         }
     }
 }

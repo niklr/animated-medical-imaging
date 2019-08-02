@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Queries;
 using AMI.Core.Modules;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
+using RNS.Framework.Search;
 
 namespace AMI.Core.Entities.Tasks.Queries.GetById
 {
@@ -29,9 +32,21 @@ namespace AMI.Core.Entities.Tasks.Queries.GetById
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            var principal = PrincipalProvider.GetPrincipal();
+            if (principal == null)
+            {
+                throw new ForbiddenException("Not authenticated");
+            }
+
+            Expression<Func<TaskEntity, bool>> expression = PredicateBuilder.Create<TaskEntity>(e => e.Id == Guid.Parse(request.Id));
+            if (!principal.IsInRole(RoleType.Administrator))
+            {
+                expression = expression.And(e => e.Object.UserId == principal.Identity.Name);
+            }
+
             var result = Context.TaskRepository
                 .GetQuery()
-                .Where(e => e.Id == Guid.Parse(request.Id))
+                .Where(expression)
                 .Select(e => new
                 {
                     Task = e,

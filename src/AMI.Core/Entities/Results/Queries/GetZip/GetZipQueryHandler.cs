@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
@@ -12,6 +13,7 @@ using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
+using RNS.Framework.Search;
 
 namespace AMI.Core.Entities.Results.Queries.GetZip
 {
@@ -52,8 +54,19 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
         /// <inheritdoc/>
         protected override async Task<FileByteResultModel> ProtectedHandleAsync(GetZipQuery request, CancellationToken cancellationToken)
         {
-            var entity = await Context.ResultRepository
-                .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
+            var principal = PrincipalProvider.GetPrincipal();
+            if (principal == null)
+            {
+                throw new ForbiddenException("Not authenticated");
+            }
+
+            Expression<Func<ResultEntity, bool>> expression = PredicateBuilder.Create<ResultEntity>(e => e.Id == Guid.Parse(request.Id));
+            if (!principal.IsInRole(RoleType.Administrator))
+            {
+                expression = expression.And(e => e.Task.Object.UserId == principal.Identity.Name);
+            }
+
+            var entity = await Context.ResultRepository.GetFirstOrDefaultAsync(expression, cancellationToken);
 
             if (entity == null)
             {
