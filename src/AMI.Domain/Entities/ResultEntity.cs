@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace AMI.Domain.Entities
 {
@@ -49,8 +48,8 @@ namespace AMI.Domain.Entities
         public string ResultSerialized { get; set; }
 
         /// <summary>
-        /// Gets or sets the tasks.
+        /// Gets or sets the task.
         /// </summary>
-        public ICollection<TaskEntity> Tasks { get; set; }
+        public TaskEntity Task { get; set; }
     }
 }

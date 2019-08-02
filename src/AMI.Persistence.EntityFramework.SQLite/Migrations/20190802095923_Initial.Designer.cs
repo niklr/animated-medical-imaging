@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190731102932_Initial")]
+    [Migration("20190802095923_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,7 +121,8 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("ResultId");
+                    b.HasIndex("ResultId")
+                        .IsUnique();
 
                     b.HasIndex("Status");
 
@@ -227,8 +228,8 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AMI.Domain.Entities.ResultEntity", "Result")
-                        .WithMany("Tasks")
-                        .HasForeignKey("ResultId");
+                        .WithOne("Task")
+                        .HasForeignKey("AMI.Domain.Entities.TaskEntity", "ResultId");
                 });
 
             modelBuilder.Entity("AMI.Domain.Entities.TokenEntity", b =>

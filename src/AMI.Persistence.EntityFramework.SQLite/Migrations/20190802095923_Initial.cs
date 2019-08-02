@@ -157,7 +157,8 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_ResultId",
                 table: "Tasks",
-                column: "ResultId");
+                column: "ResultId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_Status",

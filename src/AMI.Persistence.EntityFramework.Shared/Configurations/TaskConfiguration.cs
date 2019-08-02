@@ -36,8 +36,8 @@ namespace AMI.Persistence.InMemory.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Result)
-                .WithMany(e => e.Tasks)
-                .HasForeignKey(e => e.ResultId)
+                .WithOne(e => e.Task)
+                .HasForeignKey<TaskEntity>(e => e.ResultId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             // Indexes
