@@ -3,39 +3,33 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.IO.Serializers;
-using AMI.Core.Repositories;
+using AMI.Core.Entities.Shared.Queries;
+using AMI.Core.Modules;
 using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
-using MediatR;
 
 namespace AMI.Core.Entities.Tasks.Queries.GetById
 {
     /// <summary>
-    /// A handler for queries to get an object by its identifier.
+    /// A query handler to get an object by its identifier.
     /// </summary>
-    public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, TaskModel>
+    public class GetByIdQueryHandler : BaseQueryRequestHandler<GetByIdQuery, TaskModel>
     {
-        private readonly IAmiUnitOfWork context;
-        private readonly IDefaultJsonSerializer serializer;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GetByIdQueryHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="serializer">The JSON serializer.</param>
-        public GetByIdQueryHandler(IAmiUnitOfWork context, IDefaultJsonSerializer serializer)
+        /// <param name="module">The query handler module.</param>
+        public GetByIdQueryHandler(IQueryHandlerModule module)
+            : base(module)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
         /// <inheritdoc/>
-        public async Task<TaskModel> Handle(GetByIdQuery request, CancellationToken cancellationToken)
+        protected override async Task<TaskModel> ProtectedHandleAsync(GetByIdQuery request, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var result = context.TaskRepository
+            var result = Context.TaskRepository
                 .GetQuery()
                 .Where(e => e.Id == Guid.Parse(request.Id))
                 .Select(e => new
@@ -51,7 +45,7 @@ namespace AMI.Core.Entities.Tasks.Queries.GetById
                 throw new NotFoundException(nameof(ObjectEntity), request.Id);
             }
 
-            var model = TaskModel.Create(result.Task, result.Object, result.Result, serializer);
+            var model = TaskModel.Create(result.Task, result.Object, result.Result, Serializer);
 
             await Task.CompletedTask;
 

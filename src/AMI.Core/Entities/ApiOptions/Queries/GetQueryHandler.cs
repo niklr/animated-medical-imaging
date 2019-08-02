@@ -2,35 +2,31 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
-using MediatR;
+using AMI.Core.Entities.Shared.Queries;
+using AMI.Core.Modules;
 
 namespace AMI.Core.Entities.ApiOptions.Queries
 {
     /// <summary>
-    /// A handler for the query to get the application options.
+    /// A query handler to get the application options.
     /// </summary>
-    public class GetQueryHandler : IRequestHandler<GetQuery, Models.ApiOptions>
+    public class GetQueryHandler : BaseQueryRequestHandler<GetQuery, Models.ApiOptions>
     {
         private readonly IApiConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetQueryHandler"/> class.
         /// </summary>
+        /// <param name="module">The query handler module.</param>
         /// <param name="configuration">The configuration.</param>
-        /// <exception cref="ArgumentNullException">configuration</exception>
-        public GetQueryHandler(IApiConfiguration configuration)
+        public GetQueryHandler(IQueryHandlerModule module, IApiConfiguration configuration)
+            : base(module)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        /// <summary>
-        /// Handles the specified request.
-        /// </summary>
-        /// <param name="request">The query request.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A task that represents the asynchronous operation.
-        /// The task result contains the application options.</returns>
-        public Task<Models.ApiOptions> Handle(GetQuery request, CancellationToken cancellationToken)
+        /// <inheritdoc/>
+        protected override Task<Models.ApiOptions> ProtectedHandleAsync(GetQuery request, CancellationToken cancellationToken)
         {
             return Task.FromResult(configuration.Clone());
         }

@@ -4,25 +4,22 @@ using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
-using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
+using AMI.Core.Entities.Shared.Queries;
 using AMI.Core.IO.Writers;
-using AMI.Core.Repositories;
+using AMI.Core.Modules;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
-using MediatR;
 
 namespace AMI.Core.Entities.Results.Queries.GetZip
 {
     /// <summary>
-    /// A handler for the query to get the result as a zip.
+    /// A query handler to get the result as a zip.
     /// </summary>
-    public class GetZipQueryHandler : IRequestHandler<GetZipQuery, FileByteResultModel>
+    public class GetZipQueryHandler : BaseQueryRequestHandler<GetZipQuery, FileByteResultModel>
     {
-        private readonly IAmiUnitOfWork context;
-        private readonly IApplicationConstants constants;
         private readonly IAppConfiguration configuration;
         private readonly IArchiveWriter writer;
         private readonly IFileSystem fileSystem;
@@ -30,20 +27,17 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
         /// <summary>
         /// Initializes a new instance of the <see cref="GetZipQueryHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="constants">The application constants.</param>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="module">The query handler module.</param>
+        /// <param name="configuration">The application configuration.</param>
         /// <param name="writer">The archive writer.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public GetZipQueryHandler(
-            IAmiUnitOfWork context,
-            IApplicationConstants constants,
+            IQueryHandlerModule module,
             IAppConfiguration configuration,
             IArchiveWriter writer,
             IFileSystemStrategy fileSystemStrategy)
+            : base(module)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.writer = writer ?? throw new ArgumentNullException(nameof(writer));
 
@@ -55,16 +49,10 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
             fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 
-        /// <summary>
-        /// Handles the specified request.
-        /// </summary>
-        /// <param name="request">The query request.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A task that represents the asynchronous operation.
-        /// The task result contains the image file information.</returns>
-        public async Task<FileByteResultModel> Handle(GetZipQuery request, CancellationToken cancellationToken)
+        /// <inheritdoc/>
+        protected override async Task<FileByteResultModel> ProtectedHandleAsync(GetZipQuery request, CancellationToken cancellationToken)
         {
-            var entity = await context.ResultRepository
+            var entity = await Context.ResultRepository
                 .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
 
             if (entity == null)
@@ -89,7 +77,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
             {
                 FileContents = stream.ToArray(),
                 ContentType = "application/zip",
-                FileDownloadName = $"{constants.ApplicationNameShort}_{request.Id}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.zip"
+                FileDownloadName = $"{Constants.ApplicationNameShort}_{request.Id}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.zip"
             };
 
             return result;

@@ -1,39 +1,32 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
-using AMI.Core.IO.Serializers;
-using AMI.Core.Repositories;
-using MediatR;
+using AMI.Core.Entities.Shared.Queries;
+using AMI.Core.Modules;
 
 namespace AMI.Core.Entities.Objects.Queries.GetObjects
 {
     /// <summary>
-    /// A handler for queries to get a list of paginated objects.
+    /// A query handler to get a list of paginated objects.
     /// </summary>
-    public class GetObjectsQueryHandler : IRequestHandler<GetObjectsQuery, PaginationResultModel<ObjectModel>>
+    public class GetObjectsQueryHandler : BaseQueryRequestHandler<GetObjectsQuery, PaginationResultModel<ObjectModel>>
     {
-        private readonly IAmiUnitOfWork context;
-        private readonly IDefaultJsonSerializer serializer;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GetObjectsQueryHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="serializer">The JSON serializer.</param>
-        public GetObjectsQueryHandler(IAmiUnitOfWork context, IDefaultJsonSerializer serializer)
+        /// <param name="module">The query handler module.</param>
+        public GetObjectsQueryHandler(IQueryHandlerModule module)
+            : base(module)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
         /// <inheritdoc/>
-        public async Task<PaginationResultModel<ObjectModel>> Handle(GetObjectsQuery request, CancellationToken cancellationToken)
+        protected override async Task<PaginationResultModel<ObjectModel>> ProtectedHandleAsync(GetObjectsQuery request, CancellationToken cancellationToken)
         {
-            int total = await context.ObjectRepository.CountAsync(cancellationToken);
+            int total = await Context.ObjectRepository.CountAsync(cancellationToken);
 
-            var query = context.ObjectRepository
+            var query = Context.ObjectRepository
                 .GetQuery()
                 .Select(e => new
                 {
@@ -45,8 +38,8 @@ namespace AMI.Core.Entities.Objects.Queries.GetObjects
                 .Skip(request.Page * request.Limit)
                 .Take(request.Limit);
 
-            var entities = await context.ToListAsync(query, cancellationToken);
-            var models = entities.Select(e => ObjectModel.Create(e.Object, e.Tasks, e.Results, serializer));
+            var entities = await Context.ToListAsync(query, cancellationToken);
+            var models = entities.Select(e => ObjectModel.Create(e.Object, e.Tasks, e.Results, Serializer));
 
             return PaginationResultModel<ObjectModel>.Create(models, request.Page, request.Limit, total);
         }

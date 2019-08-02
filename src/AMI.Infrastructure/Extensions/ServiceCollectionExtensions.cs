@@ -2,6 +2,7 @@
 using AMI.Core.IO.Generators;
 using AMI.Core.IO.Uploaders;
 using AMI.Core.IO.Writers;
+using AMI.Core.Modules;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
@@ -9,6 +10,7 @@ using AMI.Infrastructure.IO.Builders;
 using AMI.Infrastructure.IO.Generators;
 using AMI.Infrastructure.IO.Uploaders;
 using AMI.Infrastructure.IO.Writers;
+using AMI.Infrastructure.Modules;
 using AMI.Infrastructure.Services;
 using AMI.Infrastructure.Stores;
 using AMI.Infrastructure.Strategies;
@@ -28,6 +30,7 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
         /// <param name="services">The service collection.</param>
         public static void AddDefaultInfrastructure(this IServiceCollection services)
         {
+            services.AddScoped<IQueryHandlerModule, QueryHandlerModule>();
             services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IGatewayService, GatewayService>();
             services.AddScoped<IIdentityService, IdentityService>();
