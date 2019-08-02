@@ -42,34 +42,42 @@ namespace AMI.Core.Workers
         /// <inheritdoc/>
         protected override async Task DoWorkAsync(CancellationToken ct)
         {
-            foreach (var item in queue.GetConsumingEnumerable(ct))
+            try
             {
-                ct.ThrowIfCancellationRequested();
-
-                StartWatch();
-
-                if (item.Command == null)
+                foreach (var item in queue.GetConsumingEnumerable(ct))
                 {
-                    await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
-                    await UpdatePositionsAsync();
-                }
-                else
-                {
-                    await UpdateStatus(item, Domain.Enums.TaskStatus.Processing, string.Empty, ct);
-                    await UpdatePositionsAsync();
+                    ct.ThrowIfCancellationRequested();
 
-                    switch (item.Command.CommandType)
+                    StartWatch();
+
+                    if (item.Command == null)
                     {
-                        case CommandType.ProcessObjectCommand:
-                            await ProcessObjectAsync(item, ct);
-                            break;
-                        default:
-                            await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
-                            break;
+                        await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
+                        await UpdatePositionsAsync();
                     }
-                }
+                    else
+                    {
+                        await UpdateStatus(item, Domain.Enums.TaskStatus.Processing, string.Empty, ct);
+                        await UpdatePositionsAsync();
 
-                StopWatch();
+                        switch (item.Command.CommandType)
+                        {
+                            case CommandType.ProcessObjectCommand:
+                                await ProcessObjectAsync(item, ct);
+                                break;
+                            default:
+                                await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
+                                break;
+                        }
+                    }
+
+                    StopWatch();
+                }
+            }
+            catch (Exception)
+            {
+                await ResetStatus();
+                throw;
             }
         }
 
@@ -119,6 +127,11 @@ namespace AMI.Core.Workers
             };
 
             await mediator.Send(command, ct);
+        }
+
+        private async Task ResetStatus()
+        {
+            await Task.CompletedTask;
         }
 
         private async Task UpdatePositionsAsync()

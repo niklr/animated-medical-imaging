@@ -30,6 +30,7 @@ namespace AMI.Core.Entities.Shared.Commands
 
             Context = module.Context ?? throw new UnexpectedNullException("The context cannot be null.");
             Gateway = module.Gateway ?? throw new UnexpectedNullException("The gateway service cannot be null.");
+            IdentityService = module.IdentityService ?? throw new UnexpectedNullException("The identity service cannot be null.");
             PrincipalProvider = module.PrincipalProvider ?? throw new UnexpectedNullException("The principal provider cannot be null.");
         }
 
@@ -42,6 +43,11 @@ namespace AMI.Core.Entities.Shared.Commands
         /// Gets the gateway service.
         /// </summary>
         protected IGatewayService Gateway { get; private set; }
+
+        /// <summary>
+        /// Gets the identity service.
+        /// </summary>
+        protected IIdentityService IdentityService { get; private set; }
 
         /// <summary>
         /// Gets the principal provider.

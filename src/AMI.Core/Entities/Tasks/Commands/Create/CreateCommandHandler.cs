@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
@@ -62,13 +63,19 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
             var command = request.Command as ProcessObjectCommand;
 
+            Guid objectId = Guid.Parse(command.Id);
+            var objectOwnerId = Context.ObjectRepository.GetQuery(e => e.Id == objectId).Select(e => e.UserId).FirstOrDefault();
+
+            if (!IdentityService.IsAuthorized(objectOwnerId))
+            {
+                throw new ForbiddenException("Not authorized");
+            }
+
             processMutex = new Mutex(false, this.GetMethodName());
 
             return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
                 Context.BeginTransaction();
-
-                Guid objectId = Guid.Parse(command.Id);
 
                 var activeCount = await Context.TaskRepository.CountAsync(e =>
                     e.ObjectId == objectId &&

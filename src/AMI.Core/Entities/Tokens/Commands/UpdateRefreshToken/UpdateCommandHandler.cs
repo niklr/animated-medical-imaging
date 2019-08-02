@@ -26,21 +26,21 @@ namespace AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken
         protected override async Task<TokenModel> ProtectedHandleAsync(UpdateRefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var userId = Guid.Parse(request.UserId);
-            var token = await Context.TokenRepository.GetFirstOrDefaultAsync(
+            var entity = await Context.TokenRepository.GetFirstOrDefaultAsync(
                 e => e.TokenValue == request.Token && e.UserId == userId, cancellationToken);
 
-            if (token == null)
+            if (entity == null)
             {
                 throw new UnexpectedNullException("Refresh token not found.");
             }
 
-            token.LastUsedDate = DateTime.UtcNow;
+            entity.LastUsedDate = DateTime.UtcNow;
 
-            Context.TokenRepository.Update(token);
+            Context.TokenRepository.Update(entity);
 
             await Context.SaveChangesAsync(cancellationToken);
 
-            return TokenModel.Create(token);
+            return TokenModel.Create(entity);
         }
     }
 }

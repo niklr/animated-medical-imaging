@@ -20,6 +20,11 @@ namespace AMI.Core.Modules
         IGatewayService Gateway { get; }
 
         /// <summary>
+        /// Gets the identity service.
+        /// </summary>
+        IIdentityService IdentityService { get; }
+
+        /// <summary>
         /// Gets the principal provider.
         /// </summary>
         ICustomPrincipalProvider PrincipalProvider { get; }

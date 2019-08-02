@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -138,7 +139,15 @@ namespace AMI.Itk.Utils
             {
                 ct.Register(() =>
                 {
-                    reader.Abort();
+                    try
+                    {
+                        // https://stackoverflow.com/questions/3469368/how-to-handle-accessviolationexception
+                        // reader.Abort();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.Message);
+                    }
                 });
 
                 ct.ThrowIfCancellationRequested();

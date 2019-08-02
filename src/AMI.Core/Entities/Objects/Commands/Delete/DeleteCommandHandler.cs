@@ -55,6 +55,11 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
                 return true;
             }
 
+            if (!IdentityService.IsAuthorized(entity.UserId))
+            {
+                throw new ForbiddenException("Not authorized");
+            }
+
             Context.ObjectRepository.Remove(entity);
 
             await Context.SaveChangesAsync(cancellationToken);

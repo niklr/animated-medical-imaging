@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using AMI.API.Requirements;
 using AMI.Core.Providers;
 using AMI.Domain.Exceptions;
@@ -53,7 +54,7 @@ namespace AMI.API.Attributes
             if (!isAuthorized)
             {
                 string message = string.Concat("One or more roles are missing: ", string.Join(", ", requirement.RequiredRoles));
-                logger.LogInformation(message);
+                Debug.WriteLine(message);
                 throw new ForbiddenException(message);
             }
         }
