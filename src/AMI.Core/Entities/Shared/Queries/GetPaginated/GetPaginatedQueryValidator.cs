@@ -1,7 +1,7 @@
-﻿using System;
-using AMI.Core.Constants;
+﻿using AMI.Core.Constants;
 using AMI.Core.Extensions.FluentValidationExtensions;
 using FluentValidation;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.Entities.Shared.Queries.GetPaginated
 {
@@ -18,10 +18,7 @@ namespace AMI.Core.Entities.Shared.Queries.GetPaginated
         /// <param name="constants">The application constants.</param>
         public GetPaginatedQueryValidator(IApplicationConstants constants)
         {
-            if (constants == null)
-            {
-                throw new ArgumentNullException(nameof(constants));
-            }
+            Ensure.ArgumentNotNull(constants, nameof(constants));
 
             RuleFor(x => x.Page).NotNull().GreaterThanOrEqualTo(0);
             RuleFor(x => x.Limit).NotEmpty().GreaterThan(0).In(constants.AllowedPaginationLimitValues);

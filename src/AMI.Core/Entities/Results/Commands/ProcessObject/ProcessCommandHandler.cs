@@ -8,10 +8,7 @@ using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Extractors;
 using AMI.Core.IO.Readers;
-using AMI.Core.IO.Serializers;
-using AMI.Core.Providers;
-using AMI.Core.Repositories;
-using AMI.Core.Services;
+using AMI.Core.Modules;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
@@ -24,7 +21,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
     /// </summary>
     public class ProcessCommandHandler : BaseCommandRequestHandler<ProcessObjectCommand, ProcessResultModel>
     {
-        private readonly IDefaultJsonSerializer serializer;
         private readonly IMediator mediator;
         private readonly IAppConfiguration configuration;
         private readonly IArchiveReader archiveReader;
@@ -34,28 +30,21 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessCommandHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
-        /// <param name="serializer">The JSON serializer.</param>
+        /// <param name="module">The command handler module.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="archiveReader">The archive reader.</param>
         /// <param name="archiveExtractor">The archive extractor.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public ProcessCommandHandler(
-            IAmiUnitOfWork context,
-            IGatewayService gateway,
-            ICustomPrincipalProvider principalProvider,
-            IDefaultJsonSerializer serializer,
+            ICommandHandlerModule module,
             IMediator mediator,
             IAppConfiguration configuration,
             IArchiveReader archiveReader,
             IArchiveExtractor archiveExtractor,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway, principalProvider)
+            : base(module)
         {
-            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.archiveReader = archiveReader ?? throw new ArgumentNullException(nameof(archiveReader));

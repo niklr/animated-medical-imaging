@@ -6,10 +6,8 @@ using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Generators;
 using AMI.Core.IO.Serializers;
-using AMI.Core.Providers;
+using AMI.Core.Modules;
 using AMI.Core.Queues;
-using AMI.Core.Repositories;
-using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
@@ -32,20 +30,16 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
+        /// <param name="module">The command handler module.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="queue">The task queue.</param>
         public CreateCommandHandler(
-            IAmiUnitOfWork context,
-            IGatewayService gateway,
-            ICustomPrincipalProvider principalProvider,
+            ICommandHandlerModule module,
             IIdGenerator idGenerator,
             IDefaultJsonSerializer serializer,
             ITaskQueue queue)
-            : base(context, gateway, principalProvider)
+            : base(module)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));

@@ -3,9 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
-using AMI.Core.Providers;
-using AMI.Core.Repositories;
-using AMI.Core.Services;
+using AMI.Core.Modules;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken
@@ -18,14 +16,9 @@ namespace AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateCommandHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
-        public UpdateCommandHandler(
-            IAmiUnitOfWork context,
-            IGatewayService gateway,
-            ICustomPrincipalProvider principalProvider)
-            : base(context, gateway, principalProvider)
+        /// <param name="module">The command handler module.</param>
+        public UpdateCommandHandler(ICommandHandlerModule module)
+            : base(module)
         {
         }
 

@@ -5,11 +5,8 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
-using AMI.Core.Providers;
-using AMI.Core.Repositories;
-using AMI.Core.Services;
+using AMI.Core.Modules;
 using AMI.Core.Strategies;
-using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 
@@ -26,18 +23,14 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleteCommandHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
+        /// <param name="module">The command handler module.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public DeleteCommandHandler(
-            IAmiUnitOfWork context,
-            IGatewayService gateway,
-            ICustomPrincipalProvider principalProvider,
+            ICommandHandlerModule module,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway, principalProvider)
+            : base(module)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 

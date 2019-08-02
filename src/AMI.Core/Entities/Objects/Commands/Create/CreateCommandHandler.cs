@@ -7,9 +7,7 @@ using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Generators;
-using AMI.Core.Providers;
-using AMI.Core.Repositories;
-using AMI.Core.Services;
+using AMI.Core.Modules;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
@@ -20,7 +18,6 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     /// <summary>
     /// A handler for create command requests.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{CreateObjectCommand, ObjectModel}" />
     public class CreateCommandHandler : BaseCommandRequestHandler<CreateObjectCommand, ObjectModel>
     {
         private readonly IIdGenerator idGenerator;
@@ -31,22 +28,18 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
+        /// <param name="module">The command handler module.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public CreateCommandHandler(
-            IAmiUnitOfWork context,
-            IGatewayService gateway,
-            ICustomPrincipalProvider principalProvider,
+            ICommandHandlerModule module,
             IIdGenerator idGenerator,
             IApplicationConstants constants,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway, principalProvider)
+            : base(module)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));

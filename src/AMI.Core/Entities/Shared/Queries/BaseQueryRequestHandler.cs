@@ -38,22 +38,22 @@ namespace AMI.Core.Entities.Shared.Queries
         /// <summary>
         /// Gets the context.
         /// </summary>
-        public IAmiUnitOfWork Context { get; private set; }
+        protected IAmiUnitOfWork Context { get; private set; }
 
         /// <summary>
         /// Gets the application constants.
         /// </summary>
-        public IApplicationConstants Constants { get; private set; }
+        protected IApplicationConstants Constants { get; private set; }
 
         /// <summary>
         /// Gets the principal provider.
         /// </summary>
-        public ICustomPrincipalProvider PrincipalProvider { get; private set; }
+        protected ICustomPrincipalProvider PrincipalProvider { get; private set; }
 
         /// <summary>
         /// Gets the JSON serializer.
         /// </summary>
-        public IDefaultJsonSerializer Serializer { get; private set; }
+        protected IDefaultJsonSerializer Serializer { get; private set; }
 
         /// <inheritdoc/>
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)

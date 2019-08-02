@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Shared.Commands;
-using AMI.Core.Providers;
-using AMI.Core.Repositories;
-using AMI.Core.Services;
+using AMI.Core.Modules;
 using AMI.Core.Strategies;
 using MediatR;
 
@@ -26,20 +24,16 @@ namespace AMI.Core.Entities.Objects.Commands.Clear
         /// <summary>
         /// Initializes a new instance of the <see cref="ClearCommandHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
+        /// <param name="module">The command handler module.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public ClearCommandHandler(
-            IAmiUnitOfWork context,
-            IGatewayService gateway,
-            ICustomPrincipalProvider principalProvider,
+            ICommandHandlerModule module,
             IMediator mediator,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
-            : base(context, gateway, principalProvider)
+            : base(module)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

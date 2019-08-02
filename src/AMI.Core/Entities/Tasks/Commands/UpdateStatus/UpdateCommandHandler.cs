@@ -5,9 +5,7 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Entities.Tasks.Queries.GetById;
 using AMI.Core.IO.Serializers;
-using AMI.Core.Providers;
-using AMI.Core.Repositories;
-using AMI.Core.Services;
+using AMI.Core.Modules;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
@@ -18,7 +16,6 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
     /// <summary>
     /// A handler for command requests to update the status of a task.
     /// </summary>
-    /// <seealso cref="BaseCommandRequestHandler{UpdateTaskStatusCommand, TaskModel}" />
     public class UpdateCommandHandler : BaseCommandRequestHandler<UpdateTaskStatusCommand, TaskModel>
     {
         private readonly IDefaultJsonSerializer serializer;
@@ -27,18 +24,14 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateCommandHandler"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
+        /// <param name="module">The command handler module.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="mediator">The mediator.</param>
         public UpdateCommandHandler(
-            IAmiUnitOfWork context,
-            IGatewayService gateway,
-            ICustomPrincipalProvider principalProvider,
+            ICommandHandlerModule module,
             IDefaultJsonSerializer serializer,
             IMediator mediator)
-            : base(context, gateway, principalProvider)
+            : base(module)
         {
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

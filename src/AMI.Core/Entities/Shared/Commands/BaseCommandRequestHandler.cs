@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Modules;
 using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
+using AMI.Domain.Exceptions;
 using MediatR;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.Entities.Shared.Commands
 {
@@ -20,14 +23,14 @@ namespace AMI.Core.Entities.Shared.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseCommandRequestHandler{TRequest, TResponse}"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="gateway">The gateway service.</param>
-        /// <param name="principalProvider">The principal provider.</param>
-        public BaseCommandRequestHandler(IAmiUnitOfWork context, IGatewayService gateway, ICustomPrincipalProvider principalProvider)
+        /// <param name="module">The command handler module.</param>
+        public BaseCommandRequestHandler(ICommandHandlerModule module)
         {
-            Context = context ?? throw new ArgumentNullException(nameof(context));
-            Gateway = gateway ?? throw new ArgumentNullException(nameof(gateway));
-            PrincipalProvider = principalProvider ?? throw new ArgumentNullException(nameof(principalProvider));
+            Ensure.ArgumentNotNull(module, nameof(module));
+
+            Context = module.Context ?? throw new UnexpectedNullException("The context cannot be null.");
+            Gateway = module.Gateway ?? throw new UnexpectedNullException("The gateway service cannot be null.");
+            PrincipalProvider = module.PrincipalProvider ?? throw new UnexpectedNullException("The principal provider cannot be null.");
         }
 
         /// <summary>
