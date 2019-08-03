@@ -7,7 +7,6 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
     /// <summary>
     /// A command containing information needed to update the status of a task.
     /// </summary>
-    /// <seealso cref="IRequest{TaskModel}" />
     public class UpdateTaskStatusCommand : IRequest<TaskModel>
     {
         /// <summary>

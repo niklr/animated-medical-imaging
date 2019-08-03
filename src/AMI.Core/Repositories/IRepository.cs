@@ -22,6 +22,20 @@ namespace AMI.Core.Repositories
         void Add(TEntity entity);
 
         /// <summary>
+        /// Adds one or many entities to the repository.
+        /// </summary>
+        /// <param name="entities">The entities to add.</param>
+        void AddRange(IEnumerable<TEntity> entities);
+
+        /// <summary>
+        /// Adds one or many entities to the repository asynchronous.
+        /// </summary>
+        /// <param name="entities">The entities to add.</param>
+        /// <param name="cancellationToken">The cancedllation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Attaches the given entity to the repository.
         /// </summary>
         /// <param name="entity">The entity to attach.</param>
@@ -129,5 +143,11 @@ namespace AMI.Core.Repositories
         /// </summary>
         /// <param name="entity">The entity to update.</param>
         void Update(TEntity entity);
+
+        /// <summary>
+        /// Updates one or many existing entities.
+        /// </summary>
+        /// <param name="entities">The entities to update.</param>
+        void UpdateRange(IEnumerable<TEntity> entities);
     }
 }

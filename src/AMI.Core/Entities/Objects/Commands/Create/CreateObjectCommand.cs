@@ -6,7 +6,6 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     /// <summary>
     /// A command containing information needed for object creation.
     /// </summary>
-    /// <seealso cref="IRequest{ObjectModel}" />
     public class CreateObjectCommand : IRequest<ObjectModel>
     {
         /// <summary>

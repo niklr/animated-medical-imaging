@@ -42,14 +42,14 @@ namespace AMI.Core.Workers
         /// <inheritdoc/>
         protected override async Task DoWorkAsync(CancellationToken ct)
         {
-            try
+            foreach (var item in queue.GetConsumingEnumerable(ct))
             {
-                foreach (var item in queue.GetConsumingEnumerable(ct))
+                ct.ThrowIfCancellationRequested();
+
+                StartWatch();
+
+                try
                 {
-                    ct.ThrowIfCancellationRequested();
-
-                    StartWatch();
-
                     if (item.Command == null)
                     {
                         await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty, ct);
@@ -70,14 +70,14 @@ namespace AMI.Core.Workers
                                 break;
                         }
                     }
-
-                    StopWatch();
                 }
-            }
-            catch (Exception)
-            {
-                await ResetStatus();
-                throw;
+                catch (Exception e)
+                {
+                    // Task status could not be updated.
+                    logger.LogError(e, e.Message);
+                }
+
+                StopWatch();
             }
         }
 
@@ -127,11 +127,6 @@ namespace AMI.Core.Workers
             };
 
             await mediator.Send(command, ct);
-        }
-
-        private async Task ResetStatus()
-        {
-            await Task.CompletedTask;
         }
 
         private async Task UpdatePositionsAsync()

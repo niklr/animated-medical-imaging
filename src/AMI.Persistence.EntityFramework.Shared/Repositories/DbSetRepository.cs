@@ -36,6 +36,18 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
+        public void AddRange(IEnumerable<T> entities)
+        {
+            dbSet.AddRange(entities);
+        }
+
+        /// <inheritdoc/>
+        public Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+        {
+            return dbSet.AddRangeAsync(entities, cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public void Attach(T entity)
         {
             dbSet.Attach(entity);
@@ -54,15 +66,15 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        public Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await dbSet.CountAsync(cancellationToken);
+            return dbSet.CountAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        public Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await dbSet.CountAsync(predicate, cancellationToken);
+            return dbSet.CountAsync(predicate, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -92,9 +104,9 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        public Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await GetQuery(predicate).FirstOrDefaultAsync(cancellationToken);
+            return GetQuery(predicate).FirstOrDefaultAsync(cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -125,6 +137,12 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         public void Update(T entity)
         {
             dbSet.Update(entity);
+        }
+
+        /// <inheritdoc/>
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            dbSet.UpdateRange(entities);
         }
     }
 }

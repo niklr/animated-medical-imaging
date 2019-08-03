@@ -39,6 +39,18 @@ namespace AMI.Infrastructure.Repositories
         }
 
         /// <inheritdoc/>
+        public void AddRange(IEnumerable<TEntity> entities)
+        {
+            Repository.AddRange(entities);
+        }
+
+        /// <inheritdoc/>
+        public Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
+        {
+            return Repository.AddRangeAsync(entities, cancellationToken);
+        }
+
+        /// <inheritdoc/>
         public void Attach(TEntity entity)
         {
             Repository.Attach(entity);
@@ -126,6 +138,12 @@ namespace AMI.Infrastructure.Repositories
         public void Update(TEntity entity)
         {
             Repository.Update(entity);
+        }
+
+        /// <inheritdoc/>
+        public void UpdateRange(IEnumerable<TEntity> entities)
+        {
+            Repository.UpdateRange(entities);
         }
     }
 }
