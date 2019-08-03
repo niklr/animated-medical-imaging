@@ -32,24 +32,24 @@ export class ResultComponent implements OnInit, AfterViewInit {
       if (this.result) {
         this.initExtendedResult();
       }
-    });
+    }, 500);
   }
 
   private initExtendedResult(): void {
     // Extend gifs
     if (this.result.gifs) {
-      for (var i = 0; i < this.result.gifs.length; i++) {
-        var currentGif = this.result.gifs[i] as AxisContainerModelOfString & ContainerModelExtended;
-        currentGif.entityUrl = this.buildEntityUrl(currentGif.entity);
-        switch (currentGif.axisType) {
+      for (const gif of this.result.gifs) {
+        const extendedGif = gif as AxisContainerModelOfString & ContainerModelExtended;
+        extendedGif.entityUrl = this.buildEntityUrl(extendedGif.entity);
+        switch (extendedGif.axisType) {
           case AxisType.X:
-            this.result.xAxisGif = currentGif;
+            this.result.xAxisGif = extendedGif;
             break;
           case AxisType.Y:
-            this.result.yAxisGif = currentGif;
+            this.result.yAxisGif = extendedGif;
             break;
           case AxisType.Z:
-            this.result.zAxisGif = currentGif;
+            this.result.zAxisGif = extendedGif;
             break;
           default:
             break;
@@ -62,18 +62,18 @@ export class ResultComponent implements OnInit, AfterViewInit {
     this.result.yAxisImages = [] as PositionAxisContainerModelOfString & ContainerModelExtended[];
     this.result.zAxisImages = [] as PositionAxisContainerModelOfString & ContainerModelExtended[];
     if (this.result.images) {
-      for (var i = 0; i < this.result.images.length; i++) {
-        var currentImage = this.result.images[i] as PositionAxisContainerModelOfString & ContainerModelExtended;
-        currentImage.entityUrl = this.buildEntityUrl(currentImage.entity);
-        switch (currentImage.axisType) {
+      for (const image of this.result.images) {
+        const extendedImage = image as PositionAxisContainerModelOfString & ContainerModelExtended;
+        extendedImage.entityUrl = this.buildEntityUrl(extendedImage.entity);
+        switch (extendedImage.axisType) {
           case AxisType.X:
-            this.result.xAxisImages.push(currentImage);
+            this.result.xAxisImages.push(extendedImage);
             break;
           case AxisType.Y:
-            this.result.yAxisImages.push(currentImage);
+            this.result.yAxisImages.push(extendedImage);
             break;
           case AxisType.Z:
-            this.result.zAxisImages.push(currentImage);
+            this.result.zAxisImages.push(extendedImage);
             break;
           default:
             break;
@@ -92,7 +92,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   private buildEntityUrl(entity: string): string {
-    var pattern = /^((http|https):\/\/)/;
+    const pattern = /^((http|https):\/\/)/;
     if (entity && !pattern.test(entity)) {
       return ConfigService.options.apiEndpoint + '/results/' + this.result.id + '/images/' + entity;
     } else {
@@ -101,19 +101,19 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   private initPhotoSwipe(): void {
-    var currentIndex = -1;
+    let currentIndex = -1;
     currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.combinedGifExtended);
     currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.xAxisGif);
-    for (var i = 0; i < this.result.xAxisImages.length; i++) {
-      currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.xAxisImages[i]);
+    for (const image of this.result.xAxisImages) {
+      currentIndex = this.addPhotoSwipeItem(currentIndex, image);
     }
     currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.yAxisGif);
-    for (var i = 0; i < this.result.yAxisImages.length; i++) {
-      currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.yAxisImages[i]);
+    for (const image of this.result.yAxisImages) {
+      currentIndex = this.addPhotoSwipeItem(currentIndex, image);
     }
     currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.zAxisGif);
-    for (var i = 0; i < this.result.zAxisImages.length; i++) {
-      currentIndex = this.addPhotoSwipeItem(currentIndex, this.result.zAxisImages[i]);
+    for (const image of this.result.zAxisImages) {
+      currentIndex = this.addPhotoSwipeItem(currentIndex, image);
     }
   }
 
@@ -130,14 +130,14 @@ export class ResultComponent implements OnInit, AfterViewInit {
   }
 
   public openPhotoSwipe(container: ContainerModelExtended): void {
-    var pswpElement = document.querySelectorAll('.pswp')[0];
-    var options = {
+    const pswpElement = document.querySelectorAll('.pswp')[0];
+    const options = {
       index: container.index,
       shareButtons: [
         { id: 'download', label: 'Download image', url: '{{raw_image_url}}', download: true }
       ]
     };
-    var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, this.photoswipeItems, options);
+    const gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, this.photoswipeItems, options);
     gallery.init();
   }
 }

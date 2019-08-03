@@ -17,6 +17,11 @@ export class DatatransferComponent implements OnInit {
       core: {
         showUploadDropzone: true,
         paginationRppOptions: [5, 10, 25],
+        downloadHeaders: function() {
+          const that = this as DatatransferComponent;
+          return that.getHeaders;
+        }.bind(this),
+        downloadXhrTimeout: 5000,
         preprocessHashEnabled: false,
         preprocessHashChecked: false,
         parseMessageCallback: (message: any) => {
@@ -47,7 +52,8 @@ export class DatatransferComponent implements OnInit {
         headers: function() {
           const that = this as DatatransferComponent;
           return that.getHeaders;
-        }.bind(this)
+        }.bind(this),
+        xhrTimeout: 5000
       }
     };
     const event = new CustomEvent('github:niklr/angular-material-datatransfer.create', { detail: config });
