@@ -59,8 +59,8 @@ namespace AMI.Core.Workers
 
             if (configuration.Options.CleanupPeriod > 0)
             {
-                DateTime refDate = DateTime.Now;
-                NextActivityDate = refDate.AddMinutes(configuration.Options.CleanupPeriod);
+                DateTime refDate = DateTime.Now.AddMinutes(-configuration.Options.CleanupPeriod);
+                NextActivityDate = DateTime.Now.AddMinutes(1);
 
                 void action(DateTime date)
                 {

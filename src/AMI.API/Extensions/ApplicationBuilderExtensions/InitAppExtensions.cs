@@ -56,7 +56,7 @@ namespace AMI.API.Extensions.ApplicationBuilderExtensions
                 logger.LogInformation("Clear expired objects.");
                 var command = new ClearObjectsCommand()
                 {
-                    RefDate = DateTime.UtcNow
+                    RefDate = DateTime.UtcNow.AddMinutes(-configuration.Options.CleanupPeriod)
                 };
                 mediator.Send(command, default(CancellationToken)).Wait();
             }
