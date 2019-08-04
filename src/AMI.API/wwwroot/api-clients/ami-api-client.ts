@@ -2123,6 +2123,8 @@ export interface IErrorModel {
 
 /** The API options. */
 export class ApiOptions implements IApiOptions {
+    /** Gets the amount of entities included in a batch operation. Default is 1000. */
+    batchSize?: number;
     /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
 Automatically deletes objects older than the defined period. */
     cleanupPeriod?: number;
@@ -2148,6 +2150,7 @@ Automatically deletes objects older than the defined period. */
 
     init(data?: any) {
         if (data) {
+            this.batchSize = data["batchSize"];
             this.cleanupPeriod = data["cleanupPeriod"];
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.isDevelopment = data["isDevelopment"];
@@ -2166,6 +2169,7 @@ Automatically deletes objects older than the defined period. */
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["batchSize"] = this.batchSize;
         data["cleanupPeriod"] = this.cleanupPeriod;
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["isDevelopment"] = this.isDevelopment;
@@ -2178,6 +2182,8 @@ Automatically deletes objects older than the defined period. */
 
 /** The API options. */
 export interface IApiOptions {
+    /** Gets the amount of entities included in a batch operation. Default is 1000. */
+    batchSize?: number;
     /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
 Automatically deletes objects older than the defined period. */
     cleanupPeriod?: number;

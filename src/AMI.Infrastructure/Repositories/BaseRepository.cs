@@ -129,9 +129,9 @@ namespace AMI.Infrastructure.Repositories
         }
 
         /// <inheritdoc/>
-        public void RemoveRange(Expression<Func<TEntity, bool>> predicate)
+        public void RemoveRange(IEnumerable<TEntity> entities)
         {
-            Repository.RemoveRange(predicate);
+            Repository.RemoveRange(entities);
         }
 
         /// <inheritdoc/>

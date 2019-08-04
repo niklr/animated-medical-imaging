@@ -255,11 +255,7 @@ namespace AMI.API
                 routes.MapHub<GatewayHub>("/gateway");
             });
 
-            var identityService = serviceProvider.GetService<IIdentityService>();
-            identityService.EnsureUsersExistAsync(default(CancellationToken)).Wait();
-
-            var gatewayObserverService = serviceProvider.GetService<IGatewayObserverService>();
-            gatewayObserverService.Add(new GatewayObserver(gatewayHubContext));
+            app.InitApp(gatewayHubContext);
         }
     }
 }

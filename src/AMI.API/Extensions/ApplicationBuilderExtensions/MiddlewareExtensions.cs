@@ -1,13 +1,13 @@
-﻿using System;
-using AMI.API.Middlewares;
+﻿using AMI.API.Middlewares;
 using Microsoft.AspNetCore.Builder;
+using RNS.Framework.Tools;
 
 namespace AMI.API.Extensions.ApplicationBuilderExtensions
 {
     /// <summary>
     /// Extensions related to <see cref="IApplicationBuilder"/>.
     /// </summary>
-    public static class ApplicationBuilderExtensions
+    public static class MiddlewareExtensions
     {
         /// <summary>
         /// Extension method used to add the middleware to the HTTP request pipeline.
@@ -16,10 +16,7 @@ namespace AMI.API.Extensions.ApplicationBuilderExtensions
         /// <returns>A <see cref="IApplicationBuilder"/>.</returns>
         public static IApplicationBuilder UseCustomExceptionMiddleware(this IApplicationBuilder builder)
         {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
+            Ensure.ArgumentNotNull(builder, nameof(builder));
 
             return builder.UseMiddleware<CustomExceptionMiddleware>();
         }
@@ -31,10 +28,7 @@ namespace AMI.API.Extensions.ApplicationBuilderExtensions
         /// <returns>The application builder using the throttle middleware.</returns>
         public static IApplicationBuilder UseThrottleMiddleware(this IApplicationBuilder builder)
         {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
+            Ensure.ArgumentNotNull(builder, nameof(builder));
 
             return builder.UseMiddleware<ThrottleMiddleware>();
         }

@@ -6,6 +6,11 @@
     public interface IApiOptions
     {
         /// <summary>
+        /// Gets the amount of entities included in a batch operation. Default is 1000.
+        /// </summary>
+        int BatchSize { get; }
+
+        /// <summary>
         /// Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
         /// Automatically deletes objects older than the defined period.
         /// </summary>

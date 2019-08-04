@@ -133,10 +133,10 @@ namespace AMI.Core.Repositories
         void Remove(TEntity entity);
 
         /// <summary>
-        /// Removes one or many entities matching the given predicate.
+        /// Removes one or many entities.
         /// </summary>
-        /// <param name="predicate">A function to test each element for a condition.</param>
-        void RemoveRange(Expression<Func<TEntity, bool>> predicate);
+        /// <param name="entities">The entities to delete.</param>
+        void RemoveRange(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Updates changes of the existing entity.

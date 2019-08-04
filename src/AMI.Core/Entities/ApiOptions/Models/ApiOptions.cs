@@ -9,13 +9,16 @@ namespace AMI.Core.Entities.Models
     public class ApiOptions : IApiOptions
     {
         /// <inheritdoc/>
-        public int CleanupPeriod { get; set; }
+        public int BatchSize { get; set; } = 1000;
+
+        /// <inheritdoc/>
+        public int CleanupPeriod { get; set; } = 0;
 
         /// <inheritdoc/>
         public string ConnectingIpHeaderName { get; set; }
 
         /// <inheritdoc/>
-        public bool IsDevelopment { get; set;  }
+        public bool IsDevelopment { get; set; } = false;
 
         /// <inheritdoc/>
         public IAuthOptions AuthOptions { get; set; } = new AuthOptions();

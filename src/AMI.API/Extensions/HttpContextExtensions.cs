@@ -7,7 +7,7 @@ using Microsoft.Extensions.Primitives;
 namespace AMI.API.Extensions.HttpContextExtensions
 {
     /// <summary>
-    /// Extensions related to the HTTP context.
+    /// Extensions related to <see cref="HttpContext"/>
     /// </summary>
     public static class HttpContextExtensions
     {

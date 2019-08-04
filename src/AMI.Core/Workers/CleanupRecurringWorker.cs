@@ -29,7 +29,7 @@ namespace AMI.Core.Workers
         public CleanupRecurringWorker(ILoggerFactory loggerFactory, IMediator mediator, IApiConfiguration configuration)
             : base(loggerFactory)
         {
-            logger = loggerFactory?.CreateLogger<TaskWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+            logger = loggerFactory?.CreateLogger<CleanupRecurringWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
@@ -47,7 +47,6 @@ namespace AMI.Core.Workers
 
             if (configuration.Options.CleanupPeriod > 0)
             {
-                // await CleanupOnStartupAsync(cancellationToken);
                 Schedule(cancellationToken);
             }
 
@@ -70,24 +69,6 @@ namespace AMI.Core.Workers
                 }
 
                 Timer = SimpleScheduler.CallActionAt(NextActivityDate, action, refDate);
-            }
-        }
-
-        private async Task CleanupOnStartupAsync(CancellationToken ct)
-        {
-            try
-            {
-                ct.ThrowIfCancellationRequested();
-
-                await mediator.Send(new ClearObjectsCommand(), ct);
-            }
-            catch (OperationCanceledException)
-            {
-                logger.LogInformation($"Cleanup on startup {WorkerName} canceled.");
-            }
-            catch (Exception e)
-            {
-                logger.LogWarning(e, $"Cleanup on startup {WorkerName} failed. {e.Message}");
             }
         }
 

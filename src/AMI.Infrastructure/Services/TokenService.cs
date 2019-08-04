@@ -53,7 +53,7 @@ namespace AMI.Infrastructure.Services
             IDefaultJsonSerializer serializer,
             UserManager<UserEntity> userManager)
         {
-            logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+            logger = loggerFactory?.CreateLogger<TokenService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

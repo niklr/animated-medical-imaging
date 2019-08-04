@@ -130,9 +130,8 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public void RemoveRange(Expression<Func<T, bool>> predicate)
+        public void RemoveRange(IEnumerable<T> entities)
         {
-            List<T> entities = GetQuery(predicate).ToList();
             foreach (T entity in entities)
             {
                 Remove(entity);

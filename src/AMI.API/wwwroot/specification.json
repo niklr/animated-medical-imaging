@@ -1880,6 +1880,11 @@
         "description": "The API options.",
         "additionalProperties": false,
         "properties": {
+          "batchSize": {
+            "type": "integer",
+            "description": "Gets the amount of entities included in a batch operation. Default is 1000.",
+            "format": "int32"
+          },
           "cleanupPeriod": {
             "type": "integer",
             "description": "Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.\nAutomatically deletes objects older than the defined period.",

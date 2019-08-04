@@ -128,9 +128,9 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
-        public void RemoveRange(Expression<Func<T, bool>> predicate)
+        public void RemoveRange(IEnumerable<T> entities)
         {
-            dbSet.RemoveRange(Get(predicate));
+            dbSet.RemoveRange(entities);
         }
 
         /// <inheritdoc/>

@@ -42,7 +42,7 @@ namespace AMI.Infrastructure.Services
             ICustomPrincipalProvider principalProvider,
             UserManager<UserEntity> userManager)
         {
-            logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+            logger = loggerFactory?.CreateLogger<IdentityService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.principalProvider = principalProvider ?? throw new ArgumentNullException(nameof(principalProvider));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));

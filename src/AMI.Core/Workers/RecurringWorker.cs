@@ -19,7 +19,7 @@ namespace AMI.Core.Workers
         public RecurringWorker(ILoggerFactory loggerFactory)
             : base(loggerFactory)
         {
-            logger = loggerFactory?.CreateLogger<TaskWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+            logger = loggerFactory?.CreateLogger<RecurringWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
         }
 
         /// <inheritdoc/>

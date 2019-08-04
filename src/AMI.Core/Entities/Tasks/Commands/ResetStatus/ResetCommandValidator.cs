@@ -3,7 +3,7 @@
 namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
 {
     /// <summary>
-    /// A validator for command requests to reset the status of a tasks.
+    /// A validator for command requests to reset the status of tasks.
     /// </summary>
     public class ResetCommandValidator : AbstractValidator<ResetTaskStatusCommand>
     {
