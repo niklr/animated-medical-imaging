@@ -1,6 +1,7 @@
 # AMI.Persistence.EntityFramework.SQLite
 
-Run the following command in Package Manager Console with the SQLite project selected:
+Existing databases in the AMI.API project may need to be deleted beforehand e.g. AmiSqliteDatabase.db
+Run the following command in Package Manager Console with the SQLite project selected and AMI.API as startup project:
 
 ```
 PM> Add-Migration Initial

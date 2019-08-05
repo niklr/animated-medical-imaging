@@ -1,12 +1,11 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using System.Reflection;
-using System.Threading;
 using AMI.API.Attributes;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Extensions.ServiceCollectionExtensions;
 using AMI.API.Handlers;
 using AMI.API.Hubs;
-using AMI.API.Observers;
 using AMI.API.Providers;
 using AMI.Compress.Extensions.ServiceCollectionExtensions;
 using AMI.Core.Behaviors;
@@ -21,8 +20,8 @@ using AMI.Core.Mappers;
 using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
-using AMI.Core.Services;
 using AMI.Domain.Entities;
+using AMI.Domain.Exceptions;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Services;
@@ -59,6 +58,15 @@ namespace AMI.API
             HostingEnvironment = env;
             AppInfo = new AppInfoFactory().Create(typeof(Program));
             Serializer = new DefaultJsonSerializer();
+
+            IAppOptions appOptions = new AppOptions();
+            Configuration.GetSection("AppOptions").Bind(appOptions);
+            if (string.IsNullOrWhiteSpace(appOptions.WorkingDirectory))
+            {
+                throw new UnexpectedNullException("Working directory is not defined.");
+            }
+
+            Directory.CreateDirectory(appOptions.WorkingDirectory);
         }
 
         private IConfiguration Configuration { get; }
@@ -93,14 +101,6 @@ namespace AMI.API
 
             // Store rate limit counters and IP rules
             services.AddMemoryCache();
-
-            // Add logging services
-            services.AddLogging(builder =>
-            {
-                builder
-                    .AddConfiguration(Configuration.GetSection("Logging"))
-                    .AddConsole();
-            });
 
             // Add hosted services
             services.AddHostedService<ProcessTaskHostedService>();

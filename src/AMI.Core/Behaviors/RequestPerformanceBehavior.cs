@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.Behaviors
 {
@@ -30,40 +31,14 @@ namespace AMI.Core.Behaviors
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        /// <summary>
-        /// Handles the specified request.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <param name="next">The request handler delegate.</param>
-        /// <returns>
-        /// A <see cref="Task" /> representing the asynchronous operation.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// request
-        /// or
-        /// cancellationToken
-        /// or
-        /// next
-        /// </exception>
+        /// <inheritdoc/>
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             timer.Start();
 
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            if (cancellationToken == null)
-            {
-                throw new ArgumentNullException(nameof(cancellationToken));
-            }
-
-            if (next == null)
-            {
-                throw new ArgumentNullException(nameof(next));
-            }
+            Ensure.ArgumentNotNull(request, nameof(request));
+            Ensure.ArgumentNotNull(cancellationToken, nameof(cancellationToken));
+            Ensure.ArgumentNotNull(next, nameof(next));
 
             var response = await next();
 
@@ -74,7 +49,7 @@ namespace AMI.Core.Behaviors
                 var name = typeof(TRequest).Name;
 
                 // TODO: Add more details
-                logger.LogWarning("Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}", name, timer.ElapsedMilliseconds, request);
+                logger.LogInformation("Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}", name, timer.ElapsedMilliseconds, request);
             }
 
             return response;
