@@ -5,7 +5,6 @@ using AMI.Core.Constants;
 using AMI.Persistence.EntityFramework.Shared;
 using AMI.Persistence.EntityFramework.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace AMI.Persistence.EntityFramework.SQLite
 {
@@ -36,10 +35,8 @@ namespace AMI.Persistence.EntityFramework.SQLite
         /// <inheritdoc/>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //Directory.CreateDirectory(configuration.Options.WorkingDirectory);
-            //var dbPath = Path.Combine(configuration.Options.WorkingDirectory, constants.SqliteDatabaseName);
-            // optionsBuilder.UseSqlite($"Data Source={dbPath};");
-            optionsBuilder.UseSqlite(@"Data Source=AmiSqliteDatabase.db;");
+            var dbPath = Path.Combine(configuration.Options.WorkingDirectory, constants.SqliteDatabaseName);
+            optionsBuilder.UseSqlite($"Data Source={dbPath};");
         }
 
         /// <inheritdoc/>

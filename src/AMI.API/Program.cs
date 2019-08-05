@@ -20,38 +20,15 @@ namespace AMI.API
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-
-            try
-            {
-                IApplicationConstants constants = new ApplicationConstants();
-
-                var host = CreateWebHostBuilder(constants).Build();
-
-                Log.Information("Starting host");
-                host.Run();
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Host terminated unexpectedly");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
+            CreateWebHostBuilder(args).Build().Run();
         }
 
         /// <summary>
         /// Creates the web host builder.
         /// </summary>
-        /// <param name="constants">The application constants.</param>
+        /// <param name="args">The arguments.</param>
         /// <returns>The web host builder.</returns>
-        public static IWebHostBuilder CreateWebHostBuilder(IApplicationConstants constants) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
@@ -63,7 +40,7 @@ namespace AMI.API
                           .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
                     config.AddEnvironmentVariables();
                 })
-                .AppendSerilog(constants)
+                .AppendSerilog()
                 .UseStartup<Startup>();
     }
 }

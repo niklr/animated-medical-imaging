@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
-using AMI.API.Extensions.LoggerConfigurationExtensions;
-using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using RNS.Framework.Tools;
 using Serilog;
+using Serilog.Formatting.Compact;
 
 namespace AMI.API.Extensions.WebHostBuilderExtensions
 {
@@ -20,12 +19,10 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
         /// Appends Serilog as the logging provider.
         /// </summary>
         /// <param name="builder">The web host builder to configure.</param>
-        /// <param name="constants">The application constants.</param>
         /// <returns>The web host builder.</returns>
-        public static IWebHostBuilder AppendSerilog(this IWebHostBuilder builder, IApplicationConstants constants)
+        public static IWebHostBuilder AppendSerilog(this IWebHostBuilder builder)
         {
             Ensure.ArgumentNotNull(builder, nameof(builder));
-            Ensure.ArgumentNotNull(constants, nameof(constants));
 
             return builder.UseSerilog((hostingContext, loggerConfiguration) =>
                 {
@@ -48,19 +45,13 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
                             Directory.CreateDirectory(logPath);
                             loggerConfiguration
                             .WriteTo.File(
+                                new RenderedCompactJsonFormatter(),
                                 Path.Combine(logPath, "AMI.API.log.txt"),
                                 fileSizeLimitBytes: 1_000_000,
                                 rollOnFileSizeLimit: true,
+                                retainedFileCountLimit: 31,
                                 shared: true,
                                 flushToDiskInterval: TimeSpan.FromSeconds(5));
-                        }
-                    }
-                    if (bool.TryParse(hostingContext.Configuration["Logging:WriteToDb"], out bool writeToDb))
-                    {
-                        if (writeToDb)
-                        {
-                            loggerConfiguration
-                            .WriteToSqlite(appOptions, constants);
                         }
                     }
                 });

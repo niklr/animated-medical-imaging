@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using AMI.API.Attributes;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
@@ -21,7 +20,6 @@ using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Domain.Entities;
-using AMI.Domain.Exceptions;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Services;
@@ -37,7 +35,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NSwag.AspNetCore;
 
 namespace AMI.API
@@ -58,15 +55,6 @@ namespace AMI.API
             HostingEnvironment = env;
             AppInfo = new AppInfoFactory().Create(typeof(Program));
             Serializer = new DefaultJsonSerializer();
-
-            IAppOptions appOptions = new AppOptions();
-            Configuration.GetSection("AppOptions").Bind(appOptions);
-            if (string.IsNullOrWhiteSpace(appOptions.WorkingDirectory))
-            {
-                throw new UnexpectedNullException("Working directory is not defined.");
-            }
-
-            Directory.CreateDirectory(appOptions.WorkingDirectory);
         }
 
         private IConfiguration Configuration { get; }
