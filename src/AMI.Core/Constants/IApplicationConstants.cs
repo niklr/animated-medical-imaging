@@ -29,5 +29,15 @@
         /// Gets the character used to separate the role names.
         /// </summary>
         string RoleNameSeparator { get; }
+
+        /// <summary>
+        /// Gets the name of the SQLite database.
+        /// </summary>
+        string SqliteDatabaseName { get; }
+
+        /// <summary>
+        /// Gets the name of the SQLite database for logs.
+        /// </summary>
+        string SqliteLogDatabaseName { get; }
     }
 }

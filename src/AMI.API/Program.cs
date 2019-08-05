@@ -1,6 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using AMI.API.Extensions.WebHostBuilderExtensions;
+using AMI.Core.Constants;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Serilog;
+using Serilog.Events;
 
 namespace AMI.API
 {
@@ -35,6 +40,7 @@ namespace AMI.API
                           .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
                     config.AddEnvironmentVariables();
                 })
+                .AppendSerilog()
                 .UseStartup<Startup>();
     }
 }

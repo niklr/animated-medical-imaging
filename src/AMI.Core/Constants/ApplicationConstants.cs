@@ -19,5 +19,11 @@
 
         /// <inheritdoc/>
         public string RoleNameSeparator => "#";
+
+        /// <inheritdoc/>
+        public string SqliteDatabaseName => "AmiSqliteDatabase.db";
+
+        /// <inheritdoc/>
+        public string SqliteLogDatabaseName => "AmiLogSqliteDatabase.db";
     }
 }

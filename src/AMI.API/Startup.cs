@@ -1,12 +1,10 @@
 ﻿using System.Net;
 using System.Reflection;
-using System.Threading;
 using AMI.API.Attributes;
 using AMI.API.Extensions.ApplicationBuilderExtensions;
 using AMI.API.Extensions.ServiceCollectionExtensions;
 using AMI.API.Handlers;
 using AMI.API.Hubs;
-using AMI.API.Observers;
 using AMI.API.Providers;
 using AMI.Compress.Extensions.ServiceCollectionExtensions;
 using AMI.Core.Behaviors;
@@ -21,7 +19,6 @@ using AMI.Core.Mappers;
 using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
-using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
@@ -38,7 +35,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NSwag.AspNetCore;
 
 namespace AMI.API
@@ -93,14 +89,6 @@ namespace AMI.API
 
             // Store rate limit counters and IP rules
             services.AddMemoryCache();
-
-            // Add logging services
-            services.AddLogging(builder =>
-            {
-                builder
-                    .AddConfiguration(Configuration.GetSection("Logging"))
-                    .AddConsole();
-            });
 
             // Add hosted services
             services.AddHostedService<ProcessTaskHostedService>();
