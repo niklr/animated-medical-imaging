@@ -23,7 +23,7 @@ namespace AMI.API.Controllers
         /// <returns>A model containing the application information.</returns>
         [HttpGet]
         [OpenApiTag("General")]
-        [ProducesResponseType(typeof(Models.AppInfo), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Models.AppInfoModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             return Ok(await Mediator.Send(new GetQuery()));

@@ -5,15 +5,15 @@ namespace AMI.Core.Entities.Models
     /// <summary>
     /// A model containing information about the application.
     /// </summary>
-    public class AppInfo
+    public class AppInfoModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AppInfo"/> class specifying application name and version.
+        /// Initializes a new instance of the <see cref="AppInfoModel"/> class specifying application name and version.
         /// </summary>
         /// <param name="appName">The name of the application.</param>
         /// <param name="version">The version of the application.</param>
         /// <exception cref="ArgumentNullException">appName</exception>
-        public AppInfo(string appName, string version = null)
+        public AppInfoModel(string appName, string version = null)
         {
             if (string.IsNullOrWhiteSpace(nameof(appName)))
             {

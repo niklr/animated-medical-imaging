@@ -26,6 +26,11 @@
         int[] AllowedPaginationLimitValues { get; }
 
         /// <summary>
+        /// Gets the name of the log file.
+        /// </summary>
+        string LogFilename { get; }
+
+        /// <summary>
         /// Gets the character used to separate the role names.
         /// </summary>
         string RoleNameSeparator { get; }

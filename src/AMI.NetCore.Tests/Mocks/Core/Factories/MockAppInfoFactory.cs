@@ -9,20 +9,20 @@ namespace AMI.NetCore.Tests.Mocks.Core.Factories
 {
     internal class MockAppInfoFactory : IAppInfoFactory
     {
-        public AppInfo Create()
+        public AppInfoModel Create()
         {
             return Create(Assembly.GetExecutingAssembly());
         }
 
-        public AppInfo Create(Type type)
+        public AppInfoModel Create(Type type)
         {
             return Create(Assembly.GetAssembly(type));
         }
 
-        private AppInfo Create(Assembly assembly)
+        private AppInfoModel Create(Assembly assembly)
         {
             var semVer = new SemanticVersion(assembly.GetName().Version.ToStringInvariant());
-            return new AppInfo(assembly.GetName().Name, semVer.ToNormalizedString());
+            return new AppInfoModel(assembly.GetName().Name, semVer.ToNormalizedString());
         }
     }
 }

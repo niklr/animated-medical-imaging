@@ -12,13 +12,13 @@ namespace AMI.Core.Factories
         /// Creates a model containing information about the application.
         /// </summary>
         /// <returns>The model containing information about the application.</returns>
-        AppInfo Create();
+        AppInfoModel Create();
 
         /// <summary>
         /// Creates a model containing information about the application based on the specified type.
         /// </summary>
         /// <param name="type">An object representing a type in the assembly that will be used to derive the application information.</param>
         /// <returns>The model containing information about the application.</returns>
-        AppInfo Create(Type type);
+        AppInfoModel Create(Type type);
     }
 }

@@ -61,7 +61,7 @@ namespace AMI.API
 
         private IHostingEnvironment HostingEnvironment { get; }
 
-        private AppInfo AppInfo { get; }
+        private AppInfoModel AppInfo { get; }
 
         private IDefaultJsonSerializer Serializer { get; }
 

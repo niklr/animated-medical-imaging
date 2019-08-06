@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using AMI.API.Extensions.LoggerConfigurationExtensions;
+using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +26,8 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
         {
             Ensure.ArgumentNotNull(builder, nameof(builder));
 
+            IApplicationConstants constants = new ApplicationConstants();
+
             return builder.UseSerilog((hostingContext, loggerConfiguration) =>
                 {
                     IAppOptions appOptions = new AppOptions();
@@ -41,17 +45,25 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
                     {
                         if (writeToFile)
                         {
-                            var logPath = Path.Combine(appOptions.WorkingDirectory, "Logs");
-                            Directory.CreateDirectory(logPath);
+                            var logFile = new FileInfo(Path.Combine(appOptions.WorkingDirectory, "Logs", constants.LogFilename));
+                            logFile.Directory?.Create();
                             loggerConfiguration
                             .WriteTo.File(
                                 new RenderedCompactJsonFormatter(),
-                                Path.Combine(logPath, "AMI.API.log.txt"),
-                                fileSizeLimitBytes: 1_000_000,
+                                logFile.FullName,
+                                fileSizeLimitBytes: 10_000_000,
                                 rollOnFileSizeLimit: true,
-                                retainedFileCountLimit: 31,
+                                retainedFileCountLimit: 2,
                                 shared: true,
                                 flushToDiskInterval: TimeSpan.FromSeconds(5));
+                        }
+                    }
+                    if (bool.TryParse(hostingContext.Configuration["Logging:WriteToDb"], out bool writeToDb))
+                    {
+                        if (writeToDb)
+                        {
+                            loggerConfiguration
+                            .WriteToSqlite(appOptions, constants);
                         }
                     }
                 });

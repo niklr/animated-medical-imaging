@@ -183,7 +183,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AppInfo"
+                  "$ref": "#/components/schemas/AppInfoModel"
                 }
               }
             }
@@ -2101,7 +2101,7 @@
           }
         }
       },
-      "AppInfo": {
+      "AppInfoModel": {
         "type": "object",
         "description": "A model containing information about the application.",
         "additionalProperties": false,

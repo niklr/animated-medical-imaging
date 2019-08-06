@@ -12,17 +12,17 @@ namespace AMI.Core.Factories
     public class AppInfoFactory : IAppInfoFactory
     {
         /// <inheritdoc/>
-        public AppInfo Create()
+        public AppInfoModel Create()
         {
             var semVer = new SemanticVersion(ReflectionHelper.GetAssemblyVersion());
-            return new AppInfo(ReflectionHelper.GetAssemblyName(), semVer.ToNormalizedString());
+            return new AppInfoModel(ReflectionHelper.GetAssemblyName(), semVer.ToNormalizedString());
         }
 
         /// <inheritdoc/>
-        public AppInfo Create(Type type)
+        public AppInfoModel Create(Type type)
         {
             var semVer = new SemanticVersion(ReflectionHelper.GetAssemblyVersion(type));
-            return new AppInfo(ReflectionHelper.GetAssemblyName(type), semVer.ToNormalizedString());
+            return new AppInfoModel(ReflectionHelper.GetAssemblyName(type), semVer.ToNormalizedString());
         }
     }
 }

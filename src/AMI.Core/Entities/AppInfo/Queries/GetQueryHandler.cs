@@ -10,7 +10,7 @@ namespace AMI.Core.Entities.AppInfo.Queries
     /// <summary>
     /// A query handler to get the application information.
     /// </summary>
-    public class GetQueryHandler : BaseQueryRequestHandler<GetQuery, Models.AppInfo>
+    public class GetQueryHandler : BaseQueryRequestHandler<GetQuery, Models.AppInfoModel>
     {
         private readonly IAppInfoFactory factory;
 
@@ -27,7 +27,7 @@ namespace AMI.Core.Entities.AppInfo.Queries
         }
 
         /// <inheritdoc/>
-        protected override Task<Models.AppInfo> ProtectedHandleAsync(GetQuery request, CancellationToken cancellationToken)
+        protected override Task<Models.AppInfoModel> ProtectedHandleAsync(GetQuery request, CancellationToken cancellationToken)
         {
             return Task.FromResult(factory.Create());
         }

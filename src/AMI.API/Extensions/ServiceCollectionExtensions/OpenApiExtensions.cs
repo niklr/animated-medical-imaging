@@ -17,7 +17,7 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="appInfo">The information about the application.</param>
-        public static void AddCustomOpenApiDocument(this IServiceCollection services, AppInfo appInfo)
+        public static void AddCustomOpenApiDocument(this IServiceCollection services, AppInfoModel appInfo)
         {
             Ensure.ArgumentNotNull(services, nameof(services));
             Ensure.ArgumentNotNull(appInfo, nameof(appInfo));

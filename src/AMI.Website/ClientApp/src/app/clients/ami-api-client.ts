@@ -140,7 +140,7 @@ export interface IAppInfoAmiApiClient {
      * Get application information
      * @return A model containing the application information.
      */
-    get(): Observable<AppInfo>;
+    get(): Observable<AppInfoModel>;
 }
 
 @Injectable()
@@ -158,7 +158,7 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
      * Get application information
      * @return A model containing the application information.
      */
-    get(): Observable<AppInfo> {
+    get(): Observable<AppInfoModel> {
         let url_ = this.baseUrl + "/app-info";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -177,14 +177,14 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<AppInfo>><any>_observableThrow(e);
+                    return <Observable<AppInfoModel>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<AppInfo>><any>_observableThrow(response_);
+                return <Observable<AppInfoModel>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<AppInfo> {
+    protected processGet(response: HttpResponseBase): Observable<AppInfoModel> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -244,7 +244,7 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = AppInfo.fromJS(resultData200);
+            result200 = AppInfoModel.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -252,7 +252,7 @@ export class AppInfoAmiApiClient implements IAppInfoAmiApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<AppInfo>(<any>null);
+        return _observableOf<AppInfoModel>(<any>null);
     }
 }
 
@@ -2123,6 +2123,8 @@ export interface IErrorModel {
 
 /** The API options. */
 export class ApiOptions implements IApiOptions {
+    /** Gets the amount of entities included in a batch operation. Default is 1000. */
+    batchSize?: number;
     /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
 Automatically deletes objects older than the defined period. */
     cleanupPeriod?: number;
@@ -2148,6 +2150,7 @@ Automatically deletes objects older than the defined period. */
 
     init(data?: any) {
         if (data) {
+            this.batchSize = data["batchSize"];
             this.cleanupPeriod = data["cleanupPeriod"];
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.isDevelopment = data["isDevelopment"];
@@ -2166,6 +2169,7 @@ Automatically deletes objects older than the defined period. */
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["batchSize"] = this.batchSize;
         data["cleanupPeriod"] = this.cleanupPeriod;
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["isDevelopment"] = this.isDevelopment;
@@ -2178,6 +2182,8 @@ Automatically deletes objects older than the defined period. */
 
 /** The API options. */
 export interface IApiOptions {
+    /** Gets the amount of entities included in a batch operation. Default is 1000. */
+    batchSize?: number;
     /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
 Automatically deletes objects older than the defined period. */
     cleanupPeriod?: number;
@@ -2550,13 +2556,13 @@ export interface IIIpRateLimitPolicy {
 }
 
 /** A model containing information about the application. */
-export class AppInfo implements IAppInfo {
+export class AppInfoModel implements IAppInfoModel {
     /** Gets the name of the application. */
     appName?: string | undefined;
     /** Gets the application version. */
     appVersion?: string | undefined;
 
-    constructor(data?: IAppInfo) {
+    constructor(data?: IAppInfoModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2572,9 +2578,9 @@ export class AppInfo implements IAppInfo {
         }
     }
 
-    static fromJS(data: any): AppInfo {
+    static fromJS(data: any): AppInfoModel {
         data = typeof data === 'object' ? data : {};
-        let result = new AppInfo();
+        let result = new AppInfoModel();
         result.init(data);
         return result;
     }
@@ -2588,7 +2594,7 @@ export class AppInfo implements IAppInfo {
 }
 
 /** A model containing information about the application. */
-export interface IAppInfo {
+export interface IAppInfoModel {
     /** Gets the name of the application. */
     appName?: string | undefined;
     /** Gets the application version. */
