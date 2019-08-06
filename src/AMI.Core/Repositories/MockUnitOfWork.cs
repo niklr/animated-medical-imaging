@@ -18,7 +18,7 @@ namespace AMI.Core.Repositories
         {
             get
             {
-                return new MockRepository<ObjectEntity>(new List<ObjectEntity>());
+                return new ListRepository<ObjectEntity>(new List<ObjectEntity>());
             }
         }
 
@@ -27,7 +27,7 @@ namespace AMI.Core.Repositories
         {
             get
             {
-                return new MockRepository<ResultEntity>(new List<ResultEntity>());
+                return new ListRepository<ResultEntity>(new List<ResultEntity>());
             }
         }
 
@@ -36,7 +36,7 @@ namespace AMI.Core.Repositories
         {
             get
             {
-                return new MockRepository<TaskEntity>(new List<TaskEntity>());
+                return new ListRepository<TaskEntity>(new List<TaskEntity>());
             }
         }
 
@@ -45,7 +45,7 @@ namespace AMI.Core.Repositories
         {
             get
             {
-                return new MockRepository<TokenEntity>(new List<TokenEntity>());
+                return new ListRepository<TokenEntity>(new List<TokenEntity>());
             }
         }
 
@@ -54,7 +54,7 @@ namespace AMI.Core.Repositories
         {
             get
             {
-                return new MockRepository<UserEntity>(new List<UserEntity>());
+                return new ListRepository<UserEntity>(new List<UserEntity>());
             }
         }
 

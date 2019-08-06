@@ -9,20 +9,20 @@ using RNS.Framework.Collections;
 namespace AMI.Core.Repositories
 {
     /// <summary>
-    /// The mock implementation of the repository.
+    /// The repository implementation based on a list.
     /// </summary>
     /// <typeparam name="T">The type of the entity.</typeparam>
     /// <seealso cref="IRepository{T}" />
-    public class MockRepository<T> : IRepository<T>
+    public class ListRepository<T> : IRepository<T>
         where T : class
     {
         private readonly IList<T> entities;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockRepository{T}"/> class.
+        /// Initializes a new instance of the <see cref="ListRepository{T}"/> class.
         /// </summary>
         /// <param name="entities">The entities list.</param>
-        public MockRepository(IList<T> entities)
+        public ListRepository(IList<T> entities)
         {
             this.entities = entities ?? throw new ArgumentNullException(nameof(entities));
         }

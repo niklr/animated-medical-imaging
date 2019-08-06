@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppInfoAmiApiClient, AppInfo } from '../clients/ami-api-client';
+import { AppInfoAmiApiClient, AppInfoModel } from '../clients/ami-api-client';
 import { BaseProxy } from './base.proxy';
 import { AuthService } from '../services/auth.service';
 import { ConfigService } from '../services/config.service';
@@ -17,7 +17,7 @@ export class AppProxy extends BaseProxy {
       retryCounter = 0;
     }
     super.preflight().then(() => {
-      this.appInfoClient.get().subscribe((result: AppInfo) => {
+      this.appInfoClient.get().subscribe((result: AppInfoModel) => {
         ConfigService.options.version = result.appVersion;
       }, error => {
         if (retryCounter <= 3) {

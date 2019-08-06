@@ -4,10 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Repositories;
 using RNS.Framework.Collections;
 
-namespace AMI.Infrastructure.Repositories
+namespace AMI.Core.Repositories
 {
     /// <summary>
     /// The base implementation all repositories have in common.
@@ -20,17 +19,15 @@ namespace AMI.Infrastructure.Repositories
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseRepository{TEntity}"/> class.
         /// </summary>
-        /// <param name="repository">The repository.</param>
-        /// <exception cref="ArgumentNullException">repository</exception>
-        public BaseRepository(IRepository<TEntity> repository)
+        public BaseRepository()
         {
-            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         /// <summary>
         /// Gets the repository.
         /// </summary>
-        protected IRepository<TEntity> Repository { get; }
+        /// <returns>The repository.</returns>
+        protected abstract IRepository<TEntity> Repository { get; }
 
         /// <inheritdoc/>
         public void Add(TEntity entity)

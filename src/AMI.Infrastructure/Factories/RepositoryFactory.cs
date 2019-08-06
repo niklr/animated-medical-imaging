@@ -22,6 +22,12 @@ namespace AMI.Infrastructure.Factories
         }
 
         /// <inheritdoc/>
+        public IAppLogRepository CreateAppLogRepository()
+        {
+            return new AppLogRepository();
+        }
+
+        /// <inheritdoc/>
         public IUserRepository CreateUserRepository()
         {
             return new UserRepository(context.UserRepository);
