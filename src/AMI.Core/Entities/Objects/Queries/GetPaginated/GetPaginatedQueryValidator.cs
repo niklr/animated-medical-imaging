@@ -1,18 +1,18 @@
 ﻿using AMI.Core.Constants;
 using AMI.Core.Entities.Shared.Queries.GetPaginated;
 
-namespace AMI.Core.Entities.Objects.Queries.GetObjects
+namespace AMI.Core.Entities.Objects.Queries.GetPaginated
 {
     /// <summary>
     /// A validator for queries to get a list of paginated objects.
     /// </summary>
-    public class GetObjectsQueryValidator : GetPaginatedQueryValidator<GetObjectsQuery>
+    public class GetPaginatedQueryValidator : GetPaginatedQueryValidator<GetPaginatedQuery>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetObjectsQueryValidator" /> class.
+        /// Initializes a new instance of the <see cref="GetPaginatedQueryValidator" /> class.
         /// </summary>
         /// <param name="constants">The application constants.</param>
-        public GetObjectsQueryValidator(IApplicationConstants constants)
+        public GetPaginatedQueryValidator(IApplicationConstants constants)
             : base(constants)
         {
         }

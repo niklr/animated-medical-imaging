@@ -11,24 +11,24 @@ using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using RNS.Framework.Search;
 
-namespace AMI.Core.Entities.Objects.Queries.GetObjects
+namespace AMI.Core.Entities.Objects.Queries.GetPaginated
 {
     /// <summary>
     /// A query handler to get a list of paginated objects.
     /// </summary>
-    public class GetObjectsQueryHandler : BaseQueryRequestHandler<GetObjectsQuery, PaginationResultModel<ObjectModel>>
+    public class GetPaginatedQueryHandler : BaseQueryRequestHandler<GetPaginatedQuery, PaginationResultModel<ObjectModel>>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetObjectsQueryHandler"/> class.
+        /// Initializes a new instance of the <see cref="GetPaginatedQueryHandler"/> class.
         /// </summary>
         /// <param name="module">The query handler module.</param>
-        public GetObjectsQueryHandler(IQueryHandlerModule module)
+        public GetPaginatedQueryHandler(IQueryHandlerModule module)
             : base(module)
         {
         }
 
         /// <inheritdoc/>
-        protected override async Task<PaginationResultModel<ObjectModel>> ProtectedHandleAsync(GetObjectsQuery request, CancellationToken cancellationToken)
+        protected override async Task<PaginationResultModel<ObjectModel>> ProtectedHandleAsync(GetPaginatedQuery request, CancellationToken cancellationToken)
         {
             var principal = PrincipalProvider.GetPrincipal();
             if (principal == null)

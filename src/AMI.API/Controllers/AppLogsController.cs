@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using AMI.API.Attributes;
+using AMI.Core.Entities.AppLogs.Queries.GetPaginated;
 using AMI.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -23,15 +24,15 @@ namespace AMI.API.Controllers
         /// <param name="limit">The limit to constrain the number of items.</param>
         /// <remarks>
         /// With this GET request you can obtain a paginated list of application logs.
-        /// The application logs are sorted in descending order by creation date.
+        /// The application logs are sorted in descending order by timestamp.
         /// </remarks>
         /// <returns>A model containing a list of paginated application logs.</returns>
         [HttpGet]
         [OpenApiTag("Admin")]
-        [ProducesResponseType(typeof(Models.PaginationResultModel<Models.ObjectModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Models.PaginationResultModel<Models.AppLogModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetPaginatedAsync(int page, int limit)
         {
-            return Ok(null);
+            return Ok(await Mediator.Send(new GetPaginatedQuery { Page = page, Limit = limit }, CancellationToken));
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Abstractions;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
@@ -65,20 +67,32 @@ namespace AMI.Infrastructure.IO.Readers
 
                 IList<AppLogEntity> list = new List<AppLogEntity>();
 
-                IFileSystem fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+                var fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
                 if (fs == null)
                 {
                     throw new UnexpectedNullException("Filesystem could not be created based on the working directory.");
                 }
 
-                foreach (string line in fs.File.ReadLines(logFilePath.LocalPath))
+                using (var stream = fs.FileStream.Create(logFilePath.LocalPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 0x1000, FileOptions.SequentialScan))
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
                 {
-                    ct.ThrowIfCancellationRequested();
-
-                    if (!string.IsNullOrWhiteSpace(line))
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        var serilog = serializer.Deserialize<CompactSerilog>(line);
-                        list.Add(serilog.ToAppLogEntity());
+                        ct.ThrowIfCancellationRequested();
+
+                        if (!string.IsNullOrWhiteSpace(line))
+                        {
+                            try
+                            {
+                                var serilog = serializer.Deserialize<CompactSerilog>(line);
+                                list.Add(serilog.ToAppLogEntity());
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.WriteLine(e.Message);
+                            }
+                        }
                     }
                 }
 
@@ -88,7 +102,7 @@ namespace AMI.Infrastructure.IO.Readers
 
         private void InitLogFilePath()
         {
-            IFileSystem fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+            var fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
             string path = fs.Path.Combine(configuration.Options.WorkingDirectory, constants.LogFilePath);
 
             if (!Uri.TryCreate(path, UriKind.RelativeOrAbsolute, out var logFilePath))
@@ -99,6 +113,9 @@ namespace AMI.Infrastructure.IO.Readers
             this.logFilePath = logFilePath;
         }
 
+        /// <summary>
+        /// Based on https://github.com/serilog/serilog-formatting-compact
+        /// </summary>
         [DataContract]
         private class CompactSerilog
         {

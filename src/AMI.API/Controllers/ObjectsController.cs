@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Objects.Queries.GetById;
-using AMI.Core.Entities.Objects.Queries.GetObjects;
+using AMI.Core.Entities.Objects.Queries.GetPaginated;
 using AMI.Core.IO.Uploaders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +46,7 @@ namespace AMI.API.Controllers
         [ProducesResponseType(typeof(Models.PaginationResultModel<Models.ObjectModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetPaginatedAsync(int page, int limit)
         {
-            return Ok(await Mediator.Send(new GetObjectsQuery { Page = page, Limit = limit }, CancellationToken));
+            return Ok(await Mediator.Send(new GetPaginatedQuery { Page = page, Limit = limit }, CancellationToken));
         }
 
         /// <summary>

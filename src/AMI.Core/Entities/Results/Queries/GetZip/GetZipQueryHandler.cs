@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,7 +71,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
                 throw new UnexpectedNullException($"The base path of result {request.Id} is null.");
             }
 
-            IFileSystem fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+            var fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
             if (fs == null)
             {
                 throw new UnexpectedNullException("Filesystem could not be created based on the working directory.");

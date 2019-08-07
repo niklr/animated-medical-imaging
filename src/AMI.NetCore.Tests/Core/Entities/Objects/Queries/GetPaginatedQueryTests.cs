@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 using AMI.Core.Entities.Objects.Commands.Create;
-using AMI.Core.Entities.Objects.Queries.GetObjects;
+using AMI.Core.Entities.Objects.Queries.GetPaginated;
 using AMI.Domain.Exceptions;
 using MediatR;
 using NUnit.Framework;
@@ -9,10 +9,10 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Entities.Objects.Queries
 {
     [TestFixture]
-    public class GetObjectsQueryTests : BaseTest
+    public class GetPaginatedQueryTests : BaseTest
     {
         [Test]
-        public void GetObjectsQuery()
+        public void GetPaginatedObjectsQuery()
         {
             // Arrange
             var mediator = GetService<IMediator>();
@@ -25,7 +25,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Queries
                 SourcePath = CreateTempFile(dataPath)
             };
             var commandResult = mediator.Send(command, ct).Result;
-            var query = new GetObjectsQuery { Page = 0, Limit = 25 };
+            var query = new GetPaginatedQuery { Page = 0, Limit = 25 };
 
             try
             {
@@ -48,12 +48,12 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Queries
         }
 
         [Test]
-        public void GetObjectsQuery_Validation_Failures()
+        public void GetPaginatedObjectsQuery_Validation_Failures()
         {
             // Arrange
             var mediator = GetService<IMediator>();
             var ct = new CancellationToken();
-            var query = new GetObjectsQuery { Page = -1 };
+            var query = new GetPaginatedQuery { Page = -1 };
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<ValidationException>(() => mediator.Send(query, ct));
