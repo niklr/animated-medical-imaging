@@ -24,7 +24,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
     {
         private readonly IAppConfiguration configuration;
         private readonly IArchiveWriter writer;
-        private readonly IFileSystem fileSystem;
+        private readonly IFileSystemStrategy fileSystemStrategy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetZipQueryHandler"/> class.
@@ -42,13 +42,7 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.writer = writer ?? throw new ArgumentNullException(nameof(writer));
-
-            if (fileSystemStrategy == null)
-            {
-                throw new ArgumentNullException(nameof(fileSystemStrategy));
-            }
-
-            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+            this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
         }
 
         /// <inheritdoc/>
@@ -78,8 +72,14 @@ namespace AMI.Core.Entities.Results.Queries.GetZip
                 throw new UnexpectedNullException($"The base path of result {request.Id} is null.");
             }
 
-            var fullBasePath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, entity.BasePath);
-            var items = fileSystem.Directory.EnumerateFiles(fullBasePath, "*.*", SearchOption.TopDirectoryOnly);
+            IFileSystem fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+            if (fs == null)
+            {
+                throw new UnexpectedNullException("Filesystem could not be created based on the working directory.");
+            }
+
+            var fullBasePath = fs.Path.Combine(configuration.Options.WorkingDirectory, entity.BasePath);
+            var items = fs.Directory.EnumerateFiles(fullBasePath, "*.*", SearchOption.TopDirectoryOnly);
 
             var archive = writer.Create(CompressionType.None);
             await writer.AddFilesAsync(items, dfp => dfp, en => en.Substring(fullBasePath.Length), archive, cancellationToken);

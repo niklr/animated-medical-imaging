@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using AMI.Compress.Extensions.ServiceCollectionExtensions;
@@ -36,16 +37,14 @@ namespace AMI.NetCore.Tests
 {
     public class BaseTest
     {
-        private readonly ServiceProvider serviceProvider;
+        private readonly ServiceCollection services;
+        private ServiceProvider serviceProvider;   
 
         public BaseTest()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
+            var configuration = CreateConfigurationBuilder().Build();
 
-            var services = new ServiceCollection();
+            services = new ServiceCollection();
 
             services.AddOptions();
             services.Configure<AppOptions>(configuration.GetSection("AppOptions"));
@@ -116,6 +115,11 @@ namespace AMI.NetCore.Tests
             return Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", filename);
         }
 
+        public string GetTestPath()
+        {
+            return Path.Combine(FileSystemHelper.BuildCurrentPath(), "data", "test");
+        }
+
         public string GetWorkingDirectoryPath(string path)
         {
             var configuration = GetService<IAppConfiguration>();
@@ -161,6 +165,25 @@ namespace AMI.NetCore.Tests
                 Id = id
             };
             mediator.Send(command);
+        }
+
+        public void OverrideConfigurationSection(string sectionName, IDictionary<string, string> dict)
+        {
+            var configurationRoot = CreateConfigurationBuilder().Build();
+            var section = configurationRoot.GetSection(sectionName);
+            foreach (var kvp in dict)
+            {
+                section[kvp.Key] = kvp.Value;
+            }
+            services.Configure<AppOptions>(section);
+            serviceProvider = services.BuildServiceProvider();
+        }
+
+        private IConfigurationBuilder CreateConfigurationBuilder()
+        {
+            return new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
         }
     }
 }

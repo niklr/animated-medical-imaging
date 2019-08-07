@@ -1,49 +1,137 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions;
+using System.Runtime.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
+using AMI.Core.Configurations;
 using AMI.Core.Constants;
-using AMI.Core.Entities.Models;
 using AMI.Core.IO.Readers;
 using AMI.Core.IO.Serializers;
+using AMI.Core.Strategies;
 using AMI.Domain.Entities;
-using Microsoft.Extensions.Logging;
+using AMI.Domain.Exceptions;
+using RNS.Framework.Extensions.MutexExtensions;
+using RNS.Framework.Extensions.Reflection;
 
 namespace AMI.Infrastructure.IO.Readers
 {
+    /// <summary>
+    /// A reader for application logs.
+    /// </summary>
     public class AppLogReader : IAppLogReader
     {
-        private readonly ILogger logger;
-        private readonly IAppOptions options;
+        private static Mutex processMutex;
+
+        private readonly IAppConfiguration configuration;
         private readonly IApplicationConstants constants;
+        private readonly IFileSystemStrategy fileSystemStrategy;
         private readonly IDefaultJsonSerializer serializer;
 
-        public AppLogReader(ILoggerFactory loggerFactory, IAppOptions options, IApplicationConstants constants, IDefaultJsonSerializer serializer)
+        private Uri logFilePath;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppLogReader"/> class.
+        /// </summary>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="constants">The application constants.</param>
+        /// <param name="fileSystemStrategy">The file system strategy.</param>
+        /// <param name="serializer">The JSON serializer.</param>
+        public AppLogReader(
+            IAppConfiguration configuration,
+            IApplicationConstants constants,
+            IFileSystemStrategy fileSystemStrategy,
+            IDefaultJsonSerializer serializer)
         {
-            logger = loggerFactory?.CreateLogger<AppLogReader>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-            this.options = options ?? throw new ArgumentNullException(nameof(options));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
+            this.fileSystemStrategy = fileSystemStrategy ?? throw new ArgumentNullException(nameof(fileSystemStrategy));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
         /// <inheritdoc/>
-        public IList<AppLogEntity> Read()
+        public Task<IList<AppLogEntity>> ReadAsync(CancellationToken ct)
         {
-            List<AppLogEntity> items = new List<AppLogEntity>();
+            processMutex = new Mutex(false, this.GetMethodName());
 
-            try
+            return processMutex.Execute(new TimeSpan(0, 0, 2), () =>
             {
-                using (StreamReader reader = new StreamReader(Path.Combine(options.WorkingDirectory, "Logs", constants.LogFilename)))
+                ct.ThrowIfCancellationRequested();
+
+                if (logFilePath == null)
                 {
-                    string json = reader.ReadToEnd();
-                    items = serializer.Deserialize<List<AppLogEntity>>(json);
+                    InitLogFilePath();
                 }
-            }
-            catch (Exception e)
+
+                IList<AppLogEntity> list = new List<AppLogEntity>();
+
+                IFileSystem fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+                if (fs == null)
+                {
+                    throw new UnexpectedNullException("Filesystem could not be created based on the working directory.");
+                }
+
+                foreach (string line in fs.File.ReadLines(logFilePath.LocalPath))
+                {
+                    ct.ThrowIfCancellationRequested();
+
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        var serilog = serializer.Deserialize<CompactSerilog>(line);
+                        list.Add(serilog.ToAppLogEntity());
+                    }
+                }
+
+                return Task.FromResult(list);
+            });
+        }
+
+        private void InitLogFilePath()
+        {
+            IFileSystem fs = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+            string path = fs.Path.Combine(configuration.Options.WorkingDirectory, constants.LogFilePath);
+
+            if (!Uri.TryCreate(path, UriKind.RelativeOrAbsolute, out var logFilePath))
             {
-                logger.LogError(e, e.Message);
+                throw new Exception($"Invalid log file path '{constants.LogFilePath}'.");
             }
 
-            return new List<AppLogEntity>();
+            this.logFilePath = logFilePath;
+        }
+
+        [DataContract]
+        private class CompactSerilog
+        {
+            [DataMember(Name = "@t")]
+            public DateTime Timestamp { get; set; }
+
+            [DataMember(Name = "@m")]
+            public string Message { get; set; }
+
+            [DataMember(Name = "@l")]
+            public string Level { get; set; }
+
+            [DataMember(Name = "@x")]
+            public string Exception { get; set; }
+
+            [DataMember(Name = "@i")]
+            public string EventId { get; set; }
+
+            [DataMember(Name = "SourceContext")]
+            public string SourceContext { get; set; }
+
+            public AppLogEntity ToAppLogEntity()
+            {
+                return new AppLogEntity()
+                {
+                    Timestamp = Timestamp,
+                    Message = Message,
+                    Level = Level,
+                    Exception = Exception,
+                    EventId = EventId,
+                    SourceContext = SourceContext
+                };
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AMI.Core.IO.Builders;
 using AMI.Core.IO.Generators;
+using AMI.Core.IO.Readers;
 using AMI.Core.IO.Uploaders;
 using AMI.Core.IO.Writers;
 using AMI.Core.Modules;
@@ -8,6 +9,7 @@ using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Infrastructure.IO.Builders;
 using AMI.Infrastructure.IO.Generators;
+using AMI.Infrastructure.IO.Readers;
 using AMI.Infrastructure.IO.Uploaders;
 using AMI.Infrastructure.IO.Writers;
 using AMI.Infrastructure.Modules;
@@ -32,6 +34,7 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
         {
             services.AddScoped<ICommandHandlerModule, CommandHandlerModule>();
             services.AddScoped<IQueryHandlerModule, QueryHandlerModule>();
+            services.AddScoped<IAppLogReader, AppLogReader>();
             services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IGatewayService, GatewayService>();
             services.AddScoped<IIdentityService, IdentityService>();

@@ -45,7 +45,13 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
                     {
                         if (writeToFile)
                         {
-                            var logFile = new FileInfo(Path.Combine(appOptions.WorkingDirectory, "Logs", constants.LogFilename));
+                            string path = Path.Combine(appOptions.WorkingDirectory, constants.LogFilePath);
+                            if (!Uri.TryCreate(path, UriKind.RelativeOrAbsolute, out var logFilePath))
+                            {
+                                throw new Exception($"Invalid log file path '{constants.LogFilePath}'.");
+                            }
+
+                            var logFile = new FileInfo(logFilePath.LocalPath);
                             logFile.Directory?.Create();
                             loggerConfiguration
                             .WriteTo.File(

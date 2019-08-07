@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
 using AnimatedGif;
+using RNS.Framework.Tools;
 
 namespace AMI.Gif.Writers
 {
@@ -52,15 +53,8 @@ namespace AMI.Gif.Writers
                 throw new ArgumentNullException(nameof(sourceFilenames));
             }
 
-            if (mapper == null)
-            {
-                throw new ArgumentNullException(nameof(mapper));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNull(mapper, nameof(mapper));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             await Task.Run(
                 () =>
