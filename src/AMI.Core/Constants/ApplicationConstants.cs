@@ -21,6 +21,12 @@
         public string LogFilePath => @"Logs\AMI.log.txt";
 
         /// <inheritdoc/>
+        public int MaxUploadChunkSize => 10_000_000;
+
+        /// <inheritdoc/>
+        public int MinUploadChunkSize => 1;
+
+        /// <inheritdoc/>
         public string RoleNameSeparator => "#";
 
         /// <inheritdoc/>

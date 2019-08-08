@@ -97,6 +97,7 @@ namespace AMI.API.Controllers
         /// With this POST request you can upload a file in chunks in order to create an object.
         /// If the file format consists of multiple files (e.g. Analyze or single-frame DICOM)
         /// they have to be uploaded as single-file archive (.tar, tar.gz, .zip, .7z).
+        /// The size of a single chunk must be between 100 and 10'000 kilobytes.
         /// </remarks>
         /// <returns>A model containing the result of the resumable upload.</returns>
         [HttpPost("upload")]

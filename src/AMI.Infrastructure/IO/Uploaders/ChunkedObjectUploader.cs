@@ -10,6 +10,7 @@ using AMI.Core.Entities.Objects.Commands.Create;
 using AMI.Core.IO.Uploaders;
 using AMI.Core.Strategies;
 using MediatR;
+using RNS.Framework.Tools;
 
 namespace AMI.Infrastructure.IO.Uploaders
 {
@@ -19,36 +20,30 @@ namespace AMI.Infrastructure.IO.Uploaders
     /// <seealso cref="IChunkedObjectUploader" />
     public class ChunkedObjectUploader : IChunkedObjectUploader
     {
+        private readonly IMediator mediator;
+        private readonly IApplicationConstants constants;
+        private readonly IAppConfiguration configuration;
         private readonly string baseUploadPath;
         private readonly IFileSystem fileSystem;
-        private readonly IApplicationConstants constants;
-        private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChunkedObjectUploader" /> class.
         /// </summary>
-        /// <param name="constants">The application constants.</param>
         /// <param name="mediator">The mediator.</param>
+        /// <param name="constants">The application constants.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public ChunkedObjectUploader(
-            IApplicationConstants constants,
             IMediator mediator,
+            IApplicationConstants constants,
             IAppConfiguration configuration,
             IFileSystemStrategy fileSystemStrategy)
         {
-            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-
-            if (fileSystemStrategy == null)
-            {
-                throw new ArgumentNullException(nameof(fileSystemStrategy));
-            }
+            Ensure.ArgumentNotNull(fileSystemStrategy, nameof(fileSystemStrategy));
 
             fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
             baseUploadPath = fileSystem.Path.Combine(configuration.Options.WorkingDirectory, "Upload", "Objects");
@@ -57,22 +52,26 @@ namespace AMI.Infrastructure.IO.Uploaders
         /// <inheritdoc/>
         public async Task<UploadChunkResultModel> UploadAsync(int totalChunks, int chunkNumber, string uid, Stream input, CancellationToken ct)
         {
-            if (string.IsNullOrWhiteSpace(uid))
-            {
-                throw new ArgumentNullException(nameof(uid));
-            }
+            Ensure.ArgumentNotNullOrWhiteSpace(uid, nameof(uid));
+            Ensure.ArgumentNotNull(input, nameof(input));
 
-            if (input == null)
+            if (input.Length < constants.MinUploadChunkSize || input.Length > constants.MaxUploadChunkSize)
             {
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentException($"The size of a single chunk must be between {constants.MinUploadChunkSize} and {constants.MaxUploadChunkSize} bytes.");
             }
 
             string localPath = CreateLocalUploadPath(uid);
             string chunkFilename = GetChunkedFilename(chunkNumber, uid);
             string chunkFilePath = fileSystem.Path.Combine(localPath, chunkFilename);
 
-            // TODO: define max chunk count
             int currentChunkCount = fileSystem.Directory.GetFiles(localPath).Length;
+
+            if (configuration.Options.MaxSizeKilobytes > 0 &&
+                currentChunkCount * input.Length > configuration.Options.MaxSizeKilobytes * 1000)
+            {
+                fileSystem.Directory.Delete(localPath, true);
+                throw new ArgumentException($"The file size exceeds the limit of {configuration.Options.MaxSizeKilobytes} kilobytes.");
+            }
 
             using (Stream output = fileSystem.File.OpenWrite(chunkFilePath))
             {
@@ -116,6 +115,12 @@ namespace AMI.Infrastructure.IO.Uploaders
                             while ((len = inputStream.Read(buffer, 0, buffer.Length)) > 0)
                             {
                                 outputStream.Write(buffer, 0, len);
+
+                                if (configuration.Options.MaxSizeKilobytes > 0 &&
+                                    outputStream.Length > configuration.Options.MaxSizeKilobytes * 1000)
+                                {
+                                    throw new ArgumentException($"The file size exceeds the limit of {configuration.Options.MaxSizeKilobytes} kilobytes.");
+                                }
                             }
 
                             inputStream.Close();

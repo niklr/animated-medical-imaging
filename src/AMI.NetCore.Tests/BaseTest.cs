@@ -167,10 +167,10 @@ namespace AMI.NetCore.Tests
             mediator.Send(command);
         }
 
-        public void OverrideConfigurationSection(string sectionName, IDictionary<string, string> dict)
+        public void OverrideAppOptions(IDictionary<string, string> dict)
         {
             var configurationRoot = CreateConfigurationBuilder().Build();
-            var section = configurationRoot.GetSection(sectionName);
+            var section = configurationRoot.GetSection("AppOptions");
             foreach (var kvp in dict)
             {
                 section[kvp.Key] = kvp.Value;

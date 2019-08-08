@@ -31,6 +31,16 @@
         string LogFilePath { get; }
 
         /// <summary>
+        /// Gets the maximum size of a single upload chunk in bytes.
+        /// </summary>
+        int MaxUploadChunkSize { get; }
+
+        /// <summary>
+        /// Gets the minimum size of a single upload chunk in bytes.
+        /// </summary>
+        int MinUploadChunkSize { get; }
+
+        /// <summary>
         /// Gets the character used to separate the role names.
         /// </summary>
         string RoleNameSeparator { get; }

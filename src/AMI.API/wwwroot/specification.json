@@ -740,7 +740,7 @@
           "Objects"
         ],
         "summary": "Upload an object",
-        "description": "With this POST request you can upload a file in chunks in order to create an object.\nIf the file format consists of multiple files (e.g. Analyze or single-frame DICOM)\nthey have to be uploaded as single-file archive (.tar, tar.gz, .zip, .7z).",
+        "description": "With this POST request you can upload a file in chunks in order to create an object.\nIf the file format consists of multiple files (e.g. Analyze or single-frame DICOM)\nthey have to be uploaded as single-file archive (.tar, tar.gz, .zip, .7z).\nThe size of a single chunk must be between 100 and 10'000 kilobytes.",
         "operationId": "Objects_Upload",
         "parameters": [
           {

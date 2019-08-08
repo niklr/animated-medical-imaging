@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Domain.Exceptions;
@@ -104,7 +103,6 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
                         // pull the bearer token out of the QueryString for WebSocket connections
                         if (context.Request.Query.TryGetValue("authtoken", out StringValues token))
                         {
-                            Debug.WriteLine($"authtoken received: {token}");
                             context.Token = token;
                         }
 

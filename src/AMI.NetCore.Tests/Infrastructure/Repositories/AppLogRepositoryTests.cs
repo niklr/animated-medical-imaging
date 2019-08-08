@@ -13,11 +13,10 @@ namespace AMI.NetCore.Tests.Infrastructure.Repositories
         public void AppLogRepository_GetQuery()
         {
             // Arrange
-            var dict = new Dictionary<string, string>()
+            OverrideAppOptions(new Dictionary<string, string>()
             {
                 { "WorkingDirectory", GetTestPath() }
-            };
-            OverrideConfigurationSection("AppOptions", dict);
+            });
             var repository = GetService<IAppLogRepository>();
 
             // Act

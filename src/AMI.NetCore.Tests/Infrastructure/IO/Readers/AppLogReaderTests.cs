@@ -14,11 +14,10 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Readers
         public void AppLogReader_ReadAsync()
         {
             // Arrange
-            var dict = new Dictionary<string, string>()
+            OverrideAppOptions(new Dictionary<string, string>()
             {
                 { "WorkingDirectory", GetTestPath() }
-            };
-            OverrideConfigurationSection("AppOptions", dict);
+            });
             var reader = GetService<IAppLogReader>();
             var ct = new CancellationToken();
 

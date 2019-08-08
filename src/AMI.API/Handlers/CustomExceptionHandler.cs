@@ -50,8 +50,6 @@ namespace AMI.API.Handlers
         {
             if (!context.Response.HasStarted)
             {
-                logger.LogWarning(exception, exception.Message);
-
                 var code = HttpStatusCode.InternalServerError;
 
                 var result = new ErrorModel()
@@ -63,30 +61,38 @@ namespace AMI.API.Handlers
                 switch (exception.GetType().Name)
                 {
                     case nameof(AuthException):
+                        logger.LogInformation(exception, exception.Message);
                         code = HttpStatusCode.Unauthorized;
                         break;
                     case nameof(ForbiddenException):
+                        logger.LogInformation(exception, exception.Message);
                         code = HttpStatusCode.Forbidden;
                         break;
                     case nameof(ArgumentException):
                     case nameof(ArgumentNullException):
+                        logger.LogInformation(exception, exception.Message);
                         code = HttpStatusCode.BadRequest;
                         break;
                     case nameof(ValidationException):
+                        logger.LogInformation(exception, exception.Message);
                         code = HttpStatusCode.BadRequest;
                         result.ValidationErrors = ((ValidationException)exception).Failures;
                         break;
                     case nameof(DeleteFailureException):
                     case nameof(UpdateFailureException):
+                        logger.LogInformation(exception, exception.Message);
                         code = HttpStatusCode.BadRequest;
                         break;
                     case nameof(NotFoundException):
+                        logger.LogInformation(exception, exception.Message);
                         code = HttpStatusCode.NotFound;
                         break;
                     case nameof(OutOfSyncException):
+                        logger.LogInformation(exception, exception.Message);
                         code = HttpStatusCode.Conflict;
                         break;
                     default:
+                        logger.LogWarning(exception, exception.Message);
                         break;
                 }
 

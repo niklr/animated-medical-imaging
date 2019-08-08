@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Entities.Models;
 using AMI.Core.IO.Uploaders;
+using AMI.NetCore.Tests.Helpers;
 using NUnit.Framework;
 
 namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
@@ -11,13 +12,6 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
     [TestFixture]
     public class ChunkedObjectUploaderTests : BaseTest
     {
-        private readonly IChunkedObjectUploader uploader;
-
-        public ChunkedObjectUploaderTests()
-        {
-            uploader = GetService<IChunkedObjectUploader>();
-        }
-
         [Test]
         public void ChunkedObjectUploader_UploadAsync_1()
         {
@@ -25,9 +19,10 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
             var ct = new CancellationToken();
             string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
             var dataPath = GetDataPath(filename);
+            var uploader = GetService<IChunkedObjectUploader>();
 
             // Act
-            var result = UploadAsync(dataPath, ct).Result;
+            var result = UploadHelper.UploadAsync(uploader, dataPath, ct).Result;
             var fullSourcePath = GetWorkingDirectoryPath(result.SourcePath);
 
             // Assert
@@ -49,9 +44,10 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
             var ct = new CancellationToken();
             string filename = "SMIR.Brain.XX.O.CT.346124.nii";
             var dataPath = GetDataPath(filename);
+            var uploader = GetService<IChunkedObjectUploader>();
 
             // Act
-            var result = UploadAsync(dataPath, ct).Result;
+            var result = UploadHelper.UploadAsync(uploader, dataPath, ct).Result;
             var fullSourcePath = GetWorkingDirectoryPath(result.SourcePath);
 
             // Assert
@@ -65,40 +61,31 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
             DeleteObject(result.Id);
             Assert.IsFalse(File.Exists(fullSourcePath));
         }
+    }
 
-        private async Task<ObjectModel> UploadAsync(string dataPath, CancellationToken ct)
+    [TestFixture]
+    public class ChunkedObjectUploaderExceptionTests : BaseTest
+    {
+        [Test]
+        public void ChunkedObjectUploader_ExceedsFileSizeLimit()
         {
-            string uid = Guid.NewGuid().ToString();
-            string filename = Path.GetFileName(dataPath);
-            using (FileStream stream = new FileStream(dataPath, FileMode.Open))
+            // Arrange
+            var ct = new CancellationToken();
+            string filename = "SMIR.Brain.XX.O.CT.346124.nii";
+            var dataPath = GetDataPath(filename);
+            OverrideAppOptions(new Dictionary<string, string>()
             {
-                long chunkLength = 1048576;
-                if (stream.Length < chunkLength)
-                {
-                    chunkLength = stream.Length;
-                }
-                long totalChunks = stream.Length / chunkLength;
+                { "MaxSizeKilobytes", "1000" }
+            });
+            var uploader = GetService<IChunkedObjectUploader>();
 
-                byte[] chunk = new byte[chunkLength];
-                int chunkNumber = 1;
-                int maximumNumberOfBytesToRead = chunk.Length;
-                while (stream.Read(chunk, 0, maximumNumberOfBytesToRead) > 0)
-                {
-                    using (MemoryStream chunkStream = new MemoryStream(chunk))
-                    {
-                        await uploader.UploadAsync(Convert.ToInt32(totalChunks), chunkNumber, uid, chunkStream, ct);
-                    }
+            // Act
+            async Task func() => await UploadHelper.UploadAsync(uploader, dataPath, ct);
 
-                    long numberOfBytesToReadLeft = stream.Length - stream.Position;
-                    if (numberOfBytesToReadLeft < maximumNumberOfBytesToRead)
-                    {
-                        maximumNumberOfBytesToRead = (int)numberOfBytesToReadLeft;
-                        chunk = new byte[maximumNumberOfBytesToRead];
-                    }
-                    chunkNumber++;
-                }
-            }
-            return await uploader.CommitAsync(filename, filename, uid, ct);
+            // Assert
+            var ex = Assert.ThrowsAsync<ArgumentException>(func);
+            Assert.IsNotNull(ex);
+            Assert.AreEqual("The file size exceeds the limit of 1000 kilobytes.", ex.Message);
         }
     }
 }

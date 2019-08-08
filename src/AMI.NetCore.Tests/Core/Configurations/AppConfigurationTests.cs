@@ -24,11 +24,10 @@ namespace AMI.NetCore.Tests.Core.Configurations
         public void AppConfiguration_Override()
         {
             // Arrange
-            var dict = new Dictionary<string, string>()
+            OverrideAppOptions(new Dictionary<string, string>()
             {
                 { "WorkingDirectory", "new_working_directory" }
-            };
-            OverrideConfigurationSection("AppOptions", dict);
+            });
             var configuration = GetService<IAppConfiguration>();
 
             // Assert
