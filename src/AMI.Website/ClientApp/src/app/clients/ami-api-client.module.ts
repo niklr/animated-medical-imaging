@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import {
   ApiOptionsAmiApiClient,
-  AppOptionsAmiApiClient,
   AppInfoAmiApiClient,
+  AppLogsAmiApiClient,
+  AppOptionsAmiApiClient,
   ObjectsAmiApiClient,
   TasksAmiApiClient,
   TokensAmiApiClient
@@ -17,8 +18,9 @@ import {
   ],
   providers: [
     ApiOptionsAmiApiClient,
-    AppOptionsAmiApiClient,
     AppInfoAmiApiClient,
+    AppLogsAmiApiClient,
+    AppOptionsAmiApiClient,
     ObjectsAmiApiClient,
     TasksAmiApiClient,
     TokensAmiApiClient

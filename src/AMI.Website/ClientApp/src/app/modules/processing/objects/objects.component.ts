@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { PubSubTopic } from '../../../enums';
 import { PageEvent } from '../../../events/page.event';
 import { ObjectModelExtended } from '../../../models/object-extended.model';
-import { ObjectProxy } from '../../../proxies';
+import { ObjectProxy } from '../../../proxies/object.proxy';
 import { ObjectStore } from '../../../stores/object.store';
 import { ConfigService } from '../../../services/config.service';
 import { NotificationService } from '../../../services/notification.service';

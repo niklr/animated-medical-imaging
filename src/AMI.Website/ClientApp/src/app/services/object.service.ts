@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ObjectModelExtended } from '../models/object-extended.model';
-import { TaskProxy, ObjectProxy } from '../proxies';
+import { TaskProxy } from '../proxies/task.proxy';
+import { ObjectProxy } from '../proxies/object.proxy';
 import { NotificationService } from './notification.service';
 import { ObjectStore } from '../stores/object.store';
 import { CallbackWrapper } from '../wrappers/callback.wrapper';

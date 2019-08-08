@@ -7,6 +7,7 @@ import { API_BASE_URL } from './clients/ami-api-client';
 import { AppComponent } from './app.component';
 import { TimeoutInterceptor, DEFAULT_TIMEOUT, TokenInterceptor } from './interceptors';
 import { GatewayHub } from './hubs';
+import { AdminProxy } from './proxies/admin.proxy';
 import { AppProxy } from './proxies/app.proxy';
 import { ObjectProxy } from './proxies/object.proxy';
 import { TaskProxy } from './proxies/task.proxy';
@@ -48,6 +49,7 @@ export function initBaseAmiApi() {
   ],
   providers: [
     GatewayHub,
+    AdminProxy,
     AppProxy,
     ObjectProxy,
     TaskProxy,

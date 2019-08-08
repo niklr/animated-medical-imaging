@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using RNS.Framework.Tools;
 using Serilog;
+using Serilog.Events;
 using Serilog.Formatting.Compact;
 
 namespace AMI.API.Extensions.WebHostBuilderExtensions
@@ -41,6 +42,7 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
                         .ReadFrom.Configuration(hostingContext.Configuration)
                         .Enrich.FromLogContext()
                         .WriteTo.Console();
+
                     if (bool.TryParse(hostingContext.Configuration["Logging:WriteToFile"], out bool writeToFile))
                     {
                         if (writeToFile)
@@ -57,6 +59,7 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
                             .WriteTo.File(
                                 new RenderedCompactJsonFormatter(),
                                 logFile.FullName,
+                                LogEventLevel.Warning,
                                 fileSizeLimitBytes: 10_000_000,
                                 rollOnFileSizeLimit: true,
                                 retainedFileCountLimit: 2,

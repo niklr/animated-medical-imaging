@@ -1,9 +1,6 @@
 <nav role="navigation">
   <div class="nav-wrapper container">
-    <!-- <a id="logo-container" href="#" class="brand-logo">AMI</a> -->
-    <a href="https://github.com/niklr/animated-medical-imaging" target="_blank" rel="noopener noreferrer">
-      <i class="fab fa-github"></i>
-    </a>
+    <a id="logo-container" [routerLink]="['/']" class="brand-logo">AMI</a>
     <ul class="right hide-on-med-and-down">
       <ng-template [ngTemplateOutlet]="showTopnavEntriesBlock"></ng-template>
       <li>
@@ -29,6 +26,11 @@
 <ng-template #showTopnavEntriesBlock>
   <li *ngIf="isAdmin">
     <a [routerLink]="['/admin/logs']">Admin</a>
+  </li>
+  <li>
+    <a href="https://github.com/niklr/animated-medical-imaging" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-github"></i>
+    </a>
   </li>
   <li *ngIf="isAuthenticated">
     <a>
