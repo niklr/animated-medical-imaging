@@ -1,11 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using AMI.API.Extensions.WebHostBuilderExtensions;
-using AMI.Core.Constants;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Serilog;
-using Serilog.Events;
 
 namespace AMI.API
 {
