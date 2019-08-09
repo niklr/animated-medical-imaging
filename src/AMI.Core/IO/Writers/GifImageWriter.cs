@@ -27,21 +27,7 @@ namespace AMI.Core.IO.Writers
         {
         }
 
-        /// <summary>
-        /// Writes the GIF images asynchronous.
-        /// </summary>
-        /// <param name="destinationPath">The destination path.</param>
-        /// <param name="images">The images.</param>
-        /// <param name="bezierEasingType">Type of the bezier easing.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// The output information for each axis.
-        /// </returns>
-        /// <exception cref="AmiException">
-        /// The writing of the GIF has been cancelled.
-        /// or
-        /// The GIF could not be written.
-        /// </exception>
+        /// <inheritdoc/>
         public async Task<IReadOnlyList<AxisContainerModel<string>>> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,
@@ -55,6 +41,7 @@ namespace AMI.Core.IO.Writers
                 foreach (var axisImages in images.GroupBy(e => e.AxisType))
                 {
                     ct.ThrowIfCancellationRequested();
+
                     string filename = await WriteAsync(
                         destinationPath,
                         axisImages.ToList(),
@@ -76,22 +63,7 @@ namespace AMI.Core.IO.Writers
             }
         }
 
-        /// <summary>
-        /// Writes the GIF image asynchronous.
-        /// </summary>
-        /// <param name="destinationPath">The destination path.</param>
-        /// <param name="images">The images.</param>
-        /// <param name="name">The name of the GIF image without file extension.</param>
-        /// <param name="bezierEasingType">Type of the bezier easing.</param>
-        /// <param name="ct">The cancellation token.</param>
-        /// <returns>
-        /// The filename of the GIF image.
-        /// </returns>
-        /// <exception cref="AmiException">
-        /// The writing of the GIF has been cancelled.
-        /// or
-        /// The GIF could not be written.
-        /// </exception>
+        /// <inheritdoc/>
         public async Task<string> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,
@@ -134,19 +106,6 @@ namespace AMI.Core.IO.Writers
         /// <returns>
         /// A <see cref="Task" /> representing the asynchronous operation.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// destinationPath
-        /// or
-        /// destinationFilename
-        /// or
-        /// sourcePath
-        /// or
-        /// sourceFilenames
-        /// or
-        /// mapper
-        /// or
-        /// ct
-        /// </exception>
         protected abstract Task AbstractWriteAsync(
             string destinationPath,
             string destinationFilename,

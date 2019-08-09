@@ -1899,6 +1899,11 @@
             "type": "boolean",
             "description": "Gets a value indicating whether the current environment is development."
           },
+          "requestTimeoutMilliseconds": {
+            "type": "integer",
+            "description": "Gets the amount of milliseconds before a reuqest times out. Default is 5000.",
+            "format": "int32"
+          },
           "authOptions": {
             "description": "Gets the options used for authentication and authorization.",
             "nullable": true,

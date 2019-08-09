@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Domain.Enums;
-using AMI.Domain.Exceptions;
 
 namespace AMI.Core.IO.Writers
 {
@@ -22,11 +21,6 @@ namespace AMI.Core.IO.Writers
         /// <returns>
         /// The output information for each axis.
         /// </returns>
-        /// <exception cref="AmiException">
-        /// The writing of the GIF has been cancelled.
-        /// or
-        /// The GIF could not be written.
-        /// </exception>
         Task<IReadOnlyList<AxisContainerModel<string>>> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,
@@ -44,11 +38,6 @@ namespace AMI.Core.IO.Writers
         /// <returns>
         /// The filename of the GIF image.
         /// </returns>
-        /// <exception cref="AmiException">
-        /// The writing of the GIF has been cancelled.
-        /// or
-        /// The GIF could not be written.
-        /// </exception>
         Task<string> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,

@@ -21,6 +21,9 @@ namespace AMI.Core.Entities.Models
         public bool IsDevelopment { get; set; } = false;
 
         /// <inheritdoc/>
+        public int RequestTimeoutMilliseconds { get; set; } = 5000;
+
+        /// <inheritdoc/>
         public IAuthOptions AuthOptions { get; set; } = new AuthOptions();
 
         /// <inheritdoc/>

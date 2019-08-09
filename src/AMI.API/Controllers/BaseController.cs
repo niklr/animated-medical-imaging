@@ -26,13 +26,13 @@ namespace AMI.API.Controllers
         {
             get
             {
-                IAppConfiguration configuration = HttpContext.RequestServices.GetService<IAppConfiguration>();
+                IApiConfiguration configuration = HttpContext.RequestServices.GetService<IApiConfiguration>();
                 CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(
                     HttpContext?.RequestAborted ?? default(CancellationToken));
 
-                if (configuration?.Options?.TimeoutMilliseconds > 0)
+                if (configuration?.Options?.RequestTimeoutMilliseconds > 0)
                 {
-                    cts.CancelAfter(configuration.Options.TimeoutMilliseconds);
+                    cts.CancelAfter(configuration.Options.RequestTimeoutMilliseconds);
                 }
 
                 return cts.Token;

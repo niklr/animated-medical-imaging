@@ -49,6 +49,8 @@ namespace AMI.Compress.Extractors
                 throw new NotSupportedException("The archive contains too many levels.");
             }
 
+            ct.ThrowIfCancellationRequested();
+
             var fs = fileSystemStrategy.Create(sourcePath);
             if (fs == null)
             {

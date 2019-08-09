@@ -2132,6 +2132,8 @@ Automatically deletes objects older than the defined period. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */
+    requestTimeoutMilliseconds?: number;
     /** Gets the options used for authentication and authorization. */
     authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
@@ -2154,6 +2156,7 @@ Automatically deletes objects older than the defined period. */
             this.cleanupPeriod = data["cleanupPeriod"];
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.isDevelopment = data["isDevelopment"];
+            this.requestTimeoutMilliseconds = data["requestTimeoutMilliseconds"];
             this.authOptions = data["authOptions"] ? IAuthOptions.fromJS(data["authOptions"]) : <any>undefined;
             this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
             this.ipRateLimitPolicies = data["ipRateLimitPolicies"] ? IIpRateLimitPolicies.fromJS(data["ipRateLimitPolicies"]) : <any>undefined;
@@ -2173,6 +2176,7 @@ Automatically deletes objects older than the defined period. */
         data["cleanupPeriod"] = this.cleanupPeriod;
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["isDevelopment"] = this.isDevelopment;
+        data["requestTimeoutMilliseconds"] = this.requestTimeoutMilliseconds;
         data["authOptions"] = this.authOptions ? this.authOptions.toJSON() : <any>undefined;
         data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
         data["ipRateLimitPolicies"] = this.ipRateLimitPolicies ? this.ipRateLimitPolicies.toJSON() : <any>undefined;
@@ -2191,6 +2195,8 @@ Automatically deletes objects older than the defined period. */
     connectingIpHeaderName?: string | undefined;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */
+    requestTimeoutMilliseconds?: number;
     /** Gets the options used for authentication and authorization. */
     authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
@@ -2775,7 +2781,7 @@ export interface IPaginationModel {
 export class AppOptions implements IAppOptions {
     /** Gets the maximum size in kilobytes. */
     maxSizeKilobytes?: number;
-    /** Gets the maximum of archived entries. */
+    /** Gets the maximum allowed amount of archived entries. */
     maxArchivedEntries?: number;
     /** Gets the timeout in milliseconds. */
     timeoutMilliseconds?: number;
@@ -2821,7 +2827,7 @@ export class AppOptions implements IAppOptions {
 export interface IAppOptions {
     /** Gets the maximum size in kilobytes. */
     maxSizeKilobytes?: number;
-    /** Gets the maximum of archived entries. */
+    /** Gets the maximum allowed amount of archived entries. */
     maxArchivedEntries?: number;
     /** Gets the timeout in milliseconds. */
     timeoutMilliseconds?: number;

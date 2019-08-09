@@ -73,6 +73,8 @@ namespace AMI.Core.Entities.Shared.Commands
             }
             catch (Exception)
             {
+                Context.RollBackTransaction();
+
                 throw;
             }
         }

@@ -155,10 +155,7 @@ namespace AMI.Infrastructure.IO.Uploaders
         /// <exception cref="Exception">Base upload path is not defined.</exception>
         private string CreateLocalUploadPath(string uid)
         {
-            if (string.IsNullOrWhiteSpace(uid))
-            {
-                throw new ArgumentNullException(nameof(uid));
-            }
+            Ensure.ArgumentNotNullOrWhiteSpace(uid, nameof(uid));
 
             string path = fileSystem.Path.Combine(baseUploadPath, uid);
             fileSystem.Directory.CreateDirectory(path);

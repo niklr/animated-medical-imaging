@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.Objects.Commands.Create;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Tasks.Commands.Create;
@@ -23,12 +24,12 @@ namespace AMI.NetCore.Tests.Core.Workers
             // Arrange
             var pause = new ManualResetEvent(false);
             var loggerFactory = GetService<ILoggerFactory>();
-            var queue = GetService<ITaskQueue>();
+            var configuration = GetService<IAppConfiguration>();
             var mediator = GetService<IMediator>();
+            var queue = GetService<ITaskQueue>();
             var context = GetService<IAmiUnitOfWork>();
-            var worker = new TaskWorker(loggerFactory, mediator, queue);
+            var worker = new TaskWorker(loggerFactory, configuration, mediator, queue);
             var cts = new CancellationTokenSource();
-            cts.CancelAfter(2000);
             string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
             string dataPath = GetDataPath(filename);
             var command1 = new CreateObjectCommand()
@@ -49,8 +50,9 @@ namespace AMI.NetCore.Tests.Core.Workers
 
             // Act
             var result2 = mediator.Send(command2, cts.Token).Result;
+            cts.CancelAfter(500);
             await worker.StartAsync(cts.Token);
-            pause.WaitOne(4000);
+            pause.WaitOne(1000);
             var result3 = context.TaskRepository.GetFirstOrDefault(e => e.Id == Guid.Parse(result2.Id));
 
             // Assert
@@ -61,6 +63,7 @@ namespace AMI.NetCore.Tests.Core.Workers
             Assert.AreEqual(WorkerStatus.Terminated, worker.WorkerStatus);
             Assert.IsNotNull(result3);
             Assert.AreNotEqual(Domain.Enums.TaskStatus.Queued, (Domain.Enums.TaskStatus)result3.Status);
+            Assert.AreNotEqual(Domain.Enums.TaskStatus.Processing, (Domain.Enums.TaskStatus)result3.Status);
         }
     }
 }

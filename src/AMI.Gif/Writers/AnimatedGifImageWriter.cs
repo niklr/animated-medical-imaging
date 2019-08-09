@@ -49,7 +49,8 @@ namespace AMI.Gif.Writers
             var fs = fileSystemStrategy.Create(destinationPath);
             if (fs == null)
             {
-                throw new UnexpectedNullException($"Filesystem could not be created based on the destination path '{destinationPath}'.");
+                throw new UnexpectedNullException(
+                    $"Filesystem could not be created based on the destination path '{destinationPath}'.");
             }
 
             await Task.Run(

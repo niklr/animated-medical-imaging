@@ -13,6 +13,7 @@ using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
 using MediatR;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.Entities.Results.Commands.ProcessObject
 {
@@ -50,11 +51,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             this.archiveReader = archiveReader ?? throw new ArgumentNullException(nameof(archiveReader));
             this.archiveExtractor = archiveExtractor ?? throw new ArgumentNullException(nameof(archiveExtractor));
 
-            if (fileSystemStrategy == null)
-            {
-                throw new ArgumentNullException(nameof(fileSystemStrategy));
-            }
-
+            Ensure.ArgumentNotNull(fileSystemStrategy, nameof(fileSystemStrategy));
             fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
         }
 

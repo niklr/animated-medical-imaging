@@ -46,15 +46,10 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         /// <inheritdoc/>
         public void CommitTransaction()
         {
-            if (transaction == null)
-            {
-                throw new ApplicationException("Cannot roll back a transaction while there is no transaction running.");
-            }
-
             try
             {
                 SaveChanges();
-                transaction.Commit();
+                transaction?.Commit();
                 ReleaseCurrentTransaction();
             }
             catch
@@ -80,15 +75,16 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         /// <inheritdoc/>
         public void RollBackTransaction()
         {
-            if (transaction == null)
-            {
-                throw new ApplicationException("Cannot roll back a transaction while there is no transaction running.");
-            }
-
             if (IsInTransaction)
             {
-                transaction.Rollback();
-                ReleaseCurrentTransaction();
+                try
+                {
+                    transaction.Rollback();
+                }
+                finally
+                {
+                    ReleaseCurrentTransaction();
+                }
             }
         }
 

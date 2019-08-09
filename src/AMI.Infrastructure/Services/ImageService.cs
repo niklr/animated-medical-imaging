@@ -12,8 +12,8 @@ using AMI.Core.IO.Writers;
 using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Exceptions;
-using Microsoft.Extensions.Logging;
 using RNS.Framework.Extensions.ObjectExtensions;
+using RNS.Framework.Tools;
 
 namespace AMI.Infrastructure.Services
 {
@@ -23,7 +23,6 @@ namespace AMI.Infrastructure.Services
     /// <seealso cref="IImageService" />
     public class ImageService : IImageService
     {
-        private readonly ILogger logger;
         private readonly IAppConfiguration configuration;
         private readonly IArchiveReader archiveReader;
         private readonly IArchiveExtractor archiveExtractor;
@@ -36,7 +35,6 @@ namespace AMI.Infrastructure.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageService"/> class.
         /// </summary>
-        /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="configuration">The configuration.</param>
         /// <param name="archiveReader">The archive reader.</param>
         /// <param name="archiveExtractor">The archive extractor.</param>
@@ -46,7 +44,6 @@ namespace AMI.Infrastructure.Services
         /// <param name="imageExtractor">The image extractor.</param>
         /// <param name="gifImageWriter">The GIF image writer.</param>
         public ImageService(
-            ILoggerFactory loggerFactory,
             IAppConfiguration configuration,
             IArchiveReader archiveReader,
             IArchiveExtractor archiveExtractor,
@@ -56,8 +53,6 @@ namespace AMI.Infrastructure.Services
             IImageExtractor imageExtractor,
             IGifImageWriter gifImageWriter)
         {
-            logger = loggerFactory?.CreateLogger<ImageService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.archiveReader = archiveReader ?? throw new ArgumentNullException(nameof(archiveReader));
             this.archiveExtractor = archiveExtractor ?? throw new ArgumentNullException(nameof(archiveExtractor));
@@ -71,6 +66,9 @@ namespace AMI.Infrastructure.Services
         /// <inheritdoc/>
         public async Task<ProcessResultModel> ProcessAsync(ProcessPathCommand command, CancellationToken ct)
         {
+            Ensure.ArgumentNotNull(command, nameof(command));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
+
             if (string.IsNullOrWhiteSpace(command.SourcePath))
             {
                 throw new UnexpectedNullException("Empty source path.");

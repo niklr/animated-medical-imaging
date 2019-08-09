@@ -27,6 +27,11 @@
         bool IsDevelopment { get; }
 
         /// <summary>
+        /// Gets the amount of milliseconds before a reuqest times out. Default is 5000.
+        /// </summary>
+        int RequestTimeoutMilliseconds { get; }
+
+        /// <summary>
         /// Gets the options used for authentication and authorization.
         /// </summary>
         IAuthOptions AuthOptions { get; }
