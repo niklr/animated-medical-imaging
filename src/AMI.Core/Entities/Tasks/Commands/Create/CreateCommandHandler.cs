@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Shared.Commands;
+using AMI.Core.Entities.Tasks.Queries.GetById;
 using AMI.Core.IO.Generators;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Modules;
@@ -12,6 +13,7 @@ using AMI.Core.Queues;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
+using MediatR;
 using RNS.Framework.Extensions.MutexExtensions;
 using RNS.Framework.Extensions.Reflection;
 
@@ -25,6 +27,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         private static Mutex processMutex;
 
         private readonly IIdGenerator idGenerator;
+        private readonly IMediator mediator;
         private readonly IDefaultJsonSerializer serializer;
         private readonly ITaskQueue queue;
 
@@ -34,16 +37,19 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// <param name="module">The command handler module.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
+        /// <param name="mediator">The mediator.</param>
         /// <param name="queue">The task queue.</param>
         public CreateCommandHandler(
             ICommandHandlerModule module,
             IIdGenerator idGenerator,
             IDefaultJsonSerializer serializer,
+            IMediator mediator,
             ITaskQueue queue)
             : base(module)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
         }
 
@@ -104,12 +110,18 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
                 Context.TaskRepository.Add(entity);
 
-                await Context.SaveChangesAsync(cancellationToken);
+                await Context.CommitTransactionAsync(cancellationToken);
 
-                var result = TaskModel.Create(entity, serializer);
+                var result = await mediator.Send(new GetByIdQuery() { Id = entity.Id.ToString() });
+
+                await Gateway.NotifyGroupsAsync(
+                    entity.Object?.UserId,
+                    GatewayOpCode.Dispatch,
+                    GatewayEvent.CreateTask,
+                    result,
+                    cancellationToken);
+
                 queue.Add(result);
-
-                Context.CommitTransaction();
 
                 return result;
             });

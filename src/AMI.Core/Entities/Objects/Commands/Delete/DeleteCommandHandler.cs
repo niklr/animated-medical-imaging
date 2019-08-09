@@ -62,8 +62,6 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
 
             Context.ObjectRepository.Remove(entity);
 
-            await Context.SaveChangesAsync(cancellationToken);
-
             var directoryName = fileSystem.Path.GetDirectoryName(entity.SourcePath);
             if (!directoryName.EndsWith(entity.Id.ToString()))
             {
@@ -73,13 +71,18 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
                     directoryName));
             }
 
-            Context.CommitTransaction();
+            await Context.CommitTransactionAsync(cancellationToken);
 
             fileSystem.Directory.Delete(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, directoryName), true);
 
             var result = ObjectModel.Create(entity);
 
-            await Gateway.NotifyGroupsAsync(entity.UserId, GatewayOpCode.Dispatch, GatewayEvent.DeleteObject, result, cancellationToken);
+            await Gateway.NotifyGroupsAsync(
+                entity.UserId,
+                GatewayOpCode.Dispatch,
+                GatewayEvent.DeleteObject,
+                result,
+                cancellationToken);
 
             return true;
         }

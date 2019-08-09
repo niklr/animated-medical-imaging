@@ -22,15 +22,11 @@ export class ObjectStore {
   }
 
   private initGateway(): void {
+    this.gateway.on(GatewayEvent[GatewayEvent.CreateTask], (data: TaskModel) => {
+      this.updateLatestTask(data);
+    });
     this.gateway.on(GatewayEvent[GatewayEvent.UpdateTask], (data: TaskModel) => {
-      if (data && data.object && data.object.id) {
-        const index = this.items.findIndex((current) => {
-          return current.id === data.object.id;
-        });
-        if (index >= 0) {
-          this.items[index].latestTask = data;
-        }
-      }
+      this.updateLatestTask(data);
     });
     this.gateway.on(GatewayEvent[GatewayEvent.CreateObject], (data: ObjectModel) => {
       if (data && data.id) {
@@ -42,6 +38,17 @@ export class ObjectStore {
         this.deleteById(data.id);
       }
     });
+  }
+
+  private updateLatestTask(data: TaskModel): void {
+    if (data && data.object && data.object.id) {
+      const index = this.items.findIndex((current) => {
+        return current.id === data.object.id;
+      });
+      if (index >= 0) {
+        this.items[index].latestTask = data;
+      }
+    }
   }
 
   private updateCount(): void {

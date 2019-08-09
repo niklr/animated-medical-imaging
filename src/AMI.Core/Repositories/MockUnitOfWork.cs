@@ -72,6 +72,12 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task CommitTransactionAsync(CancellationToken ct)
+        {
+            await Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
         }

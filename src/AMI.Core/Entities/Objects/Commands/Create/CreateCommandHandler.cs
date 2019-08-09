@@ -12,6 +12,8 @@ using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
+using RNS.Framework.Extensions.MutexExtensions;
+using RNS.Framework.Extensions.Reflection;
 
 namespace AMI.Core.Entities.Objects.Commands.Create
 {
@@ -20,6 +22,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
     /// </summary>
     public class CreateCommandHandler : BaseCommandRequestHandler<CreateObjectCommand, ObjectModel>
     {
+        private static Mutex processMutex;
+
         private readonly IIdGenerator idGenerator;
         private readonly IApplicationConstants constants;
         private readonly IAppConfiguration configuration;
@@ -62,40 +66,48 @@ namespace AMI.Core.Entities.Objects.Commands.Create
                 throw new ForbiddenException("Not authenticated");
             }
 
-            Context.BeginTransaction();
+            processMutex = new Mutex(false, this.GetMethodName());
 
-            // TODO: support custom extensions
-            string fileExtension = fileSystem.Path.GetExtension(request.OriginalFilename);
-
-            Guid guid = idGenerator.GenerateId();
-            string path = fileSystem.Path.Combine("Binary", "Objects", guid.ToString());
-            string destFilename = string.Concat(guid.ToString(), fileExtension);
-            string destPath = fileSystem.Path.Combine(path, destFilename);
-
-            fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, path));
-            fileSystem.File.Move(request.SourcePath, fileSystem.Path.Combine(configuration.Options.WorkingDirectory, destPath));
-
-            var entity = new ObjectEntity()
+            return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
-                Id = guid,
-                CreatedDate = DateTime.UtcNow,
-                ModifiedDate = DateTime.UtcNow,
-                OriginalFilename = request.OriginalFilename,
-                SourcePath = destPath,
-                UserId = principal.Identity.Name
-            };
+                Context.BeginTransaction();
 
-            Context.ObjectRepository.Add(entity);
+                // TODO: support custom extensions
+                string fileExtension = fileSystem.Path.GetExtension(request.OriginalFilename);
 
-            await Context.SaveChangesAsync(cancellationToken);
+                Guid guid = idGenerator.GenerateId();
+                string path = fileSystem.Path.Combine("Binary", "Objects", guid.ToString());
+                string destFilename = string.Concat(guid.ToString(), fileExtension);
+                string destPath = fileSystem.Path.Combine(path, destFilename);
 
-            Context.CommitTransaction();
+                fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, path));
+                fileSystem.File.Move(request.SourcePath, fileSystem.Path.Combine(configuration.Options.WorkingDirectory, destPath));
 
-            var result = ObjectModel.Create(entity);
+                var entity = new ObjectEntity()
+                {
+                    Id = guid,
+                    CreatedDate = DateTime.UtcNow,
+                    ModifiedDate = DateTime.UtcNow,
+                    OriginalFilename = request.OriginalFilename,
+                    SourcePath = destPath,
+                    UserId = principal.Identity.Name
+                };
 
-            await Gateway.NotifyGroupsAsync(entity.UserId, GatewayOpCode.Dispatch, GatewayEvent.CreateObject, result, cancellationToken);
+                Context.ObjectRepository.Add(entity);
 
-            return result;
+                await Context.CommitTransactionAsync(cancellationToken);
+
+                var result = ObjectModel.Create(entity);
+
+                await Gateway.NotifyGroupsAsync(
+                    entity.UserId,
+                    GatewayOpCode.Dispatch,
+                    GatewayEvent.CreateObject,
+                    result,
+                    cancellationToken);
+
+                return result;
+            });
         }
     }
 }

@@ -28,6 +28,13 @@ namespace AMI.Core.Repositories
         void CommitTransaction();
 
         /// <summary>
+        /// Commits the transaction asynchronous.
+        /// </summary>
+        /// <param name="ct">The cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task CommitTransactionAsync(CancellationToken ct);
+
+        /// <summary>
         /// Specifies related entities to include in the query results.
         /// </summary>
         /// <typeparam name="T">The type of entity being queried.</typeparam>

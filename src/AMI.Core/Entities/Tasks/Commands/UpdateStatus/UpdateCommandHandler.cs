@@ -73,7 +73,12 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
 
             var result = await mediator.Send(new GetByIdQuery() { Id = entity.Id.ToString() });
 
-            await Gateway.NotifyGroupsAsync(entity.Object?.UserId, GatewayOpCode.Dispatch, GatewayEvent.UpdateTask, result, cancellationToken);
+            await Gateway.NotifyGroupsAsync(
+                entity.Object?.UserId,
+                GatewayOpCode.Dispatch,
+                GatewayEvent.UpdateTask,
+                result,
+                cancellationToken);
 
             return result;
         }

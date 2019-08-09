@@ -144,9 +144,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             resultEntity.ModifiedDate = DateTime.UtcNow;
             Context.ResultRepository.Update(resultEntity);
 
-            await Context.SaveChangesAsync(cancellationToken);
-
-            Context.CommitTransaction();
+            await Context.CommitTransactionAsync(cancellationToken);
 
             return result;
         }

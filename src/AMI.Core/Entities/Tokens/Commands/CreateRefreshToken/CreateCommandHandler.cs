@@ -75,8 +75,8 @@ namespace AMI.Core.Entities.Tokens.Commands.CreateRefreshToken
                 };
 
                 Context.TokenRepository.Add(token);
-                await Context.SaveChangesAsync(cancellationToken);
-                Context.CommitTransaction();
+
+                await Context.CommitTransactionAsync(cancellationToken);
 
                 return TokenModel.Create(token);
             });

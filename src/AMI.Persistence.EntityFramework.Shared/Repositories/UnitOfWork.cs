@@ -60,6 +60,22 @@ namespace AMI.Persistence.EntityFramework.Shared.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task CommitTransactionAsync(CancellationToken ct)
+        {
+            try
+            {
+                await SaveChangesAsync(ct);
+                transaction?.Commit();
+                ReleaseCurrentTransaction();
+            }
+            catch
+            {
+                RollBackTransaction();
+                throw;
+            }
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
             GC.SuppressFinalize(this);
