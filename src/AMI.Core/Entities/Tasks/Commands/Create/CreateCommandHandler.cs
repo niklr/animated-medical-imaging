@@ -81,8 +81,6 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
             return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
-                Context.BeginTransaction();
-
                 var activeCount = await Context.TaskRepository.CountAsync(e =>
                     e.ObjectId == objectId &&
                     (e.Status == (int)Domain.Enums.TaskStatus.Created ||
@@ -110,7 +108,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
                 Context.TaskRepository.Add(entity);
 
-                await Context.CommitTransactionAsync(cancellationToken);
+                await Context.SaveChangesAsync(cancellationToken);
 
                 var result = await mediator.Send(new GetByIdQuery() { Id = entity.Id.ToString() });
 

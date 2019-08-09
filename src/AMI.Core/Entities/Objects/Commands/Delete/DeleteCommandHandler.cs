@@ -45,8 +45,6 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
         /// <inheritdoc/>
         protected override async Task<bool> ProtectedHandleAsync(DeleteObjectCommand request, CancellationToken cancellationToken)
         {
-            Context.BeginTransaction();
-
             var entity = await Context.ObjectRepository
                 .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
 
@@ -71,7 +69,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
                     directoryName));
             }
 
-            await Context.CommitTransactionAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
             fileSystem.Directory.Delete(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, directoryName), true);
 

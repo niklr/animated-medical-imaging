@@ -58,8 +58,6 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
         /// <inheritdoc/>
         protected override async Task<ProcessResultModel> ProtectedHandleAsync(ProcessObjectCommand request, CancellationToken cancellationToken)
         {
-            Context.BeginTransaction();
-
             var objectEntity = await Context.ObjectRepository.GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
             if (objectEntity == null)
             {
@@ -144,7 +142,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
             resultEntity.ModifiedDate = DateTime.UtcNow;
             Context.ResultRepository.Update(resultEntity);
 
-            await Context.CommitTransactionAsync(cancellationToken);
+            await Context.SaveChangesAsync(cancellationToken);
 
             return result;
         }

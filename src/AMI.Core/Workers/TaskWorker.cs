@@ -84,7 +84,7 @@ namespace AMI.Core.Workers
                 catch (Exception e)
                 {
                     // Task status could not be updated.
-                    logger.LogError(e, e.Message);
+                    logger.LogCritical(e, e.Message);
                 }
 
                 StopWatch();

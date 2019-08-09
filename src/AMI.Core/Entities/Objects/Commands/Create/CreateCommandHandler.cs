@@ -70,8 +70,6 @@ namespace AMI.Core.Entities.Objects.Commands.Create
 
             return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
-                Context.BeginTransaction();
-
                 // TODO: support custom extensions
                 string fileExtension = fileSystem.Path.GetExtension(request.OriginalFilename);
 
@@ -95,7 +93,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
 
                 Context.ObjectRepository.Add(entity);
 
-                await Context.CommitTransactionAsync(cancellationToken);
+                await Context.SaveChangesAsync(cancellationToken);
 
                 var result = ObjectModel.Create(entity);
 

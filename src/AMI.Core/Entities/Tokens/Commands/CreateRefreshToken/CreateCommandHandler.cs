@@ -47,8 +47,6 @@ namespace AMI.Core.Entities.Tokens.Commands.CreateRefreshToken
 
             return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
-                Context.BeginTransaction();
-
                 var userId = Guid.Parse(request.UserId);
 
                 var user = await Context.UserRepository.GetFirstOrDefaultAsync(e => e.Id == userId, cancellationToken);
@@ -76,7 +74,7 @@ namespace AMI.Core.Entities.Tokens.Commands.CreateRefreshToken
 
                 Context.TokenRepository.Add(token);
 
-                await Context.CommitTransactionAsync(cancellationToken);
+                await Context.SaveChangesAsync(cancellationToken);
 
                 return TokenModel.Create(token);
             });
