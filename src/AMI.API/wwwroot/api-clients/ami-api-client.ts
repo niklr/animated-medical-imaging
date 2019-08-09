@@ -2775,7 +2775,7 @@ export interface IPaginationModel {
 export class AppOptions implements IAppOptions {
     /** Gets the maximum size in kilobytes. */
     maxSizeKilobytes?: number;
-    /** Gets the maximum of archived entries. */
+    /** Gets the maximum allowed amount of archived entries. */
     maxArchivedEntries?: number;
     /** Gets the timeout in milliseconds. */
     timeoutMilliseconds?: number;
@@ -2821,7 +2821,7 @@ export class AppOptions implements IAppOptions {
 export interface IAppOptions {
     /** Gets the maximum size in kilobytes. */
     maxSizeKilobytes?: number;
-    /** Gets the maximum of archived entries. */
+    /** Gets the maximum allowed amount of archived entries. */
     maxArchivedEntries?: number;
     /** Gets the timeout in milliseconds. */
     timeoutMilliseconds?: number;

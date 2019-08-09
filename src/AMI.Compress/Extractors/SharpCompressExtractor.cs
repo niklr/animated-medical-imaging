@@ -12,6 +12,7 @@ using AMI.Core.Strategies;
 using AMI.Domain.Exceptions;
 using RNS.Framework.Comparers;
 using RNS.Framework.Extensions.EnumerableExtensions;
+using RNS.Framework.Tools;
 using SharpCompress.Archives;
 using SharpCompress.Readers;
 
@@ -39,20 +40,9 @@ namespace AMI.Compress.Extractors
         /// <inheritdoc/>
         public override async Task<IList<ArchivedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct, int level = 0)
         {
-            if (string.IsNullOrWhiteSpace(sourcePath))
-            {
-                throw new ArgumentNullException(nameof(sourcePath));
-            }
-
-            if (string.IsNullOrWhiteSpace(destinationPath))
-            {
-                throw new ArgumentNullException(nameof(destinationPath));
-            }
-
-            if (ct == null)
-            {
-                throw new ArgumentNullException(nameof(ct));
-            }
+            Ensure.ArgumentNotNullOrWhiteSpace(sourcePath, nameof(sourcePath));
+            Ensure.ArgumentNotNullOrWhiteSpace(destinationPath, nameof(destinationPath));
+            Ensure.ArgumentNotNull(ct, nameof(ct));
 
             if (level > 1)
             {
@@ -78,7 +68,16 @@ namespace AMI.Compress.Extractors
                 using (var archive = ArchiveFactory.Open(file, options))
                 using (var comparer = new GenericNaturalComparer<IArchiveEntry>(e => e.Key))
                 {
-                    var sortedEntries = archive.Entries.Where(e => !e.IsDirectory).Sort(comparer).Take(MaxArchivedEntries);
+                    var sortedEntries = archive.Entries
+                        .Where(e => !e.IsDirectory)
+                        .Sort(comparer)
+                        .Take(MaxArchivedEntries > 0 ? MaxArchivedEntries : int.MaxValue);
+
+                    if (MaxSizeKilobytes > 0 && sortedEntries.Sum(e => e.Size) > MaxSizeKilobytes * 1000)
+                    {
+                        throw new ArgumentException($"The file size exceeds the limit of {MaxSizeKilobytes} kilobytes.");
+                    }
+
                     foreach (var entry in sortedEntries)
                     {
                         ct.ThrowIfCancellationRequested();

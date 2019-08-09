@@ -2210,7 +2210,7 @@
           },
           "maxArchivedEntries": {
             "type": "integer",
-            "description": "Gets the maximum of archived entries.",
+            "description": "Gets the maximum allowed amount of archived entries.",
             "format": "int32"
           },
           "timeoutMilliseconds": {

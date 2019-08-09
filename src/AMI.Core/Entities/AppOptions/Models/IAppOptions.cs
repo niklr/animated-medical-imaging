@@ -11,7 +11,7 @@
         int MaxSizeKilobytes { get; }
 
         /// <summary>
-        /// Gets the maximum of archived entries.
+        /// Gets the maximum allowed amount of archived entries.
         /// </summary>
         int MaxArchivedEntries { get; }
 

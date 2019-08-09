@@ -19,7 +19,11 @@ namespace AMI.NetCore.Tests.Core.Configurations
             Assert.AreEqual(10000, configuration.Options.TimeoutMilliseconds);
             Assert.AreEqual(@"C:\Temp\AMI.NetCore.Tests", configuration.Options.WorkingDirectory);
         }
+    }
 
+    [TestFixture]
+    public class AppConfigurationTests_AppOptions : BaseTest
+    {
         [Test]
         public void AppConfiguration_Override()
         {

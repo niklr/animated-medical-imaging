@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Infrastructure.IO.Readers
 {
     [TestFixture]
-    public class AppLogReaderTests : BaseTest
+    public class AppLogReaderTests_AppOptions : BaseTest
     {
         [Test]
         public void AppLogReader_ReadAsync()

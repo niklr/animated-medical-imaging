@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.IO.Extractors
 {
@@ -16,21 +16,23 @@ namespace AMI.Core.IO.Extractors
         /// Initializes a new instance of the <see cref="ArchiveExtractor" /> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <exception cref="ArgumentNullException">configuration</exception>
         public ArchiveExtractor(IAppConfiguration configuration)
         {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+            Ensure.ArgumentNotNull(configuration, nameof(configuration));
 
+            MaxSizeKilobytes = configuration.Options.MaxSizeKilobytes;
             MaxArchivedEntries = configuration.Options.MaxArchivedEntries;
         }
 
         /// <summary>
-        /// Gets the maximum of archived entries.
+        /// Gets the maximum size in kilobytes.
         /// </summary>
-        public int MaxArchivedEntries { get; private set; } = int.MinValue;
+        public int MaxSizeKilobytes { get; private set; } = 0;
+
+        /// <summary>
+        /// Gets the maximum allowed amount of archived entries.
+        /// </summary>
+        public int MaxArchivedEntries { get; private set; } = 0;
 
         /// <summary>
         /// Extracts the archived file asynchronous.
@@ -42,13 +44,7 @@ namespace AMI.Core.IO.Extractors
         /// <returns>
         /// A list of archived entries.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// sourcePath
-        /// or
-        /// destinationPath
-        /// or
-        /// ct
-        /// </exception>
-        public abstract Task<IList<ArchivedEntryModel>> ExtractAsync(string sourcePath, string destinationPath, CancellationToken ct, int level = 0);
+        public abstract Task<IList<ArchivedEntryModel>> ExtractAsync(
+            string sourcePath, string destinationPath, CancellationToken ct, int level = 0);
     }
 }

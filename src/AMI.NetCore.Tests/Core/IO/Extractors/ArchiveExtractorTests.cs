@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -64,6 +65,39 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
                 // Assert
                 var ex = Assert.ThrowsAsync<NotSupportedException>(func);
                 Assert.AreEqual("The archive contains too many levels.", ex.Message);
+            }
+            finally
+            {
+                DeleteDirectory(destinationPath);
+            }
+        }
+    }
+
+    [TestFixture]
+    public class ArchiveExtractorTests_AppOptions : BaseTest
+    {
+        [TestCase]
+        public void ArchiveExtractor_ExtractAsync_NotSupportedException()
+        {
+            // Arrange
+            OverrideAppOptions(new Dictionary<string, string>()
+            {
+                { "MaxSizeKilobytes", "1000" }
+            });
+            var extractor = GetService<IArchiveExtractor>();
+            var configuration = GetService<IAppConfiguration>();
+            var ct = new CancellationToken();
+            var sourcePath = GetDataPath("SMIR.Brain.XX.O.CT.346124.dcm.zip");
+            var destinationPath = GetTempPath();
+
+            try
+            {
+                // Act
+                async Task func() => await extractor.ExtractAsync(sourcePath, destinationPath, ct);
+
+                // Assert
+                var ex = Assert.ThrowsAsync<ArgumentException>(func);
+                Assert.AreEqual("The file size exceeds the limit of 1000 kilobytes.", ex.Message);
             }
             finally
             {

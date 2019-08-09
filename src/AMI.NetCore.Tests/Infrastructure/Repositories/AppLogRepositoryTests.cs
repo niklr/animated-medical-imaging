@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Infrastructure.Repositories
 {
     [TestFixture]
-    public class AppLogRepositoryTests : BaseTest
+    public class AppLogRepositoryTests_AppOptions : BaseTest
     {
         [Test]
         public void AppLogRepository_GetQuery()

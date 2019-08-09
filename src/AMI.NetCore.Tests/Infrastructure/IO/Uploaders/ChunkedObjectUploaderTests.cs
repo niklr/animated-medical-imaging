@@ -64,7 +64,7 @@ namespace AMI.NetCore.Tests.Infrastructure.IO.Uploaders
     }
 
     [TestFixture]
-    public class ChunkedObjectUploaderExceptionTests : BaseTest
+    public class ChunkedObjectUploaderTests_AppOptions : BaseTest
     {
         [Test]
         public void ChunkedObjectUploader_ExceedsFileSizeLimit()

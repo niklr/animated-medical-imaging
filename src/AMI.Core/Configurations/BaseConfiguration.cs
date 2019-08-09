@@ -2,6 +2,7 @@
 using AMI.Domain.Exceptions;
 using Microsoft.Extensions.Options;
 using RNS.Framework.Extensions.ObjectExtensions;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.Configurations
 {
@@ -21,10 +22,7 @@ namespace AMI.Core.Configurations
         /// <exception cref="UnexpectedNullException">options - T</exception>
         public BaseConfiguration(IOptions<T> options)
         {
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
+            Ensure.ArgumentNotNull(options, nameof(options));
 
             if (options.Value == null)
             {
