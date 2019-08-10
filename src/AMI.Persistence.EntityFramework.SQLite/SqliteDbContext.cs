@@ -5,6 +5,7 @@ using AMI.Core.Constants;
 using AMI.Persistence.EntityFramework.Shared;
 using AMI.Persistence.EntityFramework.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace AMI.Persistence.EntityFramework.SQLite
 {
@@ -37,6 +38,9 @@ namespace AMI.Persistence.EntityFramework.SQLite
         {
             var dbPath = Path.Combine(configuration.Options.WorkingDirectory, constants.SqliteDatabaseName);
             optionsBuilder.UseSqlite($"Data Source={dbPath};");
+
+            // Ignore: A SQL parameter or literal was generated for the type 'DateTime' using the ValueConverter 'ValueConverter<DateTime, DateTime>
+            optionsBuilder.ConfigureWarnings(o => o.Ignore(RelationalEventId.ValueConversionSqlLiteralWarning));
         }
 
         /// <inheritdoc/>

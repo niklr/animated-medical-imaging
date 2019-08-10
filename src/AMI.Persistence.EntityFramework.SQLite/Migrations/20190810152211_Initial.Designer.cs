@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190810141138_Initial")]
+    [Migration("20190810152211_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

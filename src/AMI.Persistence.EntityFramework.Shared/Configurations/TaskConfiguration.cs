@@ -1,4 +1,5 @@
-﻿using AMI.Domain.Entities;
+﻿using System;
+using AMI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,10 +20,21 @@ namespace AMI.Persistence.InMemory.Configurations
             builder.ToTable("Tasks");
 
             builder.Property(e => e.CreatedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasConversion(e => e, e => DateTime.SpecifyKind(e, DateTimeKind.Utc));
 
             builder.Property(e => e.ModifiedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasConversion(e => e, e => DateTime.SpecifyKind(e, DateTimeKind.Utc));
+
+            builder.Property(e => e.QueuedDate)
+                .HasConversion(e => e, e => e.HasValue ? DateTime.SpecifyKind(e.Value, DateTimeKind.Utc) : e);
+
+            builder.Property(e => e.StartedDate)
+                .HasConversion(e => e, e => e.HasValue ? DateTime.SpecifyKind(e.Value, DateTimeKind.Utc) : e);
+
+            builder.Property(e => e.EndedDate)
+                .HasConversion(e => e, e => e.HasValue ? DateTime.SpecifyKind(e.Value, DateTimeKind.Utc) : e);
 
             builder.Property(e => e.Status)
                 .IsRequired();

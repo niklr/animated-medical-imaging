@@ -6,6 +6,8 @@
         <dd>
           <app-common-guid-badge [guid]="task.id"></app-common-guid-badge>
         </dd>
+      </dl>
+      <dl class="dl-horizontal" *ngIf="!task.queuedDate">
         <dt>Created</dt>
         <dd>{{momentUtil.getLocalDate(task.createdDate)}} {{momentUtil.getLocalTime(task.createdDate)}}</dd>
       </dl>

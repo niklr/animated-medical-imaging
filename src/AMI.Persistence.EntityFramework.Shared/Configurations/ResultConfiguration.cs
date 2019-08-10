@@ -1,4 +1,5 @@
-﻿using AMI.Domain.Entities;
+﻿using System;
+using AMI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,10 +20,12 @@ namespace AMI.Persistence.InMemory.Configurations
             builder.ToTable("Results");
 
             builder.Property(e => e.CreatedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasConversion(e => e, e => DateTime.SpecifyKind(e, DateTimeKind.Utc));
 
             builder.Property(e => e.ModifiedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasConversion(e => e, e => DateTime.SpecifyKind(e, DateTimeKind.Utc));
         }
     }
 }
