@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// An interface representing an entity related to authentication and authorization.
+    /// An entity related to authentication and authorization.
     /// </summary>
     [Serializable]
     public class AuthEntity : IAuthEntity

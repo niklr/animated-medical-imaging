@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AMI.Core.Entities.Models
+﻿namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// An interface representing options related to authentication and authorization.
@@ -33,8 +31,8 @@ namespace AMI.Core.Entities.Models
         IAuthJwtOptions JwtOptions { get; }
 
         /// <summary>
-        /// Gets the entities allowed to authenticate.
+        /// Gets the passwords of system users.
         /// </summary>
-        IReadOnlyList<IAuthEntity> Entities { get; }
+        IAuthUserPasswords UserPasswords { get; }
     }
 }

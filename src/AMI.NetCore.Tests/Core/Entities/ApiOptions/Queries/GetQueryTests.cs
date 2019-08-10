@@ -24,8 +24,8 @@ namespace AMI.NetCore.Tests.Core.Entities.ApiOptions.Queries
             Assert.IsTrue(result.IsDevelopment);
             Assert.IsNotNull(result.AuthOptions.JwtOptions);
             Assert.IsTrue(string.IsNullOrWhiteSpace(result.AuthOptions.JwtOptions.SecretKey));
-            Assert.IsNotNull(result.AuthOptions.Entities);
-            Assert.AreEqual(0, result.AuthOptions.Entities.Count);
+            Assert.IsTrue(string.IsNullOrWhiteSpace(result.AuthOptions.UserPasswords.Svc));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(result.AuthOptions.UserPasswords.Admin));
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace AMI.Core.Entities.Models
 {
     /// <summary>
-    /// An interface representing an entity related to authentication.
+    /// An interface representing an entity related to authentication and authorization.
     /// </summary>
     public interface IAuthEntity
     {

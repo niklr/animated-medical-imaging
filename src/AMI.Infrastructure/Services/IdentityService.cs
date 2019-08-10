@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
+using AMI.Core.Entities.Models;
 using AMI.Core.IO.Generators;
 using AMI.Core.Providers;
 using AMI.Core.Services;
@@ -55,9 +56,27 @@ namespace AMI.Infrastructure.Services
 
             logger.LogInformation($"{this.GetMethodName()} started");
 
+            var defaultPassword = "123456";
+            var passwords = configuration.Options?.AuthOptions?.UserPasswords;
+
+            var entities = new List<IAuthEntity>()
+            {
+                new AuthEntity()
+                {
+                    Username = "Svc",
+                    Password = string.IsNullOrWhiteSpace(passwords?.Svc) ? defaultPassword : passwords.Svc
+                },
+                new AuthEntity()
+                {
+                    Username = "Admin",
+                    Password = string.IsNullOrWhiteSpace(passwords?.Admin) ? defaultPassword : passwords.Admin,
+                    Roles = new List<string>() { RoleType.Administrator.ToString() }
+                }
+            };
+
             var exceptions = new List<Exception>();
 
-            foreach (var identity in configuration.Options.AuthOptions.Entities)
+            foreach (var identity in entities)
             {
                 ct.ThrowIfCancellationRequested();
 
@@ -89,6 +108,12 @@ namespace AMI.Infrastructure.Services
                         {
                             throw new AmiException(string.Join(" ", result.Errors.Select(x => x.Description)));
                         }
+                    }
+                    else
+                    {
+                        // Reset password
+                        await userManager.RemovePasswordAsync(existing);
+                        await userManager.AddPasswordAsync(existing, identity.Password);
                     }
                 }
                 catch (Exception e)

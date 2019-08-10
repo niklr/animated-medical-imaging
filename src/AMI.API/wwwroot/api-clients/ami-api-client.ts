@@ -2217,8 +2217,8 @@ export abstract class IAuthOptions implements IIAuthOptions {
     expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */
     jwtOptions?: IAuthJwtOptions | undefined;
-    /** Gets the entities allowed to authenticate. */
-    entities?: IAuthEntity[] | undefined;
+    /** Gets the passwords of system users. */
+    userPasswords?: IAuthUserPasswords | undefined;
 
     constructor(data?: IIAuthOptions) {
         if (data) {
@@ -2236,11 +2236,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
             this.maxRefreshTokens = data["maxRefreshTokens"];
             this.expireAfter = data["expireAfter"];
             this.jwtOptions = data["jwtOptions"] ? IAuthJwtOptions.fromJS(data["jwtOptions"]) : <any>undefined;
-            if (Array.isArray(data["entities"])) {
-                this.entities = [] as any;
-                for (let item of data["entities"])
-                    this.entities!.push(IAuthEntity.fromJS(item));
-            }
+            this.userPasswords = data["userPasswords"] ? IAuthUserPasswords.fromJS(data["userPasswords"]) : <any>undefined;
         }
     }
 
@@ -2256,11 +2252,7 @@ export abstract class IAuthOptions implements IIAuthOptions {
         data["maxRefreshTokens"] = this.maxRefreshTokens;
         data["expireAfter"] = this.expireAfter;
         data["jwtOptions"] = this.jwtOptions ? this.jwtOptions.toJSON() : <any>undefined;
-        if (Array.isArray(this.entities)) {
-            data["entities"] = [];
-            for (let item of this.entities)
-                data["entities"].push(item.toJSON());
-        }
+        data["userPasswords"] = this.userPasswords ? this.userPasswords.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -2277,8 +2269,8 @@ export interface IIAuthOptions {
     expireAfter?: number;
     /** Gets the JSON Web Token (JWT) options. */
     jwtOptions?: IAuthJwtOptions | undefined;
-    /** Gets the entities allowed to authenticate. */
-    entities?: IAuthEntity[] | undefined;
+    /** Gets the passwords of system users. */
+    userPasswords?: IAuthUserPasswords | undefined;
 }
 
 /** An interface representing JSON Web Token (JWT) options. */
@@ -2355,16 +2347,14 @@ export interface IIAuthJwtOptions {
     usernameClaimType?: string | undefined;
 }
 
-/** An interface representing an entity related to authentication. */
-export abstract class IAuthEntity implements IIAuthEntity {
-    /** Gets the username. */
-    username?: string | undefined;
-    /** Gets the password. */
-    password?: string | undefined;
-    /** Gets the roles. */
-    roles?: string[] | undefined;
+/** An interface representing passwords used to configure system users. */
+export abstract class IAuthUserPasswords implements IIAuthUserPasswords {
+    /** Gets the password for the service system user. */
+    svc?: string | undefined;
+    /** Gets the password for the administrator system user. */
+    admin?: string | undefined;
 
-    constructor(data?: IIAuthEntity) {
+    constructor(data?: IIAuthUserPasswords) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2375,42 +2365,30 @@ export abstract class IAuthEntity implements IIAuthEntity {
 
     init(data?: any) {
         if (data) {
-            this.username = data["username"];
-            this.password = data["password"];
-            if (Array.isArray(data["roles"])) {
-                this.roles = [] as any;
-                for (let item of data["roles"])
-                    this.roles!.push(item);
-            }
+            this.svc = data["svc"];
+            this.admin = data["admin"];
         }
     }
 
-    static fromJS(data: any): IAuthEntity {
+    static fromJS(data: any): IAuthUserPasswords {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'IAuthEntity' cannot be instantiated.");
+        throw new Error("The abstract class 'IAuthUserPasswords' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["username"] = this.username;
-        data["password"] = this.password;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item);
-        }
+        data["svc"] = this.svc;
+        data["admin"] = this.admin;
         return data; 
     }
 }
 
-/** An interface representing an entity related to authentication. */
-export interface IIAuthEntity {
-    /** Gets the username. */
-    username?: string | undefined;
-    /** Gets the password. */
-    password?: string | undefined;
-    /** Gets the roles. */
-    roles?: string[] | undefined;
+/** An interface representing passwords used to configure system users. */
+export interface IIAuthUserPasswords {
+    /** Gets the password for the service system user. */
+    svc?: string | undefined;
+    /** Gets the password for the administrator system user. */
+    admin?: string | undefined;
 }
 
 /** An interface representing the options to limit the rate based on the IP address of the client. Source: https://github.com/stefanprodan/AspNetCoreRateLimit */

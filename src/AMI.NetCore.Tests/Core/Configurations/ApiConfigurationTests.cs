@@ -15,8 +15,6 @@ namespace AMI.NetCore.Tests.Core.Configurations
             var configuration = GetService<IApiConfiguration>();
 
             // Act
-            var authEntity0 = configuration.Options.AuthOptions?.Entities?[0];
-            var authEntity1 = configuration.Options.AuthOptions?.Entities?[1];
             var generalRule0 = configuration.Options.IpRateLimiting?.GeneralRules?[0];
             var ipRule0 = configuration.Options.IpRateLimitPolicies?.IpRules?[0];
             var rule0 = ipRule0?.Rules?[0];
@@ -32,19 +30,8 @@ namespace AMI.NetCore.Tests.Core.Configurations
 
             Assert.IsNotNull(configuration.Options.AuthOptions);
             Assert.IsTrue(configuration.Options.AuthOptions.AllowAnonymous);
-            Assert.AreEqual(2, configuration.Options.AuthOptions.Entities.Count);
-            Assert.IsNotNull(authEntity0);
-            Assert.AreEqual("niklr", authEntity0.Username);
-            Assert.AreEqual("123456", authEntity0.Password);
-            Assert.IsNotNull(authEntity0.Roles);
-            Assert.AreEqual(0, authEntity0.Roles.Count);
-            Assert.IsNotNull(authEntity1);
-            Assert.AreEqual("admin", authEntity1.Username);
-            Assert.AreEqual("654321", authEntity1.Password);
-            Assert.IsNotNull(authEntity1.Roles);
-            Assert.AreEqual(2, authEntity1.Roles.Count);
-            Assert.IsTrue(authEntity1.Roles.Contains(RoleType.Unknown.ToString()));
-            Assert.IsTrue(authEntity1.Roles.Contains(RoleType.Administrator.ToString()));
+            Assert.AreEqual("123456", configuration.Options.AuthOptions?.UserPasswords?.Svc);
+            Assert.AreEqual("123456", configuration.Options.AuthOptions?.UserPasswords?.Admin);
 
             Assert.IsNotNull(configuration.Options.IpRateLimiting);
             Assert.AreEqual("X-Real-IP", configuration.Options.IpRateLimiting.RealIpHeader);

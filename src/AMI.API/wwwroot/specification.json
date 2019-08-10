@@ -1967,13 +1967,14 @@
               }
             ]
           },
-          "entities": {
-            "type": "array",
-            "description": "Gets the entities allowed to authenticate.",
+          "userPasswords": {
+            "description": "Gets the passwords of system users.",
             "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/IAuthEntity"
-            }
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAuthUserPasswords"
+              }
+            ]
           }
         }
       },
@@ -2020,29 +2021,21 @@
           }
         }
       },
-      "IAuthEntity": {
+      "IAuthUserPasswords": {
         "type": "object",
-        "description": "An interface representing an entity related to authentication.",
+        "description": "An interface representing passwords used to configure system users.",
         "x-abstract": true,
         "additionalProperties": false,
         "properties": {
-          "username": {
+          "svc": {
             "type": "string",
-            "description": "Gets the username.",
+            "description": "Gets the password for the service system user.",
             "nullable": true
           },
-          "password": {
+          "admin": {
             "type": "string",
-            "description": "Gets the password.",
+            "description": "Gets the password for the administrator system user.",
             "nullable": true
-          },
-          "roles": {
-            "type": "array",
-            "description": "Gets the roles.",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
           }
         }
       },

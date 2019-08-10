@@ -18,7 +18,7 @@
         public int[] AllowedPaginationLimitValues => new int[] { 10, 25, 50 };
 
         /// <inheritdoc/>
-        public string LogFilePath => @"Logs\AMI.log.txt";
+        public string LogFilePath => "Logs/AMI.log.txt";
 
         /// <inheritdoc/>
         public int MaxUploadChunkSize => 10_000_000;

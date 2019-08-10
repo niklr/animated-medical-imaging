@@ -42,7 +42,7 @@ namespace AMI.Core.Entities.Objects.Queries.GetPaginated
                 expression = expression.And(e => e.UserId == principal.Identity.Name);
             }
 
-            int total = await Context.ObjectRepository.CountAsync(cancellationToken);
+            int total = await Context.ObjectRepository.CountAsync(expression, cancellationToken);
 
             var query = Context.ObjectRepository
                 .GetQuery(expression)

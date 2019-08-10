@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace AMI.Core.Entities.Models
@@ -11,9 +10,6 @@ namespace AMI.Core.Entities.Models
     [Serializable]
     public class AuthOptions : IAuthOptions
     {
-        [NonSerialized]
-        private IReadOnlyList<AuthEntity> entities;
-
         /// <inheritdoc/>
         public bool AllowAnonymous { get; set; }
 
@@ -30,24 +26,8 @@ namespace AMI.Core.Entities.Models
         [IgnoreDataMember]
         public IAuthJwtOptions JwtOptions { get; set; } = new AuthJwtOptions();
 
-        /// <summary>
-        /// Gets or sets the entities allowed to authenticate.
-        /// </summary>
+        /// <inheritdoc/>
         [IgnoreDataMember]
-        public IReadOnlyList<AuthEntity> Entities
-        {
-            get
-            {
-                return entities;
-            }
-
-            set
-            {
-                entities = value;
-            }
-        }
-
-        [IgnoreDataMember]
-        IReadOnlyList<IAuthEntity> IAuthOptions.Entities => Entities ?? new List<AuthEntity>();
+        public IAuthUserPasswords UserPasswords { get; set; } = new AuthUserPasswords();
     }
 }

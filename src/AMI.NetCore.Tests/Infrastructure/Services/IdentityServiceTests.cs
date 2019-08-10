@@ -15,8 +15,8 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
     [TestFixture]
     public class IdentityServiceTests : BaseTest
     {
-        [TestCase("niklr", "123456")]
-        [TestCase("admin", "654321")]
+        [TestCase("svc", "123456")]
+        [TestCase("admin", "123456")]
         public async Task IdentityService_EnsureUsersExistAsync(string username, string password)
         {
             //  Arrange
@@ -28,13 +28,13 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             // Act
             await service.EnsureUsersExistAsync(ct);
             var now = DateTime.UtcNow;
-            var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.Username == username, ct);
+            var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.NormalizedUsername == username.ToUpperInvariant(), ct);
 
             // Assert
             Assert.IsNotNull(user);
             Assert.IsTrue(now >= user.CreatedDate);
             Assert.IsTrue(now >= user.ModifiedDate);
-            Assert.AreEqual(username.ToUpper(), user.NormalizedUsername);
+            Assert.AreEqual(username.ToUpperInvariant(), user.NormalizedUsername);
             Assert.IsFalse(string.IsNullOrWhiteSpace(user.PasswordHash));
             Assert.IsTrue(userManager.CheckPasswordAsync(user, password).Result);
             Assert.IsFalse(userManager.CheckPasswordAsync(user, "invalid").Result);

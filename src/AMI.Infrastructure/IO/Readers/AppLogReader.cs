@@ -30,7 +30,7 @@ namespace AMI.Infrastructure.IO.Readers
         private readonly IFileSystemStrategy fileSystemStrategy;
         private readonly IDefaultJsonSerializer serializer;
 
-        private Uri logFilePath;
+        private string logFilePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppLogReader"/> class.
@@ -73,7 +73,7 @@ namespace AMI.Infrastructure.IO.Readers
                     throw new UnexpectedNullException("Filesystem could not be created based on the working directory.");
                 }
 
-                using (var stream = fs.FileStream.Create(logFilePath.LocalPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 0x1000, FileOptions.SequentialScan))
+                using (var stream = fs.FileStream.Create(logFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 0x1000, FileOptions.SequentialScan))
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
                 {
                     string line;
@@ -110,7 +110,7 @@ namespace AMI.Infrastructure.IO.Readers
                 throw new Exception($"Invalid log file path '{constants.LogFilePath}'.");
             }
 
-            this.logFilePath = logFilePath;
+            this.logFilePath = fs.Path.GetFullPath(path);
         }
 
         /// <summary>

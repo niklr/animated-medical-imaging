@@ -112,9 +112,9 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var configuration = GetService<IApiConfiguration>();
             var ct = new CancellationToken();
             await identityService.EnsureUsersExistAsync(ct);
-            string username = "niklr";
+            string username = "svc";
             string password = "123456";
-            var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.Username == username);
+            var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.NormalizedUsername == username.ToUpperInvariant());
 
             // Act
             var result1 = await service.CreateAsync(username, password, ct);
@@ -180,7 +180,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var configuration = GetService<IApiConfiguration>();
             var ct = new CancellationToken();
             await identityService.EnsureUsersExistAsync(ct);
-            string username = "niklr";
+            string username = "svc";
             string password = "123456";
             var user = await context.UserRepository.GetFirstOrDefaultAsync(e => e.Username == username);
             var container = await service.CreateAsync(username, password, ct);

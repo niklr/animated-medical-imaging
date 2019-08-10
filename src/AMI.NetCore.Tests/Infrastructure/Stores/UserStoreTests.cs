@@ -11,7 +11,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Stores
     [TestFixture]
     public class UserStoreTests : BaseTest
     {
-        [TestCase("niklr")]
+        [TestCase("svc")]
         [TestCase("admin")]
         public async Task UserStore_FindByNameAsync(string username)
         {
@@ -26,11 +26,11 @@ namespace AMI.NetCore.Tests.Infrastructure.Stores
 
             // Assert
             Assert.IsNotNull(user);
-            Assert.AreEqual(username, user.Username);
+            Assert.AreEqual(username.ToUpperInvariant(), user.NormalizedUsername);
         }
 
-        [TestCase("niklr", new string[] { })]
-        [TestCase("admin", new string[] { "Unknown", "Administrator" })]
+        [TestCase("svc", new string[] { })]
+        [TestCase("admin", new string[] { "Administrator" })]
         public async Task UserStore_GetRolesAsync(string username, string[] expectedRoles)
         {
             // Arrange
@@ -38,7 +38,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Stores
             var userManager = GetService<UserManager<UserEntity>>();
             var ct = new CancellationToken();
             await service.EnsureUsersExistAsync(ct);
-            var user = await userManager.FindByNameAsync(username.ToUpperInvariant());
+            var user = await userManager.FindByNameAsync(username);
 
             // Act
             var roles = await userManager.GetRolesAsync(user);
@@ -52,8 +52,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Stores
             }
         }
 
-        [TestCase("Unknown", new string[] { "admin" })]
-        [TestCase("Administrator", new string[] { "admin" })]
+        [TestCase("Administrator", new string[] { "ADMIN" })]
         [TestCase("Test", new string[] { })]
         public async Task UserStore_GetUsersInRoleAsync(string role, string[] expectedUsers)
         {
@@ -71,11 +70,10 @@ namespace AMI.NetCore.Tests.Infrastructure.Stores
             Assert.AreEqual(expectedUsers.Length, users.Count);
             foreach (var user in users)
             {
-                Assert.IsTrue(expectedUsers.Contains(user.Username));
+                Assert.IsTrue(expectedUsers.Contains(user.Username.ToUpperInvariant()));
             }
         }
 
-        [TestCase("admin", "Unknown", true)]
         [TestCase("admin", "Administrator", true)]
         [TestCase("admin", "Test", false)]
         public async Task UserStore_IsInRoleAsync(string username, string role, bool expected)

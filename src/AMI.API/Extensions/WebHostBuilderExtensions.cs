@@ -52,7 +52,7 @@ namespace AMI.API.Extensions.WebHostBuilderExtensions
                                 throw new Exception($"Invalid log file path '{constants.LogFilePath}'.");
                             }
 
-                            var logFile = new FileInfo(logFilePath.LocalPath);
+                            var logFile = new FileInfo(Path.GetFullPath(path));
                             logFile.Directory?.Create();
                             loggerConfiguration
                             .WriteTo.File(
