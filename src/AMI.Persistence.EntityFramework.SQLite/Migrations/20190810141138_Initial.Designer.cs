@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190805091431_Initial")]
+    [Migration("20190810141138_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,6 +100,8 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
+                    b.Property<DateTime?>("EndedDate");
+
                     b.Property<string>("Message");
 
                     b.Property<DateTime>("ModifiedDate");
@@ -110,7 +112,11 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.Property<int>("Progress");
 
+                    b.Property<DateTime?>("QueuedDate");
+
                     b.Property<Guid?>("ResultId");
+
+                    b.Property<DateTime?>("StartedDate");
 
                     b.Property<int>("Status");
 

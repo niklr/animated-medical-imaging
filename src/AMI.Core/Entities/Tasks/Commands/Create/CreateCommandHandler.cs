@@ -97,6 +97,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
                     Id = idGenerator.GenerateId(),
                     CreatedDate = DateTime.UtcNow,
                     ModifiedDate = DateTime.UtcNow,
+                    QueuedDate = DateTime.UtcNow,
                     Status = (int)Domain.Enums.TaskStatus.Queued,
                     Progress = 0,
                     Position = queue.Count,

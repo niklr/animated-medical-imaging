@@ -2984,6 +2984,12 @@ export class TaskModel implements ITaskModel {
     createdDate?: Date;
     /** Gets or sets the modified date. */
     modifiedDate?: Date;
+    /** Gets or sets the queued date. */
+    queuedDate?: Date | undefined;
+    /** Gets or sets the started date. */
+    startedDate?: Date | undefined;
+    /** Gets or sets the ended date. */
+    endedDate?: Date | undefined;
     /** Gets or sets the status. */
     status?: TaskStatus;
     /** Gets or sets the message describing the error. */
@@ -3015,6 +3021,9 @@ export class TaskModel implements ITaskModel {
             this.id = data["id"];
             this.createdDate = data["createdDate"] ? new Date(data["createdDate"].toString()) : <any>undefined;
             this.modifiedDate = data["modifiedDate"] ? new Date(data["modifiedDate"].toString()) : <any>undefined;
+            this.queuedDate = data["queuedDate"] ? new Date(data["queuedDate"].toString()) : <any>undefined;
+            this.startedDate = data["startedDate"] ? new Date(data["startedDate"].toString()) : <any>undefined;
+            this.endedDate = data["endedDate"] ? new Date(data["endedDate"].toString()) : <any>undefined;
             this.status = data["status"];
             this.message = data["message"];
             this.position = data["position"];
@@ -3038,6 +3047,9 @@ export class TaskModel implements ITaskModel {
         data["id"] = this.id;
         data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
         data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
+        data["queuedDate"] = this.queuedDate ? this.queuedDate.toISOString() : <any>undefined;
+        data["startedDate"] = this.startedDate ? this.startedDate.toISOString() : <any>undefined;
+        data["endedDate"] = this.endedDate ? this.endedDate.toISOString() : <any>undefined;
         data["status"] = this.status;
         data["message"] = this.message;
         data["position"] = this.position;
@@ -3058,6 +3070,12 @@ export interface ITaskModel {
     createdDate?: Date;
     /** Gets or sets the modified date. */
     modifiedDate?: Date;
+    /** Gets or sets the queued date. */
+    queuedDate?: Date | undefined;
+    /** Gets or sets the started date. */
+    startedDate?: Date | undefined;
+    /** Gets or sets the ended date. */
+    endedDate?: Date | undefined;
     /** Gets or sets the status. */
     status?: TaskStatus;
     /** Gets or sets the message describing the error. */

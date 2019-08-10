@@ -100,6 +100,7 @@ namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
                     foreach (var entity in entitiesBatch)
                     {
                         entity.ModifiedDate = modifiedDate;
+                        entity.QueuedDate = modifiedDate;
                         entity.Status = (int)Domain.Enums.TaskStatus.Queued;
                         entity.Progress = 0;
                         entity.Position = position;

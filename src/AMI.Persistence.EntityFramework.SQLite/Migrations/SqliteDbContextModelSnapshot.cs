@@ -98,6 +98,8 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
+                    b.Property<DateTime?>("EndedDate");
+
                     b.Property<string>("Message");
 
                     b.Property<DateTime>("ModifiedDate");
@@ -108,7 +110,11 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.Property<int>("Progress");
 
+                    b.Property<DateTime?>("QueuedDate");
+
                     b.Property<Guid?>("ResultId");
+
+                    b.Property<DateTime?>("StartedDate");
 
                     b.Property<int>("Status");
 

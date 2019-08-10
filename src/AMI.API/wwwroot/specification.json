@@ -2373,6 +2373,24 @@
             "description": "Gets or sets the modified date.",
             "format": "date-time"
           },
+          "queuedDate": {
+            "type": "string",
+            "description": "Gets or sets the queued date.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "startedDate": {
+            "type": "string",
+            "description": "Gets or sets the started date.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endedDate": {
+            "type": "string",
+            "description": "Gets or sets the ended date.",
+            "format": "date-time",
+            "nullable": true
+          },
           "status": {
             "description": "Gets or sets the status.",
             "oneOf": [

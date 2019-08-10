@@ -23,6 +23,21 @@ namespace AMI.Domain.Entities
         public DateTime ModifiedDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the queued date.
+        /// </summary>
+        public DateTime? QueuedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the started date.
+        /// </summary>
+        public DateTime? StartedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ended date.
+        /// </summary>
+        public DateTime? EndedDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the status.
         /// </summary>
         public int Status { get; set; }

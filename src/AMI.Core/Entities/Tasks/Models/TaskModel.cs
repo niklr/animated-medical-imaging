@@ -29,6 +29,21 @@ namespace AMI.Core.Entities.Models
         public DateTime ModifiedDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the queued date.
+        /// </summary>
+        public DateTime? QueuedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the started date.
+        /// </summary>
+        public DateTime? StartedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ended date.
+        /// </summary>
+        public DateTime? EndedDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the status.
         /// </summary>
         public TaskStatus Status { get; set; }
@@ -86,6 +101,9 @@ namespace AMI.Core.Entities.Models
                 Id = entity.Id.ToString(),
                 CreatedDate = entity.CreatedDate,
                 ModifiedDate = entity.ModifiedDate,
+                QueuedDate = entity.QueuedDate,
+                StartedDate = entity.StartedDate,
+                EndedDate = entity.EndedDate,
                 Status = Enum.TryParse(entity.Status.ToString(), out TaskStatus status) ? status : TaskStatus.Created,
                 Message = entity.Message,
                 Position = entity.Position,

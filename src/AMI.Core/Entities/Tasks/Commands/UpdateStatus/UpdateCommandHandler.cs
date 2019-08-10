@@ -57,6 +57,31 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
             entity.Status = (int)request.Status;
             entity.Message = request.Message;
 
+            switch (request.Status)
+            {
+                case Domain.Enums.TaskStatus.Created:
+                    entity.QueuedDate = null;
+                    entity.StartedDate = null;
+                    entity.EndedDate = null;
+                    break;
+                case Domain.Enums.TaskStatus.Queued:
+                    entity.QueuedDate = DateTime.UtcNow;
+                    entity.StartedDate = null;
+                    entity.EndedDate = null;
+                    break;
+                case Domain.Enums.TaskStatus.Processing:
+                    entity.StartedDate = DateTime.UtcNow;
+                    entity.EndedDate = null;
+                    break;
+                case Domain.Enums.TaskStatus.Canceled:
+                case Domain.Enums.TaskStatus.Failed:
+                case Domain.Enums.TaskStatus.Finished:
+                    entity.EndedDate = DateTime.UtcNow;
+                    break;
+                default:
+                    break;
+            }
+
             if (request.Status != Domain.Enums.TaskStatus.Queued)
             {
                 entity.Position = 0;
