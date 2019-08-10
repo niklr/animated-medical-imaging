@@ -150,6 +150,7 @@ representing a multi-dimensional medical image. This json file consists of model
 #### ProcessResultModel
 
 * `labelCount (number)` The amount of labels in the image.
+* `size (array of numbers)` The amount of pixels the image has in each dimension (X, Y, Z).
 * `images (array of PositionAxisContainerModel)` A list of extracted images.
 * `gifs (array of AxisContainerModel)` A list of created GIFs.
 * `combinedGif (string)` The filename of the combined GIF (contains all requested axis types).

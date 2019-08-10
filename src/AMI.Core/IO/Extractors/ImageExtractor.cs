@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,9 +62,8 @@ namespace AMI.Core.IO.Extractors
             Ensure.ArgumentNotNull(command, nameof(command));
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
-            var result = new ProcessResultModel();
-            var imageFormat = GetImageFormat(command.ImageFormat);
-            var imageExtension = imageFormat.FileExtensionFromEncoder();
+            ImageFormat imageFormat = GetImageFormat(command.ImageFormat);
+            string imageExtension = imageFormat.FileExtensionFromEncoder();
             if (string.IsNullOrWhiteSpace(imageExtension))
             {
                 throw new UnexpectedNullException("Image file extension could not be determined.");
@@ -87,7 +87,11 @@ namespace AMI.Core.IO.Extractors
 
             PreProcess(reader, imageFormat, Convert.ToUInt32(command.AmountPerAxis), Convert.ToUInt32(command.OutputSize));
 
-            result.LabelCount = Convert.ToInt32(reader.GetLabelCount());
+            var result = new ProcessResultModel
+            {
+                LabelCount = Convert.ToInt32(reader.GetLabelCount()),
+                Size = new int[] { Convert.ToInt32(reader.Width), Convert.ToInt32(reader.Height), Convert.ToInt32(reader.Depth) }
+            };
 
             ISet<AxisType> axisTypes = new HashSet<AxisType>(command.AxisTypes);
             if (axisTypes.Count == 0)
@@ -117,29 +121,11 @@ namespace AMI.Core.IO.Extractors
                     ct.ThrowIfCancellationRequested();
 
                     string filename = $"{axisType}_{i}{imageExtension}";
-                    var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(i), Convert.ToUInt32(command.OutputSize));
-                    if (bitmap != null)
+
+                    var image = WriteImage(i, fs, command, reader, axisType, imageFormat, filename, watermark);
+                    if (image != null)
                     {
-                        if (command.Grayscale)
-                        {
-                            bitmap = bitmap.To8bppIndexedGrayscale();
-                        }
-
-                        bitmap = bitmap.ToCenter(Convert.ToUInt32(command.OutputSize), Color.Black);
-                        if (bitmap == null)
-                        {
-                            throw new UnexpectedNullException("Bitmap could not be centered.");
-                        }
-
-                        if (watermark != null)
-                        {
-                            bitmap = bitmap.AppendWatermark(watermark);
-                        }
-
-                        fs.File.WriteAllBytes(fs.Path.Combine(command.DestinationPath, filename), bitmap.ToByteArray(imageFormat));
-                        images.Add(new PositionAxisContainerModel<string>(Convert.ToUInt32(i), axisType, filename));
-
-                        bitmap.Dispose();
+                        images.Add(image);
                     }
                 }
             }
@@ -243,6 +229,45 @@ namespace AMI.Core.IO.Extractors
                 // set a new mapper with the new map
                 reader.Mapper = new AxisPositionMapper(newMap);
             }
+        }
+
+        private PositionAxisContainerModel<string> WriteImage(
+            int position,
+            IFileSystem fs,
+            ProcessPathCommand command,
+            T1 reader,
+            AxisType axisType,
+            ImageFormat imageFormat,
+            string filename,
+            BitmapWrapper watermark = null)
+        {
+            var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(position), Convert.ToUInt32(command.OutputSize));
+            if (bitmap != null)
+            {
+                if (command.Grayscale)
+                {
+                    bitmap = bitmap.To8bppIndexedGrayscale();
+                }
+
+                bitmap = bitmap.ToCenter(Convert.ToUInt32(command.OutputSize), Color.Black);
+                if (bitmap == null)
+                {
+                    throw new UnexpectedNullException("Bitmap could not be centered.");
+                }
+
+                if (watermark != null)
+                {
+                    bitmap = bitmap.AppendWatermark(watermark);
+                }
+
+                fs.File.WriteAllBytes(fs.Path.Combine(command.DestinationPath, filename), bitmap.ToByteArray(imageFormat));
+
+                bitmap.Dispose();
+
+                return new PositionAxisContainerModel<string>(Convert.ToUInt32(position), axisType, filename);
+            }
+
+            return null;
         }
 
         private ImageFormat GetImageFormat(Domain.Enums.ImageFormat imageFormat)

@@ -28,6 +28,11 @@ namespace AMI.Core.Entities.Models
         public int LabelCount { get; set; }
 
         /// <summary>
+        /// Gets or sets the amount of pixels the image has in each dimension (X, Y, Z).
+        /// </summary>
+        public int[] Size { get; set; } = new int[] { 0, 0, 0 };
+
+        /// <summary>
         /// Gets or sets the images.
         /// </summary>
         public IReadOnlyList<PositionAxisContainerModel<string>> Images
@@ -98,6 +103,7 @@ namespace AMI.Core.Entities.Models
                 model.Version = deserialized.Version;
                 model.JsonFilename = deserialized.JsonFilename;
                 model.LabelCount = deserialized.LabelCount;
+                model.Size = deserialized.Size;
                 model.Images = deserialized.Images;
                 model.Gifs = deserialized.Gifs;
                 model.CombinedGif = deserialized.CombinedGif;

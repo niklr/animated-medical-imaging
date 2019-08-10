@@ -27,6 +27,11 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             var expected = @"{
   ""resultType"": ""ProcessResult"",
   ""labelCount"": 5,
+  ""size"": [
+    160,
+    216,
+    176
+  ],
   ""images"": [
     {
       ""position"": 0,
@@ -88,7 +93,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
   ""combinedGif"": ""combined.gif"",
   ""createdDate"": ""0001-01-01T00:00:00"",
   ""modifiedDate"": ""0001-01-01T00:00:00"",
-  ""version"": ""0.0.6"",
+  ""version"": ""0.0.7"",
   ""jsonFilename"": ""output.json"",
   ""id"": null,
   ""discriminator"": ""ProcessResultModel""
@@ -103,6 +108,9 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
                 // Assert
                 Assert.AreEqual(command.AmountPerAxis, result.Images.Count);
                 Assert.AreEqual(5, result.LabelCount);
+                Assert.AreEqual(160, result.Size[0]);
+                Assert.AreEqual(216, result.Size[1]);
+                Assert.AreEqual(176, result.Size[2]);
                 Assert.AreEqual(expected, json);
             }
             finally

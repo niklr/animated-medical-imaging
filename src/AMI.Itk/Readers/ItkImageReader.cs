@@ -111,6 +111,8 @@ namespace AMI.Itk.Readers
         /// <inheritdoc/>
         public ISet<AxisType> GetRecommendedAxisTypes()
         {
+            Validate();
+
             var defaultAxisTypes = new HashSet<AxisType>() { AxisType.X, AxisType.Y, AxisType.Z };
 
             try

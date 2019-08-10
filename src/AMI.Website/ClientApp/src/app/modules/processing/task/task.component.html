@@ -6,10 +6,22 @@
         <dd>
           <app-common-guid-badge [guid]="task.id"></app-common-guid-badge>
         </dd>
-        <dt>Date added</dt>
+        <dt>Created</dt>
         <dd>{{momentUtil.getLocalDate(task.createdDate)}} {{momentUtil.getLocalTime(task.createdDate)}}</dd>
-        <dt>Date modified</dt>
-        <dd>{{momentUtil.getLocalDate(task.modifiedDate)}} {{momentUtil.getLocalTime(task.modifiedDate)}}</dd>
+      </dl>
+      <dl class="dl-horizontal" *ngIf="task.queuedDate">
+        <dt>Queued</dt>
+        <dd>{{momentUtil.getLocalDate(task.queuedDate)}} {{momentUtil.getLocalTime(task.queuedDate)}}</dd>
+      </dl>
+      <dl class="dl-horizontal" *ngIf="task.startedDate">
+        <dt>Started</dt>
+        <dd>{{momentUtil.getLocalDate(task.startedDate)}} {{momentUtil.getLocalTime(task.startedDate)}}</dd>
+      </dl>
+      <dl class="dl-horizontal" *ngIf="task.endedDate">
+        <dt>Ended</dt>
+        <dd>{{momentUtil.getLocalDate(task.endedDate)}} {{momentUtil.getLocalTime(task.endedDate)}}</dd>
+      </dl>
+      <dl class="dl-horizontal">
         <dt>Status</dt>
         <dd>{{displayTaskStatus()}}</dd>
       </dl>
@@ -29,9 +41,11 @@
         <div class="spinner-layer spinner-blue-only">
           <div class="circle-clipper left">
             <div class="circle"></div>
-          </div><div class="gap-patch">
+          </div>
+          <div class="gap-patch">
             <div class="circle"></div>
-          </div><div class="circle-clipper right">
+          </div>
+          <div class="circle-clipper right">
             <div class="circle"></div>
           </div>
         </div>

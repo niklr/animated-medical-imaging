@@ -30,6 +30,9 @@ namespace AMI.NetCore.Tests.Core.IO.Extractors
                 // 6 (per axis) * 3 (x, y, z) = 18
                 Assert.AreEqual(18, result.Images.Count);
                 Assert.AreEqual(5, (int)result.LabelCount);
+                Assert.AreEqual(160, result.Size[0]);
+                Assert.AreEqual(216, result.Size[1]);
+                Assert.AreEqual(176, result.Size[2]);
             }
             finally
             {

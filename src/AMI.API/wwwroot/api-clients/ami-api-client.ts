@@ -3454,6 +3454,8 @@ export class ProcessResultModel extends ResultModel implements IProcessResultMod
     resultType?: ResultType;
     /** Gets or sets the label count. */
     labelCount?: number;
+    /** Gets or sets the amount of pixels the image has in each dimension (X, Y, Z). */
+    size?: number[] | undefined;
     /** Gets or sets the images. */
     images?: PositionAxisContainerModelOfString[] | undefined;
     /** Gets or sets the axis containers of the GIF images. */
@@ -3471,6 +3473,11 @@ export class ProcessResultModel extends ResultModel implements IProcessResultMod
         if (data) {
             this.resultType = data["resultType"];
             this.labelCount = data["labelCount"];
+            if (Array.isArray(data["size"])) {
+                this.size = [] as any;
+                for (let item of data["size"])
+                    this.size!.push(item);
+            }
             if (Array.isArray(data["images"])) {
                 this.images = [] as any;
                 for (let item of data["images"])
@@ -3496,6 +3503,11 @@ export class ProcessResultModel extends ResultModel implements IProcessResultMod
         data = typeof data === 'object' ? data : {};
         data["resultType"] = this.resultType;
         data["labelCount"] = this.labelCount;
+        if (Array.isArray(this.size)) {
+            data["size"] = [];
+            for (let item of this.size)
+                data["size"].push(item);
+        }
         if (Array.isArray(this.images)) {
             data["images"] = [];
             for (let item of this.images)
@@ -3517,6 +3529,8 @@ export interface IProcessResultModel extends IResultModel {
     resultType?: ResultType;
     /** Gets or sets the label count. */
     labelCount?: number;
+    /** Gets or sets the amount of pixels the image has in each dimension (X, Y, Z). */
+    size?: number[] | undefined;
     /** Gets or sets the images. */
     images?: PositionAxisContainerModelOfString[] | undefined;
     /** Gets or sets the axis containers of the GIF images. */

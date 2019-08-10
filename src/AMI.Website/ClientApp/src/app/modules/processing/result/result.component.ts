@@ -3,6 +3,7 @@ import { ContainerModelExtended } from '../../../models/container-extended.model
 import { PhotoSwipeItemModel } from '../../../models/photoswipe-item.model';
 import { ProcessResultModelExtended } from '../../../models/result-extended.model';
 import { ConfigService } from '../../../services/config.service';
+import { MomentUtil } from '../../../utils';
 import {
   AxisType,
   AxisContainerModelOfString,
@@ -21,7 +22,7 @@ export class ResultComponent implements OnInit, AfterViewInit {
 
   public photoswipeItems: PhotoSwipeItemModel[] = [];
 
-  constructor() {
+  constructor(public momentUtil: MomentUtil) {
   }
 
   ngOnInit() {
