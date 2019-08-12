@@ -17,7 +17,7 @@ export class ObjectStore {
   constructor(private gateway: GatewayHub) {
     this.settings.outputSize = 250;
     this.settings.amountPerAxis = 10;
-    this.settings.delay = 33;
+    this.settings.delay = 100;
     this.settings.grayscale = true;
     this.initGateway();
   }

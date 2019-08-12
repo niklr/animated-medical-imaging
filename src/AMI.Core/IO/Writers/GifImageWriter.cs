@@ -55,6 +55,10 @@ namespace AMI.Core.IO.Writers
 
                 return result;
             }
+            catch (AmiException)
+            {
+                throw;
+            }
             catch (OperationCanceledException e)
             {
                 throw new AmiException("The writing of the GIF has been cancelled.", e);

@@ -25,9 +25,9 @@ namespace AMI.Core.Entities.Shared.Commands
 
         /// <summary>
         /// Gets or sets the delay in milliseconds between frames of the animated sequence.
-        /// Must be between 1 and 100. Default is 33.
+        /// Must be between 20 and 500. Default is 100.
         /// </summary>
-        public int Delay { get; set; } = 33;
+        public int Delay { get; set; } = 100;
 
         /// <summary>
         /// Gets or sets the axis types to be considered.
