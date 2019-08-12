@@ -31,6 +31,7 @@ namespace AMI.Core.IO.Writers
         public async Task<IReadOnlyList<AxisContainerModel<string>>> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,
+            int delay,
             BezierEasingType bezierEasingType,
             CancellationToken ct)
         {
@@ -46,6 +47,7 @@ namespace AMI.Core.IO.Writers
                         destinationPath,
                         axisImages.ToList(),
                         axisImages.Key.ToString(),
+                        delay,
                         bezierEasingType,
                         ct);
                     result.Add(new AxisContainerModel<string>(axisImages.Key, filename));
@@ -68,6 +70,7 @@ namespace AMI.Core.IO.Writers
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,
             string name,
+            int delay,
             BezierEasingType bezierEasingType,
             CancellationToken ct)
         {
@@ -80,7 +83,7 @@ namespace AMI.Core.IO.Writers
 
                 var filename = $"{name}{imageExtension}";
 
-                await AbstractWriteAsync(destinationPath, filename, destinationPath, filenames, mapper, ct);
+                await AbstractWriteAsync(destinationPath, filename, destinationPath, filenames, delay, bezierEasingType, mapper, ct);
 
                 return filename;
             }
@@ -101,6 +104,8 @@ namespace AMI.Core.IO.Writers
         /// <param name="destinationFilename">The destination filename.</param>
         /// <param name="sourcePath">The source path.</param>
         /// <param name="sourceFilenames">The source filenames.</param>
+        /// <param name="delay">The delay between frames.</param>
+        /// <param name="bezierEasingType">Type of the bezier easing.</param>
         /// <param name="mapper">The position mapper.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
@@ -111,6 +116,8 @@ namespace AMI.Core.IO.Writers
             string destinationFilename,
             string sourcePath,
             string[] sourceFilenames,
+            int delay,
+            BezierEasingType bezierEasingType,
             BezierPositionMapper mapper,
             CancellationToken ct);
     }

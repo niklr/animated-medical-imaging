@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { MomentUtil } from '../../../utils';
 import { TaskStatus, TaskModel, ProcessObjectCommand, AxisType } from '../../../clients/ami-api-client';
 
@@ -6,7 +6,7 @@ import { TaskStatus, TaskModel, ProcessObjectCommand, AxisType } from '../../../
   selector: 'app-processing-task',
   templateUrl: './task.component.html'
 })
-export class TaskComponent implements OnInit, AfterViewInit {
+export class TaskComponent implements OnInit, OnChanges {
 
   @Input() task: TaskModel;
 
@@ -19,7 +19,7 @@ export class TaskComponent implements OnInit, AfterViewInit {
   ngOnInit() {
   }
 
-  ngAfterViewInit(): void {
+  ngOnChanges() {
     this.initCommand();
     this.initMaterialize();
   }

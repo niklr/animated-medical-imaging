@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
 using AMI.Core.Strategies;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using AnimatedGif;
 using RNS.Framework.Tools;
@@ -35,6 +36,8 @@ namespace AMI.Gif.Writers
             string destinationFilename,
             string sourcePath,
             string[] sourceFilenames,
+            int delay,
+            BezierEasingType bezierEasingType,
             BezierPositionMapper mapper,
             CancellationToken ct)
         {
@@ -57,7 +60,7 @@ namespace AMI.Gif.Writers
                 () =>
                 {
                     // 33ms delay (~30fps)
-                    using (var gif = AnimatedGif.AnimatedGif.Create(fs.Path.Combine(destinationPath, destinationFilename), 33))
+                    using (var gif = AnimatedGif.AnimatedGif.Create(fs.Path.Combine(destinationPath, destinationFilename), delay))
                     {
                         for (uint i = 0; i < sourceFilenames.Length; i++)
                         {
@@ -65,8 +68,15 @@ namespace AMI.Gif.Writers
 
                             using (Image image = Image.FromFile(fs.Path.Combine(sourcePath, sourceFilenames[i])))
                             {
-                                int delay = Convert.ToInt32(mapper.GetMappedPosition(i));
-                                gif.AddFrame(image, delay, quality: GifQuality.Bit8);
+                                if (bezierEasingType == BezierEasingType.Linear)
+                                {
+                                    gif.AddFrame(image, -1, quality: GifQuality.Bit8);
+                                }
+                                else
+                                {
+                                    int mappedDelay = Convert.ToInt32(mapper.GetMappedPosition(i));
+                                    gif.AddFrame(image, mappedDelay, quality: GifQuality.Bit8);
+                                }
                             }
                         }
                     }

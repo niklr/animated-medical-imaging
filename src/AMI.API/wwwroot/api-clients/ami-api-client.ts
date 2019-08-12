@@ -3154,6 +3154,7 @@ export interface IBaseCommand {
 export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand implements IBaseProcessCommandOfProcessResultModel {
     outputSize?: number;
     amountPerAxis?: number;
+    delay?: number;
     axisTypes?: AxisType[] | undefined;
     imageFormat?: ImageFormat;
     bezierEasingTypePerAxis?: BezierEasingType;
@@ -3170,6 +3171,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand
         if (data) {
             this.outputSize = data["outputSize"];
             this.amountPerAxis = data["amountPerAxis"];
+            this.delay = data["delay"];
             if (Array.isArray(data["axisTypes"])) {
                 this.axisTypes = [] as any;
                 for (let item of data["axisTypes"])
@@ -3201,6 +3203,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand
         data = typeof data === 'object' ? data : {};
         data["outputSize"] = this.outputSize;
         data["amountPerAxis"] = this.amountPerAxis;
+        data["delay"] = this.delay;
         if (Array.isArray(this.axisTypes)) {
             data["axisTypes"] = [];
             for (let item of this.axisTypes)
@@ -3218,6 +3221,7 @@ export abstract class BaseProcessCommandOfProcessResultModel extends BaseCommand
 export interface IBaseProcessCommandOfProcessResultModel extends IBaseCommand {
     outputSize?: number;
     amountPerAxis?: number;
+    delay?: number;
     axisTypes?: AxisType[] | undefined;
     imageFormat?: ImageFormat;
     bezierEasingTypePerAxis?: BezierEasingType;

@@ -16,6 +16,7 @@ namespace AMI.Core.IO.Writers
         /// </summary>
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="images">The images.</param>
+        /// <param name="delay">The delay between frames.</param>
         /// <param name="bezierEasingType">Type of the bezier easing.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
@@ -24,6 +25,7 @@ namespace AMI.Core.IO.Writers
         Task<IReadOnlyList<AxisContainerModel<string>>> WriteAsync(
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,
+            int delay,
             BezierEasingType bezierEasingType,
             CancellationToken ct);
 
@@ -33,6 +35,7 @@ namespace AMI.Core.IO.Writers
         /// <param name="destinationPath">The destination path.</param>
         /// <param name="images">The images.</param>
         /// <param name="name">The name of the GIF image without file extension.</param>
+        /// <param name="delay">The delay between frames.</param>
         /// <param name="bezierEasingType">Type of the bezier easing.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>
@@ -42,6 +45,7 @@ namespace AMI.Core.IO.Writers
             string destinationPath,
             IReadOnlyList<PositionAxisContainerModel<string>> images,
             string name,
+            int delay,
             BezierEasingType bezierEasingType,
             CancellationToken ct);
     }

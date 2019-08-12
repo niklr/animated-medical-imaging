@@ -111,9 +111,9 @@ namespace AMI.Infrastructure.Services
 
             // Set GIFs
             result.Gifs = await gifImageWriter.WriteAsync(
-                commandClone.DestinationPath, result.Images, commandClone.BezierEasingTypePerAxis, ct);
+                commandClone.DestinationPath, result.Images, commandClone.Delay, commandClone.BezierEasingTypePerAxis, ct);
             result.CombinedGif = await gifImageWriter.WriteAsync(
-                commandClone.DestinationPath, result.Images, "combined", commandClone.BezierEasingTypeCombined, ct);
+                commandClone.DestinationPath, result.Images, "combined", commandClone.Delay, commandClone.BezierEasingTypeCombined, ct);
 
             // Set application version
             var appInfo = appInfoFactory.Create();

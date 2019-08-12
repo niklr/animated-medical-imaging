@@ -17,20 +17,21 @@ export class ObjectStore {
   constructor(private gateway: GatewayHub) {
     this.settings.outputSize = 250;
     this.settings.amountPerAxis = 10;
+    this.settings.delay = 33;
     this.settings.grayscale = true;
     this.initGateway();
   }
 
   private initGateway(): void {
     this.gateway.on(GatewayEvent[GatewayEvent.CreateTask], (data: TaskModel) => {
-      this.updateLatestTask(data);
+      this.updateLatestTask(TaskModel.fromJS(data));
     });
     this.gateway.on(GatewayEvent[GatewayEvent.UpdateTask], (data: TaskModel) => {
-      this.updateLatestTask(data);
+      this.updateLatestTask(TaskModel.fromJS(data));
     });
     this.gateway.on(GatewayEvent[GatewayEvent.CreateObject], (data: ObjectModel) => {
       if (data && data.id) {
-        this.addItem(data as ObjectModelExtended);
+        this.addItem(ObjectModel.fromJS(data) as ObjectModelExtended);
       }
     });
     this.gateway.on(GatewayEvent[GatewayEvent.DeleteObject], (data: ObjectModel) => {

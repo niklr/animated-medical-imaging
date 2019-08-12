@@ -1,11 +1,13 @@
 <div class="row">
   <div class="input-field col s12 m6">
-    <input [value]="settings.outputSize" [(ngModel)]="settings.outputSize" id="size" type="number" class="validate" min="0" max="1000">
+    <input [value]="settings.outputSize" [(ngModel)]="settings.outputSize" id="size" type="number" class="validate"
+      min="0" max="1000">
     <label for="size">Image size</label>
     <span class="helper-text">The desired size of the extracted images in pixels.</span>
   </div>
   <div class="input-field col s12 m6">
-    <input [value]="settings.amountPerAxis" [(ngModel)]="settings.amountPerAxis" id="amount" type="number" class="validate" min="0" max="1000">
+    <input [value]="settings.amountPerAxis" [(ngModel)]="settings.amountPerAxis" id="amount" type="number"
+      class="validate" min="0" max="1000">
     <label for="amount">Amount</label>
     <span class="helper-text">The amount of images to be extracted per axis.</span>
   </div>
@@ -13,7 +15,8 @@
 <div class="row">
   <div class="col s6">
     <label class="horizontal-label" *ngFor="let axisTypeContainer of axisTypeContainers">
-      <input type="checkbox" [checked]="axisTypeContainer.checked" (change)="toggleAxisTypeContainer(axisTypeContainer,$event)" />
+      <input type="checkbox" [checked]="axisTypeContainer.checked"
+        (change)="toggleAxisTypeContainer(axisTypeContainer,$event)" />
       <span>{{axisTypeContainer.displayName}}</span>
     </label>
   </div>
@@ -27,9 +30,19 @@
     </div>
   </div>
 </div>
+<div class="row">
+  <div class="col s12 m6">
+    <label for="delay">Delay</label>
+    <p class="range-field mb-0 mt-0">
+      <input [value]="settings.delay" [(ngModel)]="settings.delay" type="range" id="delay" min="1" max="100" />
+    </p>
+    <span class="custom-helper-text">The delay in milliseconds between frames of the animated sequence.</span>
+  </div>
+</div>
 <div class="row mt-2 mb-0" *ngIf="showProcessButton()">
   <div class="col s12 m6 offset-m3">
-    <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn" [clickFn]="objectService.processSelectedObjects" appClickOnce>
+    <button type="button" class="btn waves-effect waves-light full-width custom-fas-btn"
+      [clickFn]="objectService.processSelectedObjects" appClickOnce>
       <i class="fas fa-rocket"></i> PROCESS
     </button>
   </div>

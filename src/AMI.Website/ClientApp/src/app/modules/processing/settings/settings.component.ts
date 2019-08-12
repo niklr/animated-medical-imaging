@@ -35,7 +35,14 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    M.updateTextFields();
+    this.initMaterialize();
+  }
+
+  private initMaterialize(): void {
+    setTimeout(() => {
+      M.updateTextFields();
+      M.Range.init(document.querySelector('#delay'), {});
+    });
   }
 
   public showProcessButton(): boolean {

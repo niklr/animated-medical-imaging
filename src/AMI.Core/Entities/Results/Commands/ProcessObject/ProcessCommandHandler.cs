@@ -85,6 +85,7 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
                 DestinationPath = tempDestPath,
                 OutputSize = request.OutputSize,
                 AmountPerAxis = request.AmountPerAxis,
+                Delay = request.Delay,
                 AxisTypes = request.AxisTypes,
                 ImageFormat = request.ImageFormat,
                 BezierEasingTypePerAxis = request.BezierEasingTypePerAxis,

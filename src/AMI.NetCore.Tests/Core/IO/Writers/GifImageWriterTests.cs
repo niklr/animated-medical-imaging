@@ -20,6 +20,7 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
             string filename = $"combined_{Guid.NewGuid().ToString("N")}";
             string sourcePath = GetDataPath("watermark.png");
             string destinationPath = GetTempPath();
+            int delay = 33;
             var images = new List<PositionAxisContainerModel<string>>()
             {
                 new PositionAxisContainerModel<string>(0, AxisType.X, sourcePath)
@@ -28,7 +29,7 @@ namespace AMI.NetCore.Tests.Core.IO.Writers
             try
             {
                 // Act
-                var resultFilename = writer.WriteAsync(destinationPath, images, filename, BezierEasingType.Linear, new CancellationToken()).Result;
+                var resultFilename = writer.WriteAsync(destinationPath, images, filename, delay, BezierEasingType.Linear, new CancellationToken()).Result;
 
                 // Assert
                 string destinationFullPath = Path.Combine(destinationPath, resultFilename);

@@ -2549,6 +2549,10 @@
                 "type": "integer",
                 "format": "int32"
               },
+              "delay": {
+                "type": "integer",
+                "format": "int32"
+              },
               "axisTypes": {
                 "type": "array",
                 "nullable": true,

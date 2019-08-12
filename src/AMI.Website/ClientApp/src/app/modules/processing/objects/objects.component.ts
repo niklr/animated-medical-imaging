@@ -50,9 +50,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private initDropdown(): void {
     setTimeout(() => {
-      const options = {};
-      const elem = document.querySelector('#objectActionsDropdownButton');
-      const instance = M.Dropdown.init(elem, options);
+      M.Dropdown.init(document.querySelector('#objectActionsDropdownButton'), {});
     });
   }
 

@@ -42,3 +42,11 @@
 .custom-small {
   font-size: 80%;
 }
+
+.custom-helper-text {
+  position: relative;
+  min-height: 18px;
+  display: block;
+  font-size: 12px;
+  color: rgba(0,0,0,.54);
+}
