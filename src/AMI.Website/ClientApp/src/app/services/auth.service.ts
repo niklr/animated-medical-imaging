@@ -69,26 +69,23 @@ export class AuthService extends BaseService {
   public async login(username: string, password: string): Promise<void> {
     this.gc.notify();
     const message = 'Login failed.';
-    return this.init().then(async () => {
-      return this.tokenService.fetchTokenUsingPasswordFlow(username, password).then(
+    return this.tokenService.fetchTokenUsingPasswordFlow(username, password).then(
+      (s) => {
+        // Loading profile of the user
+        return this.tokenService.loadUserProfile();
+      },
+      (e) => {
+        this.handleAuthError(e, message);
+        throw e;
+      }).then(
         (s) => {
-          // Loading profile of the user
-          return this.tokenService.loadUserProfile();
+          this.setUser();
+          this.isInitialized = true;
         },
         (e) => {
           this.handleAuthError(e, message);
           throw e;
-        }).then(
-          (s) => {
-            this.setUser();
-          },
-          (e) => {
-            this.handleAuthError(e, message);
-            throw e;
-          });
-    }, (e) => {
-      this.logger.error(e);
-    });
+        });
   }
 
   public logout(): void {

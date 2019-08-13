@@ -3,6 +3,7 @@ using System.Linq;
 using AMI.Core.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using RNS.Framework.Tools;
 
 namespace AMI.API.Extensions.HttpContextExtensions
 {
@@ -19,15 +20,8 @@ namespace AMI.API.Extensions.HttpContextExtensions
         /// <returns>The remote IP address.</returns>
         public static string GetRemoteIpAddress(this HttpContext context, IApiConfiguration configuration)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+            Ensure.ArgumentNotNull(context, nameof(context));
+            Ensure.ArgumentNotNull(configuration, nameof(configuration));
 
             string remoteIp = null;
 

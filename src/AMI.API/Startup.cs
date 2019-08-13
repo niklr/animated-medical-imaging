@@ -210,9 +210,9 @@ namespace AMI.API
             var context = serviceProvider.GetRequiredService<IAmiUnitOfWork>();
             context.Migrate();
 
-            app.UseThrottleMiddleware();
-
             app.UseCors("AllowSpecificOrigins");
+
+            app.UseThrottleMiddleware();
 
             app.UseCustomExceptionMiddleware();
 

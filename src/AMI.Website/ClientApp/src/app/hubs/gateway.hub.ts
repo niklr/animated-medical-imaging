@@ -94,7 +94,7 @@ export class GatewayHub extends BaseHub {
   }
 
   public restart(): void {
-    if (this.connectionState === ConnectionState.Disconnected) {
+    if (this.token && this.connectionState === ConnectionState.Disconnected) {
       this.connectionState = ConnectionState.Connecting;
       this.start(this.token);
     }

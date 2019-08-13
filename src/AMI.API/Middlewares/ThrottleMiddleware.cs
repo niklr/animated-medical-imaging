@@ -8,6 +8,7 @@ using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RNS.Framework.Tools;
 
 namespace AMI.API.Middlewares
 {
@@ -44,10 +45,7 @@ namespace AMI.API.Middlewares
             IDefaultJsonSerializer serializer)
             : base(next, options, counterStore, policyStore, config, logger)
         {
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
+            Ensure.ArgumentNotNull(options, nameof(options));
 
             if (options.Value == null)
             {
