@@ -123,8 +123,11 @@ namespace AMI.API.Controllers
 
                 var chunkResult = await uploader.UploadAsync(totalChunks, chunkNumber, uid, file.OpenReadStream(), CancellationToken);
 
-                // Ensure current request lasts at least 500 milliseconds
-                throttler.Throttle(500);
+                if (ApiConfiguration?.Options?.EnableRateLimiting ?? false)
+                {
+                    // Ensure current request lasts at least 500 milliseconds
+                    throttler.Throttle(500);
+                }
 
                 if (chunkResult != null && chunkResult.IsCompleted)
                 {

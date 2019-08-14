@@ -12,12 +12,20 @@ namespace AMI.API.Controllers
     [ApiController]
     public abstract class BaseController : Controller
     {
+        private IApiConfiguration apiConfiguration;
         private IMediator mediator;
+
+        /// <summary>
+        /// Gets the API configuration.
+        /// </summary>
+        protected IApiConfiguration ApiConfiguration => apiConfiguration ??
+            (apiConfiguration = HttpContext.RequestServices.GetService<IApiConfiguration>());
 
         /// <summary>
         /// Gets the mediator.
         /// </summary>
-        protected IMediator Mediator => mediator ?? (mediator = HttpContext.RequestServices.GetService<IMediator>());
+        protected IMediator Mediator => mediator ??
+            (mediator = HttpContext.RequestServices.GetService<IMediator>());
 
         /// <summary>
         /// Gets the cancellation token.
@@ -26,13 +34,12 @@ namespace AMI.API.Controllers
         {
             get
             {
-                IApiConfiguration configuration = HttpContext.RequestServices.GetService<IApiConfiguration>();
                 CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(
                     HttpContext?.RequestAborted ?? default(CancellationToken));
 
-                if (configuration?.Options?.RequestTimeoutMilliseconds > 0)
+                if (ApiConfiguration?.Options?.RequestTimeoutMilliseconds > 0)
                 {
-                    cts.CancelAfter(configuration.Options.RequestTimeoutMilliseconds);
+                    cts.CancelAfter(ApiConfiguration.Options.RequestTimeoutMilliseconds);
                 }
 
                 return cts.Token;

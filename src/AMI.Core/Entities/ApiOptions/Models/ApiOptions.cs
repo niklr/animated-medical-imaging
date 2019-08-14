@@ -9,6 +9,9 @@ namespace AMI.Core.Entities.Models
     public class ApiOptions : IApiOptions
     {
         /// <inheritdoc/>
+        public string AllowedCorsOrigins { get; set; }
+
+        /// <inheritdoc/>
         public int BatchSize { get; set; } = 1000;
 
         /// <inheritdoc/>
@@ -16,6 +19,9 @@ namespace AMI.Core.Entities.Models
 
         /// <inheritdoc/>
         public string ConnectingIpHeaderName { get; set; }
+
+        /// <inheritdoc/>
+        public bool EnableRateLimiting { get; set; }
 
         /// <inheritdoc/>
         public bool IsDevelopment { get; set; } = false;

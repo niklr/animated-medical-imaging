@@ -55,6 +55,8 @@ namespace AMI.API
             HostingEnvironment = env;
             AppInfo = new AppInfoFactory().Create(typeof(Program));
             Serializer = new DefaultJsonSerializer();
+
+            Configuration.GetSection("ApiOptions").Bind(ApiOptions);
         }
 
         private IConfiguration Configuration { get; }
@@ -65,6 +67,8 @@ namespace AMI.API
 
         private IDefaultJsonSerializer Serializer { get; }
 
+        private IApiOptions ApiOptions { get; } = new ApiOptions();
+
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
@@ -72,7 +76,7 @@ namespace AMI.API
         public void ConfigureServices(IServiceCollection services)
         {
             // Add cross-origin resource sharing services
-            var allowedCorsOrigins = Configuration["AllowedCorsOrigins"]?.Split(',') ?? new string[0];
+            var allowedCorsOrigins = ApiOptions.AllowedCorsOrigins?.Split(',') ?? new string[0];
             services.AddCors(options =>
             {
                 options.AddPolicy(
@@ -212,7 +216,10 @@ namespace AMI.API
 
             app.UseCors("AllowSpecificOrigins");
 
-            app.UseThrottleMiddleware();
+            if (ApiOptions.EnableRateLimiting)
+            {
+                app.UseThrottleMiddleware();
+            }
 
             app.UseCustomExceptionMiddleware();
 

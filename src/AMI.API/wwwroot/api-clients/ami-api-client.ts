@@ -2123,6 +2123,8 @@ export interface IErrorModel {
 
 /** The API options. */
 export class ApiOptions implements IApiOptions {
+    /** Gets the origins of clients (separated by a comma) that are allowed to initiate cross-origin calls. */
+    allowedCorsOrigins?: string | undefined;
     /** Gets the amount of entities included in a batch operation. Default is 1000. */
     batchSize?: number;
     /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
@@ -2130,6 +2132,8 @@ Automatically deletes objects older than the defined period. */
     cleanupPeriod?: number;
     /** Gets the name of header used to identify the IP address of the connecting client. */
     connectingIpHeaderName?: string | undefined;
+    /** Gets a value indicating whether rate limiting is enabled. Default is false. */
+    enableRateLimiting?: boolean;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
     /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */
@@ -2152,9 +2156,11 @@ Automatically deletes objects older than the defined period. */
 
     init(data?: any) {
         if (data) {
+            this.allowedCorsOrigins = data["allowedCorsOrigins"];
             this.batchSize = data["batchSize"];
             this.cleanupPeriod = data["cleanupPeriod"];
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
+            this.enableRateLimiting = data["enableRateLimiting"];
             this.isDevelopment = data["isDevelopment"];
             this.requestTimeoutMilliseconds = data["requestTimeoutMilliseconds"];
             this.authOptions = data["authOptions"] ? IAuthOptions.fromJS(data["authOptions"]) : <any>undefined;
@@ -2172,9 +2178,11 @@ Automatically deletes objects older than the defined period. */
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["allowedCorsOrigins"] = this.allowedCorsOrigins;
         data["batchSize"] = this.batchSize;
         data["cleanupPeriod"] = this.cleanupPeriod;
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
+        data["enableRateLimiting"] = this.enableRateLimiting;
         data["isDevelopment"] = this.isDevelopment;
         data["requestTimeoutMilliseconds"] = this.requestTimeoutMilliseconds;
         data["authOptions"] = this.authOptions ? this.authOptions.toJSON() : <any>undefined;
@@ -2186,6 +2194,8 @@ Automatically deletes objects older than the defined period. */
 
 /** The API options. */
 export interface IApiOptions {
+    /** Gets the origins of clients (separated by a comma) that are allowed to initiate cross-origin calls. */
+    allowedCorsOrigins?: string | undefined;
     /** Gets the amount of entities included in a batch operation. Default is 1000. */
     batchSize?: number;
     /** Gets the cleanup period in minutes. Default is 0 to prevent any cleanup.
@@ -2193,6 +2203,8 @@ Automatically deletes objects older than the defined period. */
     cleanupPeriod?: number;
     /** Gets the name of header used to identify the IP address of the connecting client. */
     connectingIpHeaderName?: string | undefined;
+    /** Gets a value indicating whether rate limiting is enabled. Default is false. */
+    enableRateLimiting?: boolean;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
     /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */

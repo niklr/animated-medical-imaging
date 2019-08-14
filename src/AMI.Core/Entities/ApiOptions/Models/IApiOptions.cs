@@ -6,6 +6,11 @@
     public interface IApiOptions
     {
         /// <summary>
+        /// Gets the origins of clients (separated by a comma) that are allowed to initiate cross-origin calls.
+        /// </summary>
+        string AllowedCorsOrigins { get; }
+
+        /// <summary>
         /// Gets the amount of entities included in a batch operation. Default is 1000.
         /// </summary>
         int BatchSize { get; }
@@ -20,6 +25,11 @@
         /// Gets the name of header used to identify the IP address of the connecting client.
         /// </summary>
         string ConnectingIpHeaderName { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether rate limiting is enabled. Default is false.
+        /// </summary>
+        bool EnableRateLimiting { get; }
 
         /// <summary>
         /// Gets a value indicating whether the current environment is development.
