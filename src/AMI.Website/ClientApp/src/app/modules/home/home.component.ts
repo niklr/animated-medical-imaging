@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ConnectionState } from '../../enums';
 import { GatewayHub } from '../../hubs';
+import { MomentUtil } from '../../utils';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,7 @@ import { GatewayHub } from '../../hubs';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
-  constructor(private gateway: GatewayHub) { }
+  constructor(private gateway: GatewayHub, private momentUtil: MomentUtil) { }
 
   ngOnInit() {
   }
@@ -22,13 +23,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
       const options = {
         accordion: false
       };
-      const elem = document.querySelector('.collapsible.expandable');
-      const instance = M.Collapsible.init(elem, options);
+      M.Collapsible.init(document.querySelector('.collapsible.expandable'), options);
     });
   }
 
-  public get connectionState(): ConnectionState {
-    return this.gateway.connectionState;
+  public get isDisconnected(): boolean {
+    // console.log(this.gateway.connectionState + ' ' + this.momentUtil.getDiffInSeconds(this.gateway.disconnectedDate));
+    return this.gateway.connectionState == ConnectionState.Disconnected &&
+      this.momentUtil.getDiffInSeconds(this.gateway.disconnectedDate) >= 5;
   }
 
 }

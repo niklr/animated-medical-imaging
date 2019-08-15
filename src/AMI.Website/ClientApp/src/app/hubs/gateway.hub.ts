@@ -3,8 +3,8 @@ import * as SignalR from '@aspnet/signalr';
 import { BaseHub } from './base.hub';
 import { GatewayOpCode, ConnectionState } from '../enums';
 import { IGatewayResult } from '../models/gateway-result.model';
-import { LoggerService } from '../services/logger.service';
 import { ConfigService } from '../services/config.service';
+import { LoggerService } from '../services/logger.service';
 import { GarbageCollector, BackgroundWorker } from '../utils';
 
 @Injectable()
@@ -14,9 +14,14 @@ export class GatewayHub extends BaseHub {
   private token: string;
   private connection: SignalR.HubConnection;
   public connectionState: ConnectionState = ConnectionState.Disconnected;
+  public disconnectedDate: Date;
 
   constructor(private gc: GarbageCollector, private worker: BackgroundWorker, private logger: LoggerService) {
+
     super();
+
+    this.disconnectedDate = new Date();
+
     this.gc.attach(() => {
       this.stop();
       this.token = undefined;
@@ -73,21 +78,21 @@ export class GatewayHub extends BaseHub {
     this.connection.start()
       .then(() => {
         this.logger.info('Hub connection started');
-        this.connectionState = ConnectionState.Connected;
+        this.changeConnectionState(ConnectionState.Connected);
       })
       .catch(err => {
         this.logger.info('Error while establishing connection');
-        this.connectionState = ConnectionState.Disconnected;
+        this.changeConnectionState(ConnectionState.Disconnected);
       });
     this.connection.onclose(e => {
       this.logger.info('Connection closed');
-      this.connectionState = ConnectionState.Disconnected;
+      this.changeConnectionState(ConnectionState.Disconnected);
     });
   }
 
   public stop(): void {
     if (this.connection) {
-      this.connectionState = ConnectionState.Disconnected;
+      this.changeConnectionState(ConnectionState.Disconnected);
       this.connection.stop();
       this.connection.onclose(e => { });
     }
@@ -95,12 +100,22 @@ export class GatewayHub extends BaseHub {
 
   public restart(): void {
     if (this.token && this.connectionState === ConnectionState.Disconnected) {
-      this.connectionState = ConnectionState.Connecting;
+      this.changeConnectionState(ConnectionState.Connecting);
       this.start(this.token);
     }
   }
 
   public updateToken(token: string): void {
     this.token = token;
+  }
+
+  private changeConnectionState(newConnectionState: ConnectionState): void {
+    if (this.connectionState != newConnectionState) {
+      if (this.connectionState == ConnectionState.Connected &&
+        newConnectionState == ConnectionState.Disconnected) {
+        this.disconnectedDate = new Date();
+      }
+      this.connectionState = newConnectionState;
+    }
   }
 }
