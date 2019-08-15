@@ -2,7 +2,7 @@
     <div class="content">
         <div class="card login-card">
             <div class="card-content mb-0">
-                <form (keydown.enter)="login($event)" [formGroup]="loginFormGroup">
+                <form (keydown.enter)="login" [formGroup]="loginFormGroup">
                     <div class="center">
                         <img class="responsive-img" src="assets/images/ami_logo_combined.png" width="600" />
                     </div>
@@ -16,14 +16,14 @@
                         <label for="password">Password</label>
                     </div>
                     <div class="mt-10">
-                        <button class="btn waves-effect waves-light full-width" type="submit" name="action" (click)="login($event)">
+                        <button type="submit" class="btn waves-effect waves-light full-width" name="action" [clickFn]="login" appClickOnce>
                             LOG IN
                         </button>
                     </div>
                 </form>
                 <div class="mt-10">
-                    <a class="btn waves-effect waves-light grey lighten-1 full-width"
-                        (click)="anonymous($event)">ANONYMOUS</a>
+                    <button type="button" class="btn waves-effect waves-light grey lighten-1 full-width"
+                        [clickFn]="anonymous" appClickOnce>ANONYMOUS</button>
                 </div>
             </div>
         </div>
