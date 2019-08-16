@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Objects.Commands.Delete;
 using AMI.Core.Entities.Objects.Queries.GetById;
@@ -121,7 +122,10 @@ namespace AMI.API.Controllers
 
                 ThreadThrottler throttler = new ThreadThrottler();
 
-                var chunkResult = await uploader.UploadAsync(totalChunks, chunkNumber, uid, file.OpenReadStream(), CancellationToken);
+                CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(
+                    HttpContext?.RequestAborted ?? default(CancellationToken));
+
+                var chunkResult = await uploader.UploadAsync(totalChunks, chunkNumber, uid, file.OpenReadStream(), cts.Token);
 
                 if (ApiConfiguration?.Options?.EnableRateLimiting ?? false)
                 {
@@ -131,7 +135,7 @@ namespace AMI.API.Controllers
 
                 if (chunkResult != null && chunkResult.IsCompleted)
                 {
-                    var result = await uploader.CommitAsync(filename, relativePath, uid, CancellationToken);
+                    var result = await uploader.CommitAsync(filename, relativePath, uid, cts.Token);
                     return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
                 }
                 else
