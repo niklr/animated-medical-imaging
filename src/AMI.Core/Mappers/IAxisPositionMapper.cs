@@ -15,6 +15,13 @@ namespace AMI.Core.Mappers
         uint CalculateMappedPosition(uint amount, uint length, uint position);
 
         /// <summary>
+        /// Gets the length based on the specified axis type.
+        /// </summary>
+        /// <param name="axisType">Type of the axis.</param>
+        /// <returns>The length of the axis.</returns>
+        int GetLength(AxisType axisType);
+
+        /// <summary>
         /// Gets the mapped position.
         /// </summary>
         /// <param name="axisType">Type of the axis.</param>

@@ -48,6 +48,20 @@ namespace AMI.Core.Mappers
         }
 
         /// <inheritdoc/>
+        public int GetLength(AxisType axisType)
+        {
+            if (map != null)
+            {
+                if (map.TryGetValue(axisType, out uint[] positions))
+                {
+                    return positions.Length;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <inheritdoc/>
         public uint GetMappedPosition(AxisType axisType, uint position)
         {
             if (map != null)
@@ -68,8 +82,6 @@ namespace AMI.Core.Mappers
         {
             foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))
             {
-                map[axisType] = new uint[amount];
-
                 uint length = 0;
 
                 switch (axisType)
@@ -87,7 +99,9 @@ namespace AMI.Core.Mappers
                         break;
                 }
 
-                for (uint position = 0; position < amount; position++)
+                map[axisType] = new uint[Math.Min(amount, length)];
+
+                for (uint position = 0; position < map[axisType].Length; position++)
                 {
                     map[axisType][position] = CalculateMappedPosition(amount, length, position);
                 }

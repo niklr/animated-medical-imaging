@@ -9,6 +9,7 @@ using AMI.Core.Queues;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.Core.Workers
@@ -22,22 +23,22 @@ namespace AMI.Core.Workers
         private readonly ILogger logger;
         private readonly IAppConfiguration configuration;
         private readonly ITaskQueue queue;
-        private readonly IMediator mediator;
+        private readonly IServiceProvider serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskWorker"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="configuration">The application configuration.</param>
-        /// <param name="mediator">The mediator.</param>
         /// <param name="queue">The queue.</param>
-        public TaskWorker(ILoggerFactory loggerFactory, IAppConfiguration configuration, IMediator mediator, ITaskQueue queue)
+        /// <param name="serviceProvider">The service provider.</param>
+        public TaskWorker(ILoggerFactory loggerFactory, IAppConfiguration configuration, ITaskQueue queue, IServiceProvider serviceProvider)
             : base(loggerFactory)
         {
             logger = loggerFactory?.CreateLogger<TaskWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         /// <inheritdoc/>
@@ -60,23 +61,29 @@ namespace AMI.Core.Workers
 
                 try
                 {
+                    IMediator mediator = serviceProvider.GetService<IMediator>();
+                    if (mediator == null)
+                    {
+                        throw new UnexpectedNullException("The mediator could not be resolved.");
+                    }
+
                     if (item.Command == null)
                     {
-                        await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty);
+                        await UpdateStatus(mediator, item, Domain.Enums.TaskStatus.Finished, string.Empty);
                         await UpdatePositionsAsync();
                     }
                     else
                     {
-                        await UpdateStatus(item, Domain.Enums.TaskStatus.Processing, string.Empty);
+                        await UpdateStatus(mediator, item, Domain.Enums.TaskStatus.Processing, string.Empty);
                         await UpdatePositionsAsync();
 
                         switch (item.Command.CommandType)
                         {
                             case CommandType.ProcessObjectCommand:
-                                await ProcessObjectAsync(item, cts.Token);
+                                await ProcessObjectAsync(mediator, item, cts.Token);
                                 break;
                             default:
-                                await UpdateStatus(item, Domain.Enums.TaskStatus.Finished, string.Empty);
+                                await UpdateStatus(mediator, item, Domain.Enums.TaskStatus.Finished, string.Empty);
                                 break;
                         }
                     }
@@ -91,7 +98,7 @@ namespace AMI.Core.Workers
             }
         }
 
-        private async Task ProcessObjectAsync(TaskModel item, CancellationToken ct)
+        private async Task ProcessObjectAsync(IMediator mediator, TaskModel item, CancellationToken ct)
         {
             try
             {
@@ -107,26 +114,26 @@ namespace AMI.Core.Workers
 
                 var result = await mediator.Send((ProcessObjectCommand)item.Command, ct);
 
-                await UpdateStatus(item, result.Id, Domain.Enums.TaskStatus.Finished, string.Empty);
+                await UpdateStatus(mediator, item, result.Id, Domain.Enums.TaskStatus.Finished, string.Empty);
             }
             catch (OperationCanceledException)
             {
                 logger.LogInformation($"Processing of task {item.Id} canceled.");
-                await UpdateStatus(item, Domain.Enums.TaskStatus.Canceled, string.Empty);
+                await UpdateStatus(mediator, item, Domain.Enums.TaskStatus.Canceled, string.Empty);
             }
             catch (Exception e)
             {
                 logger.LogWarning(e, $"Processing of task {item.Id} failed. {e.Message}");
-                await UpdateStatus(item, Domain.Enums.TaskStatus.Failed, e.Message);
+                await UpdateStatus(mediator, item, Domain.Enums.TaskStatus.Failed, e.Message);
             }
         }
 
-        private async Task UpdateStatus(TaskModel task, Domain.Enums.TaskStatus status, string message)
+        private async Task UpdateStatus(IMediator mediator, TaskModel task, Domain.Enums.TaskStatus status, string message)
         {
-            await UpdateStatus(task, string.Empty, status, message);
+            await UpdateStatus(mediator, task, string.Empty, status, message);
         }
 
-        private async Task UpdateStatus(TaskModel task, string resultId, Domain.Enums.TaskStatus status, string message)
+        private async Task UpdateStatus(IMediator mediator, TaskModel task, string resultId, Domain.Enums.TaskStatus status, string message)
         {
             var command = new UpdateTaskStatusCommand()
             {

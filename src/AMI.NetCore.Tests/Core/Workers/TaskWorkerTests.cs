@@ -28,7 +28,7 @@ namespace AMI.NetCore.Tests.Core.Workers
             var mediator = GetService<IMediator>();
             var queue = GetService<ITaskQueue>();
             var context = GetService<IAmiUnitOfWork>();
-            var worker = new TaskWorker(loggerFactory, configuration, mediator, queue);
+            var worker = new TaskWorker(loggerFactory, configuration, queue, ServiceProvider);
             var cts = new CancellationTokenSource();
             string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
             string dataPath = GetDataPath(filename);

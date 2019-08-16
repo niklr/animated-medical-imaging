@@ -49,16 +49,17 @@ namespace AMI.NetFramework.Tests.Core.Mappers
             Assert.AreEqual(0, mapper.GetMappedPosition(AxisType.X, 0));
             Assert.AreEqual(1, mapper.GetMappedPosition(AxisType.X, 1));
             Assert.AreEqual(4, mapper.GetMappedPosition(AxisType.X, 4));
-            Assert.AreEqual(0, mapper.GetMappedPosition(AxisType.X, 5));
-            Assert.AreEqual(0, mapper.GetMappedPosition(AxisType.X, 9));
+            Assert.AreEqual(5, mapper.GetMappedPosition(AxisType.X, 5));
+            Assert.AreEqual(9, mapper.GetMappedPosition(AxisType.X, 9));
+            Assert.AreEqual(20, mapper.GetMappedPosition(AxisType.X, 20));
 
             Assert.AreEqual(0, mapper.GetMappedPosition(AxisType.Y, 0));
             Assert.AreEqual(1, mapper.GetMappedPosition(AxisType.Y, 1));
             Assert.AreEqual(9, mapper.GetMappedPosition(AxisType.Y, 9));
 
             Assert.AreEqual(0, mapper.GetMappedPosition(AxisType.Z, 0));
-            Assert.AreEqual(0, mapper.GetMappedPosition(AxisType.Z, 1));
-            Assert.AreEqual(0, mapper.GetMappedPosition(AxisType.Z, 9));
+            Assert.AreEqual(1, mapper.GetMappedPosition(AxisType.Z, 1));
+            Assert.AreEqual(9, mapper.GetMappedPosition(AxisType.Z, 9));
         }
     }
 }

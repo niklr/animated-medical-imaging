@@ -38,7 +38,6 @@ namespace AMI.NetCore.Tests
     public class BaseTest
     {
         private readonly ServiceCollection services;
-        private ServiceProvider serviceProvider;   
 
         public BaseTest()
         {
@@ -102,12 +101,14 @@ namespace AMI.NetCore.Tests
                 options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
             });
 
-            serviceProvider = services.BuildServiceProvider();
+            ServiceProvider = services.BuildServiceProvider();
         }
+
+        public IServiceProvider ServiceProvider { get; private set; }
 
         public T GetService<T>()
         {
-            return serviceProvider.GetService<T>();
+            return ServiceProvider.GetService<T>();
         }
 
         public string GetDataPath(string filename)
@@ -176,7 +177,7 @@ namespace AMI.NetCore.Tests
                 section[kvp.Key] = kvp.Value;
             }
             services.Configure<AppOptions>(section);
-            serviceProvider = services.BuildServiceProvider();
+            ServiceProvider = services.BuildServiceProvider();
         }
 
         private IConfigurationBuilder CreateConfigurationBuilder()

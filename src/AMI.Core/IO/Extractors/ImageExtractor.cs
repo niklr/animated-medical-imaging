@@ -116,7 +116,7 @@ namespace AMI.Core.IO.Extractors
 
             foreach (AxisType axisType in axisTypes)
             {
-                for (int i = 0; i < command.AmountPerAxis; i++)
+                for (int i = 0; i < reader.Mapper.GetLength(axisType); i++)
                 {
                     ct.ThrowIfCancellationRequested();
 
@@ -155,9 +155,10 @@ namespace AMI.Core.IO.Extractors
 
                 foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))
                 {
-                    newMap[axisType] = new uint[amount];
+                    int length = mapper.GetLength(axisType);
+                    newMap[axisType] = new uint[Math.Min(amount, length)];
 
-                    for (uint i = 0; i < amount; i++)
+                    for (uint i = 0; i < newMap[axisType].Length; i++)
                     {
                         // set initial mapped positions
                         newMap[axisType][i] = mapper.GetMappedPosition(axisType, i);
@@ -193,11 +194,8 @@ namespace AMI.Core.IO.Extractors
                         {
                             if (startPosition == endPosition)
                             {
-                                // set the same mappedPosition for all positions
-                                for (int i = 0; i < amount; i++)
-                                {
-                                    newMap[axisType][i] = mapper.GetMappedPosition(axisType, startPosition.Position);
-                                }
+                                newMap[axisType] = new uint[1];
+                                newMap[axisType][0] = mapper.GetMappedPosition(axisType, startPosition.Position);
                             }
                             else
                             {
@@ -206,25 +204,17 @@ namespace AMI.Core.IO.Extractors
                                 uint mappedEndPosition = mapper.GetMappedPosition(axisType, endPosition.Position);
                                 uint length = mappedEndPosition - mappedStartPosition;
 
-                                for (uint i = 0; i < amount; i++)
+                                if (length >= newMap[axisType].Length)
                                 {
-                                    newMap[axisType][i] = mappedStartPosition + mapper.CalculateMappedPosition(amount, length, i);
+                                    for (uint i = 0; i < newMap[axisType].Length; i++)
+                                    {
+                                        newMap[axisType][i] = mappedStartPosition + mapper.CalculateMappedPosition(amount, length, i);
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
-                // TODO: distribute equally (newMap) to avoid re-use of the same image excessively compared to others
-
-                /*
-                 * Request:
-                 * - Extract x images and each image at least once.
-                 * Special case:
-                 * - Less than x images can be extracted.
-                 * Preferred behaviour:
-                 * - Prioritize images in the middle for re-use.
-                 */
 
                 // set a new mapper with the new map
                 reader.Mapper = new AxisPositionMapper(newMap);

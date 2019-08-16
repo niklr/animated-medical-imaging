@@ -36,7 +36,7 @@ namespace AMI.NetFramework.Tests.Core.IO.Extractors
                 var result = extractor.ProcessAsync(command, ct).Result;
 
                 // Assert
-                Assert.AreEqual(3 * Convert.ToInt32(command.AmountPerAxis), result.Images.Count);
+                Assert.AreEqual(28, result.Images.Count);
             }
             finally
             {
