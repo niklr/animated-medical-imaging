@@ -116,7 +116,7 @@ namespace AMI.Core.IO.Extractors
 
             foreach (AxisType axisType in axisTypes)
             {
-                for (int i = 0; i < reader.Mapper.GetLength(axisType); i++)
+                for (uint i = 0; i < reader.Mapper.GetLength(axisType); i++)
                 {
                     ct.ThrowIfCancellationRequested();
 
@@ -222,7 +222,7 @@ namespace AMI.Core.IO.Extractors
         }
 
         private PositionAxisContainerModel<string> WriteImage(
-            int position,
+            uint position,
             IFileSystem fs,
             ProcessPathCommand command,
             T1 reader,
@@ -231,7 +231,7 @@ namespace AMI.Core.IO.Extractors
             string filename,
             BitmapWrapper watermark = null)
         {
-            var bitmap = reader.ExtractPosition(axisType, Convert.ToUInt32(position), Convert.ToUInt32(command.OutputSize));
+            var bitmap = reader.ExtractPosition(axisType, position, Convert.ToUInt32(command.OutputSize));
             if (bitmap != null)
             {
                 if (command.Grayscale)
