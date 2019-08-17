@@ -2136,6 +2136,10 @@ Automatically deletes objects older than the defined period. */
     enableRateLimiting?: boolean;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the object limit for anonymous users. Default is 5. */
+    objectLimitAnonymous?: number;
+    /** Gets the object limit for regular users. Default is 0 (no limit). */
+    objectLimit?: number;
     /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */
     requestTimeoutMilliseconds?: number;
     /** Gets the options used for authentication and authorization. */
@@ -2162,6 +2166,8 @@ Automatically deletes objects older than the defined period. */
             this.connectingIpHeaderName = data["connectingIpHeaderName"];
             this.enableRateLimiting = data["enableRateLimiting"];
             this.isDevelopment = data["isDevelopment"];
+            this.objectLimitAnonymous = data["objectLimitAnonymous"];
+            this.objectLimit = data["objectLimit"];
             this.requestTimeoutMilliseconds = data["requestTimeoutMilliseconds"];
             this.authOptions = data["authOptions"] ? IAuthOptions.fromJS(data["authOptions"]) : <any>undefined;
             this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
@@ -2184,6 +2190,8 @@ Automatically deletes objects older than the defined period. */
         data["connectingIpHeaderName"] = this.connectingIpHeaderName;
         data["enableRateLimiting"] = this.enableRateLimiting;
         data["isDevelopment"] = this.isDevelopment;
+        data["objectLimitAnonymous"] = this.objectLimitAnonymous;
+        data["objectLimit"] = this.objectLimit;
         data["requestTimeoutMilliseconds"] = this.requestTimeoutMilliseconds;
         data["authOptions"] = this.authOptions ? this.authOptions.toJSON() : <any>undefined;
         data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
@@ -2207,6 +2215,10 @@ Automatically deletes objects older than the defined period. */
     enableRateLimiting?: boolean;
     /** Gets a value indicating whether the current environment is development. */
     isDevelopment?: boolean;
+    /** Gets the object limit for anonymous users. Default is 5. */
+    objectLimitAnonymous?: number;
+    /** Gets the object limit for regular users. Default is 0 (no limit). */
+    objectLimit?: number;
     /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */
     requestTimeoutMilliseconds?: number;
     /** Gets the options used for authentication and authorization. */
@@ -3815,8 +3827,8 @@ the token MUST NOT be accepted for processing. */
     nbf?: number;
     /** Gets or sets the "issued at" claim identifying the time at which the token was issued. */
     iat?: number;
-    /** Gets or sets a value indicating whether this token was issued to an anonymous user. */
-    isAnon?: boolean;
+    /** Gets or sets the roles. */
+    roleClaims?: string[] | undefined;
 
     protected _discriminator: string;
 
@@ -3837,7 +3849,11 @@ the token MUST NOT be accepted for processing. */
             this.aud = data["aud"];
             this.nbf = data["nbf"];
             this.iat = data["iat"];
-            this.isAnon = data["isAnon"];
+            if (Array.isArray(data["roleClaims"])) {
+                this.roleClaims = [] as any;
+                for (let item of data["roleClaims"])
+                    this.roleClaims!.push(item);
+            }
         }
     }
 
@@ -3869,7 +3885,11 @@ the token MUST NOT be accepted for processing. */
         data["aud"] = this.aud;
         data["nbf"] = this.nbf;
         data["iat"] = this.iat;
-        data["isAnon"] = this.isAnon;
+        if (Array.isArray(this.roleClaims)) {
+            data["roleClaims"] = [];
+            for (let item of this.roleClaims)
+                data["roleClaims"].push(item);
+        }
         return data; 
     }
 }
@@ -3887,8 +3907,8 @@ the token MUST NOT be accepted for processing. */
     nbf?: number;
     /** Gets or sets the "issued at" claim identifying the time at which the token was issued. */
     iat?: number;
-    /** Gets or sets a value indicating whether this token was issued to an anonymous user. */
-    isAnon?: boolean;
+    /** Gets or sets the roles. */
+    roleClaims?: string[] | undefined;
 }
 
 /** The model containing information about the access token. */
@@ -3898,8 +3918,6 @@ or after which the token MUST NOT be accepted for processing. */
     exp?: number;
     /** Gets or sets the username. */
     username?: string | undefined;
-    /** Gets or sets the roles. */
-    roleClaims?: string[] | undefined;
 
     constructor(data?: IAccessTokenModel) {
         super(data);
@@ -3911,11 +3929,6 @@ or after which the token MUST NOT be accepted for processing. */
         if (data) {
             this.exp = data["exp"];
             this.username = data["username"];
-            if (Array.isArray(data["roleClaims"])) {
-                this.roleClaims = [] as any;
-                for (let item of data["roleClaims"])
-                    this.roleClaims!.push(item);
-            }
         }
     }
 
@@ -3930,11 +3943,6 @@ or after which the token MUST NOT be accepted for processing. */
         data = typeof data === 'object' ? data : {};
         data["exp"] = this.exp;
         data["username"] = this.username;
-        if (Array.isArray(this.roleClaims)) {
-            data["roleClaims"] = [];
-            for (let item of this.roleClaims)
-                data["roleClaims"].push(item);
-        }
         super.toJSON(data);
         return data; 
     }
@@ -3947,8 +3955,6 @@ or after which the token MUST NOT be accepted for processing. */
     exp?: number;
     /** Gets or sets the username. */
     username?: string | undefined;
-    /** Gets or sets the roles. */
-    roleClaims?: string[] | undefined;
 }
 
 /** The model containing information about the identity token. */
@@ -3959,8 +3965,6 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
     emailConfirmed?: boolean;
     /** Gets or sets the username. */
     username?: string | undefined;
-    /** Gets or sets the roles. */
-    roleClaims?: string[] | undefined;
 
     constructor(data?: IIdTokenModel) {
         super(data);
@@ -3973,11 +3977,6 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
             this.email = data["email"];
             this.emailConfirmed = data["emailConfirmed"];
             this.username = data["username"];
-            if (Array.isArray(data["roleClaims"])) {
-                this.roleClaims = [] as any;
-                for (let item of data["roleClaims"])
-                    this.roleClaims!.push(item);
-            }
         }
     }
 
@@ -3993,11 +3992,6 @@ export class IdTokenModel extends BaseTokenModel implements IIdTokenModel {
         data["email"] = this.email;
         data["emailConfirmed"] = this.emailConfirmed;
         data["username"] = this.username;
-        if (Array.isArray(this.roleClaims)) {
-            data["roleClaims"] = [];
-            for (let item of this.roleClaims)
-                data["roleClaims"].push(item);
-        }
         super.toJSON(data);
         return data; 
     }
@@ -4011,8 +4005,6 @@ export interface IIdTokenModel extends IBaseTokenModel {
     emailConfirmed?: boolean;
     /** Gets or sets the username. */
     username?: string | undefined;
-    /** Gets or sets the roles. */
-    roleClaims?: string[] | undefined;
 }
 
 /** The model containing information about the refresh token. */

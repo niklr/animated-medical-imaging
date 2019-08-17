@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AMI.Core.Entities.Models
+﻿namespace AMI.Core.Entities.Models
 {
     /// <summary>
     /// The model containing information about the access token.
@@ -25,10 +23,5 @@ namespace AMI.Core.Entities.Models
         /// Gets or sets the username.
         /// </summary>
         public string Username { get; set; }
-
-        /// <summary>
-        /// Gets or sets the roles.
-        /// </summary>
-        public IList<string> RoleClaims { get; set; } = new List<string>();
     }
 }

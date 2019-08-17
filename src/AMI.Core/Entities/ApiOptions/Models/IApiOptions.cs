@@ -37,6 +37,16 @@
         bool IsDevelopment { get; }
 
         /// <summary>
+        /// Gets the object limit for anonymous users. Default is 5.
+        /// </summary>
+        int ObjectLimitAnonymous { get; }
+
+        /// <summary>
+        /// Gets the object limit for regular users. Default is 0 (no limit).
+        /// </summary>
+        int ObjectLimit { get; }
+
+        /// <summary>
         /// Gets the amount of milliseconds before a reuqest times out. Default is 5000.
         /// </summary>
         int RequestTimeoutMilliseconds { get; }

@@ -1,14 +1,18 @@
+import { RoleType } from '../enums';
 import { KeyedCollection, IKeyedCollection } from '../extensions';
 
 export class IdentityModel {
   public sub: string;
   public username: string;
-  public isAnon: boolean;
 
   private rolesCollection: IKeyedCollection<string> = new KeyedCollection<string>();
 
   public constructor(init?: Partial<IdentityModel>) {
     Object.assign(this, init);
+  }
+
+  public get isAnon(): boolean {
+    return !this.isInRole(RoleType.User);
   }
 
   public get roles(): string[] {

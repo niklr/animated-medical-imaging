@@ -11,8 +11,13 @@
         Unknown = 0,
 
         /// <summary>
+        /// The user role.
+        /// </summary>
+        User = 1,
+
+        /// <summary>
         /// The administrator role.
         /// </summary>
-        Administrator = 1
+        Administrator = 2
     }
 }

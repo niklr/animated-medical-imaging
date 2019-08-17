@@ -64,13 +64,14 @@ namespace AMI.Infrastructure.Services
                 new AuthEntity()
                 {
                     Username = "Svc",
-                    Password = string.IsNullOrWhiteSpace(passwords?.Svc) ? defaultPassword : passwords.Svc
+                    Password = string.IsNullOrWhiteSpace(passwords?.Svc) ? defaultPassword : passwords.Svc,
+                    Roles = new List<string>() { RoleType.User.ToString() }
                 },
                 new AuthEntity()
                 {
                     Username = "Admin",
                     Password = string.IsNullOrWhiteSpace(passwords?.Admin) ? defaultPassword : passwords.Admin,
-                    Roles = new List<string>() { RoleType.Administrator.ToString() }
+                    Roles = new List<string>() { RoleType.User.ToString(), RoleType.Administrator.ToString() }
                 }
             };
 
@@ -135,10 +136,7 @@ namespace AMI.Infrastructure.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(ownerId))
-                {
-                    throw new ArgumentNullException(nameof(ownerId));
-                }
+                Ensure.ArgumentNotNullOrWhiteSpace(ownerId, nameof(ownerId));
 
                 var principal = principalProvider.GetPrincipal();
                 if (principal == null)

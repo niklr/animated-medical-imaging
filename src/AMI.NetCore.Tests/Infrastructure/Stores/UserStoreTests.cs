@@ -29,8 +29,8 @@ namespace AMI.NetCore.Tests.Infrastructure.Stores
             Assert.AreEqual(username.ToUpperInvariant(), user.NormalizedUsername);
         }
 
-        [TestCase("svc", new string[] { })]
-        [TestCase("admin", new string[] { "Administrator" })]
+        [TestCase("svc", new string[] { "User" })]
+        [TestCase("admin", new string[] { "User", "Administrator" })]
         public async Task UserStore_GetRolesAsync(string username, string[] expectedRoles)
         {
             // Arrange

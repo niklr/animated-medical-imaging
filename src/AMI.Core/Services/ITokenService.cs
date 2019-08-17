@@ -30,8 +30,19 @@ namespace AMI.Core.Services
         /// </summary>
         /// <param name="token">The value of the token.</param>
         /// <param name="ct">The cancellation token.</param>
+        /// <typeparam name="T">The type of the token.</typeparam>
         /// <returns>The decoded token.</returns>
-        Task<BaseTokenModel> DecodeAsync(string token, CancellationToken ct);
+        Task<T> DecodeAsync<T>(string token, CancellationToken ct)
+            where T : BaseTokenModel;
+
+        /// <summary>
+        /// Determines whether the specified token represents an anonymous user.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified token represents an anonymous user; otherwise, <c>false</c>.
+        /// </returns>
+        bool IsAnonymous(BaseTokenModel token);
 
         /// <summary>
         /// Uses the refresh token to get a new token container asynchronous.

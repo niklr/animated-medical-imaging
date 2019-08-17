@@ -27,6 +27,12 @@ namespace AMI.Core.Entities.Models
         public bool IsDevelopment { get; set; } = false;
 
         /// <inheritdoc/>
+        public int ObjectLimitAnonymous { get; set; } = 5;
+
+        /// <inheritdoc/>
+        public int ObjectLimit { get; set; } = 0;
+
+        /// <inheritdoc/>
         public int RequestTimeoutMilliseconds { get; set; } = 5000;
 
         /// <inheritdoc/>

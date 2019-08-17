@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using AMI.Core.IO.Converters;
 using Newtonsoft.Json;
 
@@ -40,8 +41,8 @@ namespace AMI.Core.Entities.Models
         public double Iat { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this token was issued to an anonymous user.
+        /// Gets or sets the roles.
         /// </summary>
-        public bool IsAnon { get; set; }
+        public IList<string> RoleClaims { get; set; } = new List<string>();
     }
 }

@@ -73,8 +73,8 @@ export class TokenService extends BaseService {
     return new Promise<void>(async (resolve, reject) => {
       try {
         this.loadTokenContainer();
-        if (this.container && this.container.idToken && this.container.idToken.isAnon) {
-          // Use existing token that is an anonymous user otherwise fetch new token
+        if (this.container) {
+          // Use existing token otherwise fetch new token
           resolve();
         } else {
           this.tokenProxy.createAnon().subscribe(result => {

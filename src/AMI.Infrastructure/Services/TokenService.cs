@@ -10,6 +10,7 @@ using AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using AMI.Infrastructure.Wrappers;
 using JWT;
@@ -113,7 +114,8 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task<BaseTokenModel> DecodeAsync(string token, CancellationToken ct)
+        public async Task<T> DecodeAsync<T>(string token, CancellationToken ct)
+            where T : BaseTokenModel
         {
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
@@ -122,7 +124,7 @@ namespace AMI.Infrastructure.Services
             try
             {
                 var decoded = decoder.Decode(token, configuration.Options.AuthOptions.JwtOptions.SecretKey, true);
-                var result = serializer.Deserialize<BaseTokenModel>(decoded);
+                var result = serializer.Deserialize<T>(decoded);
 
                 await Task.CompletedTask;
 
@@ -136,19 +138,30 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
+        public bool IsAnonymous(BaseTokenModel token)
+        {
+            if (token != null && token.RoleClaims != null)
+            {
+                return !token.RoleClaims.Contains(RoleType.User.ToString());
+            }
+
+            return true;
+        }
+
+        /// <inheritdoc/>
         public async Task<TokenContainerModel> UseRefreshTokenAsync(string token, CancellationToken ct)
         {
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
             ct.ThrowIfCancellationRequested();
 
-            var decoded = await DecodeAsync(token, ct);
-            if (decoded == null || !(decoded is RefreshTokenModel))
+            var decoded = await DecodeAsync<RefreshTokenModel>(token, ct);
+            if (decoded == null)
             {
                 throw new UnexpectedNullException("The provided refresh token could not be decoded.");
             }
 
-            if (decoded.IsAnon)
+            if (IsAnonymous(decoded))
             {
                 var user = CreateAnonymousUserModel(decoded.Sub);
                 var result = await CreateContainerAsync(user, ct);
@@ -226,7 +239,7 @@ namespace AMI.Infrastructure.Services
             token.Aud = configuration.Options.AuthOptions.JwtOptions.Audience;
             token.Nbf = now;
             token.Iat = now;
-            token.IsAnon = user.Username == configuration.Options.AuthOptions.AnonymousUsername;
+            token.RoleClaims = user.Roles;
         }
 
         private AccessTokenModel CreateAccessToken(UserModel user)
@@ -234,8 +247,7 @@ namespace AMI.Infrastructure.Services
             var token = new AccessTokenModel()
             {
                 Exp = DateTime.Now.AddMinutes(configuration.Options.AuthOptions.ExpireAfter).ToUnix(),
-                Username = user.Username,
-                RoleClaims = user.Roles
+                Username = user.Username
             };
 
             SetBaseToken(token, user);
@@ -249,8 +261,7 @@ namespace AMI.Infrastructure.Services
             {
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed,
-                Username = user.Username,
-                RoleClaims = user.Roles
+                Username = user.Username
             };
 
             SetBaseToken(token, user);
