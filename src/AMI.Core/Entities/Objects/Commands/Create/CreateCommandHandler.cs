@@ -26,7 +26,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
 
         private readonly IIdGenerator idGenerator;
         private readonly IApplicationConstants constants;
-        private readonly IAppConfiguration configuration;
+        private readonly IApiConfiguration apiConfiguration;
+        private readonly IAppConfiguration appConfiguration;
         private readonly IFileSystem fileSystem;
 
         /// <summary>
@@ -35,26 +36,29 @@ namespace AMI.Core.Entities.Objects.Commands.Create
         /// <param name="module">The command handler module.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="constants">The application constants.</param>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="apiConfiguration">The API configuration.</param>
+        /// <param name="appConfiguration">The application configuration.</param>
         /// <param name="fileSystemStrategy">The file system strategy.</param>
         public CreateCommandHandler(
             ICommandHandlerModule module,
             IIdGenerator idGenerator,
             IApplicationConstants constants,
-            IAppConfiguration configuration,
+            IApiConfiguration apiConfiguration,
+            IAppConfiguration appConfiguration,
             IFileSystemStrategy fileSystemStrategy)
             : base(module)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
-            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.apiConfiguration = apiConfiguration ?? throw new ArgumentNullException(nameof(apiConfiguration));
+            this.appConfiguration = appConfiguration ?? throw new ArgumentNullException(nameof(appConfiguration));
 
             if (fileSystemStrategy == null)
             {
                 throw new ArgumentNullException(nameof(fileSystemStrategy));
             }
 
-            fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+            fileSystem = fileSystemStrategy.Create(appConfiguration.Options.WorkingDirectory);
         }
 
         /// <inheritdoc/>
@@ -66,11 +70,29 @@ namespace AMI.Core.Entities.Objects.Commands.Create
                 throw new ForbiddenException("Not authenticated");
             }
 
+            int objectLimit = 0;
+            if (principal.IsInRole(RoleType.User))
+            {
+                objectLimit = apiConfiguration.Options.ObjectLimit;
+            }
+            else
+            {
+                objectLimit = apiConfiguration.Options.ObjectLimitAnonymous;
+            }
+
             processMutex = new Mutex(false, this.GetMethodName());
 
             return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
-                // TODO: support custom extensions
+                if (objectLimit > 0)
+                {
+                    var count = await Context.ObjectRepository.CountAsync(e => e.UserId == principal.Identity.Name, cancellationToken);
+                    if (count >= objectLimit)
+                    {
+                        throw new AmiException($"The object limit of {objectLimit} has been reached.");
+                    }
+                }
+
                 string fileExtension = fileSystem.Path.GetExtension(request.OriginalFilename);
 
                 Guid guid = idGenerator.GenerateId();
@@ -78,8 +100,8 @@ namespace AMI.Core.Entities.Objects.Commands.Create
                 string destFilename = string.Concat(guid.ToString(), fileExtension);
                 string destPath = fileSystem.Path.Combine(path, destFilename);
 
-                fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(configuration.Options.WorkingDirectory, path));
-                fileSystem.File.Move(request.SourcePath, fileSystem.Path.Combine(configuration.Options.WorkingDirectory, destPath));
+                fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(appConfiguration.Options.WorkingDirectory, path));
+                fileSystem.File.Move(request.SourcePath, fileSystem.Path.Combine(appConfiguration.Options.WorkingDirectory, destPath));
 
                 var entity = new ObjectEntity()
                 {

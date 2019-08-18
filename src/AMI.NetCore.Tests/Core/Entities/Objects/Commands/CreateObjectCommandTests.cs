@@ -1,11 +1,16 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading;
+using AMI.Core.Configurations;
+using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Objects.Commands.Create;
 using AMI.Core.Providers;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
+using AMI.NetCore.Tests.Mocks.Core;
 using MediatR;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
 {
@@ -54,6 +59,58 @@ namespace AMI.NetCore.Tests.Core.Entities.Objects.Commands
             finally
             {
                 DeleteDirectory(Path.GetDirectoryName(command.SourcePath));
+            }
+        }
+
+        [Test]
+        public void CreateObjectCommand_Limit_Reached()
+        {
+            // Arrange
+            var mediator = GetService<IMediator>();
+            var apiConfiguration = GetService<IApiConfiguration>();
+            var ct = new CancellationToken();
+            var objectLimit = apiConfiguration.Options.ObjectLimitAnonymous;
+            string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
+            string dataPath = GetDataPath(filename);
+            TestExecutionContext.CurrentContext.CurrentPrincipal = new Mocks.Core.MockPrincipal(
+                "22222222-2222-2222-2222-222222222222", new RoleType[] { });
+
+            var results = new List<ObjectModel>();
+            for (int i = 0; i < objectLimit; i++)
+            {
+                var command1 = new CreateObjectCommand()
+                {
+                    OriginalFilename = filename,
+                    SourcePath = CreateTempFile(dataPath)
+                };
+                var result1 = mediator.Send(command1, ct).Result;
+
+                Assert.IsNotNull(result1);
+
+                results.Add(result1);
+                DeleteDirectory(Path.GetDirectoryName(command1.SourcePath));
+            }
+
+            try
+            {
+                // Act
+                var command2 = new CreateObjectCommand()
+                {
+                    OriginalFilename = filename,
+                    SourcePath = CreateTempFile(dataPath)
+                };
+                var ex = Assert.ThrowsAsync<AmiException>(() => mediator.Send(command2, ct));
+
+                // Assert
+                Assert.IsNotNull(ex);
+                Assert.AreEqual($"The object limit of {objectLimit} has been reached.", ex.Message);
+            }
+            finally
+            {
+                foreach (var result in results)
+                {
+                    DeleteObject(result.Id);
+                }
             }
         }
 
