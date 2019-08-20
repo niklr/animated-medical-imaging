@@ -13,13 +13,14 @@ export class AdminComponent implements OnInit, AfterViewInit {
   ngOnInit() {
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.init();
-    });
+  ngAfterViewInit(): void {
+    this.initMaterialize();
   }
 
-  private init(): void {
+  private initMaterialize(): void {
+    setTimeout(() => {
+      M.Tabs.init(document.querySelector('#adminTabs'), {});
+    });
   }
 
 }

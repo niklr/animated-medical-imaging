@@ -9,6 +9,7 @@ using AMI.Core.Modules;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Enums.Auditing;
+using XDASv2Net.Model;
 
 namespace AMI.Core.Entities.AuditEvents.Commands.Create
 {
@@ -48,12 +49,17 @@ namespace AMI.Core.Entities.AuditEvents.Commands.Create
         /// <inheritdoc/>
         protected override async Task<AuditEventModel> ProtectedHandleAsync(CreateAuditEventCommand request, CancellationToken cancellationToken)
         {
+            EventType parsedEventType = Enum.TryParse(request.Event.Action.Event.Name, out EventType eventType)
+                 ? eventType : EventType.INVOKE_SERVICE;
+            SubEventType parsedSubEventType = Enum.TryParse(request.Event.Action.SubEvent.Name, out SubEventType subEventType)
+                 ? subEventType : SubEventType.None;
+
             var eventEntity = new AuditEventEntity()
             {
                 Id = idGenerator.GenerateId(),
                 Timestamp = DateTime.UtcNow,
-                EventType = Convert.ToInt32(request.Event.Action.Event.Name),
-                SubEventType = Convert.ToInt32(request.Event.Action.SubEvent.Name),
+                EventType = (int)parsedEventType,
+                SubEventType = (int)parsedSubEventType,
                 EventSerialized = serializer.Serialize(request.Event)
             };
 

@@ -510,6 +510,139 @@ export class AppOptionsAmiApiClient implements IAppOptionsAmiApiClient {
     }
 }
 
+export interface IAuditEventsAmiApiClient {
+    /**
+     * Get paginated list of audit events
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated audit events.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfAuditEventModel>;
+}
+
+@Injectable()
+export class AuditEventsAmiApiClient implements IAuditEventsAmiApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Get paginated list of audit events
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated audit events.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfAuditEventModel> {
+        let url_ = this.baseUrl + "/audit-events?";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&"; 
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaginated(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaginated(<any>response_);
+                } catch (e) {
+                    return <Observable<PaginationResultModelOfAuditEventModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PaginationResultModelOfAuditEventModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPaginated(response: HttpResponseBase): Observable<PaginationResultModelOfAuditEventModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginationResultModelOfAuditEventModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PaginationResultModelOfAuditEventModel>(<any>null);
+    }
+}
+
 export interface IObjectsAmiApiClient {
     /**
      * Get paginated list of objects
@@ -2835,6 +2968,682 @@ export interface IAppOptions {
     timeoutMilliseconds?: number;
     /** Gets the working directory. */
     workingDirectory?: string | undefined;
+}
+
+export class PaginationResultModelOfAuditEventModel implements IPaginationResultModelOfAuditEventModel {
+    items?: AuditEventModel[] | undefined;
+    pagination?: PaginationModel | undefined;
+
+    constructor(data?: IPaginationResultModelOfAuditEventModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["items"])) {
+                this.items = [] as any;
+                for (let item of data["items"])
+                    this.items!.push(AuditEventModel.fromJS(item));
+            }
+            this.pagination = data["pagination"] ? PaginationModel.fromJS(data["pagination"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PaginationResultModelOfAuditEventModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginationResultModelOfAuditEventModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pagination"] = this.pagination ? this.pagination.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IPaginationResultModelOfAuditEventModel {
+    items?: AuditEventModel[] | undefined;
+    pagination?: PaginationModel | undefined;
+}
+
+/** A model representing an audit event. */
+export class AuditEventModel implements IAuditEventModel {
+    /** Gets or sets the timestamp. */
+    timestamp?: Date;
+    /** Gets or sets the type of the event. */
+    eventType?: EventType;
+    /** Gets or sets the type of the sub event. */
+    subEventType?: SubEventType;
+    /** Gets or sets the XDASv2 event. */
+    xdas?: XDASv2Event | undefined;
+
+    constructor(data?: IAuditEventModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.timestamp = data["timestamp"] ? new Date(data["timestamp"].toString()) : <any>undefined;
+            this.eventType = data["eventType"];
+            this.subEventType = data["subEventType"];
+            this.xdas = data["xdas"] ? XDASv2Event.fromJS(data["xdas"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuditEventModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuditEventModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["timestamp"] = this.timestamp ? this.timestamp.toISOString() : <any>undefined;
+        data["eventType"] = this.eventType;
+        data["subEventType"] = this.subEventType;
+        data["xdas"] = this.xdas ? this.xdas.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+/** A model representing an audit event. */
+export interface IAuditEventModel {
+    /** Gets or sets the timestamp. */
+    timestamp?: Date;
+    /** Gets or sets the type of the event. */
+    eventType?: EventType;
+    /** Gets or sets the type of the sub event. */
+    subEventType?: SubEventType;
+    /** Gets or sets the XDASv2 event. */
+    xdas?: XDASv2Event | undefined;
+}
+
+export enum EventType {
+    CREATE_ACCOUNT = "CREATE_ACCOUNT",
+    DELETE_ACCOUNT = "DELETE_ACCOUNT",
+    DISABLE_ACCOUNT = "DISABLE_ACCOUNT",
+    ENABLE_ACCOUNT = "ENABLE_ACCOUNT",
+    QUERY_ACCOUNT = "QUERY_ACCOUNT",
+    MODIFY_ACCOUNT = "MODIFY_ACCOUNT",
+    MODIFY_ACCOUNT_SECURITY_TOKEN = "MODIFY_ACCOUNT_SECURITY_TOKEN",
+    CREATE_SESSION = "CREATE_SESSION",
+    TERMINATE_SESSION = "TERMINATE_SESSION",
+    MODIFY_SESSION = "MODIFY_SESSION",
+    CREATE_DATA_ITEM = "CREATE_DATA_ITEM",
+    DELETE_DATA_ITEM = "DELETE_DATA_ITEM",
+    MODIFY_DATA_ITEM_ATTRIBUTE = "MODIFY_DATA_ITEM_ATTRIBUTE",
+    QUERY_DATA_ITEM_ATTRIBUTE = "QUERY_DATA_ITEM_ATTRIBUTE",
+    ENABLE_SERVICE = "ENABLE_SERVICE",
+    DISABLE_SERVICE = "DISABLE_SERVICE",
+    INVOKE_SERVICE = "INVOKE_SERVICE",
+    TERMINATE_SERVICE = "TERMINATE_SERVICE",
+    MODIFY_PROCESS_CONTEXT = "MODIFY_PROCESS_CONTEXT",
+    ASSOCIATE_TRUST = "ASSOCIATE_TRUST",
+    DEASSOCIATE_TRUST = "DEASSOCIATE_TRUST",
+    CREATE_PEER_ASSOCIATION = "CREATE_PEER_ASSOCIATION",
+    TERMINATE_PEER_ASSOCIATION = "TERMINATE_PEER_ASSOCIATION",
+    CREATE_DATA_ITEM_ASSOCIATION = "CREATE_DATA_ITEM_ASSOCIATION",
+    TERMINATE_DATA_ITEM_ASSOCIATION = "TERMINATE_DATA_ITEM_ASSOCIATION",
+    MODIFY_DATA_ITEM_ASSOCIATION = "MODIFY_DATA_ITEM_ASSOCIATION",
+    CREATE_ROLE = "CREATE_ROLE",
+    DELETE_ROLE = "DELETE_ROLE",
+    MODIFY_ROLE = "MODIFY_ROLE",
+    QUERY_ROLE = "QUERY_ROLE",
+    START_SYSTEM = "START_SYSTEM",
+    SHUTDOWN_SYSTEM = "SHUTDOWN_SYSTEM",
+    BACKUP_DATA_STORE = "BACKUP_DATA_STORE",
+    RECOVER_DATA_STORE = "RECOVER_DATA_STORE",
+    AUTHENTICATE_SESSION = "AUTHENTICATE_SESSION",
+    UNAUTHENTICATE_SESSION = "UNAUTHENTICATE_SESSION",
+    CREATE_ACCESS_TOKEN = "CREATE_ACCESS_TOKEN",
+    EDIR_OPERATIONAL_ID = "EDIR_OPERATIONAL_ID",
+}
+
+/** A type to describe a sub event. */
+export enum SubEventType {
+    None = "None",
+    CreateObject = "CreateObject",
+    UpdateObject = "UpdateObject",
+    DeleteObject = "DeleteObject",
+    DownloadObject = "DownloadObject",
+    CreateTask = "CreateTask",
+    UpdateTask = "UpdateTask",
+    DeleteTask = "DeleteTask",
+}
+
+export class XDASv2Event implements IXDASv2Event {
+    source?: string | undefined;
+    initiator!: Initiator;
+    target?: Target | undefined;
+    observer!: Observer;
+    action!: Action;
+
+    constructor(data?: IXDASv2Event) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.initiator = new Initiator();
+            this.observer = new Observer();
+            this.action = new Action();
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.source = data["source"];
+            this.initiator = data["initiator"] ? Initiator.fromJS(data["initiator"]) : new Initiator();
+            this.target = data["target"] ? Target.fromJS(data["target"]) : <any>undefined;
+            this.observer = data["observer"] ? Observer.fromJS(data["observer"]) : new Observer();
+            this.action = data["action"] ? Action.fromJS(data["action"]) : new Action();
+        }
+    }
+
+    static fromJS(data: any): XDASv2Event {
+        data = typeof data === 'object' ? data : {};
+        let result = new XDASv2Event();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["source"] = this.source;
+        data["initiator"] = this.initiator ? this.initiator.toJSON() : <any>undefined;
+        data["target"] = this.target ? this.target.toJSON() : <any>undefined;
+        data["observer"] = this.observer ? this.observer.toJSON() : <any>undefined;
+        data["action"] = this.action ? this.action.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IXDASv2Event {
+    source?: string | undefined;
+    initiator: Initiator;
+    target?: Target | undefined;
+    observer: Observer;
+    action: Action;
+}
+
+export class Initiator implements IInitiator {
+    account?: Account | undefined;
+    entity?: Entity | undefined;
+    assertions?: any | undefined;
+
+    constructor(data?: IInitiator) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.account = data["account"] ? Account.fromJS(data["account"]) : <any>undefined;
+            this.entity = data["entity"] ? Entity.fromJS(data["entity"]) : <any>undefined;
+            this.assertions = data["assertions"];
+        }
+    }
+
+    static fromJS(data: any): Initiator {
+        data = typeof data === 'object' ? data : {};
+        let result = new Initiator();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["account"] = this.account ? this.account.toJSON() : <any>undefined;
+        data["entity"] = this.entity ? this.entity.toJSON() : <any>undefined;
+        data["assertions"] = this.assertions;
+        return data; 
+    }
+}
+
+export interface IInitiator {
+    account?: Account | undefined;
+    entity?: Entity | undefined;
+    assertions?: any | undefined;
+}
+
+export class Account implements IAccount {
+    domain?: string | undefined;
+    name?: string | undefined;
+    id?: number | undefined;
+
+    constructor(data?: IAccount) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.domain = data["domain"];
+            this.name = data["name"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): Account {
+        data = typeof data === 'object' ? data : {};
+        let result = new Account();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["domain"] = this.domain;
+        data["name"] = this.name;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IAccount {
+    domain?: string | undefined;
+    name?: string | undefined;
+    id?: number | undefined;
+}
+
+export class Entity implements IEntity {
+    sysAddr?: string | undefined;
+    sysName?: string | undefined;
+    svcName?: string | undefined;
+    svcComp?: string | undefined;
+
+    constructor(data?: IEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.sysAddr = data["sysAddr"];
+            this.sysName = data["sysName"];
+            this.svcName = data["svcName"];
+            this.svcComp = data["svcComp"];
+        }
+    }
+
+    static fromJS(data: any): Entity {
+        data = typeof data === 'object' ? data : {};
+        let result = new Entity();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sysAddr"] = this.sysAddr;
+        data["sysName"] = this.sysName;
+        data["svcName"] = this.svcName;
+        data["svcComp"] = this.svcComp;
+        return data; 
+    }
+}
+
+export interface IEntity {
+    sysAddr?: string | undefined;
+    sysName?: string | undefined;
+    svcName?: string | undefined;
+    svcComp?: string | undefined;
+}
+
+export class Target implements ITarget {
+    account?: Account | undefined;
+    entity?: Entity | undefined;
+    data?: any | undefined;
+
+    constructor(data?: ITarget) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.account = data["account"] ? Account.fromJS(data["account"]) : <any>undefined;
+            this.entity = data["entity"] ? Entity.fromJS(data["entity"]) : <any>undefined;
+            this.data = data["data"];
+        }
+    }
+
+    static fromJS(data: any): Target {
+        data = typeof data === 'object' ? data : {};
+        let result = new Target();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["account"] = this.account ? this.account.toJSON() : <any>undefined;
+        data["entity"] = this.entity ? this.entity.toJSON() : <any>undefined;
+        data["data"] = this.data;
+        return data; 
+    }
+}
+
+export interface ITarget {
+    account?: Account | undefined;
+    entity?: Entity | undefined;
+    data?: any | undefined;
+}
+
+export class Observer implements IObserver {
+    account?: Account | undefined;
+    entity?: Entity | undefined;
+
+    constructor(data?: IObserver) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.account = data["account"] ? Account.fromJS(data["account"]) : <any>undefined;
+            this.entity = data["entity"] ? Entity.fromJS(data["entity"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Observer {
+        data = typeof data === 'object' ? data : {};
+        let result = new Observer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["account"] = this.account ? this.account.toJSON() : <any>undefined;
+        data["entity"] = this.entity ? this.entity.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IObserver {
+    account?: Account | undefined;
+    entity?: Entity | undefined;
+}
+
+export class Action implements IAction {
+    event!: Event;
+    subEvent?: SubEvent | undefined;
+    log?: Log | undefined;
+    time!: Time;
+    outcome!: string;
+    extendedOutcome!: string;
+
+    constructor(data?: IAction) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.event = new Event();
+            this.time = new Time();
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.event = data["event"] ? Event.fromJS(data["event"]) : new Event();
+            this.subEvent = data["subEvent"] ? SubEvent.fromJS(data["subEvent"]) : <any>undefined;
+            this.log = data["log"] ? Log.fromJS(data["log"]) : <any>undefined;
+            this.time = data["time"] ? Time.fromJS(data["time"]) : new Time();
+            this.outcome = data["outcome"];
+            this.extendedOutcome = data["extendedOutcome"];
+        }
+    }
+
+    static fromJS(data: any): Action {
+        data = typeof data === 'object' ? data : {};
+        let result = new Action();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["subEvent"] = this.subEvent ? this.subEvent.toJSON() : <any>undefined;
+        data["log"] = this.log ? this.log.toJSON() : <any>undefined;
+        data["time"] = this.time ? this.time.toJSON() : <any>undefined;
+        data["outcome"] = this.outcome;
+        data["extendedOutcome"] = this.extendedOutcome;
+        return data; 
+    }
+}
+
+export interface IAction {
+    event: Event;
+    subEvent?: SubEvent | undefined;
+    log?: Log | undefined;
+    time: Time;
+    outcome: string;
+    extendedOutcome: string;
+}
+
+export class Event implements IEvent {
+    id!: string;
+    name?: string | undefined;
+    correlationId?: string | undefined;
+
+    constructor(data?: IEvent) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.name = data["name"];
+            this.correlationId = data["correlationId"];
+        }
+    }
+
+    static fromJS(data: any): Event {
+        data = typeof data === 'object' ? data : {};
+        let result = new Event();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["correlationId"] = this.correlationId;
+        return data; 
+    }
+}
+
+export interface IEvent {
+    id: string;
+    name?: string | undefined;
+    correlationId?: string | undefined;
+}
+
+export class SubEvent implements ISubEvent {
+    name?: string | undefined;
+
+    constructor(data?: ISubEvent) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.name = data["name"];
+        }
+    }
+
+    static fromJS(data: any): SubEvent {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubEvent();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data; 
+    }
+}
+
+export interface ISubEvent {
+    name?: string | undefined;
+}
+
+export class Log implements ILog {
+    severity?: number | undefined;
+    priority?: number | undefined;
+    facility?: number | undefined;
+
+    constructor(data?: ILog) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.severity = data["severity"];
+            this.priority = data["priority"];
+            this.facility = data["facility"];
+        }
+    }
+
+    static fromJS(data: any): Log {
+        data = typeof data === 'object' ? data : {};
+        let result = new Log();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["severity"] = this.severity;
+        data["priority"] = this.priority;
+        data["facility"] = this.facility;
+        return data; 
+    }
+}
+
+export interface ILog {
+    severity?: number | undefined;
+    priority?: number | undefined;
+    facility?: number | undefined;
+}
+
+export class Time implements ITime {
+    offset!: number;
+    sequence?: number | undefined;
+    tolerance?: number | undefined;
+    certainty?: number | undefined;
+    source?: string | undefined;
+    zone?: string | undefined;
+
+    constructor(data?: ITime) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.offset = data["offset"];
+            this.sequence = data["sequence"];
+            this.tolerance = data["tolerance"];
+            this.certainty = data["certainty"];
+            this.source = data["source"];
+            this.zone = data["zone"];
+        }
+    }
+
+    static fromJS(data: any): Time {
+        data = typeof data === 'object' ? data : {};
+        let result = new Time();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["offset"] = this.offset;
+        data["sequence"] = this.sequence;
+        data["tolerance"] = this.tolerance;
+        data["certainty"] = this.certainty;
+        data["source"] = this.source;
+        data["zone"] = this.zone;
+        return data; 
+    }
+}
+
+export interface ITime {
+    offset: number;
+    sequence?: number | undefined;
+    tolerance?: number | undefined;
+    certainty?: number | undefined;
+    source?: string | undefined;
+    zone?: string | undefined;
 }
 
 export class PaginationResultModelOfObjectModel implements IPaginationResultModelOfObjectModel {

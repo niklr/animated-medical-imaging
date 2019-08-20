@@ -1,0 +1,54 @@
+<h3>Admin <small class="text-muted grey-text">/ Audit events</small></h3>
+<div *ngIf="items.length <= 0; else showAuditEventsBlock">
+  <div class="card">
+    <div class="card-content">
+      <p class="caption wrapword full-width custom-card-content-caption">
+        <i class="fas fa-info-circle"></i> No audit events found.
+        <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+      </p>
+    </div>
+  </div>
+</div>
+<ng-template #showAuditEventsBlock>
+  <div *ngFor="let item of items">
+    <div class="card mb-4">
+      <div class="card-content grey lighten-4">
+        <div class="card-title text-ellipsis">
+          <b>
+            <i class="far fa-calendar"></i> {{getLocalDate(item.timestamp)}}
+            <i class="far fa-clock"></i> {{getLocalTime(item.timestamp)}}
+          </b>
+          {{item.subEventType}}
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="custom-card-content-overflow-item" *ngIf="!!item.xdas.source">
+          <h5>Source</h5>
+          <p>{{item.xdas.source}}</p>
+        </div>
+        <div class="custom-card-content-overflow-item" *ngIf="!!item.xdas.initiator">
+          <h5>Initiator</h5>
+          <pre><code>{{stringify(item.xdas.initiator)}}</code></pre>
+        </div>
+        <div class="custom-card-content-overflow-item" *ngIf="!!item.xdas.observer">
+          <h5>Observer</h5>
+          <pre><code>{{stringify(item.xdas.observer)}}</code></pre>
+        </div>
+        <div class="custom-card-content-overflow-item" *ngIf="!!item.xdas.action">
+          <h5>Action</h5>
+          <pre><code>{{stringify(item.xdas.action)}}</code></pre>
+        </div>
+        <div class="custom-card-content-overflow-item" *ngIf="!!item.xdas.target">
+          <h5>Target</h5>
+          <pre><code>{{stringifyTarget(item.xdas.target)}}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2 right-align">
+    <paginator [pageIndex]="pageEvent.pageIndex" [length]="pageEvent.length" [pageSize]="pageEvent.pageSize"
+               (page)="setPage($event)"></paginator>
+  </div>
+</ng-template>

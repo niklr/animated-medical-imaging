@@ -4,5 +4,18 @@
     </div>
 </div>
 <div class="custom-section">
-    <h3 class="mt-0">Admin</h3>
+  <div class="row">
+    <div class="col s12">
+      <ul id="adminTabs" class="tabs">
+        <li class="tab col s3"><a class="active" href="#logs">Logs</a></li>
+        <li class="tab col s3"><a href="#events">Events</a></li>
+      </ul>
+    </div>
+    <div id="logs" class="col s12">
+      <app-admin-logs></app-admin-logs>
+    </div>
+    <div id="events" class="col s12">
+      <app-admin-events></app-admin-events>
+    </div>
+  </div>
 </div>

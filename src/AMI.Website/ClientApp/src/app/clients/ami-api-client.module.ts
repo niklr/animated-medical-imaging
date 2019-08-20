@@ -4,6 +4,7 @@ import {
   AppInfoAmiApiClient,
   AppLogsAmiApiClient,
   AppOptionsAmiApiClient,
+  AuditEventsAmiApiClient,
   ObjectsAmiApiClient,
   TasksAmiApiClient,
   TokensAmiApiClient
@@ -21,6 +22,7 @@ import {
     AppInfoAmiApiClient,
     AppLogsAmiApiClient,
     AppOptionsAmiApiClient,
+    AuditEventsAmiApiClient,
     ObjectsAmiApiClient,
     TasksAmiApiClient,
     TokensAmiApiClient
