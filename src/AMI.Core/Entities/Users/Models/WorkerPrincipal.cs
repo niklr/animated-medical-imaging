@@ -28,6 +28,9 @@ namespace AMI.Core.Entities.Models
         IIdentity IPrincipal.Identity => Identity;
 
         /// <inheritdoc/>
+        public string IpAddress { get; }
+
+        /// <inheritdoc/>
         public bool IsInRole(RoleType role)
         {
             return true;

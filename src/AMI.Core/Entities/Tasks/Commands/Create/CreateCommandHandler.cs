@@ -12,6 +12,7 @@ using AMI.Core.Modules;
 using AMI.Core.Queues;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 using MediatR;
 using RNS.Framework.Extensions.MutexExtensions;
@@ -51,6 +52,15 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.CreateTask;
+            }
         }
 
         /// <inheritdoc/>

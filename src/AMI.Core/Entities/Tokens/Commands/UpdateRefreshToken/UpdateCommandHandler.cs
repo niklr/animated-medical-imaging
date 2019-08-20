@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Modules;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken
@@ -20,6 +21,15 @@ namespace AMI.Core.Entities.Tokens.Commands.UpdateRefreshToken
         public UpdateCommandHandler(ICommandHandlerModule module)
             : base(module)
         {
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.None;
+            }
         }
 
         /// <inheritdoc/>

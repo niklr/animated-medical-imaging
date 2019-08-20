@@ -18,7 +18,8 @@ namespace AMI.Core.Entities.Models
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="principal">The principal.</param>
-        public CustomPrincipal(IAuthJwtOptions options, ClaimsPrincipal principal)
+        /// <param name="ipAddress">The IP address.</param>
+        public CustomPrincipal(IAuthJwtOptions options, ClaimsPrincipal principal, string ipAddress)
         {
             Ensure.ArgumentNotNull(options, nameof(options));
             Ensure.ArgumentNotNull(principal, nameof(principal));
@@ -32,12 +33,17 @@ namespace AMI.Core.Entities.Models
                 Username = usernameClaim?.Value,
                 Domain = issuerClaim?.Value
             };
+
+            IpAddress = ipAddress;
         }
 
         /// <inheritdoc/>
         public ICustomIdentity Identity { get; }
 
         IIdentity IPrincipal.Identity => Identity;
+
+        /// <inheritdoc/>
+        public string IpAddress { get; }
 
         /// <inheritdoc/>
         public bool IsInRole(RoleType role)

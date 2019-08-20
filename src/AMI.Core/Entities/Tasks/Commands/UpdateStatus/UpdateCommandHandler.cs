@@ -8,6 +8,7 @@ using AMI.Core.IO.Serializers;
 using AMI.Core.Modules;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 using MediatR;
 
@@ -35,6 +36,15 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
         {
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.UpdateTask;
+            }
         }
 
         /// <inheritdoc/>

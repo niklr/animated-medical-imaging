@@ -39,6 +39,9 @@ namespace AMI.NetCore.Tests.Mocks.Core
         IIdentity IPrincipal.Identity => Identity;
 
         /// <inheritdoc/>
+        public string IpAddress { get; }
+
+        /// <inheritdoc/>
         public bool IsInRole(RoleType role)
         {
             return roles.Contains(role);

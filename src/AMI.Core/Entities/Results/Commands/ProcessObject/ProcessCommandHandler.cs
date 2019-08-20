@@ -11,6 +11,7 @@ using AMI.Core.IO.Readers;
 using AMI.Core.Modules;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 using MediatR;
 using RNS.Framework.Tools;
@@ -53,6 +54,15 @@ namespace AMI.Core.Entities.Results.Commands.ProcessObject
 
             Ensure.ArgumentNotNull(fileSystemStrategy, nameof(fileSystemStrategy));
             fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.None;
+            }
         }
 
         /// <inheritdoc/>

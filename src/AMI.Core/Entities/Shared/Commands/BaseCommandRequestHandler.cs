@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Models;
 using AMI.Core.Modules;
 using AMI.Core.Providers;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 using MediatR;
 using RNS.Framework.Tools;
@@ -28,11 +30,17 @@ namespace AMI.Core.Entities.Shared.Commands
         {
             Ensure.ArgumentNotNull(module, nameof(module));
 
+            Audit = module.Audit ?? throw new UnexpectedNullException("The auditing service cannot be null.");
             Context = module.Context ?? throw new UnexpectedNullException("The context cannot be null.");
             Gateway = module.Gateway ?? throw new UnexpectedNullException("The gateway service cannot be null.");
             IdentityService = module.IdentityService ?? throw new UnexpectedNullException("The identity service cannot be null.");
             PrincipalProvider = module.PrincipalProvider ?? throw new UnexpectedNullException("The principal provider cannot be null.");
         }
+
+        /// <summary>
+        /// Gets the auditing service.
+        /// </summary>
+        protected IAuditService Audit { get; private set; }
 
         /// <summary>
         /// Gets the context.
@@ -55,6 +63,11 @@ namespace AMI.Core.Entities.Shared.Commands
         protected ICustomPrincipalProvider PrincipalProvider { get; private set; }
 
         /// <summary>
+        /// Gets the type of the sub event.
+        /// </summary>
+        protected abstract SubEventType SubEventType { get; }
+
+        /// <summary>
         /// Asynchronously handles the command request.
         /// </summary>
         /// <param name="request">The command request.</param>
@@ -67,8 +80,19 @@ namespace AMI.Core.Entities.Shared.Commands
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // TODO: audit response
                 var response = await ProtectedHandleAsync(request, cancellationToken);
+
+                if (SubEventType != SubEventType.None)
+                {
+                    var principal = PrincipalProvider.GetPrincipal();
+                    var auditData = new AuditEventDataModel()
+                    {
+                        Entity = response,
+                        Command = request
+                    };
+                    await Audit.AddDefaultEventAsync(principal, auditData, SubEventType);
+                }
+
                 return response;
             }
             catch (Exception)

@@ -8,6 +8,7 @@ using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Modules;
 using AMI.Core.Strategies;
 using AMI.Domain.Enums;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Entities.Objects.Commands.Delete
@@ -40,6 +41,15 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
             }
 
             fileSystem = fileSystemStrategy.Create(configuration.Options.WorkingDirectory);
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.DeleteObject;
+            }
         }
 
         /// <inheritdoc/>

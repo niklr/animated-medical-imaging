@@ -14,6 +14,15 @@ namespace AMI.Core.Repositories
     public class MockUnitOfWork : IAmiUnitOfWork
     {
         /// <inheritdoc/>
+        public IRepository<AuditEventEntity> AuditEventRepository
+        {
+            get
+            {
+                return new ListRepository<AuditEventEntity>(new List<AuditEventEntity>());
+            }
+        }
+
+        /// <inheritdoc/>
         public IRepository<ObjectEntity> ObjectRepository
         {
             get

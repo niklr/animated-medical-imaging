@@ -16,6 +16,26 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
+            modelBuilder.Entity("AMI.Domain.Entities.AuditEventEntity", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<string>("EventSerialized")
+                        .IsRequired();
+
+                    b.Property<int>("EventType");
+
+                    b.Property<int>("SubEventType");
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Timestamp");
+
+                    b.ToTable("AuditEvents");
+                });
+
             modelBuilder.Entity("AMI.Domain.Entities.ObjectEntity", b =>
                 {
                     b.Property<Guid>("Id");

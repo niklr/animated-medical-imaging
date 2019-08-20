@@ -11,6 +11,7 @@ using AMI.Core.Modules;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 using RNS.Framework.Extensions.MutexExtensions;
 using RNS.Framework.Extensions.Reflection;
@@ -59,6 +60,15 @@ namespace AMI.Core.Entities.Objects.Commands.Create
             }
 
             fileSystem = fileSystemStrategy.Create(appConfiguration.Options.WorkingDirectory);
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.CreateObject;
+            }
         }
 
         /// <inheritdoc/>

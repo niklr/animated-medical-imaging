@@ -51,6 +51,7 @@
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="System.IO.Abstractions" Version="6.0.15" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="XDASv2Net" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using AMI.Core.Configurations;
+﻿using AMI.API.Extensions.HttpContextExtensions;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Providers;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +38,7 @@ namespace AMI.API.Providers
                 return new WorkerPrincipal();
             }
 
-            return new CustomPrincipal(configuration.Options?.AuthOptions?.JwtOptions, accessor.HttpContext?.User);
+            return new CustomPrincipal(configuration.Options?.AuthOptions?.JwtOptions, accessor.HttpContext?.User, accessor.HttpContext?.GetRemoteIpAddress(configuration));
         }
     }
 }

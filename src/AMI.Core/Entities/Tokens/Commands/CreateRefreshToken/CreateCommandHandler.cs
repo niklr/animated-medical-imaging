@@ -8,6 +8,7 @@ using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Generators;
 using AMI.Core.Modules;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 using RNS.Framework.Extensions.MutexExtensions;
 using RNS.Framework.Extensions.Reflection;
@@ -38,6 +39,15 @@ namespace AMI.Core.Entities.Tokens.Commands.CreateRefreshToken
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.None;
+            }
         }
 
         /// <inheritdoc/>

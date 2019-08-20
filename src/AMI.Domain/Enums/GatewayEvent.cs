@@ -38,6 +38,11 @@
         /// <summary>
         /// The event representing a deleted object.
         /// </summary>
-        DeleteObject = 6
+        DeleteObject = 6,
+
+        /// <summary>
+        /// The event representing a created audit event.
+        /// </summary>
+        CreateAuditEvent = 7
     }
 }

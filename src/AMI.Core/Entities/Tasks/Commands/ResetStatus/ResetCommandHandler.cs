@@ -8,6 +8,7 @@ using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Modules;
 using AMI.Core.Queues;
+using AMI.Domain.Enums.Auditing;
 
 namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
 {
@@ -40,6 +41,15 @@ namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
 
             batchSize = configuration.Options.BatchSize > 0 ? configuration.Options.BatchSize : 1000;
+        }
+
+        /// <inheritdoc/>
+        protected override SubEventType SubEventType
+        {
+            get
+            {
+                return SubEventType.None;
+            }
         }
 
         /// <inheritdoc/>

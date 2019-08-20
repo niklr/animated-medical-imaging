@@ -25,6 +25,15 @@ namespace AMI.Persistence.EntityFramework.SQLite
         }
 
         /// <inheritdoc/>
+        public IRepository<AuditEventEntity> AuditEventRepository
+        {
+            get
+            {
+                return new DbSetRepository<AuditEventEntity>(context.AuditEvents);
+            }
+        }
+
+        /// <inheritdoc/>
         public IRepository<ObjectEntity> ObjectRepository
         {
             get

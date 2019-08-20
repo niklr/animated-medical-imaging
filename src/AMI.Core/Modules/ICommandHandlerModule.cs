@@ -10,6 +10,11 @@ namespace AMI.Core.Modules
     public interface ICommandHandlerModule
     {
         /// <summary>
+        /// Gets the auditing service.
+        /// </summary>
+        IAuditService Audit { get; }
+
+        /// <summary>
         /// Gets the context.
         /// </summary>
         IAmiUnitOfWork Context { get; }

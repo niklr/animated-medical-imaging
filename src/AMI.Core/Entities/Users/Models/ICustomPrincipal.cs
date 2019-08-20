@@ -14,6 +14,11 @@ namespace AMI.Core.Entities.Models
         new ICustomIdentity Identity { get; }
 
         /// <summary>
+        /// Gets the IP address.
+        /// </summary>
+        string IpAddress { get; }
+
+        /// <summary>
         /// Determines whether the user is in the specified role.
         /// </summary>
         /// <param name="role">The role.</param>

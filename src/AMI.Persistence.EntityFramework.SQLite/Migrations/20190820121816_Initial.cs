@@ -8,6 +8,21 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AuditEvents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Timestamp = table.Column<DateTime>(nullable: false),
+                    EventType = table.Column<int>(nullable: false),
+                    SubEventType = table.Column<int>(nullable: false),
+                    EventSerialized = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditEvents", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Objects",
                 columns: table => new
                 {
@@ -143,6 +158,11 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AuditEvents_Timestamp",
+                table: "AuditEvents",
+                column: "Timestamp");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Objects_CreatedDate",
                 table: "Objects",
                 column: "CreatedDate");
@@ -225,6 +245,9 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AuditEvents");
+
             migrationBuilder.DropTable(
                 name: "Roles");
 

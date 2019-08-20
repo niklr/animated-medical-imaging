@@ -42,6 +42,9 @@ namespace AMI.Core.Entities.Users.Models
         IIdentity IPrincipal.Identity => Identity;
 
         /// <inheritdoc/>
+        public string IpAddress { get; }
+
+        /// <inheritdoc/>
         public bool IsInRole(RoleType role)
         {
             return roles.Contains(role.ToString());

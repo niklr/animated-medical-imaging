@@ -9,6 +9,11 @@ namespace AMI.Core.Repositories
     public interface IAmiUnitOfWork : IUnitOfWork
     {
         /// <summary>
+        /// Gets the audit event repository.
+        /// </summary>
+        IRepository<AuditEventEntity> AuditEventRepository { get; }
+
+        /// <summary>
         /// Gets the object repository.
         /// </summary>
         IRepository<ObjectEntity> ObjectRepository { get; }

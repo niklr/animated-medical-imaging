@@ -38,6 +38,7 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
             services.AddScoped<IQueryHandlerModule, QueryHandlerModule>();
             services.AddScoped<IAppLogReader, AppLogReader>();
             services.AddScoped<IIdGenerator, IdGenerator>();
+            services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IGatewayService, GatewayService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IImageService, ImageService>();

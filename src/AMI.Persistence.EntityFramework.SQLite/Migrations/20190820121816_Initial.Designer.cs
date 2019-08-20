@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190810152211_Initial")]
+    [Migration("20190820121816_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,6 +17,26 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+
+            modelBuilder.Entity("AMI.Domain.Entities.AuditEventEntity", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<string>("EventSerialized")
+                        .IsRequired();
+
+                    b.Property<int>("EventType");
+
+                    b.Property<int>("SubEventType");
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Timestamp");
+
+                    b.ToTable("AuditEvents");
+                });
 
             modelBuilder.Entity("AMI.Domain.Entities.ObjectEntity", b =>
                 {
