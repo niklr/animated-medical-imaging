@@ -4,8 +4,10 @@ using AMI.Core.Constants;
 using AMI.Core.Helpers;
 using AMI.Core.IO.Writers;
 using AMI.Core.Mappers;
+using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Gif.Writers;
+using AMI.Infrastructure.Services;
 using AMI.Infrastructure.Strategies;
 using AMI.Itk.Factories;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,7 @@ namespace AMI.NetFramework.Tests
         public BaseTest()
         {
             _serviceProvider = new ServiceCollection()
+                .AddScoped<IIdentityService, IdentityService>()
                 .AddSingleton<IApplicationConstants, ApplicationConstants>()
                 .AddSingleton<ILoggerFactory, NullLoggerFactory>()
                 .AddSingleton<IItkImageReaderFactory, ItkImageReaderFactory>()

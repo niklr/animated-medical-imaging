@@ -16,9 +16,11 @@ using AMI.Core.Mappers;
 using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
+using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
+using AMI.Infrastructure.Services;
 using AMI.Itk.Extensions.ServiceCollectionExtensions;
 using AMI.NetCore.Tests.Mocks.Core.Factories;
 using AMI.NetCore.Tests.Mocks.Core.Providers;
@@ -63,6 +65,7 @@ namespace AMI.NetCore.Tests
             services.AddDefaultItk();
 
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
+            services.AddScoped<IIdentityService, IdentityService>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ICustomPrincipalProvider, MockPrincipalProvider>();
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();

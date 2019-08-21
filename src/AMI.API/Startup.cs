@@ -19,6 +19,7 @@ using AMI.Core.Mappers;
 using AMI.Core.Providers;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
+using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
@@ -111,6 +112,7 @@ namespace AMI.API
             services.AddDefaultItk();
 
             // Add other services
+            services.AddScoped<IIdentityService, IdentityService>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ICustomPrincipalProvider, CustomPrincipalProvider>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();

@@ -25,9 +25,9 @@ namespace AMI.Core.Modules
         IGatewayService Gateway { get; }
 
         /// <summary>
-        /// Gets the identity service.
+        /// Gets the auth service.
         /// </summary>
-        IIdentityService IdentityService { get; }
+        IAuthService AuthService { get; }
 
         /// <summary>
         /// Gets the principal provider.

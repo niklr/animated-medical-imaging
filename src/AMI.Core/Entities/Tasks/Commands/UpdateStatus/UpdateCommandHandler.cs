@@ -58,7 +58,7 @@ namespace AMI.Core.Entities.Tasks.Commands.UpdateStatus
                 throw new NotFoundException(nameof(TaskEntity), request.Id);
             }
 
-            if (!IdentityService.IsAuthorized(entity.UserId))
+            if (!AuthService.IsAuthorized(entity.UserId))
             {
                 throw new ForbiddenException("Not authorized");
             }

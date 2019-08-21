@@ -39,8 +39,8 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
             services.AddScoped<IAppLogReader, AppLogReader>();
             services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IGatewayService, GatewayService>();
-            services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IDefaultJsonWriter, DefaultJsonWriter>();

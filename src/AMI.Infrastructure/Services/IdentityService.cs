@@ -130,31 +130,5 @@ namespace AMI.Infrastructure.Services
 
             logger.LogInformation($"{this.GetMethodName()} ended");
         }
-
-        /// <inheritdoc/>
-        public bool IsAuthorized(string ownerId)
-        {
-            try
-            {
-                Ensure.ArgumentNotNullOrWhiteSpace(ownerId, nameof(ownerId));
-
-                var principal = principalProvider.GetPrincipal();
-                if (principal == null)
-                {
-                    throw new UnexpectedNullException("Principal could not be retrieved.");
-                }
-
-                if (ownerId.Equals(principal.Identity.Name) || principal.IsInRole(RoleType.Administrator))
-                {
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, e.Message);
-            }
-
-            return false;
-        }
     }
 }

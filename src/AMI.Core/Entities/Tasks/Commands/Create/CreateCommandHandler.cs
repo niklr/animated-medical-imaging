@@ -82,7 +82,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
             Guid objectId = Guid.Parse(command.Id);
             var objectOwnerId = Context.ObjectRepository.GetQuery(e => e.Id == objectId).Select(e => e.UserId).FirstOrDefault();
 
-            if (!IdentityService.IsAuthorized(objectOwnerId))
+            if (!AuthService.IsAuthorized(objectOwnerId))
             {
                 throw new ForbiddenException("Not authorized");
             }
