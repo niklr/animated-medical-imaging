@@ -110,6 +110,14 @@ AMI.Portable.exe --SourcePath SMIR.Brain.XX.O.CT.346124.nii --DestinationPath te
 
 [3]<a name="ref3"></a> [SICAS Medical Image Repository](https://www.smir.ch/) 
 
+The third example shows how to interact with the graphical user interface AMI.Website to achieve a similar result as above.
+First, the settings can be defined which will be used to process the image uploaded in the second step. 
+Finally, the extracted result can be directly viewed in the web browser.
+
+<h1 align="center">
+	<img src="assets/images/example3/ami-website.gif" alt="animated-medical-imaging website">
+</h1>
+
 ### Installation <a name="installation"></a>
 
 Easiest is to obtain the latest AMI.Portable executable from [GitHub](https://github.com/niklr/animated-medical-imaging/releases). 
