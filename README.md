@@ -2,8 +2,37 @@
 	<img src="assets/images/logo_combined.png" alt="animated-medical-imaging logo">
 </h1>
 
-Animated Medical Imaging (AMI) is a software-based solution to streamline the process of generating an optimal subset 
-representing a multi-dimensional medical image and combining the subset to an animated sequence.
+Animated Medical Imaging (AMI) is a container-based solution to streamline the process of generating an optimal subset 
+representing a multi-dimensional medical image and combining the subset to an animated sequence. 
+Despite the focus being on containers tailored for a microservice infrastructure, 
+it is also possible to process medical images directly in the command line.
+
+<h1 align="center">
+	<img src="assets/images/overview.png" alt="animated-medical-imaging overview">
+</h1>
+
+The container-based solution consists of two services called AMI.API and AMI.Website:
+* AMI.API
+  * A REST-based application programming interface (API)
+  * For a live demonstration please visit
+    * https://ami-api.smir.ch
+  * Can be deployed as Linux-based Docker container
+    * https://hub.docker.com/r/niklr/ami-api
+* AMI.Website
+  * A web-based user interface to interact with the API
+  * For a live demonstration please visit
+    * https://ami.smir.ch
+  * Can be deployed as Linux-based Docker container
+    * https://hub.docker.com/r/niklr/ami-website
+
+The command-line solution distinguishes between AMI.CLI and AMI.Portable:
+* AMI.CLI
+  * A cross-platform command line interface (CLI)
+  * Status is still experimental. Breaking changes are to be expected in this project.
+* AMI.Portable
+  * A portable executable for Windows 32bit and 64bit
+  * Compiled releases can be found and download here:
+    * https://github.com/niklr/animated-medical-imaging/releases
 
 Supported file formats:
 * Analyze (.hdr, .img)
