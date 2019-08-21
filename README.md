@@ -30,8 +30,8 @@ The command-line solution distinguishes between AMI.CLI and AMI.Portable:
   * A cross-platform command line interface (CLI)
   * Status is still experimental. Breaking changes are to be expected in this project.
 * AMI.Portable
-  * A portable executable for Windows 32bit and 64bit
-  * Compiled releases can be found and download here:
+  * A portable executable for 32b & 64b Windows
+  * Compiled releases can be found and downloaded here:
     * https://github.com/niklr/animated-medical-imaging/releases
 
 Supported file formats:
