@@ -20,7 +20,7 @@ namespace AMI.Core.Mappers
         /// </summary>
         /// <param name="amount">The amount of positions.</param>
         /// <param name="bezierEasingType">Type of the Bézier curve easing.</param>
-        public BezierPositionMapper(uint amount, BezierEasingType bezierEasingType)
+        public BezierPositionMapper(int amount, BezierEasingType bezierEasingType)
             : this(amount)
         {
             var vectors = ConvertBezierEasingType(bezierEasingType);
@@ -39,7 +39,7 @@ namespace AMI.Core.Mappers
         /// <param name="y1">The value to assign to the first y field.</param>
         /// <param name="x2">The value to assign to the second x field.</param>
         /// <param name="y2">The value to assign to the second y field.</param>
-        public BezierPositionMapper(uint amount, float x1, float y1, float x2, float y2)
+        public BezierPositionMapper(int amount, float x1, float y1, float x2, float y2)
             : this(amount)
         {
             v1 = new Vector2(x1, y1);
@@ -48,7 +48,7 @@ namespace AMI.Core.Mappers
             Init(amount);
         }
 
-        private BezierPositionMapper(uint amount)
+        private BezierPositionMapper(int amount)
         {
             v0 = new Vector2(0, 0);
             v3 = new Vector2(1, 1);
@@ -84,7 +84,7 @@ namespace AMI.Core.Mappers
         /// </summary>
         /// <param name="position">The position.</param>
         /// <returns>The mapped position.</returns>
-        public float GetMappedPosition(uint position)
+        public float GetMappedPosition(int position)
         {
             if (map != null && position < map.Length)
             {
@@ -124,7 +124,7 @@ namespace AMI.Core.Mappers
             return new Vector2(result.Item1, result.Item2);
         }
 
-        private void Init(uint amount)
+        private void Init(int amount)
         {
             /*
              * fps = 30
@@ -141,10 +141,10 @@ namespace AMI.Core.Mappers
                 float fps;
                 switch (amount)
                 {
-                    case uint a when a <= 10:
+                    case int a when a <= 10:
                         fps = 10f;
                         break;
-                    case uint a when a <= 40:
+                    case int a when a <= 40:
                         fps = 15f;
                         break;
                     default:

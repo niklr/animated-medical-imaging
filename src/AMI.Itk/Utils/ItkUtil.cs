@@ -225,7 +225,7 @@ namespace AMI.Itk.Utils
         }
 
         /// <inheritdoc/>
-        public Image ExtractPosition(Image image, AxisType axisType, uint index)
+        public Image ExtractPosition(Image image, AxisType axisType, int index)
         {
             Ensure.ArgumentNotNull(image, nameof(image));
 
@@ -261,7 +261,7 @@ namespace AMI.Itk.Utils
         }
 
         /// <inheritdoc/>
-        public Image ResampleImage2D(Image image, uint outputSize)
+        public Image ResampleImage2D(Image image, int outputSize)
         {
             Ensure.ArgumentNotNull(image, nameof(image));
 
@@ -301,8 +301,8 @@ namespace AMI.Itk.Utils
 
             var actualSize = new VectorUInt32()
             {
-                (uint)neww,
-                (uint)newh
+                Convert.ToUInt32(neww),
+                Convert.ToUInt32(newh)
             };
 
             // https://itk.org/ITKExamples/src/Filtering/ImageGrid/ResampleAnImage/Documentation.html
@@ -317,7 +317,7 @@ namespace AMI.Itk.Utils
         }
 
         /// <inheritdoc/>
-        public Image ResampleImage3D(Image image, uint outputSize)
+        public Image ResampleImage3D(Image image, int outputSize)
         {
             Ensure.ArgumentNotNull(image, nameof(image));
 
@@ -327,14 +327,15 @@ namespace AMI.Itk.Utils
                 throw new NotSupportedException($"The dimension ({dimension}) of the provided image is not supported.");
             }
 
+            var outputSizeConverted = Convert.ToUInt32(outputSize);
             var inputSize = image.GetSize();
             var inputSpacing = image.GetSpacing();
 
             var desiredSize = new VectorUInt32()
             {
-                outputSize,
-                outputSize,
-                outputSize
+                outputSizeConverted,
+                outputSizeConverted,
+                outputSizeConverted
             };
 
             var outputSpacing = new VectorDouble()

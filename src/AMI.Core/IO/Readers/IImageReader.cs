@@ -21,17 +21,17 @@ namespace AMI.Core.IO.Readers
         /// <summary>
         /// Gets the width of the image.
         /// </summary>
-        uint Width { get; }
+        int Width { get; }
 
         /// <summary>
         /// Gets the height of the image.
         /// </summary>
-        uint Height { get; }
+        int Height { get; }
 
         /// <summary>
         /// Gets the depth of the image.
         /// </summary>
-        uint Depth { get; }
+        int Depth { get; }
 
         /// <summary>
         /// Gets or sets the axis positions mapper.
@@ -59,7 +59,7 @@ namespace AMI.Core.IO.Readers
         /// <param name="position">The position.</param>
         /// <param name="size">The desired output size.</param>
         /// <returns>The extracted position as bitmap.</returns>
-        System.Drawing.Bitmap ExtractPosition(AxisType axisType, uint position, uint? size);
+        System.Drawing.Bitmap ExtractPosition(AxisType axisType, int position, int? size);
 
         /// <summary>
         /// Gets the label count.

@@ -3344,7 +3344,8 @@
             "additionalProperties": false,
             "properties": {
               "position": {
-                "type": "integer"
+                "type": "integer",
+                "format": "int32"
               }
             }
           }

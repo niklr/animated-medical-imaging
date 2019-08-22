@@ -12,7 +12,7 @@ namespace AMI.NetFramework.Tests.Core.Mappers
         public void BezierPositionMapper_GetPointOnBezierCurve()
         {
             // Arrange
-            uint amount = 60;
+            int amount = 60;
             float x1 = 0.25f;
             float y1 = 0.25f;
             float x2 = 0.75f;
@@ -27,7 +27,7 @@ namespace AMI.NetFramework.Tests.Core.Mappers
             Assert.AreEqual(new Tuple<float, float>(0.5f, 0.5f), mapper.GetPointOnBezierCurve(0.5f));
 
             float duration = 0;
-            for (uint i = 0; i < amount; i++)
+            for (int i = 0; i < amount; i++)
             {
                 duration += mapper.GetMappedPosition(i);
             }
@@ -38,7 +38,7 @@ namespace AMI.NetFramework.Tests.Core.Mappers
         public void BezierPositionMapper_GetPointOnBezierCurve_BezierEasingType()
         {
             // Arrange
-            uint amount = 60;
+            int amount = 60;
             BezierEasingType bezierEasingType = BezierEasingType.Linear;
 
             // Act
@@ -50,7 +50,7 @@ namespace AMI.NetFramework.Tests.Core.Mappers
             Assert.AreEqual(new Tuple<float, float>(0.5f, 0.5f), mapper.GetPointOnBezierCurve(0.5f));
 
             float duration = 0;
-            for (uint i = 0; i < amount; i++)
+            for (int i = 0; i < amount; i++)
             {
                 duration += mapper.GetMappedPosition(i);
             }
@@ -66,7 +66,7 @@ namespace AMI.NetFramework.Tests.Core.Mappers
         public void BezierPositionMapper_GetPointOnBezierCurve_BezierEasingType(BezierEasingType bezierEasingType)
         {
             // Arrange
-            uint amount = 60;
+            int amount = 60;
 
             // Act
             var mapper = new BezierPositionMapper(amount, bezierEasingType);
@@ -76,7 +76,7 @@ namespace AMI.NetFramework.Tests.Core.Mappers
             Assert.AreEqual(new Tuple<float, float>(1, 1), mapper.GetPointOnBezierCurve(1));
 
             float duration = 0;
-            for (uint i = 0; i < amount; i++)
+            for (int i = 0; i < amount; i++)
             {
                 duration += mapper.GetMappedPosition(i);
             }

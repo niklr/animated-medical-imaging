@@ -62,7 +62,7 @@ namespace AMI.Gif.Writers
                     // 33ms delay (~30fps)
                     using (var gif = AnimatedGif.AnimatedGif.Create(fs.Path.Combine(destinationPath, destinationFilename), delay))
                     {
-                        for (uint i = 0; i < sourceFilenames.Length; i++)
+                        for (int i = 0; i < sourceFilenames.Length; i++)
                         {
                             ct.ThrowIfCancellationRequested();
 

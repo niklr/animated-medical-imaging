@@ -83,14 +83,14 @@ namespace AMI.Core.IO.Extractors
 
             await reader.InitAsync(command.SourcePath, ct);
 
-            reader.Mapper = new AxisPositionMapper(Convert.ToUInt32(command.AmountPerAxis), reader.Width, reader.Height, reader.Depth);
+            reader.Mapper = new AxisPositionMapper(command.AmountPerAxis, reader.Width, reader.Height, reader.Depth);
 
-            PreProcess(reader, imageFormat, Convert.ToUInt32(command.AmountPerAxis), Convert.ToUInt32(command.OutputSize));
+            PreProcess(reader, imageFormat, command.AmountPerAxis, command.OutputSize);
 
             var result = new ProcessResultModel
             {
                 LabelCount = Convert.ToInt32(reader.GetLabelCount()),
-                Size = new int[] { Convert.ToInt32(reader.Width), Convert.ToInt32(reader.Height), Convert.ToInt32(reader.Depth) }
+                Size = new int[] { reader.Width, reader.Height, reader.Depth }
             };
 
             ISet<AxisType> axisTypes = new HashSet<AxisType>(command.AxisTypes);
@@ -103,7 +103,7 @@ namespace AMI.Core.IO.Extractors
             if (!string.IsNullOrWhiteSpace(command.WatermarkSourcePath))
             {
                 BitmapReader bitmapReader = new BitmapReader();
-                var watermarkBitmap = await bitmapReader.ReadAsync(command.WatermarkSourcePath, Convert.ToUInt32(command.OutputSize), ct);
+                var watermarkBitmap = await bitmapReader.ReadAsync(command.WatermarkSourcePath, command.OutputSize, ct);
                 if (watermarkBitmap == null)
                 {
                     throw new UnexpectedNullException("Watermark could not be read.");
@@ -116,7 +116,7 @@ namespace AMI.Core.IO.Extractors
 
             foreach (AxisType axisType in axisTypes)
             {
-                for (uint i = 0; i < reader.Mapper.GetLength(axisType); i++)
+                for (int i = 0; i < reader.Mapper.GetLength(axisType); i++)
                 {
                     ct.ThrowIfCancellationRequested();
 
@@ -137,7 +137,7 @@ namespace AMI.Core.IO.Extractors
             return result;
         }
 
-        private void PreProcess(IImageReader<T2> reader, ImageFormat imageFormat, uint amount, uint? outputSize)
+        private void PreProcess(IImageReader<T2> reader, ImageFormat imageFormat, int amount, int? outputSize)
         {
             Ensure.ArgumentNotNull(reader, nameof(reader));
 
@@ -145,7 +145,7 @@ namespace AMI.Core.IO.Extractors
             {
                 // calculate hashes of images for the defined amount for each axis
                 IList<PositionAxisContainerModel<string>> hashes = new List<PositionAxisContainerModel<string>>();
-                IDictionary<AxisType, uint[]> newMap = new Dictionary<AxisType, uint[]>();
+                IDictionary<AxisType, int[]> newMap = new Dictionary<AxisType, int[]>();
 
                 IAxisPositionMapper mapper = reader.Mapper;
                 if (mapper == null)
@@ -156,9 +156,9 @@ namespace AMI.Core.IO.Extractors
                 foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))
                 {
                     int length = mapper.GetLength(axisType);
-                    newMap[axisType] = new uint[Math.Min(amount, length)];
+                    newMap[axisType] = new int[Math.Min(amount, length)];
 
-                    for (uint i = 0; i < newMap[axisType].Length; i++)
+                    for (int i = 0; i < newMap[axisType].Length; i++)
                     {
                         // set initial mapped positions
                         newMap[axisType][i] = mapper.GetMappedPosition(axisType, i);
@@ -194,19 +194,19 @@ namespace AMI.Core.IO.Extractors
                         {
                             if (startPosition == endPosition)
                             {
-                                newMap[axisType] = new uint[1];
+                                newMap[axisType] = new int[1];
                                 newMap[axisType][0] = mapper.GetMappedPosition(axisType, startPosition.Position);
                             }
                             else
                             {
                                 // calculate mappedPosition between startPosition and endPosition
-                                uint mappedStartPosition = mapper.GetMappedPosition(axisType, startPosition.Position);
-                                uint mappedEndPosition = mapper.GetMappedPosition(axisType, endPosition.Position);
-                                uint length = mappedEndPosition - mappedStartPosition;
+                                int mappedStartPosition = mapper.GetMappedPosition(axisType, startPosition.Position);
+                                int mappedEndPosition = mapper.GetMappedPosition(axisType, endPosition.Position);
+                                int length = mappedEndPosition - mappedStartPosition;
 
                                 if (length >= newMap[axisType].Length)
                                 {
-                                    for (uint i = 0; i < newMap[axisType].Length; i++)
+                                    for (int i = 0; i < newMap[axisType].Length; i++)
                                     {
                                         newMap[axisType][i] = mappedStartPosition + mapper.CalculateMappedPosition(amount, length, i);
                                     }
@@ -222,7 +222,7 @@ namespace AMI.Core.IO.Extractors
         }
 
         private PositionAxisContainerModel<string> WriteImage(
-            uint position,
+            int position,
             IFileSystem fs,
             ProcessPathCommand command,
             T1 reader,
@@ -231,7 +231,7 @@ namespace AMI.Core.IO.Extractors
             string filename,
             BitmapWrapper watermark = null)
         {
-            var bitmap = reader.ExtractPosition(axisType, position, Convert.ToUInt32(command.OutputSize));
+            var bitmap = reader.ExtractPosition(axisType, position, command.OutputSize);
             if (bitmap != null)
             {
                 if (command.Grayscale)
@@ -239,7 +239,7 @@ namespace AMI.Core.IO.Extractors
                     bitmap = bitmap.To8bppIndexedGrayscale();
                 }
 
-                bitmap = bitmap.ToCenter(Convert.ToUInt32(command.OutputSize), Color.Black);
+                bitmap = bitmap.ToCenter(command.OutputSize, Color.Black);
                 if (bitmap == null)
                 {
                     throw new UnexpectedNullException("Bitmap could not be centered.");
@@ -254,7 +254,7 @@ namespace AMI.Core.IO.Extractors
 
                 bitmap.Dispose();
 
-                return new PositionAxisContainerModel<string>(Convert.ToUInt32(position), axisType, filename);
+                return new PositionAxisContainerModel<string>(position, axisType, filename);
             }
 
             return null;

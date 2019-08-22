@@ -61,7 +61,7 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The extracted position as two-dimensional ITK image.
         /// </returns>
-        Image ExtractPosition(Image image, AxisType axisType, uint index);
+        Image ExtractPosition(Image image, AxisType axisType, int index);
 
         /// <summary>
         /// Resamples the two-dimensional ITK image to the desired size.
@@ -71,7 +71,7 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The resampled two-dimensional ITK image.
         /// </returns>
-        Image ResampleImage2D(Image image, uint outputSize);
+        Image ResampleImage2D(Image image, int outputSize);
 
         /// <summary>
         /// Resamples the three-dimensional ITK image to the desired size.
@@ -81,7 +81,7 @@ namespace AMI.Itk.Utils
         /// <returns>
         /// The resampled three-dimensional ITK image.
         /// </returns>
-        Image ResampleImage3D(Image image, uint outputSize);
+        Image ResampleImage3D(Image image, int outputSize);
 
         /// <summary>
         /// Gets the number of labels in the ITK image.

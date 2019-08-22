@@ -15,7 +15,7 @@ namespace AMI.Core.Entities.Models
         /// <param name="position">The position.</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <param name="entity">The entity to associate with the axis.</param>
-        public PositionAxisContainerModel(uint position, AxisType axisType, T entity)
+        public PositionAxisContainerModel(int position, AxisType axisType, T entity)
             : base(axisType, entity)
         {
             Position = position;
@@ -24,6 +24,6 @@ namespace AMI.Core.Entities.Models
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
-        public uint Position { get; set; }
+        public int Position { get; set; }
     }
 }

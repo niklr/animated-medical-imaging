@@ -80,7 +80,7 @@ namespace AMI.Core.IO.Writers
         {
             try
             {
-                var mapper = new BezierPositionMapper(Convert.ToUInt32(images.Count()), bezierEasingType);
+                var mapper = new BezierPositionMapper(images.Count(), bezierEasingType);
 
                 var filenames = images.OrderBy(e => e.AxisType).ThenBy(e => e.Position)
                     .Select(e => e.Entity).ToArray();

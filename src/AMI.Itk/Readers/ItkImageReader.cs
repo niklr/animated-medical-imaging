@@ -45,21 +45,21 @@ namespace AMI.Itk.Readers
         public Image Image { get; private set; }
 
         /// <inheritdoc/>
-        public uint Width
+        public int Width
         {
-            get { return size[0]; }
+            get { return Convert.ToInt32(size[0]); }
         }
 
         /// <inheritdoc/>
-        public uint Height
+        public int Height
         {
-            get { return size[1]; }
+            get { return Convert.ToInt32(size[1]); }
         }
 
         /// <inheritdoc/>
-        public uint Depth
+        public int Depth
         {
-            get { return size[2]; }
+            get { return Convert.ToInt32(size[2]); }
         }
 
         /// <inheritdoc/>
@@ -147,11 +147,11 @@ namespace AMI.Itk.Readers
         }
 
         /// <inheritdoc/>
-        public System.Drawing.Bitmap ExtractPosition(AxisType axisType, uint position, uint? size)
+        public System.Drawing.Bitmap ExtractPosition(AxisType axisType, int position, int? size)
         {
             Validate();
 
-            uint mappedPosition = Mapper == null ?
+            int mappedPosition = Mapper == null ?
                 position : Mapper.GetMappedPosition(axisType, position);
 
             using (Image image = itkUtil.ExtractPosition(Image, axisType, mappedPosition))

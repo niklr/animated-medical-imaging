@@ -110,7 +110,7 @@ namespace AMI.Core.Extensions.Drawing
         /// The resized image.
         /// </returns>
         /// <exception cref="ArgumentNullException">original</exception>
-        public static Bitmap Resize(this Bitmap original, uint? size)
+        public static Bitmap Resize(this Bitmap original, int? size)
         {
             Ensure.ArgumentNotNull(original, nameof(original));
 
@@ -175,7 +175,7 @@ namespace AMI.Core.Extensions.Drawing
         /// The centered image.
         /// </returns>
         /// <exception cref="ArgumentNullException">original</exception>
-        public static Bitmap ToCenter(this Bitmap original, uint? size, Color color)
+        public static Bitmap ToCenter(this Bitmap original, int? size, Color color)
         {
             Ensure.ArgumentNotNull(original, nameof(original));
 

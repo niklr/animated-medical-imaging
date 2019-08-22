@@ -19,7 +19,7 @@ namespace AMI.Core.IO.Readers
         /// <param name="outputSize">The output size.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>The image as bitmap.</returns>
-        public async Task<Bitmap> ReadAsync(string path, uint? outputSize, CancellationToken ct)
+        public async Task<Bitmap> ReadAsync(string path, int? outputSize, CancellationToken ct)
         {
             return await Task.Run(
                 () =>

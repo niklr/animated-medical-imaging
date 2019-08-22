@@ -11,10 +11,10 @@ namespace AMI.NetFramework.Tests.Core.Mappers
         public void AxisPositionMapper_Map_1()
         {
             // Arrange
-            uint amount = 10;
-            uint width = 100;
-            uint height = 200;
-            uint depth = 300;
+            int amount = 10;
+            int width = 100;
+            int height = 200;
+            int depth = 300;
 
             // Act
             var mapper = new AxisPositionMapper(amount, width, height, depth);
@@ -37,10 +37,10 @@ namespace AMI.NetFramework.Tests.Core.Mappers
         public void AxisPositionMapper_Map_2()
         {
             // Arrange
-            uint amount = 10;
-            uint width = 5;
-            uint height = 10;
-            uint depth = 0;
+            int amount = 10;
+            int width = 5;
+            int height = 10;
+            int depth = 0;
 
             // Act
             var mapper = new AxisPositionMapper(amount, width, height, depth);
