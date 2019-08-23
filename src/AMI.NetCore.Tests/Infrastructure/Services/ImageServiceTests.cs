@@ -93,7 +93,7 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
   ""combinedGif"": ""combined.gif"",
   ""createdDate"": ""0001-01-01T00:00:00"",
   ""modifiedDate"": ""0001-01-01T00:00:00"",
-  ""version"": ""0.0.13"",
+  ""version"": ""0.0.14"",
   ""jsonFilename"": ""output.json"",
   ""id"": null,
   ""discriminator"": ""ProcessResultModel""
