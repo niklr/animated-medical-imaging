@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
+using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using MediatR;
 using NUnit.Framework;
@@ -19,7 +21,13 @@ namespace AMI.NetCore.Tests.Core.Entities.Results.Commands
             {
                 SourcePath = GetDataPath("SMIR.Brain_3more.XX.XX.OT.6560.mha"),
                 DestinationPath = GetTempPath(),
-                AmountPerAxis = 6
+                AmountPerAxis = 6,
+                AxisTypes = new HashSet<AxisType>
+                {
+                    AxisType.X,
+                    AxisType.Y,
+                    AxisType.Z
+                }
             };
 
             try

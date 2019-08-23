@@ -96,7 +96,7 @@ namespace AMI.Core.IO.Extractors
             ISet<AxisType> axisTypes = new HashSet<AxisType>(command.AxisTypes);
             if (axisTypes.Count == 0)
             {
-                axisTypes = reader.GetRecommendedAxisTypes();
+                axisTypes = new HashSet<AxisType> { AxisType.Z };
             }
 
             BitmapWrapper watermark = null;
@@ -143,8 +143,8 @@ namespace AMI.Core.IO.Extractors
 
             if (amount > 1)
             {
-                // calculate hashes of images for the defined amount for each axis
-                IList<PositionAxisContainerModel<string>> hashes = new List<PositionAxisContainerModel<string>>();
+                // count labels of images for the defined amount for each axis
+                IList<PositionAxisContainerModel<ulong>> labels = new List<PositionAxisContainerModel<ulong>>();
                 IDictionary<AxisType, int[]> newMap = new Dictionary<AxisType, int[]>();
 
                 IAxisPositionMapper mapper = reader.Mapper;
@@ -163,53 +163,41 @@ namespace AMI.Core.IO.Extractors
                         // set initial mapped positions
                         newMap[axisType][i] = mapper.GetMappedPosition(axisType, i);
 
-                        using (var bitmap = reader.ExtractPosition(axisType, i, outputSize))
-                        {
-                            if (bitmap != null)
-                            {
-                                string hash = Cryptography.CalculateSHA1Hash(bitmap.ToByteArray(imageFormat));
-                                hashes.Add(new PositionAxisContainerModel<string>(i, axisType, hash));
-                            }
-                        }
+                        var labelCount = reader.GetLabelCount(axisType, i);
+                        labels.Add(new PositionAxisContainerModel<ulong>(i, axisType, labelCount));
                     }
                 }
 
-                // calculate new mapped positions based on the hashes
+                // calculate new mapped positions based on the labels
                 foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))
                 {
-                    var axisHashes = hashes.Where(e => e.AxisType == axisType);
+                    var candidates = labels
+                        .Where(e => e.AxisType == axisType)
+                        .Where(e => e.Entity > 1)
+                        .OrderBy(e => e.Position);
 
-                    // find the most likely hash representing an empty image
-                    string emptyHash = axisHashes.GroupBy(e => e.Entity)
-                        .Where(e => e.Count() > 1).OrderBy(e => e.Count()).Select(e => e.Key).FirstOrDefault();
+                    var startPosition = candidates.FirstOrDefault();
+                    var endPosition = candidates.LastOrDefault();
 
-                    if (emptyHash != null)
+                    if (startPosition != null && endPosition != null)
                     {
-                        var nonEmptyHashes = axisHashes.Where(e => e.Entity != emptyHash).OrderBy(e => e.Position);
-
-                        var startPosition = nonEmptyHashes.FirstOrDefault();
-                        var endPosition = nonEmptyHashes.LastOrDefault();
-
-                        if (startPosition != null && endPosition != null)
+                        if (startPosition == endPosition)
                         {
-                            if (startPosition == endPosition)
-                            {
-                                newMap[axisType] = new int[1];
-                                newMap[axisType][0] = mapper.GetMappedPosition(axisType, startPosition.Position);
-                            }
-                            else
-                            {
-                                // calculate mappedPosition between startPosition and endPosition
-                                int mappedStartPosition = mapper.GetMappedPosition(axisType, startPosition.Position);
-                                int mappedEndPosition = mapper.GetMappedPosition(axisType, endPosition.Position);
-                                int length = mappedEndPosition - mappedStartPosition;
+                            newMap[axisType] = new int[1];
+                            newMap[axisType][0] = mapper.GetMappedPosition(axisType, startPosition.Position);
+                        }
+                        else
+                        {
+                            // calculate mappedPosition between startPosition and endPosition
+                            int mappedStartPosition = mapper.GetMappedPosition(axisType, startPosition.Position);
+                            int mappedEndPosition = mapper.GetMappedPosition(axisType, endPosition.Position);
+                            int length = mappedEndPosition - mappedStartPosition;
 
-                                if (length >= newMap[axisType].Length)
+                            if (length >= newMap[axisType].Length)
+                            {
+                                for (int i = 0; i < newMap[axisType].Length; i++)
                                 {
-                                    for (int i = 0; i < newMap[axisType].Length; i++)
-                                    {
-                                        newMap[axisType][i] = mappedStartPosition + mapper.CalculateMappedPosition(amount, length, i);
-                                    }
+                                    newMap[axisType][i] = mappedStartPosition + mapper.CalculateMappedPosition(amount, length, i);
                                 }
                             }
                         }

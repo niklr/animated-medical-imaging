@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Mappers;
@@ -47,12 +46,6 @@ namespace AMI.Core.IO.Readers
         Task InitAsync(string path, CancellationToken ct);
 
         /// <summary>
-        /// Gets the recommended axis types.
-        /// </summary>
-        /// <returns>The recommended axis types.</returns>
-        ISet<AxisType> GetRecommendedAxisTypes();
-
-        /// <summary>
         /// Extracts the specified position as bitmap.
         /// </summary>
         /// <param name="axisType">Type of the axis.</param>
@@ -66,5 +59,13 @@ namespace AMI.Core.IO.Readers
         /// </summary>
         /// <returns>The label count.</returns>
         ulong GetLabelCount();
+
+        /// <summary>
+        /// Gets the label count.
+        /// </summary>
+        /// <param name="axisType">Type of the axis.</param>
+        /// <param name="position">The position.</param>
+        /// <returns>The label count.</returns>
+        ulong GetLabelCount(AxisType axisType, int position);
     }
 }

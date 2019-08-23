@@ -25,7 +25,6 @@ namespace AMI.Itk.Readers
         private readonly IFileExtensionMapper fileExtensionMapper;
         private readonly IItkUtil itkUtil;
         private VectorUInt32 size = new VectorUInt32();
-        private IDictionary<AxisType, Image> axisImages;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ItkImageReader"/> class.
@@ -72,16 +71,6 @@ namespace AMI.Itk.Readers
             {
                 Image.Dispose();
             }
-
-            if (axisImages != null)
-            {
-                foreach (var axisImage in axisImages)
-                {
-                    axisImage.Value.Dispose();
-                }
-
-                axisImages = new Dictionary<AxisType, Image>();
-            }
         }
 
         /// <inheritdoc/>
@@ -100,49 +89,10 @@ namespace AMI.Itk.Readers
                 }
 
                 size = Image.GetSize();
-                axisImages = new Dictionary<AxisType, Image>();
             }
             finally
             {
                 SemaphoreSlim.Release();
-            }
-        }
-
-        /// <inheritdoc/>
-        public ISet<AxisType> GetRecommendedAxisTypes()
-        {
-            Validate();
-
-            var defaultAxisTypes = new HashSet<AxisType>() { AxisType.X, AxisType.Y, AxisType.Z };
-
-            try
-            {
-                ISet<AxisType> axisTypes = new HashSet<AxisType>();
-
-                var estimatedAreas = EstimateAreas();
-                var maxEstimatedArea = estimatedAreas.Values.Max();
-
-                foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))
-                {
-                    double areaRatio = estimatedAreas[axisType] / maxEstimatedArea;
-                    if (areaRatio > 0.05)
-                    {
-                        axisTypes.Add(axisType);
-                    }
-                }
-
-                if (axisTypes.Count > 0)
-                {
-                    return axisTypes;
-                }
-                else
-                {
-                    return defaultAxisTypes;
-                }
-            }
-            catch (Exception)
-            {
-                return defaultAxisTypes;
             }
         }
 
@@ -156,18 +106,6 @@ namespace AMI.Itk.Readers
 
             using (Image image = itkUtil.ExtractPosition(Image, axisType, mappedPosition))
             {
-                if (axisImages.TryGetValue(axisType, out Image axisImage))
-                {
-                    var filter = new AddImageFilter();
-                    axisImage = filter.Execute(axisImage, image);
-                    axisImages[axisType] = axisImage;
-                    filter.Dispose();
-                }
-                else
-                {
-                    axisImages.Add(axisType, new Image(image));
-                }
-
                 if (size.HasValue && size.Value > 0)
                 {
                     using (var resampledImage = itkUtil.ResampleImage2D(image, size.Value))
@@ -195,33 +133,24 @@ namespace AMI.Itk.Readers
             }
         }
 
-        private IDictionary<AxisType, double> EstimateAreas()
+        /// <inheritdoc/>
+        public ulong GetLabelCount(AxisType axisType, int position)
         {
-            IDictionary<AxisType, double> areas = new Dictionary<AxisType, double>();
+            Validate();
 
-            try
+            int mappedPosition = Mapper == null ?
+                position : Mapper.GetMappedPosition(axisType, position);
+
+            using (Image image = itkUtil.ExtractPosition(Image, axisType, mappedPosition))
             {
-                foreach (AxisType axisType in (AxisType[])Enum.GetValues(typeof(AxisType)))
+                try
                 {
-                    areas.Add(axisType, 0);
-                    if (axisImages.TryGetValue(axisType, out Image axisImage))
-                    {
-                        // WriteImage(axisImage, $@"C:\Temp\images\{axisType}.mha");
-                        var spacing = axisImage.GetSpacing();
-                        var areaOfOneVoxel = spacing[0] * spacing[1];
-
-                        var filter = new StatisticsImageFilter();
-                        filter.Execute(axisImage);
-                        areas[axisType] += filter.GetSum() * areaOfOneVoxel;
-                        filter.Dispose();
-                    }
+                    return itkUtil.GetLabelCount(image);
                 }
-
-                return areas;
-            }
-            catch (Exception)
-            {
-                return areas;
+                catch (Exception)
+                {
+                    return 0;
+                }
             }
         }
 

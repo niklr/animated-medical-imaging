@@ -398,31 +398,38 @@ namespace AMI.Itk.Utils
             return GetBuffer(image).ToBitmap(width, height);
         }
 
-        private Image ApplyRescaleIntensityImageFilter(Image image)
+        private Image ApplyRescaleIntensityImageFilter(Image image, int retryCount = 0)
         {
             Ensure.ArgumentNotNull(image, nameof(image));
 
-            Image output = null;
-
-            try
+            if (retryCount > 1)
             {
-                // Execute rescale intensity image filter
-                RescaleIntensityImageFilter filter = new RescaleIntensityImageFilter();
-                filter.SetOutputMinimum(0);
-                filter.SetOutputMaximum(255);
-                output = filter.Execute(image);
-                filter.Dispose();
-                image.Dispose();
+                return image;
             }
-            catch (Exception)
+            else
             {
-                // ignore "RescaleIntensityImageFilter(000000F79D6CFC40):
-                // Minimum output value cannot be greater than Maximum output value." exceptions
-                output = new Image(image);
-                image.Dispose();
+                try
+                {
+                    // Execute rescale intensity image filter
+                    RescaleIntensityImageFilter filter = new RescaleIntensityImageFilter();
+                    filter.SetOutputMinimum(0);
+                    filter.SetOutputMaximum(255);
+                    Image output = filter.Execute(image);
+                    filter.Dispose();
+                    image.Dispose();
+                    return output;
+                }
+                catch (Exception)
+                {
+                    // System.ApplicationException: Exception thrown in SimpleITK RescaleIntensityImageFilter_Execute:
+                    // "Minimum output value cannot be greater than Maximum output value."
+                    // Applying the CastImageFilter before the RescaleIntensityImageFilter.
+                    Image castedImage = ApplyCastImageFilter(image);
+                    Image output = ApplyRescaleIntensityImageFilter(castedImage, ++retryCount);
+                    castedImage.Dispose();
+                    return output;
+                }
             }
-
-            return output;
         }
 
         private Image ApplyCastImageFilter(Image image)
@@ -435,20 +442,26 @@ namespace AMI.Itk.Utils
             // Execute cast filter
             CastImageFilter filter = new CastImageFilter();
             PixelIDValueEnum imageType = PixelIDValueEnum.swigToEnum(image.GetPixelIDValue());
-            if (imageType.ToString().ToLowerInvariant().Contains("vector"))
+            if (imageType == PixelIDValueEnum.sitkVectorUInt8 || imageType == PixelIDValueEnum.sitkUInt8)
             {
-                filter.SetOutputPixelType(PixelIDValueEnum.sitkVectorUInt8);
+                return image;
             }
             else
             {
-                filter.SetOutputPixelType(PixelIDValueEnum.sitkUInt8);
+                if (imageType.ToString().ToLowerInvariant().Contains("vector"))
+                {
+                    filter.SetOutputPixelType(PixelIDValueEnum.sitkVectorUInt8);
+                }
+                else
+                {
+                    filter.SetOutputPixelType(PixelIDValueEnum.sitkUInt8);
+                }
+
+                Image output = filter.Execute(image);
+                filter.Dispose();
+                image.Dispose();
+                return output;
             }
-
-            Image output = filter.Execute(image);
-            filter.Dispose();
-            image.Dispose();
-
-            return output;
         }
 
         private IntPtr GetBuffer(Image image)

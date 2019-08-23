@@ -1,8 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading;
 using AMI.Core.Entities.Results.Commands.ProcessPath;
 using AMI.Core.IO.Extractors;
 using AMI.Core.Strategies;
+using AMI.Domain.Enums;
 using AMI.Itk.Extractors;
 using AMI.Itk.Factories;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,13 @@ namespace AMI.NetFramework.Tests.Core.IO.Extractors
             {
                 SourcePath = GetDataPath("SMIR.Brain.XX.O.CT.339203.nii"),
                 DestinationPath = GetTempPath(),
-                AmountPerAxis = 10
+                AmountPerAxis = 10,
+                AxisTypes = new HashSet<AxisType>
+                {
+                    AxisType.X,
+                    AxisType.Y,
+                    AxisType.Z
+                }
             };
 
             IImageExtractor extractor = new ItkImageExtractor(loggerFactory, fileSystemStrategy, factory);
