@@ -33,49 +33,35 @@ namespace AMI.Core.Extensions.Drawing
             // see https://github.com/SimpleITK/SimpleITK/issues/582
             PixelFormat format = PixelFormat.Format8bppIndexed;
 
-            // Check if the stride is the same as the width
-            if (width % 4 == 0)
+            unsafe
             {
-                // Width = Stride: simply use the Bitmap constructor
-                bitmap = new Bitmap(
-                    width,   // Width
-                    height,  // Height
-                    width,   // Stride
-                    format,  // PixelFormat
-                    intPtr); // Buffer
-            }
-            else
-            {
-                unsafe
+                // Width != Stride: copy data from buffer to bitmap
+                byte* buffer = (byte*)intPtr.ToPointer();
+
+                // Compute the stride
+                int stride = width;
+                if (width % 4 != 0)
                 {
-                    // Width != Stride: copy data from buffer to bitmap
-                    byte* buffer = (byte*)intPtr.ToPointer();
-
-                    // Compute the stride
-                    int stride = width;
-                    if (width % 4 != 0)
-                    {
-                        stride = (width / 4 * 4) + 4;
-                    }
-
-                    bitmap = new Bitmap(width, height, format);
-                    Rectangle rect = new Rectangle(0, 0, width, height);
-                    BitmapData bitmapData = bitmap.LockBits(rect, ImageLockMode.WriteOnly, format);
-
-                    // row iteration
-                    for (int j = 0; j < height; j++)
-                    {
-                        byte* row = (byte*)bitmapData.Scan0 + (j * stride);
-
-                        // column iteration
-                        for (int i = 0; i < width; i++)
-                        {
-                            row[i] = buffer[(j * width) + i];
-                        }
-                    }
-
-                    bitmap.UnlockBits(bitmapData);
+                    stride = (width / 4 * 4) + 4;
                 }
+
+                bitmap = new Bitmap(width, height, format);
+                Rectangle rect = new Rectangle(0, 0, width, height);
+                BitmapData bitmapData = bitmap.LockBits(rect, ImageLockMode.WriteOnly, format);
+
+                // row iteration
+                for (int j = 0; j < height; j++)
+                {
+                    byte* row = (byte*)bitmapData.Scan0 + (j * stride);
+
+                    // column iteration
+                    for (int i = 0; i < width; i++)
+                    {
+                        row[i] = buffer[(j * width) + i];
+                    }
+                }
+
+                bitmap.UnlockBits(bitmapData);
             }
 
             return bitmap;
