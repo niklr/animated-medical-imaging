@@ -1,12 +1,14 @@
-<h3>Admin <small class="text-muted grey-text">/ Audit events</small></h3>
+<h3>
+  Admin <small class="text-muted grey-text">/ Audit events</small>
+  <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
+    <i class="fas fa-redo-alt"></i>
+  </button>
+</h3>
 <div *ngIf="items.length <= 0; else showAuditEventsBlock">
   <div class="card">
     <div class="card-content">
       <p class="caption wrapword full-width custom-card-content-caption">
         <i class="fas fa-info-circle"></i> No audit events found.
-        <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
-          <i class="fas fa-redo-alt"></i>
-        </button>
       </p>
     </div>
   </div>
@@ -42,7 +44,7 @@
         </div>
         <div class="custom-card-content-overflow-item" *ngIf="!!item.xdas.target">
           <h5>Target</h5>
-          <pre><code>{{stringifyTarget(item.xdas.target)}}</code></pre>
+          <pre><code>{{stringify(item.xdas.target)}}</code></pre>
         </div>
       </div>
     </div>

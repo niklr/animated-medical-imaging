@@ -62,33 +62,4 @@ export class AdminEventsComponent implements OnInit, AfterViewInit {
   public stringify(value: any): string {
     return JSON.stringify(value, null, 4);
   }
-
-  private convertKeyValuePair(obj: Object, el: any) {
-    if (Array.isArray(el.value)) {
-      const innerObject = {};
-      Array.from(el.value, el1 => {
-        this.convertKeyValuePair(innerObject, el1);
-      });
-      obj[el.name] = innerObject;
-    } else {
-      obj[el.name] = el.value;
-    }
-  }
-
-  public stringifyTarget(target: Target): string {
-    const newTarget = new Target();
-    newTarget.entity = target.entity;
-    newTarget.account = target.account;
-    newTarget.data = {};
-    if (!!target.data && Array.isArray(target.data)) {
-      try {
-        Array.from(target.data, x => {
-          this.convertKeyValuePair(newTarget.data, x);
-        });
-      } catch (error) {
-        newTarget.data = {};
-      }
-    }
-    return JSON.stringify(newTarget, null, 4);
-  }
 }

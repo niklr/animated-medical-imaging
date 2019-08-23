@@ -6,11 +6,13 @@ using AMI.Core.Entities.AuditEvents.Commands.Create;
 using AMI.Core.Entities.Models;
 using AMI.Core.Services;
 using AMI.Domain.Attributes;
+using AMI.Domain.Enums;
 using AMI.Domain.Enums.Auditing;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Extensions.Enum;
 using RNS.Framework.Networking;
+using RNS.Framework.Tools;
 using XDASv2Net.Attributes;
 using XDASv2Net.Model;
 
@@ -41,23 +43,28 @@ namespace AMI.Infrastructure.Services
         {
             try
             {
-                XDASv2Event xdasEvent = CreateXDASEvent(principal, subEventType, outcomeType);
+                Ensure.ArgumentNotNull(principal, nameof(principal));
 
-                Target target = new Target()
+                if (!principal.IsInRole(RoleType.Service))
                 {
-                    Entity = CreateTargetEntity()
-                };
+                    XDASv2Event xdasEvent = CreateXDASEvent(principal, subEventType, outcomeType);
 
-                target.Data = data;
+                    Target target = new Target()
+                    {
+                        Entity = CreateTargetEntity()
+                    };
 
-                xdasEvent.Target = target;
+                    target.Data = data;
 
-                var command = new CreateAuditEventCommand()
-                {
-                    Event = xdasEvent
-                };
+                    xdasEvent.Target = target;
 
-                await mediator.Send(command);
+                    var command = new CreateAuditEventCommand()
+                    {
+                        Event = xdasEvent
+                    };
+
+                    await mediator.Send(command);
+                }
             }
             catch (Exception e)
             {

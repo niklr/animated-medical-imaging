@@ -18,6 +18,11 @@
         /// <summary>
         /// The administrator role.
         /// </summary>
-        Administrator = 2
+        Administrator = 2,
+
+        /// <summary>
+        /// The service role.
+        /// </summary>
+        Service = 3
     }
 }
