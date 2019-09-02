@@ -2273,7 +2273,7 @@ Automatically deletes objects older than the defined period. */
     objectLimitAnonymous?: number;
     /** Gets the object limit for regular users. Default is 0 (no limit). */
     objectLimit?: number;
-    /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */
+    /** Gets the amount of milliseconds before a request times out. Default is 5000. */
     requestTimeoutMilliseconds?: number;
     /** Gets the options used for authentication and authorization. */
     authOptions?: IAuthOptions | undefined;
@@ -2352,7 +2352,7 @@ Automatically deletes objects older than the defined period. */
     objectLimitAnonymous?: number;
     /** Gets the object limit for regular users. Default is 0 (no limit). */
     objectLimit?: number;
-    /** Gets the amount of milliseconds before a reuqest times out. Default is 5000. */
+    /** Gets the amount of milliseconds before a request times out. Default is 5000. */
     requestTimeoutMilliseconds?: number;
     /** Gets the options used for authentication and authorization. */
     authOptions?: IAuthOptions | undefined;

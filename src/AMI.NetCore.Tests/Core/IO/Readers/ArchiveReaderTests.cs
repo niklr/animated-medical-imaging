@@ -45,12 +45,12 @@ namespace AMI.NetCore.Tests.Core.IO.Readers
             // Assert
             Assert.AreEqual(configuration.Options.MaxArchivedEntries, result.Count);
             Assert.IsNotNull(firstEntry);
-            Assert.AreEqual("SMIR.Brain.XX.O.CT.346124_Frame_1.dcm", firstEntry.Key);
-            Assert.AreEqual(197408, firstEntry.Size);
-            Assert.AreEqual(1867, firstEntry.CompressedSize);
-            Assert.AreEqual("SMIR.Brain.XX.O.CT.346124_Frame_10.dcm", lastEntry.Key);
-            Assert.AreEqual(197408, lastEntry.Size);
-            Assert.AreEqual(22517, lastEntry.CompressedSize);
+            Assert.AreEqual("SMIR.Brain.XX.O.CT.346124-001.dcm", firstEntry.Key);
+            Assert.AreEqual(132536, firstEntry.Size);
+            Assert.AreEqual(2066, firstEntry.CompressedSize);
+            Assert.AreEqual("SMIR.Brain.XX.O.CT.346124-010.dcm", lastEntry.Key);
+            Assert.AreEqual(132536, lastEntry.Size);
+            Assert.AreEqual(30622, lastEntry.CompressedSize);
         }
     }
 }

@@ -2034,7 +2034,7 @@
           },
           "requestTimeoutMilliseconds": {
             "type": "integer",
-            "description": "Gets the amount of milliseconds before a reuqest times out. Default is 5000.",
+            "description": "Gets the amount of milliseconds before a request times out. Default is 5000.",
             "format": "int32"
           },
           "authOptions": {

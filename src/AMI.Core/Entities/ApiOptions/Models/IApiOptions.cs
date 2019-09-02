@@ -47,7 +47,7 @@
         int ObjectLimit { get; }
 
         /// <summary>
-        /// Gets the amount of milliseconds before a reuqest times out. Default is 5000.
+        /// Gets the amount of milliseconds before a request times out. Default is 5000.
         /// </summary>
         int RequestTimeoutMilliseconds { get; }
 
