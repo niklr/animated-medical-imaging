@@ -1,5 +1,6 @@
 ﻿using System;
 using AMI.Core.Configurations;
+using AMI.Core.Services;
 using AMI.Core.Workers;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -21,10 +22,11 @@ namespace AMI.Infrastructure.Services
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The API configuration.</param>
-        public CleanupHostedService(ILoggerFactory loggerFactory, IMediator mediator, IApiConfiguration configuration)
+        /// <param name="workerService">The worker service.</param>
+        public CleanupHostedService(ILoggerFactory loggerFactory, IMediator mediator, IApiConfiguration configuration, IWorkerService workerService)
         {
             logger = loggerFactory?.CreateLogger<CleanupHostedService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-            worker = new CleanupRecurringWorker(loggerFactory, mediator, configuration);
+            worker = new CleanupRecurringWorker(loggerFactory, workerService, mediator, configuration);
         }
 
         /// <inheritdoc/>

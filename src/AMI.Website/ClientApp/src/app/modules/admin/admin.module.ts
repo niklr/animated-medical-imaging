@@ -6,12 +6,14 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminEventsComponent } from './events/events.component';
 import { AdminLogsComponent } from './logs/logs.component';
+import { AdminWorkersComponent } from './workers/workers.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
     AdminEventsComponent,
-    AdminLogsComponent
+    AdminLogsComponent,
+    AdminWorkersComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,8 @@ import { AdminLogsComponent } from './logs/logs.component';
   exports: [
     AdminComponent,
     AdminEventsComponent,
-    AdminLogsComponent
+    AdminLogsComponent,
+    AdminWorkersComponent
   ]
 })
 export class AdminModule { }

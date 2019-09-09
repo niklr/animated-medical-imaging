@@ -11,9 +11,9 @@
         Unknown = 0,
 
         /// <summary>
-        /// The default worker type.
+        /// The queue worker type.
         /// </summary>
-        Default = 1,
+        Queue = 1,
 
         /// <summary>
         /// The recurring worker type.

@@ -7,6 +7,7 @@ using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Tasks.Commands.Create;
 using AMI.Core.Queues;
 using AMI.Core.Repositories;
+using AMI.Core.Services;
 using AMI.Core.Workers;
 using AMI.Domain.Enums;
 using MediatR;
@@ -16,19 +17,20 @@ using NUnit.Framework;
 namespace AMI.NetCore.Tests.Core.Workers
 {
     [TestFixture]
-    public class TaskWorkerTests : BaseTest
+    public class QueueWorkerTests : BaseTest
     {
         [Test]
-        public async Task TaskWorker_DoWorkAsync()
+        public async Task QueueWorker_DoWorkAsync()
         {
             // Arrange
             var pause = new ManualResetEvent(false);
             var loggerFactory = GetService<ILoggerFactory>();
+            var workerService = GetService<IWorkerService>();
             var configuration = GetService<IAppConfiguration>();
             var mediator = GetService<IMediator>();
             var queue = GetService<ITaskQueue>();
             var context = GetService<IAmiUnitOfWork>();
-            var worker = new TaskWorker(loggerFactory, configuration, queue, ServiceProvider);
+            var worker = new QueueWorker(loggerFactory, workerService, configuration, queue, ServiceProvider);
             var cts = new CancellationTokenSource();
             string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
             string dataPath = GetDataPath(filename);
@@ -59,7 +61,7 @@ namespace AMI.NetCore.Tests.Core.Workers
             Assert.IsNotNull(result2);
             Assert.AreEqual(Domain.Enums.TaskStatus.Queued, result2.Status);
             Assert.AreEqual(CommandType.ProcessObjectCommand, result2.Command.CommandType);
-            Assert.AreEqual(WorkerType.Default, worker.WorkerType);
+            Assert.AreEqual(WorkerType.Queue, worker.WorkerType);
             Assert.AreEqual(WorkerStatus.Terminated, worker.WorkerStatus);
             Assert.IsNotNull(result3);
             Assert.AreNotEqual(Domain.Enums.TaskStatus.Queued, (Domain.Enums.TaskStatus)result3.Status);

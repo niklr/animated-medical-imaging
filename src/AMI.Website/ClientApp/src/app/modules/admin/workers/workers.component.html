@@ -1,0 +1,31 @@
+<h3>
+    Admin <small class="text-muted grey-text">/ Workers</small>
+    <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
+        <i class="fas fa-redo-alt"></i>
+    </button>
+</h3>
+
+<table class="responsive-table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Queue Count</th>
+            <th>Last Activity</th>
+            <th>Current Duration</th>
+            <th>Last Duration</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><app-common-guid-badge [guid]="workerId"></app-common-guid-badge></td>
+            <td>Task Worker</td>
+            <td>12</td>
+            <td>04.09.2019 09:47:59</td>
+            <td>00:00:00</td>
+            <td>00:00:00</td>
+            <td>Idling</td>
+        </tr>
+    </tbody>
+</table>

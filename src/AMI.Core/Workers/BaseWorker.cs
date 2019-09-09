@@ -2,8 +2,10 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Services;
 using AMI.Domain.Enums;
 using Microsoft.Extensions.Logging;
+using RNS.Framework.Tools;
 
 namespace AMI.Core.Workers
 {
@@ -12,7 +14,6 @@ namespace AMI.Core.Workers
     /// </summary>
     public abstract class BaseWorker : IBaseWorker
     {
-        private readonly ILogger logger;
         private Stopwatch stopwatch;
         private CancellationTokenSource cts;
 
@@ -20,10 +21,15 @@ namespace AMI.Core.Workers
         /// Initializes a new instance of the <see cref="BaseWorker"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
-        public BaseWorker(ILoggerFactory loggerFactory)
+        /// <param name="workerService">The worker service.</param>
+        public BaseWorker(ILoggerFactory loggerFactory, IWorkerService workerService)
         {
-            logger = loggerFactory?.CreateLogger<BaseWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+            Ensure.ArgumentNotNull(workerService, nameof(workerService));
+
+            Logger = loggerFactory?.CreateLogger<BaseWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             Id = Guid.NewGuid();
+
+            workerService.Add(this);
         }
 
         /// <inheritdoc/>
@@ -59,10 +65,15 @@ namespace AMI.Core.Workers
         /// <inheritdoc/>
         public TimeSpan LastProcessingTime { get; private set; }
 
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        protected ILogger Logger { get; }
+
         /// <inheritdoc/>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation($"{GetType().Name} start called.");
+            Logger.LogInformation($"{GetType().Name} start called.");
 
             cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
@@ -86,21 +97,21 @@ namespace AMI.Core.Workers
                 {
                     UpdateActivity(WorkerStatus.Exception);
 
-                    logger.LogCritical(e, $"Critical exception in {WorkerName}.");
+                    Logger.LogCritical(e, $"Critical exception in {WorkerName}.");
 
                     await StartAsync(cancellationToken);
                 }
             }
 
-            logger.LogInformation($"{GetType().Name} start call ended.");
+            Logger.LogInformation($"{GetType().Name} start call ended.");
         }
 
         /// <inheritdoc/>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation($"{GetType().Name} stop called.");
+            Logger.LogInformation($"{GetType().Name} stop called.");
             cts?.Cancel();
-            logger.LogInformation($"{GetType().Name} stop call ended.");
+            Logger.LogInformation($"{GetType().Name} stop call ended.");
             await Task.CompletedTask;
         }
 

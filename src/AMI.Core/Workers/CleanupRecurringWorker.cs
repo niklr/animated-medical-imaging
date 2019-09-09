@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Objects.Commands.Clear;
+using AMI.Core.Services;
 using AMI.Domain.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,6 @@ namespace AMI.Core.Workers
     /// <seealso cref="RecurringWorker" />
     public class CleanupRecurringWorker : RecurringWorker
     {
-        private readonly ILogger logger;
         private readonly IMediator mediator;
         private readonly IApiConfiguration configuration;
 
@@ -24,12 +24,12 @@ namespace AMI.Core.Workers
         /// Initializes a new instance of the <see cref="CleanupRecurringWorker"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="workerService">The worker service.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The API configuration.</param>
-        public CleanupRecurringWorker(ILoggerFactory loggerFactory, IMediator mediator, IApiConfiguration configuration)
-            : base(loggerFactory)
+        public CleanupRecurringWorker(ILoggerFactory loggerFactory, IWorkerService workerService, IMediator mediator, IApiConfiguration configuration)
+            : base(loggerFactory, workerService)
         {
-            logger = loggerFactory?.CreateLogger<CleanupRecurringWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
@@ -87,11 +87,11 @@ namespace AMI.Core.Workers
             }
             catch (OperationCanceledException)
             {
-                logger.LogInformation($"Cleanup {WorkerName} canceled.");
+                Logger.LogInformation($"Cleanup {WorkerName} canceled.");
             }
             catch (Exception e)
             {
-                logger.LogWarning(e, $"Cleanup {WorkerName} failed. {e.Message}");
+                Logger.LogWarning(e, $"Cleanup {WorkerName} failed. {e.Message}");
             }
         }
     }

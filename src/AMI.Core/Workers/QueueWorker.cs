@@ -6,6 +6,7 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Tasks.Commands.UpdateStatus;
 using AMI.Core.Queues;
+using AMI.Core.Services;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using MediatR;
@@ -15,34 +16,36 @@ using Microsoft.Extensions.Logging;
 namespace AMI.Core.Workers
 {
     /// <summary>
-    /// A worker to process tasks.
+    /// A worker to process queues.
     /// </summary>
     /// <seealso cref="BaseWorker" />
-    public class TaskWorker : BaseWorker
+    public class QueueWorker : BaseWorker, IQueueWorker
     {
-        private readonly ILogger logger;
         private readonly IAppConfiguration configuration;
         private readonly ITaskQueue queue;
         private readonly IServiceProvider serviceProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TaskWorker"/> class.
+        /// Initializes a new instance of the <see cref="QueueWorker"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="workerService">The worker service.</param>
         /// <param name="configuration">The application configuration.</param>
         /// <param name="queue">The queue.</param>
         /// <param name="serviceProvider">The service provider.</param>
-        public TaskWorker(ILoggerFactory loggerFactory, IAppConfiguration configuration, ITaskQueue queue, IServiceProvider serviceProvider)
-            : base(loggerFactory)
+        public QueueWorker(ILoggerFactory loggerFactory, IWorkerService workerService, IAppConfiguration configuration, ITaskQueue queue, IServiceProvider serviceProvider)
+            : base(loggerFactory, workerService)
         {
-            logger = loggerFactory?.CreateLogger<TaskWorker>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         /// <inheritdoc/>
-        public override WorkerType WorkerType => WorkerType.Default;
+        public override WorkerType WorkerType => WorkerType.Queue;
+
+        /// <inheritdoc/>
+        public int Count => queue.Count;
 
         /// <inheritdoc/>
         protected override async Task DoWorkAsync(CancellationToken ct)
@@ -91,7 +94,7 @@ namespace AMI.Core.Workers
                 catch (Exception e)
                 {
                     // Task status could not be updated.
-                    logger.LogCritical(e, e.Message);
+                    Logger.LogCritical(e, e.Message);
                 }
 
                 StopWatch();
@@ -118,12 +121,12 @@ namespace AMI.Core.Workers
             }
             catch (OperationCanceledException)
             {
-                logger.LogInformation($"Processing of task {item.Id} canceled.");
+                Logger.LogInformation($"Processing of task {item.Id} canceled.");
                 await UpdateStatus(mediator, item, Domain.Enums.TaskStatus.Canceled, string.Empty);
             }
             catch (Exception e)
             {
-                logger.LogWarning(e, $"Processing of task {item.Id} failed. {e.Message}");
+                Logger.LogWarning(e, $"Processing of task {item.Id} failed. {e.Message}");
                 await UpdateStatus(mediator, item, Domain.Enums.TaskStatus.Failed, e.Message);
             }
         }

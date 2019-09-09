@@ -2190,6 +2190,139 @@ export class TokensAmiApiClient implements ITokensAmiApiClient {
     }
 }
 
+export interface IWorkersAmiApiClient {
+    /**
+     * Get paginated list of workers
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated workers.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfBaseWorkerModel>;
+}
+
+@Injectable()
+export class WorkersAmiApiClient implements IWorkersAmiApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * Get paginated list of workers
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated workers.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfBaseWorkerModel> {
+        let url_ = this.baseUrl + "/workers?";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&"; 
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaginated(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaginated(<any>response_);
+                } catch (e) {
+                    return <Observable<PaginationResultModelOfBaseWorkerModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PaginationResultModelOfBaseWorkerModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPaginated(response: HttpResponseBase): Observable<PaginationResultModelOfBaseWorkerModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginationResultModelOfBaseWorkerModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PaginationResultModelOfBaseWorkerModel>(<any>null);
+    }
+}
+
 /** A model representing an error. */
 export class ErrorModel implements IErrorModel {
     /** Gets or sets the error. */
@@ -4890,6 +5023,235 @@ export interface ICredentialsModel {
     username?: string | undefined;
     /** Gets or sets the password. */
     password?: string | undefined;
+}
+
+export class PaginationResultModelOfBaseWorkerModel implements IPaginationResultModelOfBaseWorkerModel {
+    items?: BaseWorkerModel[] | undefined;
+    pagination?: PaginationModel | undefined;
+
+    constructor(data?: IPaginationResultModelOfBaseWorkerModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["items"])) {
+                this.items = [] as any;
+                for (let item of data["items"])
+                    this.items!.push(BaseWorkerModel.fromJS(item));
+            }
+            this.pagination = data["pagination"] ? PaginationModel.fromJS(data["pagination"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PaginationResultModelOfBaseWorkerModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginationResultModelOfBaseWorkerModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pagination"] = this.pagination ? this.pagination.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IPaginationResultModelOfBaseWorkerModel {
+    items?: BaseWorkerModel[] | undefined;
+    pagination?: PaginationModel | undefined;
+}
+
+/** The base all results have in common. */
+export abstract class BaseWorkerModel implements IBaseWorkerModel {
+    /** Gets or sets the identifier of the worker. */
+    id?: string | undefined;
+    /** Gets or sets the name of the worker. */
+    workerName?: string | undefined;
+    /** Gets or sets the type of the worker. */
+    workerType?: WorkerType;
+    /** Gets or sets the current status of the worker. */
+    workerStatus?: WorkerStatus;
+    /** Gets or sets the last activity date. */
+    lastActivityDate?: Date;
+    /** Gets or sets the current processing time. */
+    currentProcessingTime?: string;
+    /** Gets or sets the last processing time. */
+    lastProcessingTime?: string;
+
+    protected _discriminator: string;
+
+    constructor(data?: IBaseWorkerModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        this._discriminator = "BaseWorkerModel";
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.workerName = data["workerName"];
+            this.workerType = data["workerType"];
+            this.workerStatus = data["workerStatus"];
+            this.lastActivityDate = data["lastActivityDate"] ? new Date(data["lastActivityDate"].toString()) : <any>undefined;
+            this.currentProcessingTime = data["currentProcessingTime"];
+            this.lastProcessingTime = data["lastProcessingTime"];
+        }
+    }
+
+    static fromJS(data: any): BaseWorkerModel {
+        data = typeof data === 'object' ? data : {};
+        if (data["discriminator"] === "QueueWorkerModel") {
+            let result = new QueueWorkerModel();
+            result.init(data);
+            return result;
+        }
+        if (data["discriminator"] === "RecurringWorkerModel") {
+            let result = new RecurringWorkerModel();
+            result.init(data);
+            return result;
+        }
+        throw new Error("The abstract class 'BaseWorkerModel' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["discriminator"] = this._discriminator; 
+        data["id"] = this.id;
+        data["workerName"] = this.workerName;
+        data["workerType"] = this.workerType;
+        data["workerStatus"] = this.workerStatus;
+        data["lastActivityDate"] = this.lastActivityDate ? this.lastActivityDate.toISOString() : <any>undefined;
+        data["currentProcessingTime"] = this.currentProcessingTime;
+        data["lastProcessingTime"] = this.lastProcessingTime;
+        return data; 
+    }
+}
+
+/** The base all results have in common. */
+export interface IBaseWorkerModel {
+    /** Gets or sets the identifier of the worker. */
+    id?: string | undefined;
+    /** Gets or sets the name of the worker. */
+    workerName?: string | undefined;
+    /** Gets or sets the type of the worker. */
+    workerType?: WorkerType;
+    /** Gets or sets the current status of the worker. */
+    workerStatus?: WorkerStatus;
+    /** Gets or sets the last activity date. */
+    lastActivityDate?: Date;
+    /** Gets or sets the current processing time. */
+    currentProcessingTime?: string;
+    /** Gets or sets the last processing time. */
+    lastProcessingTime?: string;
+}
+
+/** A type to describe the worker. */
+export enum WorkerType {
+    Unknown = "Unknown",
+    Queue = "Queue",
+    Recurring = "Recurring",
+}
+
+/** The different states of a worker. */
+export enum WorkerStatus {
+    Initialized = "Initialized",
+    Processing = "Processing",
+    Idling = "Idling",
+    Retrying = "Retrying",
+    Exception = "Exception",
+    Terminated = "Terminated",
+}
+
+/** A model containing information about the default worker. */
+export class QueueWorkerModel extends BaseWorkerModel implements IQueueWorkerModel {
+    /** Gets or sets the queue count. */
+    count?: number;
+
+    constructor(data?: IQueueWorkerModel) {
+        super(data);
+        this._discriminator = "QueueWorkerModel";
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.count = data["count"];
+        }
+    }
+
+    static fromJS(data: any): QueueWorkerModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new QueueWorkerModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["count"] = this.count;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A model containing information about the default worker. */
+export interface IQueueWorkerModel extends IBaseWorkerModel {
+    /** Gets or sets the queue count. */
+    count?: number;
+}
+
+/** A model containing information about the recurring worker. */
+export class RecurringWorkerModel extends BaseWorkerModel implements IRecurringWorkerModel {
+    /** Gets or sets the next activity date. */
+    nextActivityDate?: Date;
+
+    constructor(data?: IRecurringWorkerModel) {
+        super(data);
+        this._discriminator = "RecurringWorkerModel";
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.nextActivityDate = data["nextActivityDate"] ? new Date(data["nextActivityDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RecurringWorkerModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new RecurringWorkerModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["nextActivityDate"] = this.nextActivityDate ? this.nextActivityDate.toISOString() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A model containing information about the recurring worker. */
+export interface IRecurringWorkerModel extends IBaseWorkerModel {
+    /** Gets or sets the next activity date. */
+    nextActivityDate?: Date;
 }
 
 export interface FileParameter {
