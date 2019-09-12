@@ -5,6 +5,7 @@ import { ClickOnceDirective } from '../../directives';
 import { ClipboardUtil, GuidUtil } from '../../utils';
 import { GuidBadgeComponent } from './guid-badge/guid-badge.component';
 import { PaginationComponent } from './paginator/paginator.component';
+import { TrimTextComponent } from './trim/trim.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { PaginationComponent } from './paginator/paginator.component';
   declarations: [
     ClickOnceDirective,
     GuidBadgeComponent,
-    PaginationComponent
+    PaginationComponent,
+    TrimTextComponent
   ],
   providers: [
     ClipboardUtil,
@@ -23,7 +25,8 @@ import { PaginationComponent } from './paginator/paginator.component';
   exports: [
     ClickOnceDirective,
     GuidBadgeComponent,
-    PaginationComponent
+    PaginationComponent,
+    TrimTextComponent
   ]
 })
 export class SharedCommonModule { }

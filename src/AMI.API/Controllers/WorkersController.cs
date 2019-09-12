@@ -13,7 +13,7 @@ namespace AMI.API.Controllers
     /// Application log management
     /// </summary>
     [ApiController]
-    // [RequiresRole(RoleType.Administrator)]
+    [RequiresRole(RoleType.Administrator)]
     [Route("workers")]
     public class WorkersController : BaseController
     {

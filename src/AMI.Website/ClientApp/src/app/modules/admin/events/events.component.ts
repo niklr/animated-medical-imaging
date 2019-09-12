@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { AuditEventModel, Target } from '../../../clients/ami-api-client';
+import { AuditEventModel } from '../../../clients/ami-api-client';
 import { PageEvent } from '../../../events/page.event';
 import { NotificationService } from '../../../services/notification.service';
 import { AdminProxy } from '../../../proxies/admin.proxy';

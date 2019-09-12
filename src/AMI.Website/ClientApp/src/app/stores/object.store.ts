@@ -10,7 +10,6 @@ export class ObjectStore {
 
   private items: ObjectModelExtended[] = [];
 
-  public count = 0;
   public settings: ProcessObjectCommand = new ProcessObjectCommand();
   public pageEvent: PageEvent = new PageEvent();
 
@@ -52,18 +51,17 @@ export class ObjectStore {
     }
   }
 
-  private updateCount(): void {
-    this.count = this.items.length;
-  }
-
   private addItem(item: ObjectModelExtended): void {
     const index = this.items.findIndex((current) => {
       return current.id === item.id;
     });
     if (index < 0) {
       this.items.unshift(item);
-      this.updateCount();
     }
+  }
+
+  public get count(): number {
+    return this.items.length;
   }
 
   public getItems(): ObjectModelExtended[] {
@@ -72,18 +70,15 @@ export class ObjectStore {
 
   public setItems(items: ObjectModelExtended[]): void {
     this.items = items;
-    this.updateCount();
   }
 
   public deleteById(id: string): void {
     this.items = this.items.filter((item) => {
       return item.id !== id;
     });
-    this.updateCount();
   }
 
   public clear(): void {
     this.items.length = 0;
-    this.updateCount();
   }
 }

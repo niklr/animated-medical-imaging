@@ -7,7 +7,8 @@ import {
   AuditEventsAmiApiClient,
   ObjectsAmiApiClient,
   TasksAmiApiClient,
-  TokensAmiApiClient
+  TokensAmiApiClient,
+  WorkersAmiApiClient
 } from './ami-api-client';
 
 @NgModule({
@@ -25,7 +26,8 @@ import {
     AuditEventsAmiApiClient,
     ObjectsAmiApiClient,
     TasksAmiApiClient,
-    TokensAmiApiClient
+    TokensAmiApiClient,
+    WorkersAmiApiClient
   ]
 })
 export class AmiApiClientModule { }
