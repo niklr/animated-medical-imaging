@@ -26,11 +26,12 @@ namespace AMI.NetCore.Tests.Core.Workers
             var pause = new ManualResetEvent(false);
             var loggerFactory = GetService<ILoggerFactory>();
             var workerService = GetService<IWorkerService>();
+            var gateway = GetService<IGatewayService>();
             var configuration = GetService<IAppConfiguration>();
             var mediator = GetService<IMediator>();
             var queue = GetService<ITaskQueue>();
             var context = GetService<IAmiUnitOfWork>();
-            var worker = new QueueWorker(loggerFactory, workerService, configuration, queue, ServiceProvider);
+            var worker = new QueueWorker(loggerFactory, workerService, gateway, configuration, queue, ServiceProvider);
             var cts = new CancellationTokenSource();
             string filename = "SMIR.Brain_3more.XX.XX.OT.6560.mha";
             string dataPath = GetDataPath(filename);

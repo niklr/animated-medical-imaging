@@ -25,10 +25,16 @@ namespace AMI.Core.Workers
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="workerService">The worker service.</param>
+        /// <param name="gateway">The gateway service.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The API configuration.</param>
-        public CleanupRecurringWorker(ILoggerFactory loggerFactory, IWorkerService workerService, IMediator mediator, IApiConfiguration configuration)
-            : base(loggerFactory, workerService)
+        public CleanupRecurringWorker(
+            ILoggerFactory loggerFactory,
+            IWorkerService workerService,
+            IGatewayService gateway,
+            IMediator mediator,
+            IApiConfiguration configuration)
+            : base(loggerFactory, workerService, gateway)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

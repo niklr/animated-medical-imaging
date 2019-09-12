@@ -32,5 +32,20 @@ export enum GatewayEvent {
   /// <summary>
   /// The event representing a deleted object.
   /// </summary>
-  DeleteObject = 'DeleteObject'
+  DeleteObject = 'DeleteObject',
+
+  /// <summary>
+  /// The event representing a created worker.
+  /// </summary>
+  CreateWorker = 'CreateWorker',
+
+  /// <summary>
+  /// The event representing an updated worker.
+  /// </summary>
+  UpdateWorker = 'UpdateWorker',
+
+  /// <summary>
+  /// The event representing a deleted worker.
+  /// </summary>
+  DeleteWorker = 'DeleteWorker'
 }

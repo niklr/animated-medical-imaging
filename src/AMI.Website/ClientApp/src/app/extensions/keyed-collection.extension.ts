@@ -2,6 +2,7 @@
 
 export interface IKeyedCollection<T> {
     add(key: string, value: T): void;
+    update(key: string, value: T): void;
     containsKey(key: string): boolean;
     count(): number;
     item(key: string): T;
@@ -32,7 +33,15 @@ export class KeyedCollection<T> implements IKeyedCollection<T> {
         }
 
         this._items[key] = value;
-        this.update();
+        this.updateInternal();
+    }
+
+    public update(key: string, value: T): void {
+        if (this.containsKey(key)) {
+            Object.assign(this._items[key], value);
+        } else {
+            this.add(key, value);
+        }   
     }
 
     public remove(key: string): T {
@@ -40,7 +49,7 @@ export class KeyedCollection<T> implements IKeyedCollection<T> {
             const val = this._items[key];
             delete this._items[key];
             this._count--;
-            this.update();
+            this.updateInternal();
             return val;
         } else {
             return undefined;
@@ -65,7 +74,7 @@ export class KeyedCollection<T> implements IKeyedCollection<T> {
         this._values = this._values.sort(compareFn);
     }
 
-    private update(): void {
+    private updateInternal(): void {
         this._keys = [];
         this._values = [];
 

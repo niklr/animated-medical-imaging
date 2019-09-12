@@ -25,15 +25,17 @@ namespace AMI.Infrastructure.Services
         /// <param name="queue">The queue.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="workerService">The worker service.</param>
+        /// <param name="gateway">The gateway service.</param>
         public ProcessTaskHostedService(
             ILoggerFactory loggerFactory,
             IAppConfiguration configuration,
             ITaskQueue queue,
             IServiceProvider serviceProvider,
-            IWorkerService workerService)
+            IWorkerService workerService,
+            IGatewayService gateway)
         {
             logger = loggerFactory?.CreateLogger<ProcessTaskHostedService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-            worker = new QueueWorker(loggerFactory, workerService, configuration, queue, serviceProvider);
+            worker = new QueueWorker(loggerFactory, workerService, gateway, configuration, queue, serviceProvider);
         }
 
         /// <inheritdoc/>

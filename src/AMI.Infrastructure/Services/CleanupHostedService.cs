@@ -23,10 +23,16 @@ namespace AMI.Infrastructure.Services
         /// <param name="mediator">The mediator.</param>
         /// <param name="configuration">The API configuration.</param>
         /// <param name="workerService">The worker service.</param>
-        public CleanupHostedService(ILoggerFactory loggerFactory, IMediator mediator, IApiConfiguration configuration, IWorkerService workerService)
+        /// <param name="gateway">The gateway service.</param>
+        public CleanupHostedService(
+            ILoggerFactory loggerFactory,
+            IMediator mediator,
+            IApiConfiguration configuration,
+            IWorkerService workerService,
+            IGatewayService gateway)
         {
             logger = loggerFactory?.CreateLogger<CleanupHostedService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
-            worker = new CleanupRecurringWorker(loggerFactory, workerService, mediator, configuration);
+            worker = new CleanupRecurringWorker(loggerFactory, workerService, gateway, mediator, configuration);
         }
 
         /// <inheritdoc/>

@@ -16,8 +16,9 @@ namespace AMI.Core.Workers
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="workerService">The worker service.</param>
-        public RecurringWorker(ILoggerFactory loggerFactory, IWorkerService workerService)
-            : base(loggerFactory, workerService)
+        /// <param name="gateway">The gateway service.</param>
+        public RecurringWorker(ILoggerFactory loggerFactory, IWorkerService workerService, IGatewayService gateway)
+            : base(loggerFactory, workerService, gateway)
         {
         }
 

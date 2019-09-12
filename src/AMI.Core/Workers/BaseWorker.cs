@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Models;
 using AMI.Core.Services;
 using AMI.Domain.Enums;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,8 @@ namespace AMI.Core.Workers
     /// </summary>
     public abstract class BaseWorker : IBaseWorker
     {
+        private readonly IGatewayService gateway;
+
         private Stopwatch stopwatch;
         private CancellationTokenSource cts;
 
@@ -22,7 +25,8 @@ namespace AMI.Core.Workers
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="workerService">The worker service.</param>
-        public BaseWorker(ILoggerFactory loggerFactory, IWorkerService workerService)
+        /// <param name="gateway">The gateway service.</param>
+        public BaseWorker(ILoggerFactory loggerFactory, IWorkerService workerService, IGatewayService gateway)
         {
             Ensure.ArgumentNotNull(workerService, nameof(workerService));
 
@@ -30,6 +34,8 @@ namespace AMI.Core.Workers
             Id = Guid.NewGuid();
 
             workerService.Add(this);
+
+            this.gateway = gateway ?? throw new ArgumentNullException(nameof(gateway));
         }
 
         /// <inheritdoc/>
@@ -150,6 +156,17 @@ namespace AMI.Core.Workers
         {
             LastActivityDate = DateTime.Now;
             WorkerStatus = status;
+
+            Task.Run(
+                async () =>
+                {
+                    await gateway.NotifyGroupsAsync(
+                            string.Empty,
+                            GatewayOpCode.Dispatch,
+                            GatewayEvent.UpdateWorker,
+                            BaseWorkerModel.Create(this),
+                            cts.Token);
+                }, cts.Token);
         }
     }
 }

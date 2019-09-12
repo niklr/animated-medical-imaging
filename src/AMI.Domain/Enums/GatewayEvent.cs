@@ -16,7 +16,7 @@
         CreateTask = 1,
 
         /// <summary>
-        /// The event representing an updated a task.
+        /// The event representing an updated task.
         /// </summary>
         UpdateTask = 2,
 
@@ -43,6 +43,21 @@
         /// <summary>
         /// The event representing a created audit event.
         /// </summary>
-        CreateAuditEvent = 7
+        CreateAuditEvent = 7,
+
+        /// <summary>
+        /// The event representing a created worker.
+        /// </summary>
+        CreateWorker = 8,
+
+        /// <summary>
+        /// The event representing an updated worker.
+        /// </summary>
+        UpdateWorker = 9,
+
+        /// <summary>
+        /// The event representing a deleted worker.
+        /// </summary>
+        DeleteWorkrer = 10
     }
 }

@@ -30,11 +30,18 @@ namespace AMI.Core.Workers
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="workerService">The worker service.</param>
+        /// <param name="gateway">The gateway service.</param>
         /// <param name="configuration">The application configuration.</param>
         /// <param name="queue">The queue.</param>
         /// <param name="serviceProvider">The service provider.</param>
-        public QueueWorker(ILoggerFactory loggerFactory, IWorkerService workerService, IAppConfiguration configuration, ITaskQueue queue, IServiceProvider serviceProvider)
-            : base(loggerFactory, workerService)
+        public QueueWorker(
+            ILoggerFactory loggerFactory,
+            IWorkerService workerService,
+            IGatewayService gateway,
+            IAppConfiguration configuration,
+            ITaskQueue queue,
+            IServiceProvider serviceProvider)
+            : base(loggerFactory, workerService, gateway)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.queue = queue ?? throw new ArgumentNullException(nameof(queue));

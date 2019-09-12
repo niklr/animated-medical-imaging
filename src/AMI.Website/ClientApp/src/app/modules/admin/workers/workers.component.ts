@@ -1,7 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { QueueWorkerModel, RecurringWorkerModel, WorkerType } from '../../../clients/ami-api-client';
+import { QueueWorkerModel, RecurringWorkerModel, WorkerType, TaskModel, BaseWorkerModel } from '../../../clients/ami-api-client';
+import { GatewayEvent } from '../../../enums';
 import { PageEvent } from '../../../events/page.event';
 import { IKeyedCollection, KeyedCollection } from '../../../extensions';
+import { GatewayHub } from '../../../hubs/gateway.hub';
 import { NotificationService } from '../../../services/notification.service';
 import { AdminProxy } from '../../../proxies/admin.proxy';
 import { MomentUtil } from '../../../utils';
@@ -12,13 +14,15 @@ import { MomentUtil } from '../../../utils';
 })
 export class AdminWorkersComponent implements OnInit, AfterViewInit {
 
+    static isInitialized = false;
+
     queueWorkers: IKeyedCollection<QueueWorkerModel> = new KeyedCollection<QueueWorkerModel>();
     recurringWorkers: IKeyedCollection<RecurringWorkerModel> = new KeyedCollection<RecurringWorkerModel>();
 
     // MatPaginator Output
     pageEvent: PageEvent;
 
-    constructor(private notificationService: NotificationService, private momentUtil: MomentUtil, private adminProxy: AdminProxy) {
+    constructor(private notificationService: NotificationService, private momentUtil: MomentUtil, private gateway: GatewayHub, private adminProxy: AdminProxy) {
         this.pageEvent = new PageEvent();
         this.pageEvent.pageSize = 50;
     }
@@ -29,11 +33,32 @@ export class AdminWorkersComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         setTimeout(() => {
             this.init();
+            this.initGateway();
         });
     }
 
     private init(): void {
         this.setPage(this.pageEvent);
+    }
+
+    private initGateway(): void {
+        if (!AdminWorkersComponent.isInitialized) {
+            AdminWorkersComponent.isInitialized = true;
+            this.gateway.on(GatewayEvent[GatewayEvent.UpdateWorker], (data: BaseWorkerModel) => {
+                if (data) {
+                    switch (data.workerType) {
+                        case WorkerType.Queue:
+                            this.queueWorkers.update(data.id, data);
+                            break;
+                        case WorkerType.Recurring:
+                            this.recurringWorkers.update(data.id, data);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
     }
 
     public setPage(event: PageEvent): void {
@@ -76,5 +101,4 @@ export class AdminWorkersComponent implements OnInit, AfterViewInit {
     public getLocalTime(date: any): string {
         return this.momentUtil.getLocalTime(date);
     }
-
 }
