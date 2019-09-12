@@ -84,6 +84,8 @@ namespace AMI.Core.Workers
             {
                 ct.ThrowIfCancellationRequested();
 
+                StartWatch();
+
                 var command = new ClearObjectsCommand()
                 {
                     RefDate = refDate
@@ -99,6 +101,8 @@ namespace AMI.Core.Workers
             {
                 Logger.LogWarning(e, $"Cleanup {WorkerName} failed. {e.Message}");
             }
+
+            StopWatch();
         }
     }
 }
