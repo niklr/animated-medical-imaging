@@ -3,7 +3,7 @@ using AMI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AMI.Persistence.InMemory.Configurations
+namespace AMI.Persistence.EntityFramework.Shared.Configurations
 {
     /// <summary>
     /// A configuration for the <see cref="AuditEventEntity"/>.

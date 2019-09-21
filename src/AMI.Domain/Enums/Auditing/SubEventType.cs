@@ -53,6 +53,24 @@ namespace AMI.Domain.Enums.Auditing
         /// The sub event representing an operation to delete a task.
         /// </summary>
         [EventType(BaseEventType = BaseEventType.Delete)]
-        DeleteTask
+        DeleteTask,
+
+        /// <summary>
+        /// The sub event representing an operation to delete a webhook endpoint.
+        /// </summary>
+        [EventType(BaseEventType = BaseEventType.Create)]
+        CreateWebhook,
+
+        /// <summary>
+        /// The sub event representing an operation to update a webhook endpoint.
+        /// </summary>
+        [EventType(BaseEventType = BaseEventType.Update)]
+        UpdateWebhook,
+
+        /// <summary>
+        /// The sub event representing an operation to delete a webhook endpoint.
+        /// </summary>
+        [EventType(BaseEventType = BaseEventType.Delete)]
+        DeleteWebhook
     }
 }

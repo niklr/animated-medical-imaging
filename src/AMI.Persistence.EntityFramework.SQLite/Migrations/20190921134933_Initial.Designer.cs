@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190820121816_Initial")]
+    [Migration("20190921134933_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,6 +244,42 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("AMI.Domain.Entities.WebhookEntity", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<string>("ApiVersion")
+                        .IsRequired()
+                        .HasMaxLength(128);
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("EnabledEvents")
+                        .IsRequired()
+                        .HasMaxLength(4096);
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<string>("Secret")
+                        .IsRequired()
+                        .HasMaxLength(4096);
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(2048);
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Webhooks");
                 });
 
             modelBuilder.Entity("AMI.Domain.Entities.TaskEntity", b =>

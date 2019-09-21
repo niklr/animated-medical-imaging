@@ -8,16 +8,16 @@ namespace AMI.Persistence.EntityFramework.Shared.Configurations
     /// <summary>
     /// A configuration for the <see cref="ObjectEntity"/>.
     /// </summary>
-    public class ObjectConfiguration : IEntityTypeConfiguration<ObjectEntity>
+    public class WebhookConfiguration : IEntityTypeConfiguration<WebhookEntity>
     {
         /// <inheritdoc/>
-        public void Configure(EntityTypeBuilder<ObjectEntity> builder)
+        public void Configure(EntityTypeBuilder<WebhookEntity> builder)
         {
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id)
                 .ValueGeneratedNever();
 
-            builder.ToTable("Objects");
+            builder.ToTable("Webhooks");
 
             builder.Property(e => e.CreatedDate)
                 .IsRequired()
@@ -27,10 +27,20 @@ namespace AMI.Persistence.EntityFramework.Shared.Configurations
                 .IsRequired()
                 .HasConversion(e => e, e => DateTime.SpecifyKind(e, DateTimeKind.Utc));
 
-            builder.Property(e => e.OriginalFilename)
+            builder.Property(e => e.Url)
+                .HasMaxLength(2048)
                 .IsRequired();
 
-            builder.Property(e => e.SourcePath)
+            builder.Property(e => e.ApiVersion)
+                .HasMaxLength(128)
+                .IsRequired();
+
+            builder.Property(e => e.Secret)
+                .HasMaxLength(4096)
+                .IsRequired();
+
+            builder.Property(e => e.EnabledEvents)
+                .HasMaxLength(4096)
                 .IsRequired();
 
             builder.Property(e => e.UserId)

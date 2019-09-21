@@ -100,6 +100,24 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Webhooks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: false),
+                    Url = table.Column<string>(maxLength: 2048, nullable: false),
+                    ApiVersion = table.Column<string>(maxLength: 128, nullable: false),
+                    Secret = table.Column<string>(maxLength: 4096, nullable: false),
+                    EnabledEvents = table.Column<string>(maxLength: 4096, nullable: false),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Webhooks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tasks",
                 columns: table => new
                 {
@@ -241,6 +259,16 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 table: "Users",
                 column: "Username",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Webhooks_CreatedDate",
+                table: "Webhooks",
+                column: "CreatedDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Webhooks_UserId",
+                table: "Webhooks",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -256,6 +284,9 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tokens");
+
+            migrationBuilder.DropTable(
+                name: "Webhooks");
 
             migrationBuilder.DropTable(
                 name: "Objects");

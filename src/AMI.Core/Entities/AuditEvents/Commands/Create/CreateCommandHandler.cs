@@ -49,8 +49,8 @@ namespace AMI.Core.Entities.AuditEvents.Commands.Create
         /// <inheritdoc/>
         protected override async Task<AuditEventModel> ProtectedHandleAsync(CreateAuditEventCommand request, CancellationToken cancellationToken)
         {
-            EventType parsedEventType = Enum.TryParse(request.Event.Action.Event.Name, out EventType eventType)
-                 ? eventType : EventType.INVOKE_SERVICE;
+            XDASv2Net.Model.EventType parsedEventType = Enum.TryParse(request.Event.Action.Event.Name, out XDASv2Net.Model.EventType eventType)
+                 ? eventType : XDASv2Net.Model.EventType.INVOKE_SERVICE;
             SubEventType parsedSubEventType = Enum.TryParse(request.Event.Action.SubEvent.Name, out SubEventType subEventType)
                  ? subEventType : SubEventType.None;
 

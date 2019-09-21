@@ -163,21 +163,21 @@ namespace AMI.Infrastructure.Services
             switch (baseEventType)
             {
                 case BaseEventType.Create:
-                    action.Event.Id = EventType.CREATE_DATA_ITEM.GetAttribute<EventInformationAttribute>().EventIdentifier;
-                    action.Event.Name = EventType.CREATE_DATA_ITEM.ToString();
+                    action.Event.Id = XDASv2Net.Model.EventType.CREATE_DATA_ITEM.GetAttribute<EventInformationAttribute>().EventIdentifier;
+                    action.Event.Name = XDASv2Net.Model.EventType.CREATE_DATA_ITEM.ToString();
                     break;
                 case BaseEventType.Update:
-                    action.Event.Id = EventType.MODIFY_DATA_ITEM_ATTRIBUTE.GetAttribute<EventInformationAttribute>().EventIdentifier;
-                    action.Event.Name = EventType.MODIFY_DATA_ITEM_ATTRIBUTE.ToString();
+                    action.Event.Id = XDASv2Net.Model.EventType.MODIFY_DATA_ITEM_ATTRIBUTE.GetAttribute<EventInformationAttribute>().EventIdentifier;
+                    action.Event.Name = XDASv2Net.Model.EventType.MODIFY_DATA_ITEM_ATTRIBUTE.ToString();
                     break;
                 case BaseEventType.Delete:
-                    action.Event.Id = EventType.DELETE_DATA_ITEM.GetAttribute<EventInformationAttribute>().EventIdentifier;
-                    action.Event.Name = EventType.DELETE_DATA_ITEM.ToString();
+                    action.Event.Id = XDASv2Net.Model.EventType.DELETE_DATA_ITEM.GetAttribute<EventInformationAttribute>().EventIdentifier;
+                    action.Event.Name = XDASv2Net.Model.EventType.DELETE_DATA_ITEM.ToString();
                     break;
                 case BaseEventType.Read:
                 default:
-                    action.Event.Id = EventType.QUERY_DATA_ITEM_ATTRIBUTE.GetAttribute<EventInformationAttribute>().EventIdentifier;
-                    action.Event.Name = EventType.QUERY_DATA_ITEM_ATTRIBUTE.ToString();
+                    action.Event.Id = XDASv2Net.Model.EventType.QUERY_DATA_ITEM_ATTRIBUTE.GetAttribute<EventInformationAttribute>().EventIdentifier;
+                    action.Event.Name = XDASv2Net.Model.EventType.QUERY_DATA_ITEM_ATTRIBUTE.ToString();
                     break;
             }
 

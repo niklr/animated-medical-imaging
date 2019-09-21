@@ -3260,6 +3260,9 @@ export enum SubEventType {
     CreateTask = "CreateTask",
     UpdateTask = "UpdateTask",
     DeleteTask = "DeleteTask",
+    CreateWebhook = "CreateWebhook",
+    UpdateWebhook = "UpdateWebhook",
+    DeleteWebhook = "DeleteWebhook",
 }
 
 export class XDASv2Event implements IXDASv2Event {
