@@ -85,7 +85,7 @@ namespace AMI.Core.Entities.Shared.Commands
                 if (SubEventType != SubEventType.None)
                 {
                     var principal = PrincipalProvider.GetPrincipal();
-                    var auditData = new AuditEventDataModel()
+                    var auditData = new AuditDataModel()
                     {
                         Entity = response,
                         Command = request

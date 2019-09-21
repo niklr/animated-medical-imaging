@@ -3,7 +3,7 @@
     /// <summary>
     /// A model representing data of an audit event.
     /// </summary>
-    public class AuditEventDataModel
+    public class AuditDataModel
     {
         /// <summary>
         /// Gets or sets the audit event entity.
