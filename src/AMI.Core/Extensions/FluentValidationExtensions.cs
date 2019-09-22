@@ -113,5 +113,21 @@ namespace AMI.Core.Extensions.FluentValidationExtensions
                     return Guid.TryParse(x, out Guid result);
                 });
         }
+
+        /// <summary>
+        /// Applies the URL validation.
+        /// </summary>
+        /// <typeparam name="T">The type of the object being validated.</typeparam>
+        /// <param name="rule">The rule builder.</param>
+        /// <returns>The rule builder options.</returns>
+        public static IRuleBuilderOptions<T, string> UrlValidation<T>(this IRuleBuilder<T, string> rule)
+        {
+            return rule
+                .Must(x =>
+                {
+                    return Uri.TryCreate(x, UriKind.Absolute, out Uri uri)
+                            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+                });
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AMI.Core.Entities.Models;
+using FluentValidation;
 
 namespace AMI.Core.Entities.Webhooks.Commands.Create
 {
@@ -12,6 +13,7 @@ namespace AMI.Core.Entities.Webhooks.Commands.Create
         /// </summary>
         public CreateCommandValidator()
         {
+            Include(new BaseCommandValidator<WebhookModel>());
         }
     }
 }

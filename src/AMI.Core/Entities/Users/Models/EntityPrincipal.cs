@@ -33,7 +33,7 @@ namespace AMI.Core.Entities.Users.Models
 
             roles = string.IsNullOrWhiteSpace(entity.Roles) ?
                     new HashSet<string>() :
-                    new HashSet<string>(entity.Roles.Replace(constants.RoleNameSeparator, string.Empty).Split(','));
+                    new HashSet<string>(entity.Roles.Replace(constants.ValueSeparator, string.Empty).Split(','));
         }
 
         /// <inheritdoc/>

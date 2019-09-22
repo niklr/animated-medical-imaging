@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using AMI.Core.Entities.Models;
+using AMI.Core.Extensions.FluentValidationExtensions;
+using FluentValidation;
 
 namespace AMI.Core.Entities.Webhooks.Commands.Update
 {
@@ -12,6 +14,8 @@ namespace AMI.Core.Entities.Webhooks.Commands.Update
         /// </summary>
         public UpdateCommandValidator()
         {
+            Include(new BaseCommandValidator<WebhookModel>());
+            RuleFor(x => x.Id).NotEmpty().GuidValidation();
         }
     }
 }

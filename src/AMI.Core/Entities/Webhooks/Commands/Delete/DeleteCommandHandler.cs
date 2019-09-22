@@ -11,7 +11,7 @@ namespace AMI.Core.Entities.Webhooks.Commands.Delete
     /// <summary>
     /// A handler for delete command requests.
     /// </summary>
-    public class DeleteCommandHandler : BaseCommandRequestHandler<DeleteWebhookCommand, WebhookModel>
+    public class DeleteCommandHandler : BaseCommandRequestHandler<DeleteWebhookCommand, bool>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleteCommandHandler"/> class.
@@ -32,7 +32,7 @@ namespace AMI.Core.Entities.Webhooks.Commands.Delete
         }
 
         /// <inheritdoc/>
-        protected override async Task<WebhookModel> ProtectedHandleAsync(DeleteWebhookCommand request, CancellationToken cancellationToken)
+        protected override async Task<bool> ProtectedHandleAsync(DeleteWebhookCommand request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

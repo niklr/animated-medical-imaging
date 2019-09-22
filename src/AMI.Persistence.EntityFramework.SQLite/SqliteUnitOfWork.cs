@@ -79,6 +79,15 @@ namespace AMI.Persistence.EntityFramework.SQLite
         }
 
         /// <inheritdoc/>
+        public IRepository<WebhookEntity> WebhookRepository
+        {
+            get
+            {
+                return new DbSetRepository<WebhookEntity>(context.Webhooks);
+            }
+        }
+
+        /// <inheritdoc/>
         public void Migrate()
         {
             context.Database.Migrate();

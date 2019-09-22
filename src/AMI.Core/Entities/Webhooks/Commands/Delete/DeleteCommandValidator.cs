@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AMI.Core.Extensions.FluentValidationExtensions;
+using FluentValidation;
 
 namespace AMI.Core.Entities.Webhooks.Commands.Delete
 {
@@ -12,6 +13,7 @@ namespace AMI.Core.Entities.Webhooks.Commands.Delete
         /// </summary>
         public DeleteCommandValidator()
         {
+            RuleFor(x => x.Id).NotEmpty().GuidValidation();
         }
     }
 }

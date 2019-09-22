@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Constants;
+using AMI.Core.Extensions.StringExtensions;
 using AMI.Core.IO.Generators;
 using AMI.Core.Repositories;
 using AMI.Domain.Entities;
@@ -167,7 +168,7 @@ namespace AMI.Infrastructure.Stores
             Ensure.ArgumentNotNull(user, nameof(user));
 
             IList<string> roles = string.IsNullOrWhiteSpace(user.Roles) ?
-                    Array.Empty<string>() : user.Roles.Replace(constants.RoleNameSeparator, string.Empty).Split(',');
+                    Array.Empty<string>() : user.Roles.Replace(constants.ValueSeparator, string.Empty).Split(',');
 
             return Task.FromResult(roles);
         }
@@ -301,7 +302,7 @@ namespace AMI.Infrastructure.Stores
 
         private string GenerateInternalRoleName(RoleType roleType)
         {
-            return $"{constants.RoleNameSeparator}{roleType.ToString()}{constants.RoleNameSeparator}";
+            return roleType.ToString().Embed(constants.ValueSeparator);
         }
 
         private HashSet<string> GetRoles(TUser user)

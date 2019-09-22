@@ -27,7 +27,10 @@
         public int MinUploadChunkSize => 1;
 
         /// <inheritdoc/>
-        public string RoleNameSeparator => "#";
+        public string ValueSeparator => "#";
+
+        /// <inheritdoc/>
+        public string WildcardCharacter => "*";
 
         /// <inheritdoc/>
         public string SqliteDatabaseName => "AmiSqliteDatabase.db";

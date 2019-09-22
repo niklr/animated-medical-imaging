@@ -6,7 +6,7 @@ namespace AMI.Core.Extensions.StringExtensions
     /// <summary>
     /// Extensions related to strings.
     /// </summary>
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// Converts the value of the specified object to its equivalent string representation
@@ -19,6 +19,17 @@ namespace AMI.Core.Extensions.StringExtensions
         public static string ToStringInvariant<T>(this T value)
         {
             return Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Embeds the value between the specified separator.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="separator">The separator.</param>
+        /// <returns>The value embedded between the specified separator.</returns>
+        public static string Embed(this string value, string separator)
+        {
+            return string.IsNullOrWhiteSpace(separator) ? value : $"{separator}{value}{separator}";
         }
     }
 }

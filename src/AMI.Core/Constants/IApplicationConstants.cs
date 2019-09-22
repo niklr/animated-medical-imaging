@@ -41,9 +41,14 @@
         int MinUploadChunkSize { get; }
 
         /// <summary>
-        /// Gets the character used to separate the role names.
+        /// Gets the character used to separate string values.
         /// </summary>
-        string RoleNameSeparator { get; }
+        string ValueSeparator { get; }
+
+        /// <summary>
+        /// Gets the character representing a wildcard.
+        /// </summary>
+        string WildcardCharacter { get; }
 
         /// <summary>
         /// Gets the name of the SQLite database.

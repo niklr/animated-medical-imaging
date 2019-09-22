@@ -39,6 +39,11 @@ namespace AMI.Core.Repositories
         IRepository<UserEntity> UserRepository { get; }
 
         /// <summary>
+        /// Gets the webhook repository.
+        /// </summary>
+        IRepository<WebhookEntity> WebhookRepository { get; }
+
+        /// <summary>
         /// Applies any pending migrations for the context to the database.
         /// Will create the database if it does not already exist.
         /// </summary>

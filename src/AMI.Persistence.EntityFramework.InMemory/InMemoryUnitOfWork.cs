@@ -78,6 +78,15 @@ namespace AMI.Persistence.EntityFramework.InMemory
         }
 
         /// <inheritdoc/>
+        public IRepository<WebhookEntity> WebhookRepository
+        {
+            get
+            {
+                return new DbSetRepository<WebhookEntity>(context.Webhooks);
+            }
+        }
+
+        /// <inheritdoc/>
         public void Migrate()
         {
         }

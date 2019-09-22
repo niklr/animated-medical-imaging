@@ -46,5 +46,10 @@ namespace AMI.Persistence.EntityFramework.Shared
         /// Gets or sets the user entities.
         /// </summary>
         public DbSet<UserEntity> Users { get; set; }
+
+        /// <summary>
+        /// Gets or sets the webhook entities.
+        /// </summary>
+        public DbSet<WebhookEntity> Webhooks { get; set; }
     }
 }

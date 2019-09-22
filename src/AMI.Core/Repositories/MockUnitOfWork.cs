@@ -68,6 +68,15 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public IRepository<WebhookEntity> WebhookRepository
+        {
+            get
+            {
+                return new ListRepository<WebhookEntity>(new List<WebhookEntity>());
+            }
+        }
+
+        /// <inheritdoc/>
         public bool IsInTransaction => false;
 
         /// <inheritdoc/>

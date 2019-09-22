@@ -21,7 +21,7 @@ namespace AMI.API.Controllers
         /// <param name="id">The identifier of the task.</param>
         /// <remarks>
         /// With this GET request you can obtain information about the task with the specified identifier.
-        /// A task is an abstraction for job being processed in the background.
+        /// A task is an abstraction for a job being processed in the background.
         /// </remarks>
         /// <returns>A model containing the specified task.</returns>
         [HttpGet("{id}")]

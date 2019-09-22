@@ -56,7 +56,7 @@ namespace AMI.Core.Entities.Models
                 Email = entity.Email,
                 EmailConfirmed = entity.EmailConfirmed,
                 Roles = string.IsNullOrWhiteSpace(entity.Roles) ?
-                    Array.Empty<string>() : entity.Roles.Replace(constants.RoleNameSeparator, string.Empty).Split(',')
+                    Array.Empty<string>() : entity.Roles.Replace(constants.ValueSeparator, string.Empty).Split(',')
             };
 
             return model;
