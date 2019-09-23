@@ -11,6 +11,7 @@ using AMI.Core.Extensions.StringExtensions;
 using AMI.Core.IO.Generators;
 using AMI.Core.Modules;
 using AMI.Domain.Entities;
+using AMI.Domain.Enums;
 using AMI.Domain.Enums.Auditing;
 using AMI.Domain.Exceptions;
 using RNS.Framework.Extensions.MutexExtensions;
@@ -66,15 +67,28 @@ namespace AMI.Core.Entities.Webhooks.Commands.Create
                 throw new ForbiddenException("Not authenticated");
             }
 
+            int webhookLimit;
+            if (principal.IsInRole(RoleType.Administrator))
+            {
+                webhookLimit = 0;
+            }
+            else
+            {
+                webhookLimit = apiConfiguration.Options.WebhookLimit;
+            }
+
             processMutex = new Mutex(false, this.GetMethodName());
 
             return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
-                var count = await Context.WebhookRepository.CountAsync(
-                    e => e.UserId == principal.Identity.Name, cancellationToken);
-                if (count >= apiConfiguration.Options.WebhookLimit)
+                if (webhookLimit > 0)
                 {
-                    throw new AmiException($"The webhook limit of {apiConfiguration.Options.WebhookLimit} has been reached.");
+                    var count = await Context.WebhookRepository.CountAsync(
+                        e => e.UserId == principal.Identity.Name, cancellationToken);
+                    if (count >= webhookLimit)
+                    {
+                        throw new AmiException($"The webhook limit of {webhookLimit} has been reached.");
+                    }
                 }
 
                 Guid guid = idGenerator.GenerateId();
