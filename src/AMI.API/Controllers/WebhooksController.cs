@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Webhooks.Commands.Create;
+using AMI.Core.Entities.Webhooks.Commands.Delete;
 using AMI.Core.Entities.Webhooks.Commands.Update;
 using AMI.Core.Entities.Webhooks.Queries.GetById;
 using AMI.Domain.Exceptions;
@@ -70,6 +71,23 @@ namespace AMI.API.Controllers
             }
 
             return Ok(await Mediator.Send(command, CancellationToken));
+        }
+
+        /// <summary>
+        /// Delete webhook by id
+        /// </summary>
+        /// <param name="id">The identifier of the webhook.</param>
+        /// <remarks>
+        /// With this DELETE request you can delete the webhook with the specified identifier.
+        /// </remarks>
+        /// <returns>No content.</returns>
+        [HttpDelete("{id}")]
+        [Authorize]
+        [ProducesResponseType(typeof(Models.WebhookModel), (int)HttpStatusCode.NoContent)]
+        public async Task<IActionResult> DeleteById(string id)
+        {
+            await Mediator.Send(new DeleteWebhookCommand { Id = id }, CancellationToken);
+            return NoContent();
         }
     }
 }

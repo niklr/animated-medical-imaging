@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.Modules;
 using AMI.Domain.Enums.Auditing;
+using AMI.Domain.Exceptions;
 
 namespace AMI.Core.Entities.Webhooks.Commands.Delete
 {
@@ -34,7 +34,24 @@ namespace AMI.Core.Entities.Webhooks.Commands.Delete
         /// <inheritdoc/>
         protected override async Task<bool> ProtectedHandleAsync(DeleteWebhookCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var entity = await Context.WebhookRepository
+                .GetFirstOrDefaultAsync(e => e.Id == Guid.Parse(request.Id), cancellationToken);
+
+            if (entity == null)
+            {
+                return true;
+            }
+
+            if (!AuthService.IsAuthorized(entity.UserId))
+            {
+                throw new ForbiddenException("Not authorized");
+            }
+
+            Context.WebhookRepository.Remove(entity);
+
+            await Context.SaveChangesAsync(cancellationToken);
+
+            return true;
         }
     }
 }
