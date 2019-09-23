@@ -36,6 +36,9 @@ namespace AMI.Core.Entities.Models
         public int RequestTimeoutMilliseconds { get; set; } = 5000;
 
         /// <inheritdoc/>
+        public int WebhookLimit { get; set; } = 2;
+
+        /// <inheritdoc/>
         public IAuthOptions AuthOptions { get; set; } = new AuthOptions();
 
         /// <inheritdoc/>

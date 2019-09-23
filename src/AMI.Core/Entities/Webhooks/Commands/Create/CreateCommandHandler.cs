@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Configurations;
 using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
@@ -26,6 +27,7 @@ namespace AMI.Core.Entities.Webhooks.Commands.Create
 
         private readonly IIdGenerator idGenerator;
         private readonly IApplicationConstants constants;
+        private readonly IApiConfiguration apiConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
@@ -33,11 +35,17 @@ namespace AMI.Core.Entities.Webhooks.Commands.Create
         /// <param name="module">The command handler module.</param>
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="constants">The application constants.</param>
-        public CreateCommandHandler(ICommandHandlerModule module, IIdGenerator idGenerator, IApplicationConstants constants)
+        /// <param name="apiConfiguration">The API configuration.</param>
+        public CreateCommandHandler(
+            ICommandHandlerModule module,
+            IIdGenerator idGenerator,
+            IApplicationConstants constants,
+            IApiConfiguration apiConfiguration)
             : base(module)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
+            this.apiConfiguration = apiConfiguration ?? throw new ArgumentNullException(nameof(apiConfiguration));
         }
 
         /// <inheritdoc/>
@@ -62,6 +70,13 @@ namespace AMI.Core.Entities.Webhooks.Commands.Create
 
             return await processMutex.Execute(new TimeSpan(0, 0, 2), async () =>
             {
+                var count = await Context.WebhookRepository.CountAsync(
+                    e => e.UserId == principal.Identity.Name, cancellationToken);
+                if (count >= apiConfiguration.Options.WebhookLimit)
+                {
+                    throw new AmiException($"The webhook limit of {apiConfiguration.Options.WebhookLimit} has been reached.");
+                }
+
                 Guid guid = idGenerator.GenerateId();
 
                 string enabledEvents = request.EnabledEvents.Contains(constants.WildcardCharacter) ?

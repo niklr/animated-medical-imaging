@@ -1,7 +1,9 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using AMI.Core.Entities.Webhooks.Commands.Create;
+using AMI.Core.Entities.Webhooks.Commands.Update;
 using AMI.Core.Entities.Webhooks.Queries.GetById;
+using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models = AMI.Core.Entities.Models;
@@ -46,6 +48,28 @@ namespace AMI.API.Controllers
         {
             var result = await Mediator.Send(command, CancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        }
+
+        /// <summary>
+        /// Update webhook
+        /// </summary>
+        /// <param name="id">The identifier of the webhook.</param>
+        /// <param name="command">The command to update an existing webhook.</param>
+        /// <remarks>
+        /// With this PUT request you can update a webhook.
+        /// </remarks>
+        /// <returns>A model containing the updated webhook.</returns>
+        [HttpPut("{id}")]
+        [Authorize]
+        [ProducesResponseType(typeof(Models.WebhookModel), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateWebhookCommand command)
+        {
+            if (!id.Equals(command.Id))
+            {
+                throw new AmiException("The specified identifiers do not match.");
+            }
+
+            return Ok(await Mediator.Send(command, CancellationToken));
         }
     }
 }

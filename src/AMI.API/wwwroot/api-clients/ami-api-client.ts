@@ -2198,6 +2198,13 @@ export interface IWebhooksAmiApiClient {
      */
     getById(id: string | null): Observable<WebhookModel>;
     /**
+     * Update webhook
+     * @param id The identifier of the webhook.
+     * @param command The command to update an existing webhook.
+     * @return A model containing the updated webhook.
+     */
+    update(id: string | null, command: UpdateWebhookCommand): Observable<WebhookModel>;
+    /**
      * Create webhook
      * @param command The command to create a new webhook.
      * @return A model containing the created webhook.
@@ -2251,6 +2258,116 @@ export class WebhooksAmiApiClient implements IWebhooksAmiApiClient {
     }
 
     protected processGetById(response: HttpResponseBase): Observable<WebhookModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = WebhookModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<WebhookModel>(<any>null);
+    }
+
+    /**
+     * Update webhook
+     * @param id The identifier of the webhook.
+     * @param command The command to update an existing webhook.
+     * @return A model containing the updated webhook.
+     */
+    update(id: string | null, command: UpdateWebhookCommand): Observable<WebhookModel> {
+        let url_ = this.baseUrl + "/webhooks/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<WebhookModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<WebhookModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<WebhookModel> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -2646,6 +2763,8 @@ Automatically deletes objects older than the defined period. */
     objectLimit?: number;
     /** Gets the amount of milliseconds before a request times out. Default is 5000. */
     requestTimeoutMilliseconds?: number;
+    /** Gets the webhook limit per user. Default is 2. */
+    webhookLimit?: number;
     /** Gets the options used for authentication and authorization. */
     authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
@@ -2673,6 +2792,7 @@ Automatically deletes objects older than the defined period. */
             this.objectLimitAnonymous = data["objectLimitAnonymous"];
             this.objectLimit = data["objectLimit"];
             this.requestTimeoutMilliseconds = data["requestTimeoutMilliseconds"];
+            this.webhookLimit = data["webhookLimit"];
             this.authOptions = data["authOptions"] ? IAuthOptions.fromJS(data["authOptions"]) : <any>undefined;
             this.ipRateLimiting = data["ipRateLimiting"] ? IIpRateLimitOptions.fromJS(data["ipRateLimiting"]) : <any>undefined;
             this.ipRateLimitPolicies = data["ipRateLimitPolicies"] ? IIpRateLimitPolicies.fromJS(data["ipRateLimitPolicies"]) : <any>undefined;
@@ -2697,6 +2817,7 @@ Automatically deletes objects older than the defined period. */
         data["objectLimitAnonymous"] = this.objectLimitAnonymous;
         data["objectLimit"] = this.objectLimit;
         data["requestTimeoutMilliseconds"] = this.requestTimeoutMilliseconds;
+        data["webhookLimit"] = this.webhookLimit;
         data["authOptions"] = this.authOptions ? this.authOptions.toJSON() : <any>undefined;
         data["ipRateLimiting"] = this.ipRateLimiting ? this.ipRateLimiting.toJSON() : <any>undefined;
         data["ipRateLimitPolicies"] = this.ipRateLimitPolicies ? this.ipRateLimitPolicies.toJSON() : <any>undefined;
@@ -2725,6 +2846,8 @@ Automatically deletes objects older than the defined period. */
     objectLimit?: number;
     /** Gets the amount of milliseconds before a request times out. Default is 5000. */
     requestTimeoutMilliseconds?: number;
+    /** Gets the webhook limit per user. Default is 2. */
+    webhookLimit?: number;
     /** Gets the options used for authentication and authorization. */
     authOptions?: IAuthOptions | undefined;
     /** Gets the options used to limit the rate based on the IP address of the client. */
@@ -5433,6 +5556,43 @@ export class CreateWebhookCommand extends BaseWebhookCommandOfWebhookModel imple
 
 /** A command containing information needed to create a webhook. */
 export interface ICreateWebhookCommand extends IBaseWebhookCommandOfWebhookModel {
+}
+
+/** A command containing information needed to update a webhook. */
+export class UpdateWebhookCommand extends BaseWebhookCommandOfWebhookModel implements IUpdateWebhookCommand {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
+
+    constructor(data?: IUpdateWebhookCommand) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): UpdateWebhookCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateWebhookCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+/** A command containing information needed to update a webhook. */
+export interface IUpdateWebhookCommand extends IBaseWebhookCommandOfWebhookModel {
+    /** Gets or sets the identifier. */
+    id?: string | undefined;
 }
 
 export class PaginationResultModelOfBaseWorkerModel implements IPaginationResultModelOfBaseWorkerModel {

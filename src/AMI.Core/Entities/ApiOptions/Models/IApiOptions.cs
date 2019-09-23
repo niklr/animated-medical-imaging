@@ -52,6 +52,11 @@
         int RequestTimeoutMilliseconds { get; }
 
         /// <summary>
+        /// Gets the webhook limit per user. Default is 2.
+        /// </summary>
+        int WebhookLimit { get; }
+
+        /// <summary>
         /// Gets the options used for authentication and authorization.
         /// </summary>
         IAuthOptions AuthOptions { get; }
