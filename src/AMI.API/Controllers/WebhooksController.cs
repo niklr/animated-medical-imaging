@@ -4,6 +4,7 @@ using AMI.Core.Entities.Webhooks.Commands.Create;
 using AMI.Core.Entities.Webhooks.Commands.Delete;
 using AMI.Core.Entities.Webhooks.Commands.Update;
 using AMI.Core.Entities.Webhooks.Queries.GetById;
+using AMI.Core.Entities.Webhooks.Queries.GetPaginated;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,24 @@ namespace AMI.API.Controllers
         public async Task<IActionResult> GetById(string id)
         {
             return Ok(await Mediator.Send(new GetByIdQuery { Id = id }, CancellationToken));
+        }
+
+        /// <summary>
+        /// Get paginated list of webhooks
+        /// </summary>
+        /// <param name="page">The current page.</param>
+        /// <param name="limit">The limit to constrain the number of items.</param>
+        /// <remarks>
+        /// With this GET request you can obtain a paginated list of webhooks.
+        /// The webhooks are sorted in descending order by creation date.
+        /// </remarks>
+        /// <returns>A model containing a list of paginated webhooks.</returns>
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType(typeof(Models.PaginationResultModel<Models.WebhookModel>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetPaginatedAsync(int page, int limit)
+        {
+            return Ok(await Mediator.Send(new GetPaginatedQuery { Page = page, Limit = limit }, CancellationToken));
         }
 
         /// <summary>

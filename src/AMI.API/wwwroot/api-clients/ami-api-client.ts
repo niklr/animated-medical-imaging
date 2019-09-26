@@ -2211,6 +2211,13 @@ export interface IWebhooksAmiApiClient {
      */
     deleteById(id: string | null): Observable<WebhookModel>;
     /**
+     * Get paginated list of webhooks
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated webhooks.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfWebhookModel>;
+    /**
      * Create webhook
      * @param command The command to create a new webhook.
      * @return A model containing the created webhook.
@@ -2547,6 +2554,117 @@ export class WebhooksAmiApiClient implements IWebhooksAmiApiClient {
             }));
         }
         return _observableOf<WebhookModel>(<any>null);
+    }
+
+    /**
+     * Get paginated list of webhooks
+     * @param page (optional) The current page.
+     * @param limit (optional) The limit to constrain the number of items.
+     * @return A model containing a list of paginated webhooks.
+     */
+    getPaginated(page: number | undefined, limit: number | undefined): Observable<PaginationResultModelOfWebhookModel> {
+        let url_ = this.baseUrl + "/webhooks?";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&"; 
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaginated(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaginated(<any>response_);
+                } catch (e) {
+                    return <Observable<PaginationResultModelOfWebhookModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PaginationResultModelOfWebhookModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetPaginated(response: HttpResponseBase): Observable<PaginationResultModelOfWebhookModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorModel.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorModel.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ErrorModel.fromJS(resultData403);
+            return throwException("A server error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ErrorModel.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorModel.fromJS(resultData409);
+            return throwException("A server error occurred.", status, _responseText, _headers, result409);
+            }));
+        } else if (status === 429) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result429: any = null;
+            let resultData429 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result429 = ErrorModel.fromJS(resultData429);
+            return throwException("A server error occurred.", status, _responseText, _headers, result429);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = ErrorModel.fromJS(resultData500);
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginationResultModelOfWebhookModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PaginationResultModelOfWebhookModel>(<any>null);
     }
 
     /**
@@ -5584,6 +5702,54 @@ Specify ['*'] to enable all events. */
     enabledEvents?: string[] | undefined;
     /** Gets or sets the user identifier. */
     userId?: string | undefined;
+}
+
+export class PaginationResultModelOfWebhookModel implements IPaginationResultModelOfWebhookModel {
+    items?: WebhookModel[] | undefined;
+    pagination?: PaginationModel | undefined;
+
+    constructor(data?: IPaginationResultModelOfWebhookModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["items"])) {
+                this.items = [] as any;
+                for (let item of data["items"])
+                    this.items!.push(WebhookModel.fromJS(item));
+            }
+            this.pagination = data["pagination"] ? PaginationModel.fromJS(data["pagination"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PaginationResultModelOfWebhookModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginationResultModelOfWebhookModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pagination"] = this.pagination ? this.pagination.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IPaginationResultModelOfWebhookModel {
+    items?: WebhookModel[] | undefined;
+    pagination?: PaginationModel | undefined;
 }
 
 export abstract class BaseWebhookCommandOfWebhookModel implements IBaseWebhookCommandOfWebhookModel {
