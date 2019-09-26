@@ -25,7 +25,9 @@
 
 <ng-template #showTopnavEntriesBlock>
   <li *ngIf="isAdmin">
-    <a [routerLink]="['/admin']">Admin</a>
+    <a [routerLink]="['/admin']">
+      Admin
+    </a>
   </li>
   <li>
     <a href="https://github.com/niklr/animated-medical-imaging" target="_blank" rel="noopener noreferrer">
@@ -41,7 +43,7 @@
 
 <ng-template #showAccountEntriesBlock>
   <li *ngIf="isAuthenticated" class="disabled">
-    <a>
+    <a [routerLink]="['/user']">
       &nbsp;{{identity.username}}
     </a>
   </li>

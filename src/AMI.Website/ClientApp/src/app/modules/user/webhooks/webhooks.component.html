@@ -1,0 +1,123 @@
+<div class="row">
+    <div class="col s12">
+        <h3>
+            User <small class="text-muted grey-text">/ Webhooks</small>
+        </h3>
+    </div>
+    <div class="col s12">
+        <blockquote>
+            After we process and complete your request you will be notified via webhook depending on the type of
+            request.
+            Dedicated resources enable you to specify new webhooks, list webhook events and clear missed webhook events.
+            For testing purposes you can use a service like <a href="https://hookbin.com/"
+                target="_blank">hookbin.com</a>.
+        </blockquote>
+    </div>
+    <div class="col s12">
+        <button id="webhookActionsDropdownButton" class="custom-fas-btn dropdown-trigger btn grey lighten-1 mr-2"
+            data-target="webhookActionsDropdownTarget">
+            Actions <i class="fas fa-caret-down"></i>
+        </button>
+        <!-- Dropdown Structure -->
+        <ul id="webhookActionsDropdownTarget" class="dropdown-content">
+            <li (click)="deleteSelected()"><a class="red-text">
+                    <i class="far fa-trash-alt"></i> Delete selectd</a>
+            </li>
+        </ul>
+
+        <button class="btn waves-effect waves-light modal-trigger" type="button" data-target="webhookCreateButton">
+            Create
+        </button>
+        <!-- Modal Structure -->
+        <div id="webhookCreateButton" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4>Create webhook</h4>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="url" type="text" class="validate">
+                        <label for="url">URL (e.g. https://hookbin.com/1234)</label>
+                        <span class="helper-text">The URL of the webhook endpoint.</span>
+                    </div>
+                    <div class="input-field col s12">
+                        <input id="apiVersion" type="text" class="validate">
+                        <label for="apiVersion">API version</label>
+                        <span class="helper-text">The API version used to render events for this webhook
+                            endpoint.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close btn lighten-1 waves-effect waves-light mr-2">Create</button>
+                <button class="modal-close btn grey lighten-1 waves-effect waves-light">Cancel</button>
+            </div>
+        </div>
+
+        <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
+            <i class="fas fa-redo-alt"></i>
+        </button>
+    </div>
+    <div class="col s12">
+        <table class="responsive-table">
+            <thead>
+                <tr>
+                    <th>
+                        <label>
+                            <input type="checkbox" class="filled-in" [(ngModel)]="isChecked"
+                                (click)="toggleCheckbox()" />
+                            <span class="mt-10"></span>
+                        </label>
+                    </th>
+                    <th>Id</th>
+                    <th>Created</th>
+                    <th>Modified</th>
+                    <th>Url</th>
+                    <th>API version</th>
+                    <th>Enabled events</th>
+                    <th>UserId</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let webhook of webhooks.values()">
+                    <td>
+                        <label>
+                            <input type="checkbox" class="filled-in" [(ngModel)]="webhook.isChecked" />
+                            <span></span>
+                        </label>
+                    </td>
+                    <td>
+                        <app-common-guid-badge [guid]="webhook.id"></app-common-guid-badge>
+                    </td>
+                    <td>
+                        {{getLocalDate(webhook.createdDate)}} {{getLocalTime(webhook.createdDate)}}
+                    </td>
+                    <td>
+                        {{getLocalDate(webhook.modifiedDate)}} {{getLocalTime(webhook.modifiedDate)}}
+                    </td>
+                    <td>
+                        <app-common-trim [text]="webhook.url" [length]="25"></app-common-trim>
+                    </td>
+                    <td>{{webhook.apiVersion}}</td>
+                    <td>
+                        <span class="new badge grey lighten-1" *ngFor="let enabledEvent of webhook.enabledEvents">
+                            {{enabledEvent}}
+                        </span>
+                    </td>
+                    <td>
+                        <app-common-guid-badge [guid]="webhook.userId"></app-common-guid-badge>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col s12">
+        <div *ngIf="webhooks.values().length <= 0">
+            <div class="card mt-3">
+                <div class="card-content">
+                    <p class="caption wrapword full-width custom-card-content-caption">
+                        <i class="fas fa-info-circle"></i> No webhook found.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

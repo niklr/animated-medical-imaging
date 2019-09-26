@@ -18,6 +18,11 @@ const routes: Routes = [
         path: 'admin',
         loadChildren: './admin/admin.module#AdminModule',
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'user',
+        loadChildren: './user/user.module#UserModule',
+        canActivate: [AuthGuard]
       }
     ]
   }

@@ -12,6 +12,7 @@ import { AppProxy } from './proxies/app.proxy';
 import { ObjectProxy } from './proxies/object.proxy';
 import { TaskProxy } from './proxies/task.proxy';
 import { TokenProxy } from './proxies/token.proxy';
+import { WebhookProxy } from './proxies/webhook.proxy';
 import { AuthService } from './services/auth.service';
 import { ConfigService } from './services/config.service';
 import { ConsoleLoggerService } from './services/console-logger.service';
@@ -54,6 +55,7 @@ export function initBaseAmiApi() {
     ObjectProxy,
     TaskProxy,
     TokenProxy,
+    WebhookProxy,
     AuthService,
     ConfigService,
     NotificationService,

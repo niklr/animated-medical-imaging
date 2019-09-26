@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { QueueWorkerModel, RecurringWorkerModel, WorkerType, TaskModel, BaseWorkerModel } from '../../../clients/ami-api-client';
+import { QueueWorkerModel, RecurringWorkerModel, WorkerType, BaseWorkerModel } from '../../../clients/ami-api-client';
 import { GatewayEvent } from '../../../enums';
 import { PageEvent } from '../../../events/page.event';
 import { IKeyedCollection, KeyedCollection } from '../../../extensions';
