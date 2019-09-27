@@ -25,31 +25,13 @@
             </li>
         </ul>
 
-        <button class="btn waves-effect waves-light modal-trigger" type="button" data-target="webhookCreateButton">
+        <button class="btn waves-effect waves-light modal-trigger" type="button" data-target="webhookCreateButton"
+            (click)="openModal()">
             Create
         </button>
         <!-- Modal Structure -->
         <div id="webhookCreateButton" class="modal modal-fixed-footer">
-            <div class="modal-content">
-                <h4>Create webhook</h4>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input id="url" type="text" class="validate">
-                        <label for="url">URL (e.g. https://hookbin.com/1234)</label>
-                        <span class="helper-text">The URL of the webhook endpoint.</span>
-                    </div>
-                    <div class="input-field col s12">
-                        <input id="apiVersion" type="text" class="validate">
-                        <label for="apiVersion">API version</label>
-                        <span class="helper-text">The API version used to render events for this webhook
-                            endpoint.</span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-close btn lighten-1 waves-effect waves-light mr-2">Create</button>
-                <button class="modal-close btn grey lighten-1 waves-effect waves-light">Cancel</button>
-            </div>
+            <app-user-webhook-modal [webhook]="currentWebhook" (onSave)="addOrUpdate($event)"></app-user-webhook-modal>
         </div>
 
         <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
@@ -98,7 +80,8 @@
                     </td>
                     <td>{{webhook.apiVersion}}</td>
                     <td>
-                        <span class="new badge grey lighten-1" *ngFor="let enabledEvent of webhook.enabledEvents">
+                        <span class="new badge grey lighten-1 mr-2" data-badge-caption=""
+                            *ngFor="let enabledEvent of webhook.enabledEvents">
                             {{enabledEvent}}
                         </span>
                     </td>

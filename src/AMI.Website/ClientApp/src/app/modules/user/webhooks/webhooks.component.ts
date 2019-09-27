@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { WebhookModel } from '../../../clients/ami-api-client';
+import { EventType } from '../../../enums';
 import { PageEvent } from '../../../events/page.event';
 import { IKeyedCollection, KeyedCollection } from '../../../extensions';
 import { WebhookModelExtended } from '../../../models/webhook-extended.model';
@@ -15,6 +16,7 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
 
     public isChecked = true;
     public webhooks: IKeyedCollection<WebhookModelExtended> = new KeyedCollection<WebhookModelExtended>();
+    public currentWebhook: WebhookModelExtended = new WebhookModelExtended();
 
     // MatPaginator Output
     public pageEvent: PageEvent;
@@ -64,6 +66,10 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
 
     }
 
+    public openModal(webhook: WebhookModel): void {
+        this.currentWebhook = new WebhookModelExtended(webhook);
+    }
+
     public setPage(event: PageEvent): void {
         this.webhooks = new KeyedCollection<WebhookModelExtended>();
 
@@ -82,6 +88,16 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
         }, error => {
             this.notificationService.handleError(error);
         });
+    }
+
+    public addOrUpdate(webhook: WebhookModel): void {
+        if (webhook) {
+            if (this.webhooks.containsKey(webhook.id)) {
+                this.webhooks.update(webhook.id, webhook as WebhookModelExtended);
+            } else {
+                this.webhooks.add(webhook.id, webhook as WebhookModelExtended);
+            }
+        }
     }
 
     public refresh(): void {

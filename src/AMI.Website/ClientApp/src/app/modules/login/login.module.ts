@@ -6,14 +6,14 @@ import { LoginComponent } from './login.component';
 import { SharedCommonModule } from '../common/common.module';
 
 @NgModule({
+  declarations: [
+    LoginComponent
+  ],
   imports: [
     CommonModule,
     SharedCommonModule,
     ReactiveFormsModule,
     LoginRoutingModule
-  ],
-  declarations: [
-    LoginComponent
   ],
   providers: [
 

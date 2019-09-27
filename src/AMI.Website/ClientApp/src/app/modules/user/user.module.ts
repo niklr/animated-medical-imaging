@@ -5,11 +5,13 @@ import { SharedCommonModule } from '../common/common.module';
 import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
 import { UserWebhooksComponent } from './webhooks/webhooks.component';
+import { UserWebhookModalComponent } from './webhook-modal/webhook-modal.component';
 
 @NgModule({
   declarations: [
     UserComponent,
-    UserWebhooksComponent
+    UserWebhooksComponent,
+    UserWebhookModalComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +21,8 @@ import { UserWebhooksComponent } from './webhooks/webhooks.component';
   ],
   exports: [
     UserComponent,
-    UserWebhooksComponent
+    UserWebhooksComponent,
+    UserWebhookModalComponent
   ]
 })
 export class UserModule { }

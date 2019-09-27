@@ -1,0 +1,57 @@
+<form #webhookModalForm="ngForm" (keydown.enter)="save">
+    <div class="modal-content">
+        <h4 *ngIf="webhook.id">
+            Edit webhook <app-common-guid-badge [guid]="webhook.id"></app-common-guid-badge>
+        </h4>
+        <h4 *ngIf="!webhook.id">
+            Create webhook
+        </h4>
+        <div class="row">
+            <div class="input-field col s12">
+                <input [(ngModel)]="webhook.url" name="url" id="url" #url="ngModel" type="text"
+                    [ngClass]="{ 'invalid': webhookModalForm.submitted && url.invalid }" autocomplete="off" required>
+                <label for="url">URL (e.g. https://hookbin.com/1234)</label>
+                <span class="helper-text">The URL of the webhook endpoint.</span>
+            </div>
+            <div class="input-field col s12">
+                <input [(ngModel)]="webhook.apiVersion" name="apiVersion" id="apiVersion" type="text"
+                    autocomplete="off">
+                <label for="apiVersion">API version</label>
+                <span class="helper-text">The API version used to render events for this webhook
+                    endpoint.</span>
+            </div>
+            <div class="input-field col s12">
+                <input [(ngModel)]="webhook.secret" name="secret" id="secret" type="text"
+                    autocomplete="off">
+                <label for="secret">Secret</label>
+                <span class="helper-text">The secret used to generate signatures.</span>
+            </div>
+            <div class="col s12 mt-3">
+                <span class="mr-2">Enabled events:</span>
+                <label class="mr-2">
+                    <input name="enabledEventsRadio" type="radio" [checked]="webhook.isWildcardEventSelected"
+                        (change)="webhook.toggleWildcardEvent($event)" />
+                    <span>All</span>
+                </label>
+                <label>
+                    <input name="enabledEventsRadio" type="radio" [checked]="!webhook.isWildcardEventSelected"
+                        (change)="webhook.toggleWildcardEvent($event)" />
+                    <span>Specific</span>
+                </label>
+            </div>
+            <div class="col s12 mt-2" *ngIf="!webhook.isWildcardEventSelected">
+                <label class="horizontal-label mr-2" *ngFor="let container of webhook.eventsContainer.values()">
+                    <input type="checkbox" [checked]="container.checked"
+                        (change)="webhook.toggleEvent(container,$event)" />
+                    <span>{{container.displayName}}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-close btn lighten-1 waves-effect waves-light mr-2" [clickFn]="save" appClickOnce>
+            Save
+        </button>
+        <button class="modal-close btn grey lighten-1 waves-effect waves-light">Cancel</button>
+    </div>
+</form>
