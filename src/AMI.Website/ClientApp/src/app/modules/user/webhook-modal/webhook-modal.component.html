@@ -8,20 +8,20 @@
         </h4>
         <div class="row">
             <div class="input-field col s12">
-                <input [(ngModel)]="webhook.url" name="url" id="url" #url="ngModel" type="text"
+                <input [value]="webhook.url" [(ngModel)]="webhook.url" name="url" id="url" #url="ngModel" type="text"
                     [ngClass]="{ 'invalid': webhookModalForm.submitted && url.invalid }" autocomplete="off" required>
                 <label for="url">URL (e.g. https://hookbin.com/1234)</label>
                 <span class="helper-text">The URL of the webhook endpoint.</span>
             </div>
             <div class="input-field col s12">
-                <input [(ngModel)]="webhook.apiVersion" name="apiVersion" id="apiVersion" type="text"
+                <input [value]="webhook.apiVersion" [(ngModel)]="webhook.apiVersion" name="apiVersion" id="apiVersion" type="text"
                     autocomplete="off">
                 <label for="apiVersion">API version</label>
                 <span class="helper-text">The API version used to render events for this webhook
                     endpoint.</span>
             </div>
             <div class="input-field col s12">
-                <input [(ngModel)]="webhook.secret" name="secret" id="secret" type="text"
+                <input [value]="webhook.secret" [(ngModel)]="webhook.secret" name="secret" id="secret" type="text"
                     autocomplete="off">
                 <label for="secret">Secret</label>
                 <span class="helper-text">The secret used to generate signatures.</span>

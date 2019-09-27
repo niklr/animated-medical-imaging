@@ -24,7 +24,7 @@ export class TrimTextComponent implements OnInit, AfterViewInit {
             this.textShortened = this.text.slice(0, this.length) + '...';
         } else {
             this.textShortened = this.text;
-        }   
+        }
     }
 
     ngAfterViewInit(): void {

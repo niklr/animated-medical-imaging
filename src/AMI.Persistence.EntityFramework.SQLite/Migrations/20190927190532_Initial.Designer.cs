@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190921134933_Initial")]
+    [Migration("20190927190532_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -251,7 +251,6 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                     b.Property<Guid>("Id");
 
                     b.Property<string>("ApiVersion")
-                        .IsRequired()
                         .HasMaxLength(128);
 
                     b.Property<DateTime>("CreatedDate");

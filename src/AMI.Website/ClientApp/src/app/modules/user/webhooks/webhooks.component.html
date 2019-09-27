@@ -25,13 +25,12 @@
             </li>
         </ul>
 
-        <button class="btn waves-effect waves-light modal-trigger" type="button" data-target="webhookCreateButton"
-            (click)="openModal()">
+        <button class="btn waves-effect waves-light" type="button" (click)="openModal()">
             Create
         </button>
         <!-- Modal Structure -->
-        <div id="webhookCreateButton" class="modal modal-fixed-footer">
-            <app-user-webhook-modal [webhook]="currentWebhook" (onSave)="addOrUpdate($event)"></app-user-webhook-modal>
+        <div id="webhookModalContainer" class="modal modal-fixed-footer">
+            <app-user-webhook-modal [webhook]="currentWebhook" (saveEmitter)="addOrUpdate($event)"></app-user-webhook-modal>
         </div>
 
         <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
@@ -56,39 +55,11 @@
                     <th>API version</th>
                     <th>Enabled events</th>
                     <th>UserId</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let webhook of webhooks.values()">
-                    <td>
-                        <label>
-                            <input type="checkbox" class="filled-in" [(ngModel)]="webhook.isChecked" />
-                            <span></span>
-                        </label>
-                    </td>
-                    <td>
-                        <app-common-guid-badge [guid]="webhook.id"></app-common-guid-badge>
-                    </td>
-                    <td>
-                        {{getLocalDate(webhook.createdDate)}} {{getLocalTime(webhook.createdDate)}}
-                    </td>
-                    <td>
-                        {{getLocalDate(webhook.modifiedDate)}} {{getLocalTime(webhook.modifiedDate)}}
-                    </td>
-                    <td>
-                        <app-common-trim [text]="webhook.url" [length]="25"></app-common-trim>
-                    </td>
-                    <td>{{webhook.apiVersion}}</td>
-                    <td>
-                        <span class="new badge grey lighten-1 mr-2" data-badge-caption=""
-                            *ngFor="let enabledEvent of webhook.enabledEvents">
-                            {{enabledEvent}}
-                        </span>
-                    </td>
-                    <td>
-                        <app-common-guid-badge [guid]="webhook.userId"></app-common-guid-badge>
-                    </td>
-                </tr>
+                <tr *ngFor="let webhook of webhooks.values()" [webhook]="webhook" (openModalEmitter)="openModal($event)" app-user-webhook></tr>
             </tbody>
         </table>
     </div>

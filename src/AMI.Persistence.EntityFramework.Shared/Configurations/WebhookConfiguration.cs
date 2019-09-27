@@ -32,8 +32,7 @@ namespace AMI.Persistence.EntityFramework.Shared.Configurations
                 .IsRequired();
 
             builder.Property(e => e.ApiVersion)
-                .HasMaxLength(128)
-                .IsRequired();
+                .HasMaxLength(128);
 
             builder.Property(e => e.Secret)
                 .HasMaxLength(4096)

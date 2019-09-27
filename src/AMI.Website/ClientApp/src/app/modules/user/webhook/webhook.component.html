@@ -1,0 +1,40 @@
+<td>
+    <label>
+        <input type="checkbox" class="filled-in" [(ngModel)]="webhook.isChecked" />
+        <span></span>
+    </label>
+</td>
+<td>
+    <app-common-guid-badge [guid]="webhook.id"></app-common-guid-badge>
+</td>
+<td>
+    {{getLocalDate(webhook.createdDate)}} {{getLocalTime(webhook.createdDate)}}
+</td>
+<td>
+    {{getLocalDate(webhook.modifiedDate)}} {{getLocalTime(webhook.modifiedDate)}}
+</td>
+<td class="wrapword">
+    {{webhook.url}}
+</td>
+<td>{{webhook.apiVersion}}</td>
+<td>
+    <span class="new badge grey lighten-1 mr-2" data-badge-caption=""
+        *ngFor="let enabledEvent of webhook.enabledEvents">
+        {{enabledEvent}}
+    </span>
+</td>
+<td>
+    <app-common-guid-badge [guid]="webhook.userId"></app-common-guid-badge>
+</td>
+<td>
+    <button [id]="dropdownButtonGuid" class="custom-fas-btn dropdown-trigger btn-flat"
+        [attr.data-target]="dropdownTargetGuid">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- Dropdown Structure -->
+    <ul [id]="dropdownTargetGuid" class="dropdown-content">
+        <li (click)="edit()"><a><i class="far fa-edit"></i> Edit</a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li (click)="delete()"><a class="red-text"><i class="far fa-trash-alt"></i> Delete</a></li>
+    </ul>
+</td>

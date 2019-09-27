@@ -12,7 +12,7 @@ import { CallbackWrapper } from '../../../wrappers/callback.wrapper';
 export class UserWebhookModalComponent implements OnInit, AfterViewInit {
 
     @Input() webhook: WebhookModelExtended;
-    @Output() onSave: EventEmitter<any> = new EventEmitter();
+    @Output() saveEmitter: EventEmitter<any> = new EventEmitter();
     @ViewChild('webhookModalForm') public webhookModalForm: NgForm;
 
     constructor(private notificationService: NotificationService, private webhookProxy: WebhookProxy) {
@@ -30,9 +30,9 @@ export class UserWebhookModalComponent implements OnInit, AfterViewInit {
         if (this.webhookModalForm.valid) {
             if (this.webhook.id) {
                 this.webhookProxy.update(this.webhook).then(result => {
-                    this.onSave.emit(result);
+                    this.saveEmitter.emit(result);
                 }, error => {
-                  this.notificationService.handleError(error);
+                    this.notificationService.handleError(error);
                 }).finally(() => {
                     setTimeout(() => {
                         callbackWrapper.invokeCallbackFn();
@@ -40,9 +40,9 @@ export class UserWebhookModalComponent implements OnInit, AfterViewInit {
                 });
             } else {
                 this.webhookProxy.create(this.webhook).then(result => {
-                    this.onSave.emit(result);
+                    this.saveEmitter.emit(result);
                 }, error => {
-                  this.notificationService.handleError(error);
+                    this.notificationService.handleError(error);
                 }).finally(() => {
                     setTimeout(() => {
                         callbackWrapper.invokeCallbackFn();

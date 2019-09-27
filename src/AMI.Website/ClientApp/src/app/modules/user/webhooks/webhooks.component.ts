@@ -1,12 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { WebhookModel } from '../../../clients/ami-api-client';
-import { EventType } from '../../../enums';
 import { PageEvent } from '../../../events/page.event';
 import { IKeyedCollection, KeyedCollection } from '../../../extensions';
 import { WebhookModelExtended } from '../../../models/webhook-extended.model';
 import { NotificationService } from '../../../services/notification.service';
 import { WebhookProxy } from '../../../proxies/webhook.proxy';
-import { MomentUtil } from '../../../utils';
 
 @Component({
     selector: 'app-user-webhooks',
@@ -14,14 +12,16 @@ import { MomentUtil } from '../../../utils';
 })
 export class UserWebhooksComponent implements OnInit, AfterViewInit {
 
-    public isChecked = true;
+    public isChecked = false;
     public webhooks: IKeyedCollection<WebhookModelExtended> = new KeyedCollection<WebhookModelExtended>();
     public currentWebhook: WebhookModelExtended = new WebhookModelExtended();
 
     // MatPaginator Output
     public pageEvent: PageEvent;
 
-    constructor(private notificationService: NotificationService, private momentUtil: MomentUtil, private webhookProxy: WebhookProxy) {
+    private webhookModalContainer: any;
+
+    constructor(private notificationService: NotificationService, private webhookProxy: WebhookProxy) {
         this.pageEvent = new PageEvent();
         this.pageEvent.pageSize = 50;
     }
@@ -38,7 +38,7 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
     private initDropdown(): void {
         setTimeout(() => {
             M.Dropdown.init(document.querySelector('#webhookActionsDropdownButton'), {});
-            M.Modal.init(document.querySelector('#webhookCreateButton'), {});
+            this.webhookModalContainer = M.Modal.init(document.querySelector('#webhookModalContainer'), {});
         });
     }
 
@@ -48,18 +48,16 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
 
     private afterInit(): void {
         this.initDropdown();
-        // Mark all objects as checked by default
-        this.isChecked = true;
-        const items = this.webhooks.values();
-        if (items) {
-            for (const item of items) {
-                item.isChecked = true;
-            }
-        }
     }
 
     public toggleCheckbox(): void {
         this.isChecked = !this.isChecked;
+        const items = this.webhooks.values();
+        if (items) {
+            for (const item of items) {
+                item.isChecked = this.isChecked;
+            }
+        }
     }
 
     public deleteSelected(): void {
@@ -68,6 +66,10 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
 
     public openModal(webhook: WebhookModel): void {
         this.currentWebhook = new WebhookModelExtended(webhook);
+        this.webhookModalContainer.open();
+        setTimeout(() => {
+            M.updateTextFields();
+        });
     }
 
     public setPage(event: PageEvent): void {
@@ -98,17 +100,10 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
                 this.webhooks.add(webhook.id, webhook as WebhookModelExtended);
             }
         }
+        this.webhookModalContainer.close();
     }
 
     public refresh(): void {
         this.setPage(new PageEvent());
-    }
-
-    public getLocalDate(date: any): string {
-        return this.momentUtil.getLocalDate(date);
-    }
-
-    public getLocalTime(date: any): string {
-        return this.momentUtil.getLocalTime(date);
     }
 }

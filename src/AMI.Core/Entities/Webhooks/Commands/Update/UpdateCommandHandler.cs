@@ -64,8 +64,12 @@ namespace AMI.Core.Entities.Webhooks.Commands.Update
             entity.ModifiedDate = DateTime.UtcNow;
             entity.Url = request.Url;
             entity.ApiVersion = request.ApiVersion;
-            entity.Secret = request.Secret;
             entity.EnabledEvents = enabledEvents;
+
+            if (!string.IsNullOrWhiteSpace(request.Secret))
+            {
+                entity.Secret = request.Secret;
+            }
 
             Context.WebhookRepository.Update(entity);
 

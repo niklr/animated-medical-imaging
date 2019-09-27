@@ -41,7 +41,7 @@ export class KeyedCollection<T> implements IKeyedCollection<T> {
             Object.assign(this._items[key], value);
         } else {
             this.add(key, value);
-        }   
+        }
     }
 
     public remove(key: string): T {

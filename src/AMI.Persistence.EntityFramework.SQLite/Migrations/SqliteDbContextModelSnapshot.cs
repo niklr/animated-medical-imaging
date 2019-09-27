@@ -249,7 +249,6 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                     b.Property<Guid>("Id");
 
                     b.Property<string>("ApiVersion")
-                        .IsRequired()
                         .HasMaxLength(128);
 
                     b.Property<DateTime>("CreatedDate");

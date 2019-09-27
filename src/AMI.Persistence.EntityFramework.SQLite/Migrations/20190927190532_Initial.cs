@@ -107,7 +107,7 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     ModifiedDate = table.Column<DateTime>(nullable: false),
                     Url = table.Column<string>(maxLength: 2048, nullable: false),
-                    ApiVersion = table.Column<string>(maxLength: 128, nullable: false),
+                    ApiVersion = table.Column<string>(maxLength: 128, nullable: true),
                     Secret = table.Column<string>(maxLength: 4096, nullable: false),
                     EnabledEvents = table.Column<string>(maxLength: 4096, nullable: false),
                     UserId = table.Column<string>(nullable: false)

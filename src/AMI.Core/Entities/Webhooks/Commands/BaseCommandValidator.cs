@@ -24,8 +24,8 @@ namespace AMI.Core.Entities.Webhooks.Commands
             }.ToArray();
 
             RuleFor(x => x.Url).NotEmpty().MaximumLength(2048).UrlValidation();
-            RuleFor(x => x.ApiVersion).NotEmpty().MaximumLength(128);
-            RuleFor(x => x.Secret).NotEmpty().MaximumLength(4096);
+            RuleFor(x => x.ApiVersion).MaximumLength(128);
+            RuleFor(x => x.Secret).MaximumLength(4096);
             RuleFor(x => x.EnabledEvents).NotEmpty();
             RuleForEach(x => x.EnabledEvents).NotEmpty().In(allowedEvents);
         }

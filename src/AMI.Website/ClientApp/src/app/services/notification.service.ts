@@ -32,7 +32,18 @@ export class NotificationService {
     if (error instanceof Error) {
       message = (<Error>error).message;
     } else if (error instanceof ErrorModel) {
-      message = (<ErrorModel>error).error;
+      const errorModel = error as ErrorModel;
+      message = errorModel.error;
+      if (!!message && !!errorModel.validationErrors) {
+        message = '<p>' + message + '</p>';
+        Object.keys(errorModel.validationErrors).forEach(key => {
+          message += '<ul>';
+          Object.values(errorModel.validationErrors[key]).forEach(value => {
+            message += '<li>&nbsp;' + value + '&nbsp;</li>';
+          });
+          message += '</ul>';
+        });
+      }
     } else if (error instanceof Response) {
       message = error.status ? `${error.status} - ${error.statusText}` : 'Server error';
       try {
