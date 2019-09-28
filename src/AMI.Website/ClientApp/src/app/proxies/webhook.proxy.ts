@@ -80,4 +80,18 @@ export class WebhookProxy extends BaseProxy {
       });
     });
   }
+
+  public delete(id: string): Promise<WebhookModel> {
+    return new Promise<WebhookModel>((resolve, reject) => {
+      super.preflight().then(() => {
+        return this.webhooksClient.deleteById(id).subscribe(result => {
+          resolve(result);
+        }, error => {
+          reject(error);
+        });
+      }, error => {
+        reject(error);
+      });
+    });
+  }
 }

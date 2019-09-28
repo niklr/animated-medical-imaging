@@ -10,6 +10,7 @@ export class UserWebhookComponent implements OnInit, AfterViewInit {
 
     @Input() webhook: WebhookModelExtended;
     @Output() openModalEmitter: EventEmitter<any> = new EventEmitter();
+    @Output() deleteEmitter: EventEmitter<any> = new EventEmitter();
 
     public dropdownButtonGuid: string;
     public dropdownTargetGuid: string;
@@ -43,7 +44,7 @@ export class UserWebhookComponent implements OnInit, AfterViewInit {
     }
 
     public delete(): void {
-
+        this.deleteEmitter.emit(this.webhook);
     }
 }
 

@@ -54,14 +54,29 @@ export class UserWebhooksComponent implements OnInit, AfterViewInit {
         this.isChecked = !this.isChecked;
         const items = this.webhooks.values();
         if (items) {
-            for (const item of items) {
+            items.forEach(item => {
                 item.isChecked = this.isChecked;
-            }
+            });
         }
     }
 
     public deleteSelected(): void {
+        const items = this.webhooks.values();
+        if (items) {
+            items.forEach(item => {
+                if (item.isChecked) {
+                    this.delete(item);
+                }
+            });
+        }
+    }
 
+    public delete(webhook: WebhookModel): void {
+        this.webhookProxy.delete(webhook.id).then(result => {
+            this.webhooks.remove(webhook.id);
+        }, error => {
+            this.notificationService.handleError(error);
+        });
     }
 
     public openModal(webhook: WebhookModel): void {

@@ -30,7 +30,8 @@
         </button>
         <!-- Modal Structure -->
         <div id="webhookModalContainer" class="modal modal-fixed-footer">
-            <app-user-webhook-modal [webhook]="currentWebhook" (saveEmitter)="addOrUpdate($event)"></app-user-webhook-modal>
+            <app-user-webhook-modal [webhook]="currentWebhook" (saveEmitter)="addOrUpdate($event)">
+            </app-user-webhook-modal>
         </div>
 
         <button class="custom-fas-btn waves-effect waves-light btn-flat right" (click)="refresh()">
@@ -59,7 +60,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let webhook of webhooks.values()" [webhook]="webhook" (openModalEmitter)="openModal($event)" app-user-webhook></tr>
+                <tr *ngFor="let webhook of webhooks.values()" [webhook]="webhook" (openModalEmitter)="openModal($event)"
+                    (deleteEmitter)="delete($event)" app-user-webhook></tr>
             </tbody>
         </table>
     </div>
