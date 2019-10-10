@@ -37,5 +37,8 @@
 
         /// <inheritdoc/>
         public string SqliteLogDatabaseName => "AmiLogSqliteDatabase.db";
+
+        /// <inheritdoc/>
+        public string HangfireLiteDbName => "AmiHangfireLiteDb.db";
     }
 }

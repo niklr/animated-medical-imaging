@@ -22,6 +22,7 @@ using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
+using AMI.Hangfire.Extensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Services;
 using AMI.Itk.Extensions.ServiceCollectionExtensions;
@@ -36,7 +37,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NSwag.AspNetCore;
 
 namespace AMI.API
 {
@@ -70,6 +70,8 @@ namespace AMI.API
 
         private IApiOptions ApiOptions { get; } = new ApiOptions();
 
+        private IApplicationConstants Constants { get; } = new ApplicationConstants();
+
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
@@ -86,11 +88,7 @@ namespace AMI.API
             });
 
             // Add services related to options and configure them
-            services.AddOptions();
-            services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
-            services.Configure<ApiOptions>(Configuration.GetSection("ApiOptions"));
-            services.Configure<AspNetCoreRateLimit.IpRateLimitOptions>(Configuration.GetSection("ApiOptions:IpRateLimiting"));
-            services.Configure<AspNetCoreRateLimit.IpRateLimitPolicies>(Configuration.GetSection("ApiOptions:IpRateLimitPolicies"));
+            services.AddCustomOptions(Configuration);
 
             // Store rate limit counters and IP rules
             services.AddMemoryCache();
@@ -165,6 +163,9 @@ namespace AMI.API
                     Serializer.OverrideJsonSerializerSettings(options.SerializerSettings);
                 });
 
+            // Add Hangfire
+            services.AddHangfire(Configuration, Constants);
+
             // Add SignalR
             services.AddSignalR()
                 .AddJsonProtocol(options =>
@@ -228,20 +229,9 @@ namespace AMI.API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            // Add OpenAPI/Swagger middlewares
-            // https://github.com/RSuter/NSwag/wiki/Assembly-loading#net-core
-            app.UseReDoc(options =>
-            {
-                options.Path = "/redoc";
-                options.DocumentPath = "/specification.json";
-            });
+            app.UseOpenApiMiddlewares(AppInfo);
 
-            // Serves the Swagger UI 3 web ui to view the OpenAPI/Swagger documents by default on `/swagger`
-            app.UseSwaggerUi3(options =>
-            {
-                options.Path = "/swagger";
-                options.SwaggerRoutes.Add(new SwaggerUi3Route($"v{AppInfo.AppVersion}", "/specification.json"));
-            });
+            app.UseCustomHangfireDashboard();
 
             app.UseAuthentication();
 

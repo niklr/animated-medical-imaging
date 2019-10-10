@@ -13,24 +13,22 @@ namespace AMI.API.Extensions.ApplicationBuilderExtensions
         /// Extension method used to add the middleware to the HTTP request pipeline.
         /// </summary>
         /// <param name="builder">The application builder.</param>
-        /// <returns>A <see cref="IApplicationBuilder"/>.</returns>
-        public static IApplicationBuilder UseCustomExceptionMiddleware(this IApplicationBuilder builder)
+        public static void UseCustomExceptionMiddleware(this IApplicationBuilder builder)
         {
             Ensure.ArgumentNotNull(builder, nameof(builder));
 
-            return builder.UseMiddleware<CustomExceptionMiddleware>();
+            builder.UseMiddleware<CustomExceptionMiddleware>();
         }
 
         /// <summary>
         /// Uses the throttle middleware.
         /// </summary>
         /// <param name="builder">The application builder.</param>
-        /// <returns>The application builder using the throttle middleware.</returns>
-        public static IApplicationBuilder UseThrottleMiddleware(this IApplicationBuilder builder)
+        public static void UseThrottleMiddleware(this IApplicationBuilder builder)
         {
             Ensure.ArgumentNotNull(builder, nameof(builder));
 
-            return builder.UseMiddleware<ThrottleMiddleware>();
+            builder.UseMiddleware<ThrottleMiddleware>();
         }
     }
 }

@@ -55,7 +55,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.Persistence.EntityFrame
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.Persistence.EntityFramework.InMemory", "AMI.Persistence.EntityFramework.InMemory\AMI.Persistence.EntityFramework.InMemory.csproj", "{8475EA6D-33E1-43AC-A99C-DA66AB7E68E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.Persistence.EntityFramework.SQLite", "AMI.Persistence.EntityFramework.SQLite\AMI.Persistence.EntityFramework.SQLite.csproj", "{72FD1AAF-3BAE-4050-A6D7-4BC9AEAC28D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.Persistence.EntityFramework.SQLite", "AMI.Persistence.EntityFramework.SQLite\AMI.Persistence.EntityFramework.SQLite.csproj", "{72FD1AAF-3BAE-4050-A6D7-4BC9AEAC28D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMI.Hangfire", "AMI.Hangfire\AMI.Hangfire.csproj", "{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,6 +249,18 @@ Global
 		{72FD1AAF-3BAE-4050-A6D7-4BC9AEAC28D3}.Release|x64.Build.0 = Release|Any CPU
 		{72FD1AAF-3BAE-4050-A6D7-4BC9AEAC28D3}.Release|x86.ActiveCfg = Release|Any CPU
 		{72FD1AAF-3BAE-4050-A6D7-4BC9AEAC28D3}.Release|x86.Build.0 = Release|Any CPU
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Debug|x64.ActiveCfg = Debug|x64
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Debug|x64.Build.0 = Debug|x64
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Debug|x86.ActiveCfg = Debug|x86
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Debug|x86.Build.0 = Debug|x86
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Release|x64.ActiveCfg = Release|x64
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Release|x64.Build.0 = Release|x64
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Release|x86.ActiveCfg = Release|x86
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -271,6 +285,7 @@ Global
 		{683B8B42-1962-4DDF-B3E0-8B649EEDD9FD} = {85167369-012B-4829-B1EE-4A7C0C20C639}
 		{8475EA6D-33E1-43AC-A99C-DA66AB7E68E2} = {85167369-012B-4829-B1EE-4A7C0C20C639}
 		{72FD1AAF-3BAE-4050-A6D7-4BC9AEAC28D3} = {85167369-012B-4829-B1EE-4A7C0C20C639}
+		{D221B8E0-4728-43CA-8106-AFCEF80D3B3F} = {73CF8D0E-B41C-4CFF-A951-1E9829B6EC5E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {25000B12-CFDC-4E8A-841D-2697DDFA98EE}

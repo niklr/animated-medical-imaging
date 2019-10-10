@@ -59,5 +59,10 @@
         /// Gets the name of the SQLite database for logs.
         /// </summary>
         string SqliteLogDatabaseName { get; }
+
+        /// <summary>
+        /// Gets the name of the LiteDB for Hangfire.
+        /// </summary>
+        string HangfireLiteDbName { get; }
     }
 }
