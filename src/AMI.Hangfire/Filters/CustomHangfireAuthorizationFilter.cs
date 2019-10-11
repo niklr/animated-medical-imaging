@@ -1,4 +1,5 @@
-﻿using Hangfire.Dashboard;
+﻿using AMI.Domain.Enums;
+using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Authentication;
 
 namespace AMI.Hangfire.Filters
@@ -20,7 +21,7 @@ namespace AMI.Hangfire.Filters
         {
             var httpContext = context.GetHttpContext();
             var result = httpContext.AuthenticateAsync("Cookies").Result;
-            return result?.Principal?.IsInRole("Administrator") ?? false;
+            return result?.Principal?.IsInRole(RoleType.Administrator.ToString()) ?? false;
         }
     }
 }
