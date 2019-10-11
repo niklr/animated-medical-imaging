@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using AMI.Hangfire.Filters;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using RNS.Framework.Tools;
 
@@ -13,12 +14,17 @@ namespace AMI.Hangfire.Extensions
         /// Extension method used to add the dashboard UI of Hangfire.
         /// </summary>
         /// <param name="builder">The application builder.</param>
-        /// <returns>A <see cref="IApplicationBuilder"/>.</returns>
-        public static IApplicationBuilder UseCustomHangfireDashboard(this IApplicationBuilder builder)
+        public static void UseCustomHangfireDashboard(this IApplicationBuilder builder)
         {
             Ensure.ArgumentNotNull(builder, nameof(builder));
 
-            return builder.UseHangfireDashboard();
+            var options = new DashboardOptions
+            {
+                Authorization = new[] { new CustomHangfireAuthorizationFilter() },
+                AppPath = "/account/login"
+            };
+
+            builder.UseHangfireDashboard("/hangfire", options);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace AMI.API.Extensions.ApplicationBuilderExtensions
         }
 
         /// <summary>
-        /// Uses the throttle middleware.
+        /// Extension method used to add the throttle middleware.
         /// </summary>
         /// <param name="builder">The application builder.</param>
         public static void UseThrottleMiddleware(this IApplicationBuilder builder)

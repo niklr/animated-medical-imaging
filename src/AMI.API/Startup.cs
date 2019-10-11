@@ -231,9 +231,9 @@ namespace AMI.API
 
             app.UseOpenApiMiddlewares(AppInfo);
 
-            app.UseCustomHangfireDashboard();
-
             app.UseAuthentication();
+
+            app.UseCustomHangfireDashboard();
 
             app.UseMvc();
 

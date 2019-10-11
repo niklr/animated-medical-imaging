@@ -75,6 +75,11 @@ namespace AMI.API.Extensions.ServiceCollectionExtensions
                 o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddCookie(o =>
+            {
+                o.LoginPath = "/account/login";
+                o.LogoutPath = "/account/logout";
+                o.AccessDeniedPath = "/account/login";
             }).AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
