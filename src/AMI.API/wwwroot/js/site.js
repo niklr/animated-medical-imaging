@@ -32,16 +32,13 @@ angular.module('ami-main', [
         $scope.error = undefined;
         $http.post(ami.baseUrl + 'account/login', $scope.user).then(
             function (response) {
-                console.log(response);
+                window.location = ami.baseUrl + 'hangfire';
             },
             function (error) {
-                console.log(error);
-                $scope.error = error.data;
+                if (error) {
+                    $scope.error = error.data;
+                }
             });
-    };
-
-    $scope.test = function () {
-        console.log(ami.baseUrl);
     };
 
 }]);

@@ -1,19 +1,21 @@
 ﻿<ul class="navbar-nav">
     @if (Context.User.Identity.IsAuthenticated)
     {
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="#">@User.Identity.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Login", "Account", new { area = "" })">
-            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
+        <li class="nav-item">
+            <span class="nav-link">
+                <span class="badge badge-secondary">@Context.User.Claims.Where(c => c.Type == "username").Select(c => c.Value).SingleOrDefault()</span>
+            </span>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" action="~/Account/Logout" method="post">
+                <button type="submit" class="nav-link btn btn-link">Logout</button>
+            </form>
+        </li>
     }
     else
     {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-page="/Account/Login">Login</a>
-    </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-page="/Account/Login">Login</a>
+        </li>
     }
 </ul>

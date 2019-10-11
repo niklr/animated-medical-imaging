@@ -45,8 +45,14 @@ namespace AMI.API.Controllers
         /// </summary>
         /// <returns>The login page.</returns>
         [HttpGet("login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
+            var result = await HttpContext.AuthenticateAsync("Cookies");
+            if (result?.Succeeded ?? false)
+            {
+                HttpContext.User = result.Principal;
+            }
+
             return View();
         }
 
@@ -92,7 +98,7 @@ namespace AMI.API.Controllers
             var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, model.Id),
-                    new Claim("Username", model.Username),
+                    new Claim("username", model.Username),
 
                     // TODO
                     // new Claim("LastChanged", "Database Value...")
@@ -119,6 +125,18 @@ namespace AMI.API.Controllers
                 authProperties);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Performs the logout.
+        /// </summary>
+        /// <returns>The logout result.</returns>
+        [HttpPost("logout")]
+        public async Task<IActionResult> PostLogout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction(nameof(Login));
         }
     }
 }
