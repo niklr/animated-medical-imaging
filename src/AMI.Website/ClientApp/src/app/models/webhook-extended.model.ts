@@ -53,7 +53,7 @@ export class WebhookModelExtended extends WebhookModel {
     });
   }
 
-  toggleWildcardEvent(): void {
+  toggleWildcardEvent(event: any): void {
     this.isWildcardEventSelected = !this.isWildcardEventSelected;
     if (this.isWildcardEventSelected) {
       this.eventsContainer.values().forEach(element => {
