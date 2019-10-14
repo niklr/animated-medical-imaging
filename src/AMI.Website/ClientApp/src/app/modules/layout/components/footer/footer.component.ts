@@ -12,8 +12,16 @@ export class FooterComponent implements OnInit {
   ngOnInit() {
   }
 
-  get appVersion(): string {
-    return ConfigService.options.version;
+  get showClientVersion(): boolean {
+    return ConfigService.options.clientVersion !== ConfigService.options.serverVersion;
+  }
+
+  get clientVersion(): string {
+    return ConfigService.options.clientVersion;
+  }
+
+  get serverVersion(): string {
+    return ConfigService.options.serverVersion;
   }
 
 }

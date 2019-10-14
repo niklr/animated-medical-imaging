@@ -23,6 +23,10 @@
   @include text-ellipsis($width: 100%);
 }
 
+.custom-inline {
+  display: inline;
+}
+
 .custom-selectable {
   cursor: pointer;
 }

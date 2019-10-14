@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { IApiOptions } from '../clients/ami-api-client';
+import { IApiOptions, IAppInfoModel } from '../clients/ami-api-client';
 import { IClientOptions } from '../models/client-options.model';
 
 @Injectable()
@@ -26,15 +26,24 @@ export class ConfigService {
         }
         reject(message);
       };
-      this.http.get<IClientOptions>(this.baseUrl + '/options').subscribe(result1 => {
-        ConfigService.options = result1;
+      this.http.get<IClientOptions>(this.baseUrl + '/options').subscribe(result => {
+        ConfigService.options = result;
         ConfigService.options.isDevelopment = !environment.production;
         ConfigService.options.enableConsoleOutput = !environment.production;
         ConfigService.options.apiEndpoint = this.removeTrailingSlash(ConfigService.options.apiEndpoint);
-        this.http.get<IApiOptions>(ConfigService.options.apiEndpoint + '/api-options').subscribe(result2 => {
-          ConfigService.apiOptions = result2;
-          ConfigService.isInitialized = true;
-          resolve();
+        this.http.get<IAppInfoModel>(this.baseUrl + '/app-info').subscribe(innerResult => {
+          if (innerResult) {
+            ConfigService.options.clientVersion = innerResult.appVersion;
+          }
+        }, error => {
+          handleError(error);
+        });
+        this.http.get<IApiOptions>(ConfigService.options.apiEndpoint + '/api-options').subscribe(innerResult => {
+          if (innerResult) {
+            ConfigService.apiOptions = innerResult;
+            ConfigService.isInitialized = true;
+            resolve();
+          }
         }, error => {
           handleError(error);
         });

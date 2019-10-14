@@ -1,8 +1,13 @@
 <footer class="footer">
   <div class="divider"></div>
   <div class="container">
-    <div class="right" *ngIf="appVersion">
-      v{{appVersion}}
+    <div class="right">
+      <div class="custom-inline" *ngIf="clientVersion && showClientVersion">
+          <small class="grey-text">Client </small>v{{clientVersion}}
+      </div>
+      <div class="custom-inline" *ngIf="serverVersion">
+        <span *ngIf="showClientVersion"> / <small class="grey-text">Server </small></span>v{{serverVersion}}
+      </div>
     </div>
   </div>
 </footer>

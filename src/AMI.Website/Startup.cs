@@ -1,3 +1,4 @@
+using AMI.Core.Factories;
 using AMI.Website.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +43,9 @@ namespace AMI.Website
                     .AddConfiguration(Configuration.GetSection("Logging"))
                     .AddConsole();
             });
+
+            // To read the name and version of the application from the assembly.
+            services.AddSingleton<IAppInfoFactory, AppInfoFactory>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

@@ -18,7 +18,7 @@ export class AppProxy extends BaseProxy {
     }
     super.preflight().then(() => {
       this.appInfoClient.get().subscribe((result: AppInfoModel) => {
-        ConfigService.options.version = result.appVersion;
+        ConfigService.options.serverVersion = result.appVersion;
       }, error => {
         if (retryCounter <= 3) {
           setTimeout(() => {

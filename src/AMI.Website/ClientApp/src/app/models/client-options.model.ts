@@ -1,6 +1,7 @@
 export interface IClientOptions {
   isDevelopment: boolean;
-  version: string;
+  clientVersion: string;
+  serverVersion: string;
   enableConsoleOutput: boolean;
   apiEndpoint: string;
 }
