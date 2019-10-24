@@ -19,6 +19,7 @@ using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
+using AMI.Hangfire.Extensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Services;
 using AMI.Itk.Extensions.ServiceCollectionExtensions;
@@ -63,6 +64,9 @@ namespace AMI.NetCore.Tests
 
             // Add ITK services
             services.AddDefaultItk();
+
+            // Add Hangfire
+            services.AddTestHangfire();
 
             services.AddScoped<IAmiUnitOfWork, InMemoryUnitOfWork>();
             services.AddScoped<IIdentityService, IdentityService>();

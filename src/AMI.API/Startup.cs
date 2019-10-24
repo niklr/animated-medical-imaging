@@ -94,8 +94,8 @@ namespace AMI.API
             services.AddMemoryCache();
 
             // Add hosted services
-            services.AddHostedService<ProcessTaskHostedService>();
-            services.AddHostedService<CleanupHostedService>();
+            // services.AddHostedService<ProcessTaskHostedService>();
+            // services.AddHostedService<CleanupHostedService>();
 
             // Add infrastructure services
             services.AddDefaultInfrastructure();
@@ -234,6 +234,7 @@ namespace AMI.API
             app.UseAuthentication();
 
             app.UseCustomHangfireDashboard();
+            app.ScheduleRecurringHangfireJobs();
 
             app.UseMvc();
 

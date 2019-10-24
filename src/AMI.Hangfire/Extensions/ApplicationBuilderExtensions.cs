@@ -1,8 +1,12 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
+using AMI.Core.Services;
+using AMI.Domain.Exceptions;
 using AMI.Hangfire.Filters;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using RNS.Framework.Tools;
 
 namespace AMI.Hangfire.Extensions
@@ -44,6 +48,29 @@ namespace AMI.Hangfire.Extensions
             };
 
             builder.UseHangfireDashboard(pathMatch, options);
+        }
+
+        /// <summary>
+        /// Extension method used to schedule recurring Hangfire jobs.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        public static void ScheduleRecurringHangfireJobs(this IApplicationBuilder builder)
+        {
+            Ensure.ArgumentNotNull(builder, nameof(builder));
+
+            var serviceProvider = builder.ApplicationServices;
+            if (serviceProvider == null)
+            {
+                throw new UnexpectedNullException($"{nameof(IServiceProvider)} could not be retrieved.");
+            }
+
+            var backgroundService = serviceProvider.GetRequiredService<IBackgroundService>();
+            if (backgroundService == null)
+            {
+                throw new UnexpectedNullException($"{nameof(IBackgroundService)} could not be retrieved.");
+            }
+
+            backgroundService.ScheduleCleanup();
         }
     }
 }

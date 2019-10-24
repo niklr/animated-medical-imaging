@@ -9,7 +9,7 @@ using AMI.Core.Entities.Tasks.Queries.GetById;
 using AMI.Core.IO.Generators;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Modules;
-using AMI.Core.Queues;
+using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Enums.Auditing;
@@ -30,7 +30,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         private readonly IIdGenerator idGenerator;
         private readonly IMediator mediator;
         private readonly IDefaultJsonSerializer serializer;
-        private readonly ITaskQueue queue;
+        private readonly IBackgroundService backgroundService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
@@ -39,19 +39,19 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
         /// <param name="idGenerator">The generator for unique identifiers.</param>
         /// <param name="serializer">The JSON serializer.</param>
         /// <param name="mediator">The mediator.</param>
-        /// <param name="queue">The task queue.</param>
+        /// <param name="backgroundService">The background service.</param>
         public CreateCommandHandler(
             ICommandHandlerModule module,
             IIdGenerator idGenerator,
             IDefaultJsonSerializer serializer,
             IMediator mediator,
-            ITaskQueue queue)
+            IBackgroundService backgroundService)
             : base(module)
         {
             this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
+            this.backgroundService = backgroundService ?? throw new ArgumentNullException(nameof(backgroundService));
         }
 
         /// <inheritdoc/>
@@ -102,6 +102,9 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
                     throw new AmiException("The specified object is already actively being processed.");
                 }
 
+                var position = await Context.TaskRepository.CountAsync(e =>
+                    e.Status == (int)Domain.Enums.TaskStatus.Queued);
+
                 var entity = new TaskEntity()
                 {
                     Id = idGenerator.GenerateId(),
@@ -110,7 +113,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
                     QueuedDate = DateTime.UtcNow,
                     Status = (int)Domain.Enums.TaskStatus.Queued,
                     Progress = 0,
-                    Position = queue.Count,
+                    Position = position,
                     CommandType = (int)CommandType.ProcessObjectCommand,
                     CommandSerialized = serializer.Serialize(command),
                     UserId = principal.Identity.Name,
@@ -130,7 +133,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
                     result,
                     cancellationToken);
 
-                queue.Add(result);
+                await backgroundService.EnqueueTaskAsync(result.Id);
 
                 return result;
             });

@@ -53,6 +53,7 @@
     <ProjectReference Include="..\AMI.Compress\AMI.Compress.csproj" />
     <ProjectReference Include="..\AMI.Core\AMI.Core.csproj" />
     <ProjectReference Include="..\AMI.Gif\AMI.Gif.csproj" />
+    <ProjectReference Include="..\AMI.Hangfire\AMI.Hangfire.csproj" />
     <ProjectReference Include="..\AMI.Infrastructure\AMI.Infrastructure.csproj" />
     <ProjectReference Include="..\AMI.Itk\AMI.Itk.csproj" />
     <ProjectReference Include="..\AMI.Persistence.EntityFramework.InMemory\AMI.Persistence.EntityFramework.InMemory.csproj" />
