@@ -62,10 +62,11 @@ namespace AMI.NetCore.Tests.Core.Entities.Webhooks.Commands
             var ex = Assert.ThrowsAsync<ValidationException>(() => mediator.Send(command, ct));
             Assert.AreEqual("One or more validation failures have occurred.", ex.Message);
             Assert.IsNotNull(ex.Failures);
-            Assert.AreEqual(4, ex.Failures.Count);
-            var firstEntry = ex.Failures[nameof(command.ApiVersion)];
-            Assert.AreEqual(1, firstEntry.Length);
-            Assert.AreEqual("'Api Version' must not be empty.", firstEntry[0]);
+            Assert.AreEqual(3, ex.Failures.Count);
+            var firstEntry = ex.Failures[nameof(command.Url)];
+            Assert.AreEqual(2, firstEntry.Length);
+            Assert.AreEqual("'Url' must not be empty.", firstEntry[0]);
+            Assert.AreEqual("The specified 'Url' is not valid.", firstEntry[1]);
         }
 
         [Test]
@@ -119,7 +120,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Webhooks.Commands
             Assert.AreEqual(1, ex.Failures.Count);
             var firstEntry = ex.Failures[nameof(command.Url)];
             Assert.AreEqual(1, firstEntry.Length);
-            Assert.AreEqual("The specified condition was not met for 'Url'.", firstEntry[0]);
+            Assert.AreEqual("The specified 'Url' is not valid.", firstEntry[0]);
         }
     }
 }

@@ -127,7 +127,8 @@ namespace AMI.Core.Extensions.FluentValidationExtensions
                 {
                     return Uri.TryCreate(x, UriKind.Absolute, out Uri uri)
                             && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
-                });
+                })
+                .WithMessage("The specified '{PropertyName}' is not valid.");
         }
     }
 }
