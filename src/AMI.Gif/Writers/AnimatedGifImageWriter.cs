@@ -56,31 +56,29 @@ namespace AMI.Gif.Writers
                     $"Filesystem could not be created based on the destination path '{destinationPath}'.");
             }
 
-            await Task.Run(
-                () =>
+            // 33ms delay (~30fps)
+            using (var gif = AnimatedGif.AnimatedGif.Create(fs.Path.Combine(destinationPath, destinationFilename), delay))
+            {
+                for (int i = 0; i < sourceFilenames.Length; i++)
                 {
-                    // 33ms delay (~30fps)
-                    using (var gif = AnimatedGif.AnimatedGif.Create(fs.Path.Combine(destinationPath, destinationFilename), delay))
-                    {
-                        for (int i = 0; i < sourceFilenames.Length; i++)
-                        {
-                            ct.ThrowIfCancellationRequested();
+                    ct.ThrowIfCancellationRequested();
 
-                            using (Image image = Image.FromFile(fs.Path.Combine(sourcePath, sourceFilenames[i])))
-                            {
-                                if (bezierEasingType == BezierEasingType.Linear)
-                                {
-                                    gif.AddFrame(image, -1, quality: GifQuality.Bit8);
-                                }
-                                else
-                                {
-                                    int mappedDelay = Convert.ToInt32(mapper.GetMappedPosition(i));
-                                    gif.AddFrame(image, mappedDelay, quality: GifQuality.Bit8);
-                                }
-                            }
+                    using (Image image = Image.FromFile(fs.Path.Combine(sourcePath, sourceFilenames[i])))
+                    {
+                        if (bezierEasingType == BezierEasingType.Linear)
+                        {
+                            gif.AddFrame(image, -1, quality: GifQuality.Bit8);
+                        }
+                        else
+                        {
+                            int mappedDelay = Convert.ToInt32(mapper.GetMappedPosition(i));
+                            gif.AddFrame(image, mappedDelay, quality: GifQuality.Bit8);
                         }
                     }
-                }, ct);
+                }
+            }
+
+            await Task.CompletedTask;
         }
     }
 }

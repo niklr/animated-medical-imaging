@@ -4,6 +4,7 @@ using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
 using AMI.Core.Services;
 using AMI.Domain.Exceptions;
+using AMI.Hangfire.Attributes;
 using AMI.Hangfire.Services;
 using Hangfire;
 using Hangfire.LiteDB;
@@ -41,7 +42,7 @@ namespace AMI.Hangfire.Extensions
 
             services.AddTransient<ICleanupService, CleanupService>();
             services.AddTransient<ITaskService, TaskService>();
-            services.AddTransient<IBackgroundService, BackgroundService>();
+            services.AddSingleton<IBackgroundService, BackgroundService>();
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace AMI.Hangfire.Extensions
 
             services.AddTransient<ICleanupService, CleanupService>();
             services.AddTransient<ITaskService, TaskService>();
-            services.AddTransient<IBackgroundService, BackgroundService>();
+            services.AddSingleton<IBackgroundService, BackgroundService>();
 
             var appOptions = new AppOptions();
             configuration.GetSection("AppOptions").Bind(appOptions);
@@ -75,7 +76,10 @@ namespace AMI.Hangfire.Extensions
             {
                 options.Queues = new[] { QueueNames.Default, QueueNames.Imaging, QueueNames.Webhooks };
                 options.SchedulePollingInterval = TimeSpan.FromSeconds(5);
+                options.WorkerCount = 1;
             });
+
+            GlobalJobFilters.Filters.Add(new LogEverythingAttribute());
         }
     }
 }

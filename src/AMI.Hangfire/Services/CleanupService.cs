@@ -38,8 +38,6 @@ namespace AMI.Hangfire.Services
         /// <inheritdoc/>
         public async Task CleanupAsync(IJobCancellationToken ct)
         {
-            logger.LogInformation("CleanupService.Cleanup started.");
-
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
             try
@@ -59,8 +57,6 @@ namespace AMI.Hangfire.Services
             {
                 logger.LogWarning(e, $"Cleanup failed. {e.Message}");
             }
-
-            logger.LogInformation("CleanupService.Cleanup ended.");
         }
     }
 }

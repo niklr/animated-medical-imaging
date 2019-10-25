@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Configurations;
 using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Tasks.Commands.UpdateStatus;
@@ -21,16 +22,22 @@ namespace AMI.Hangfire.Services
     {
         private readonly ILogger logger;
         private readonly IMediator mediator;
+        private readonly IAppConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskService"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="mediator">The mediator.</param>
-        public TaskService(ILoggerFactory loggerFactory, IMediator mediator)
+        /// <param name="configuration">The application configuration.</param>
+        public TaskService(
+            ILoggerFactory loggerFactory,
+            IMediator mediator,
+            IAppConfiguration configuration)
         {
             this.logger = loggerFactory?.CreateLogger<TaskService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <inheritdoc/>
@@ -38,6 +45,13 @@ namespace AMI.Hangfire.Services
         {
             Ensure.ArgumentNotNullOrWhiteSpace(id, nameof(id));
             Ensure.ArgumentNotNull(ct, nameof(ct));
+
+            // TODO: use IJobCancellationToken
+            var cts = new CancellationTokenSource();
+            if (configuration?.Options?.TimeoutMilliseconds > 0)
+            {
+                cts.CancelAfter(configuration.Options.TimeoutMilliseconds);
+            }
 
             try
             {
@@ -58,7 +72,7 @@ namespace AMI.Hangfire.Services
                     switch (task.Command.CommandType)
                     {
                         case CommandType.ProcessObjectCommand:
-                            await ProcessObjectAsync(mediator, task, ct.ShutdownToken);
+                            await ProcessObjectAsync(mediator, task, cts.Token);
                             break;
                         default:
                             await UpdateStatus(mediator, task, Domain.Enums.TaskStatus.Finished, string.Empty);
