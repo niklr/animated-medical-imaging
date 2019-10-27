@@ -9,7 +9,6 @@ using AMI.Core.Modules;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
 using AMI.Domain.Enums.Auditing;
-using XDASv2Net.Model;
 
 namespace AMI.Core.Entities.AuditEvents.Commands.Create
 {
@@ -69,12 +68,7 @@ namespace AMI.Core.Entities.AuditEvents.Commands.Create
 
             var result = AuditEventModel.Create(eventEntity, serializer);
 
-            await Gateway.NotifyGroupsAsync(
-                string.Empty,
-                GatewayOpCode.Dispatch,
-                GatewayEvent.CreateAuditEvent,
-                result,
-                cancellationToken);
+            await Gateway.NotifyGroupsAsync(string.Empty, EventType.AuditEventCreated, result, cancellationToken);
 
             return result;
         }

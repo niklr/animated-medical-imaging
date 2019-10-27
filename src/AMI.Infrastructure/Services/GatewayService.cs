@@ -66,27 +66,26 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public Task NotifyGroupAsync<T>(string groupName, GatewayOpCode gatewayOpCode, GatewayEvent gatewayEvent, T data, CancellationToken ct)
+        public Task NotifyGroupAsync<T>(string groupName, EventType eventType, T data, CancellationToken ct)
         {
             var result = new GatewayResultModel<T>()
             {
-                d = data,
-                op = gatewayOpCode,
-                t = gatewayEvent
+                Data = data,
+                EventType = eventType
             };
 
             return gatewayObserverService.NotifyAsync(groupName, result, ct);
         }
 
         /// <inheritdoc/>
-        public async Task NotifyGroupsAsync<T>(string userId, GatewayOpCode gatewayOpCode, GatewayEvent gatewayEvent, T data, CancellationToken ct)
+        public async Task NotifyGroupsAsync<T>(string userId, EventType eventType, T data, CancellationToken ct)
         {
             if (!string.IsNullOrWhiteSpace(userId))
             {
-                await NotifyGroupAsync(Builder.BuildUserIdGroupName(userId), gatewayOpCode, gatewayEvent, data, ct);
+                await NotifyGroupAsync(Builder.BuildUserIdGroupName(userId), eventType, data, ct);
             }
 
-            await NotifyGroupAsync(Builder.BuildAdministratorGroupName(), gatewayOpCode, gatewayEvent, data, ct);
+            await NotifyGroupAsync(Builder.BuildAdministratorGroupName(), eventType, data, ct);
         }
 
         private ICustomPrincipal GetPrincipal(string userId)

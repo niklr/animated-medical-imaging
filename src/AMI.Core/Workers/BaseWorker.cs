@@ -160,12 +160,7 @@ namespace AMI.Core.Workers
             Task.Run(
                 async () =>
                 {
-                    await gateway.NotifyGroupsAsync(
-                            string.Empty,
-                            GatewayOpCode.Dispatch,
-                            GatewayEvent.UpdateWorker,
-                            BaseWorkerModel.Create(this),
-                            cts.Token);
+                    await gateway.NotifyGroupsAsync(string.Empty, EventType.WorkerUpdated, BaseWorkerModel.Create(this), cts.Token);
                 }, cts.Token);
         }
     }

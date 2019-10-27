@@ -28,23 +28,21 @@ namespace AMI.Core.Services
         /// </summary>
         /// <typeparam name="T">The type of the data.</typeparam>
         /// <param name="groupName">The name of the group.</param>
-        /// <param name="gatewayOpCode">The gateway operation code.</param>
-        /// <param name="gatewayEvent">The gateway event.</param>
+        /// <param name="eventType">The type of the event.</param>
         /// <param name="data">The data to send.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task NotifyGroupAsync<T>(string groupName, GatewayOpCode gatewayOpCode, GatewayEvent gatewayEvent, T data, CancellationToken ct);
+        Task NotifyGroupAsync<T>(string groupName, EventType eventType, T data, CancellationToken ct);
 
         /// <summary>
         /// Notifies the group asynchronous.
         /// </summary>
         /// <typeparam name="T">The type of the data.</typeparam>
         /// <param name="userId">The user identifier.</param>
-        /// <param name="gatewayOpCode">The gateway operation code.</param>
-        /// <param name="gatewayEvent">The gateway event.</param>
+        /// <param name="eventType">The type of the event.</param>
         /// <param name="data">The data to send.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task NotifyGroupsAsync<T>(string userId, GatewayOpCode gatewayOpCode, GatewayEvent gatewayEvent, T data, CancellationToken ct);
+        Task NotifyGroupsAsync<T>(string userId, EventType eventType, T data, CancellationToken ct);
     }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as SignalR from '@aspnet/signalr';
 import { BaseHub } from './base.hub';
-import { GatewayOpCode, ConnectionState } from '../enums';
+import { ConnectionState } from '../enums';
 import { IGatewayResult } from '../models/gateway-result.model';
 import { ConfigService } from '../services/config.service';
 import { LoggerService } from '../services/logger.service';
@@ -67,13 +67,7 @@ export class GatewayHub extends BaseHub {
 
     this.connection.on('notify', (result: any) => {
       const gatewayResult = result as IGatewayResult<any>;
-      switch (gatewayResult.op) {
-        case GatewayOpCode.Dispatch:
-          this.fire(gatewayResult.t, gatewayResult.d);
-          break;
-        default:
-          break;
-      }
+      this.fire(gatewayResult.eventType, gatewayResult.data);
     });
     this.connection.start()
       .then(() => {
@@ -110,9 +104,9 @@ export class GatewayHub extends BaseHub {
   }
 
   private changeConnectionState(newConnectionState: ConnectionState): void {
-    if (this.connectionState != newConnectionState) {
-      if (this.connectionState == ConnectionState.Connected &&
-        newConnectionState == ConnectionState.Disconnected) {
+    if (this.connectionState !== newConnectionState) {
+      if (this.connectionState === ConnectionState.Connected &&
+        newConnectionState === ConnectionState.Disconnected) {
         this.disconnectedDate = new Date();
       }
       this.connectionState = newConnectionState;

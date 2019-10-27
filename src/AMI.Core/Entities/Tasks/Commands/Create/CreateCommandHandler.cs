@@ -126,12 +126,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
                 var result = await mediator.Send(new GetByIdQuery() { Id = entity.Id.ToString() });
 
-                await Gateway.NotifyGroupsAsync(
-                    entity.Object?.UserId,
-                    GatewayOpCode.Dispatch,
-                    GatewayEvent.CreateTask,
-                    result,
-                    cancellationToken);
+                await Gateway.NotifyGroupsAsync(entity.Object?.UserId, EventType.TaskCreated, result, cancellationToken);
 
                 await backgroundService.EnqueueTaskAsync(result.Id);
 

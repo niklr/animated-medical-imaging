@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { QueueWorkerModel, RecurringWorkerModel, WorkerType, BaseWorkerModel } from '../../../clients/ami-api-client';
-import { GatewayEvent } from '../../../enums';
+import { EventType } from '../../../enums';
 import { PageEvent } from '../../../events/page.event';
 import { IKeyedCollection, KeyedCollection } from '../../../extensions';
 import { GatewayHub } from '../../../hubs/gateway.hub';
@@ -22,7 +22,8 @@ export class AdminWorkersComponent implements OnInit, AfterViewInit {
     // MatPaginator Output
     pageEvent: PageEvent;
 
-    constructor(private notificationService: NotificationService, private momentUtil: MomentUtil, private gateway: GatewayHub, private adminProxy: AdminProxy) {
+    constructor(private notificationService: NotificationService, private momentUtil: MomentUtil,
+                private gateway: GatewayHub, private adminProxy: AdminProxy) {
         this.pageEvent = new PageEvent();
         this.pageEvent.pageSize = 50;
     }
@@ -44,7 +45,7 @@ export class AdminWorkersComponent implements OnInit, AfterViewInit {
     private initGateway(): void {
         if (!AdminWorkersComponent.isInitialized) {
             AdminWorkersComponent.isInitialized = true;
-            this.gateway.on(GatewayEvent[GatewayEvent.UpdateWorker], (data: BaseWorkerModel) => {
+            this.gateway.on(EventType[EventType.WorkerUpdated], (data: BaseWorkerModel) => {
                 if (data) {
                     switch (data.workerType) {
                         case WorkerType.Queue:
