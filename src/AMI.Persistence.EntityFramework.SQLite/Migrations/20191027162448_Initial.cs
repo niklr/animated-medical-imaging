@@ -23,6 +23,23 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: false),
+                    ApiVersion = table.Column<string>(nullable: false),
+                    EventType = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    EventSerialized = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Objects",
                 columns: table => new
                 {
@@ -181,6 +198,31 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 column: "Timestamp");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Events_CreatedDate",
+                table: "Events",
+                column: "CreatedDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_EventType",
+                table: "Events",
+                column: "EventType");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_UserId",
+                table: "Events",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_CreatedDate_UserId",
+                table: "Events",
+                columns: new[] { "CreatedDate", "UserId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_CreatedDate_EventType_UserId",
+                table: "Events",
+                columns: new[] { "CreatedDate", "EventType", "UserId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Objects_CreatedDate",
                 table: "Objects",
                 column: "CreatedDate");
@@ -266,15 +308,28 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                 column: "CreatedDate");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Webhooks_EnabledEvents",
+                table: "Webhooks",
+                column: "EnabledEvents");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Webhooks_UserId",
                 table: "Webhooks",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Webhooks_UserId_EnabledEvents",
+                table: "Webhooks",
+                columns: new[] { "UserId", "EnabledEvents" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "AuditEvents");
+
+            migrationBuilder.DropTable(
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "Roles");

@@ -23,6 +23,11 @@ namespace AMI.Persistence.EntityFramework.Shared
         public DbSet<AuditEventEntity> AuditEvents { get; set; }
 
         /// <summary>
+        /// Gets or sets the events.
+        /// </summary>
+        public DbSet<EventEntity> Events { get; set; }
+
+        /// <summary>
         /// Gets or sets the object entities.
         /// </summary>
         public DbSet<ObjectEntity> Objects { get; set; }

@@ -5,7 +5,7 @@ using XDASv2Net.Model;
 namespace AMI.Core.Entities.AuditEvents.Commands.Create
 {
     /// <summary>
-    /// A command containing information needed to create a task.
+    /// A command containing information needed to create an audit event.
     /// </summary>
     public class CreateAuditEventCommand : IRequest<AuditEventModel>
     {

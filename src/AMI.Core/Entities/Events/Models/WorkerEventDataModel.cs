@@ -3,11 +3,11 @@
     /// <summary>
     /// A model containing information about the event.
     /// </summary>
-    public class ObjectEventDataModel
+    public class WorkerEventDataModel : BaseEventDataModel
     {
         /// <summary>
         /// Gets or sets the object.
         /// </summary>
-        public ObjectModel Object { get; set; }
+        public BaseWorkerModel Object { get; set; }
     }
 }

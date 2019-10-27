@@ -3,11 +3,11 @@
     /// <summary>
     /// A model containing information about the event.
     /// </summary>
-    public class AuditEventDataModel
+    public class ObjectEventDataModel : BaseEventDataModel
     {
         /// <summary>
         /// Gets or sets the object.
         /// </summary>
-        public AuditEventModel Object { get; set; }
+        public ObjectModel Object { get; set; }
     }
 }

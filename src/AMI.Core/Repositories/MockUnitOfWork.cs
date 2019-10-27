@@ -23,6 +23,15 @@ namespace AMI.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public IRepository<EventEntity> EventRepository
+        {
+            get
+            {
+                return new ListRepository<EventEntity>(new List<EventEntity>());
+            }
+        }
+
+        /// <inheritdoc/>
         public IRepository<ObjectEntity> ObjectRepository
         {
             get

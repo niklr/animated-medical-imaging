@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
 using AMI.Core.Services;
@@ -33,13 +32,9 @@ namespace AMI.Hangfire.Services
         }
 
         /// <inheritdoc/>
-        public async Task<string> EnqueueTaskAsync(string id)
+        public string EnqueueTask(string id)
         {
-            string jobId = client.Enqueue<ITaskService>(x => x.ProcessAsync(id, JobCancellationToken.Null));
-
-            await Task.CompletedTask;
-
-            return jobId;
+            return client.Enqueue<ITaskService>(x => x.ProcessAsync(id, JobCancellationToken.Null));
         }
 
         /// <inheritdoc/>

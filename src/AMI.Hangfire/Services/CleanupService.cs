@@ -42,6 +42,7 @@ namespace AMI.Hangfire.Services
 
             try
             {
+                // TODO: cleanup events as well
                 var command = new ClearObjectsCommand()
                 {
                     RefDate = DateTime.Now.AddMinutes(-configuration.Options.CleanupPeriod)

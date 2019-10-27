@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace AMI.Core.Services
+﻿namespace AMI.Core.Services
 {
     /// <summary>
     /// An interface representing a service to handle background processing.
@@ -8,11 +6,11 @@ namespace AMI.Core.Services
     public interface IBackgroundService
     {
         /// <summary>
-        /// Enqueues the task asynchronous.
+        /// Enqueues the task.
         /// </summary>
         /// <param name="id">The identifier of the task.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task<string> EnqueueTaskAsync(string id);
+        /// <returns>A unique identifier of the created background job.</returns>
+        string EnqueueTask(string id);
 
         /// <summary>
         /// Schedules the recurring cleanup job.

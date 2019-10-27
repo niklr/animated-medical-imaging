@@ -65,6 +65,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AMI.Domain\AMI.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\Events\Queries\" />
   </ItemGroup>  
   
 </Project>

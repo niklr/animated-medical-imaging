@@ -128,7 +128,7 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
 
                 await Gateway.NotifyGroupsAsync(entity.Object?.UserId, EventType.TaskCreated, result, cancellationToken);
 
-                await backgroundService.EnqueueTaskAsync(result.Id);
+                backgroundService.EnqueueTask(result.Id);
 
                 return result;
             });

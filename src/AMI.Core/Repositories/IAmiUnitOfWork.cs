@@ -14,6 +14,11 @@ namespace AMI.Core.Repositories
         IRepository<AuditEventEntity> AuditEventRepository { get; }
 
         /// <summary>
+        /// Gets the event repository.
+        /// </summary>
+        IRepository<EventEntity> EventRepository { get; }
+
+        /// <summary>
         /// Gets the object repository.
         /// </summary>
         IRepository<ObjectEntity> ObjectRepository { get; }

@@ -74,9 +74,16 @@ namespace AMI.Hangfire.Extensions
 
             services.AddHangfireServer(options =>
             {
-                options.Queues = new[] { QueueNames.Default, QueueNames.Imaging, QueueNames.Webhooks };
+                options.Queues = new[] { QueueNames.Default, QueueNames.Imaging };
                 options.SchedulePollingInterval = TimeSpan.FromSeconds(5);
                 options.WorkerCount = 1;
+            });
+
+            services.AddHangfireServer(options =>
+            {
+                options.Queues = new[] { QueueNames.Webhooks };
+                options.SchedulePollingInterval = TimeSpan.FromSeconds(5);
+                options.WorkerCount = Environment.ProcessorCount * 5;
             });
 
             GlobalJobFilters.Filters.Add(new LogEverythingAttribute());

@@ -3,11 +3,11 @@
     /// <summary>
     /// A model containing information about the event.
     /// </summary>
-    public class TaskEventDataModel
+    public class AuditEventDataModel : BaseEventDataModel
     {
         /// <summary>
         /// Gets or sets the object.
         /// </summary>
-        public TaskModel Object { get; set; }
+        public AuditEventModel Object { get; set; }
     }
 }

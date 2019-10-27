@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190927190532_Initial")]
+    [Migration("20191027162448_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,40 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
                     b.HasIndex("Timestamp");
 
                     b.ToTable("AuditEvents");
+                });
+
+            modelBuilder.Entity("AMI.Domain.Entities.EventEntity", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<string>("ApiVersion")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("EventSerialized")
+                        .IsRequired();
+
+                    b.Property<int>("EventType");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("EventType");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("CreatedDate", "UserId");
+
+                    b.HasIndex("CreatedDate", "EventType", "UserId");
+
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("AMI.Domain.Entities.ObjectEntity", b =>
@@ -276,7 +310,11 @@ namespace AMI.Persistence.EntityFramework.SQLite.Migrations
 
                     b.HasIndex("CreatedDate");
 
+                    b.HasIndex("EnabledEvents");
+
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "EnabledEvents");
 
                     b.ToTable("Webhooks");
                 });

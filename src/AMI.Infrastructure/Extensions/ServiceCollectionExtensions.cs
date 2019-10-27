@@ -40,6 +40,7 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
             services.AddScoped<IIdGenerator, IdGenerator>();
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IEventService, EventService>();
             services.AddScoped<IGatewayService, GatewayService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<ITokenService, TokenService>();
