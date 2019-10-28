@@ -43,11 +43,13 @@ namespace AMI.NetCore.Tests.Core.Entities.Webhooks.Commands
             Assert.AreEqual("TaskUpdated", result1.EnabledEvents[0]);
             Assert.AreEqual("TaskCreated", result1.EnabledEvents[1]);
             Assert.AreEqual(command.Url, result1.Url);
+            Assert.AreEqual(SHARED_GUID_1, result1.UserId);
 
             Assert.IsNotNull(entity);
             Assert.AreEqual("#TaskUpdated#,#TaskCreated#", entity.EnabledEvents);
 
             uow.WebhookRepository.Remove(entity);
+            uow.SaveChanges();
         }
 
         [Test]

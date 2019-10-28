@@ -15,6 +15,11 @@ namespace AMI.Core.Entities.Events.Commands.Create
         public EventType EventType { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the user.
+        /// </summary>
+        public string UserId { get; set; }
+
+        /// <summary>
         /// Gets or sets the event.
         /// </summary>
         public object Event { get; set; }

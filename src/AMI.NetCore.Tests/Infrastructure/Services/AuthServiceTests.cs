@@ -9,10 +9,10 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
     [TestFixture]
     public class AuthServiceTests : BaseTest
     {
-        [TestCase("00000000-0000-0000-0000-000000000000", false)]
-        [TestCase("11111111-1111-1111-1111-111111111111", true)]
-        [TestCase("22222222-2222-2222-2222-222222222222", false)]
-        [TestCase("33333333-3333-3333-3333-333333333333", false)]
+        [TestCase(SHARED_GUID_0, false)]
+        [TestCase(SHARED_GUID_1, true)]
+        [TestCase(SHARED_GUID_2, false)]
+        [TestCase(SHARED_GUID_3, false)]
         public void AuthService_IsAuthorized(string ownerId, bool expected)
         {
             //  Arrange
@@ -31,10 +31,10 @@ namespace AMI.NetCore.Tests.Infrastructure.Services
             //  Arrange
             var service = GetService<IAuthService>();
             TestExecutionContext.CurrentContext.CurrentPrincipal = new MockPrincipal(
-                "22222222-2222-2222-2222-222222222222", new RoleType[] { RoleType.Administrator });
+                SHARED_GUID_2, new RoleType[] { RoleType.Administrator });
 
             // Act
-            bool actual = service.IsAuthorized("33333333-3333-3333-3333-333333333333");
+            bool actual = service.IsAuthorized(SHARED_GUID_3);
 
             // Assert
             Assert.AreEqual(true, actual);

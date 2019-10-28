@@ -7,7 +7,7 @@ namespace AMI.NetCore.Tests.Mocks.Core.Providers
 {
     public class MockPrincipalProvider : ICustomPrincipalProvider
     {
-        private readonly Guid sharedGuid = new Guid("11111111-1111-1111-1111-111111111111");
+        private readonly Guid sharedGuid = new Guid(BaseTest.SHARED_GUID_1);
 
         /// <inheritdoc/>
         public ICustomPrincipal GetPrincipal()

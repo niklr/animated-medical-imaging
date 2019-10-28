@@ -53,6 +53,7 @@ namespace AMI.Core.Entities.Events.Commands.Create
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow,
                 EventType = (int)request.EventType,
+                UserId = request.UserId,
                 EventSerialized = serializer.Serialize(request.Event)
             };
 

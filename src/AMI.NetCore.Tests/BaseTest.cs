@@ -40,6 +40,11 @@ namespace AMI.NetCore.Tests
 {
     public class BaseTest
     {
+        public const string SHARED_GUID_0 = "00000000-0000-0000-0000-000000000000";
+        public const string SHARED_GUID_1 = "11111111-1111-1111-1111-111111111111";
+        public const string SHARED_GUID_2 = "22222222-2222-2222-2222-222222222222";
+        public const string SHARED_GUID_3 = "33333333-3333-3333-3333-333333333333";
+
         private readonly ServiceCollection services;
 
         public BaseTest()

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Models;
 using AMI.Domain.Enums;
 
 namespace AMI.Core.Services
@@ -18,6 +19,6 @@ namespace AMI.Core.Services
         /// <param name="data">The event data.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task CreateAsync<T>(string userId, EventType eventType, T data, CancellationToken ct);
+        Task<EventModel> CreateAsync<T>(string userId, EventType eventType, T data, CancellationToken ct);
     }
 }

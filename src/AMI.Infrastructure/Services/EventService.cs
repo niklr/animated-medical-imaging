@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Entities.Events.Commands.Create;
+using AMI.Core.Entities.Models;
 using AMI.Core.Services;
 using AMI.Domain.Enums;
 using MediatR;
@@ -28,10 +30,28 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task CreateAsync<T>(string userId, EventType eventType, T data, CancellationToken ct)
+        public async Task<EventModel> CreateAsync<T>(string userId, EventType eventType, T data, CancellationToken ct)
         {
-            // TODO: store the event and if at least one webhook exists create a background job
-            await Task.CompletedTask;
+            try
+            {
+                // TODO: store the event and if at least one webhook exists create a background job
+                var command = new CreateEventCommand()
+                {
+                    UserId = userId,
+                    EventType = eventType,
+                    Event = data
+                };
+
+                var result = await mediator.Send(command);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, e.Message);
+            }
+
+            return null;
         }
     }
 }

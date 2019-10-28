@@ -12,6 +12,7 @@ namespace AMI.Core.Entities.Events.Commands.Create
         /// </summary>
         public CreateCommandValidator()
         {
+            RuleFor(x => x.UserId).NotEmpty();
             RuleFor(x => x.Event).NotNull();
         }
     }

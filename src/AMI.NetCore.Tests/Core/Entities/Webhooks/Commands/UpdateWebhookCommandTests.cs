@@ -54,6 +54,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Webhooks.Commands
             Assert.AreEqual("#TaskUpdated#,#TaskCreated#,#TaskDeleted#", entity.EnabledEvents);
 
             uow.WebhookRepository.Remove(entity);
+            uow.SaveChanges();
         }
 
         [Test]
@@ -105,6 +106,7 @@ namespace AMI.NetCore.Tests.Core.Entities.Webhooks.Commands
             Assert.IsTrue(firstEntry[0].StartsWith("'Enabled Events' must be one of these values: Unknown, TaskCr"));
 
             uow.WebhookRepository.Remove(entity);
+            uow.SaveChanges();
         }
 
         [Test]
