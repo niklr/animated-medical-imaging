@@ -511,6 +511,125 @@
         }
       }
     },
+    "/events": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Get paginated list of events",
+        "description": "With this GET request you can obtain a paginated list of events.\nThe events are sorted in descending order by creation date.",
+        "operationId": "Events_GetPaginated",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The current page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The limit to constrain the number of items.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "A model containing a list of paginated events.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResultModelOfEventModel"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/objects": {
       "get": {
         "tags": [
@@ -3493,7 +3612,7 @@
           }
         }
       },
-      "PaginationResultModelOfObjectModel": {
+      "PaginationResultModelOfEventModel": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -3501,7 +3620,7 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/ObjectModel"
+              "$ref": "#/components/schemas/EventModel"
             }
           },
           "pagination": {
@@ -3514,14 +3633,14 @@
           }
         }
       },
-      "ObjectModel": {
+      "EventModel": {
         "type": "object",
-        "description": "A model representing an object.",
+        "description": "A model containing information about an event that occurred.\nAn event is created for example when the status of a task changes.",
         "additionalProperties": false,
         "properties": {
           "id": {
             "type": "string",
-            "description": "Gets or sets the identifier of the object.",
+            "description": "Gets or sets the identifier.",
             "nullable": true
           },
           "createdDate": {
@@ -3534,93 +3653,114 @@
             "description": "Gets or sets the modified date.",
             "format": "date-time"
           },
-          "dataType": {
-            "description": "Gets or sets the type of the data.",
+          "apiVersion": {
+            "type": "string",
+            "description": "Gets or sets the API version used to render data.",
+            "nullable": true
+          },
+          "eventType": {
+            "description": "Gets or sets the type of the event.",
             "oneOf": [
               {
-                "$ref": "#/components/schemas/DataType"
+                "$ref": "#/components/schemas/EventType2"
               }
             ]
-          },
-          "fileFormat": {
-            "description": "Gets or sets the file format.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileFormat"
-              }
-            ]
-          },
-          "originalFilename": {
-            "type": "string",
-            "description": "Gets or sets the original filename.",
-            "nullable": true
-          },
-          "sourcePath": {
-            "type": "string",
-            "description": "Gets or sets the source path (directory, file, url, etc.).",
-            "nullable": true
-          },
-          "extractedPath": {
-            "type": "string",
-            "description": "Gets or sets the extracted/uncompressed path (directory).",
-            "nullable": true
           },
           "userId": {
             "type": "string",
-            "description": "Gets or sets the user identifier.",
+            "description": "Gets or sets the user identifier that originated the event.",
             "nullable": true
           },
-          "latestTask": {
-            "description": "Gets or sets the latest task.",
+          "dataSerialized": {
+            "type": "string",
+            "description": "Gets or sets the serialized data associated with the event.\nProvided only if the deserialization failed.",
+            "nullable": true
+          },
+          "data": {
+            "description": "Gets or sets the data associated with the event.",
             "nullable": true,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/TaskModel"
+                "$ref": "#/components/schemas/BaseEventDataModel"
               }
             ]
           }
         }
       },
-      "DataType": {
+      "EventType2": {
         "type": "string",
-        "description": "A type to describe the data.",
+        "description": "A type to describe webhook/gateway events.",
         "x-enumNames": [
           "Unknown",
-          "RawImage",
-          "SegmentationImage"
+          "TaskCreated",
+          "TaskUpdated",
+          "TaskDeleted",
+          "ObjectCreated",
+          "ObjectUpdated",
+          "ObjectDeleted",
+          "AuditEventCreated",
+          "WorkerCreated",
+          "WorkerUpdated",
+          "WorkerDeleted"
         ],
         "enum": [
           "Unknown",
-          "RawImage",
-          "SegmentationImage"
+          "TaskCreated",
+          "TaskUpdated",
+          "TaskDeleted",
+          "ObjectCreated",
+          "ObjectUpdated",
+          "ObjectDeleted",
+          "AuditEventCreated",
+          "WorkerCreated",
+          "WorkerUpdated",
+          "WorkerDeleted"
         ]
       },
-      "FileFormat": {
-        "type": "string",
-        "description": "A type to describe the file format.",
-        "x-enumNames": [
-          "Unknown",
-          "Dicom",
-          "Analyze",
-          "MetaImage",
-          "Nifti",
-          "Rar",
-          "Zip",
-          "Tar",
-          "SevenZip",
-          "GZip"
+      "BaseEventDataModel": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "discriminator",
+          "mapping": {
+            "TaskEventDataModel": "#/components/schemas/TaskEventDataModel",
+            "ObjectEventDataModel": "#/components/schemas/ObjectEventDataModel",
+            "AuditEventDataModel": "#/components/schemas/AuditEventDataModel",
+            "WorkerEventDataModel": "#/components/schemas/WorkerEventDataModel"
+          }
+        },
+        "description": "The base properties all event data have in common.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "required": [
+          "discriminator"
         ],
-        "enum": [
-          "Unknown",
-          "Dicom",
-          "Analyze",
-          "MetaImage",
-          "Nifti",
-          "Rar",
-          "Zip",
-          "Tar",
-          "SevenZip",
-          "GZip"
+        "properties": {
+          "discriminator": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskEventDataModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEventDataModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the event.",
+            "additionalProperties": false,
+            "properties": {
+              "object": {
+                "description": "Gets or sets the object.",
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/TaskModel"
+                  }
+                ]
+              }
+            }
+          }
         ]
       },
       "TaskModel": {
@@ -4090,6 +4230,339 @@
           }
         ]
       },
+      "ObjectModel": {
+        "type": "object",
+        "description": "A model representing an object.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the identifier of the object.",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the created date.",
+            "format": "date-time"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "Gets or sets the modified date.",
+            "format": "date-time"
+          },
+          "dataType": {
+            "description": "Gets or sets the type of the data.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DataType"
+              }
+            ]
+          },
+          "fileFormat": {
+            "description": "Gets or sets the file format.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileFormat"
+              }
+            ]
+          },
+          "originalFilename": {
+            "type": "string",
+            "description": "Gets or sets the original filename.",
+            "nullable": true
+          },
+          "sourcePath": {
+            "type": "string",
+            "description": "Gets or sets the source path (directory, file, url, etc.).",
+            "nullable": true
+          },
+          "extractedPath": {
+            "type": "string",
+            "description": "Gets or sets the extracted/uncompressed path (directory).",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string",
+            "description": "Gets or sets the user identifier.",
+            "nullable": true
+          },
+          "latestTask": {
+            "description": "Gets or sets the latest task.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TaskModel"
+              }
+            ]
+          }
+        }
+      },
+      "DataType": {
+        "type": "string",
+        "description": "A type to describe the data.",
+        "x-enumNames": [
+          "Unknown",
+          "RawImage",
+          "SegmentationImage"
+        ],
+        "enum": [
+          "Unknown",
+          "RawImage",
+          "SegmentationImage"
+        ]
+      },
+      "FileFormat": {
+        "type": "string",
+        "description": "A type to describe the file format.",
+        "x-enumNames": [
+          "Unknown",
+          "Dicom",
+          "Analyze",
+          "MetaImage",
+          "Nifti",
+          "Rar",
+          "Zip",
+          "Tar",
+          "SevenZip",
+          "GZip"
+        ],
+        "enum": [
+          "Unknown",
+          "Dicom",
+          "Analyze",
+          "MetaImage",
+          "Nifti",
+          "Rar",
+          "Zip",
+          "Tar",
+          "SevenZip",
+          "GZip"
+        ]
+      },
+      "ObjectEventDataModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEventDataModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the event.",
+            "additionalProperties": false,
+            "properties": {
+              "object": {
+                "description": "Gets or sets the object.",
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ObjectModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AuditEventDataModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEventDataModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the event.",
+            "additionalProperties": false,
+            "properties": {
+              "object": {
+                "description": "Gets or sets the object.",
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AuditEventModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "WorkerEventDataModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseEventDataModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the event.",
+            "additionalProperties": false,
+            "properties": {
+              "object": {
+                "description": "Gets or sets the object.",
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/BaseWorkerModel"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "BaseWorkerModel": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "discriminator",
+          "mapping": {
+            "QueueWorkerModel": "#/components/schemas/QueueWorkerModel",
+            "RecurringWorkerModel": "#/components/schemas/RecurringWorkerModel"
+          }
+        },
+        "description": "The base all results have in common.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "required": [
+          "discriminator"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the identifier of the worker.",
+            "nullable": true
+          },
+          "workerName": {
+            "type": "string",
+            "description": "Gets or sets the name of the worker.",
+            "nullable": true
+          },
+          "workerType": {
+            "description": "Gets or sets the type of the worker.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkerType"
+              }
+            ]
+          },
+          "workerStatus": {
+            "description": "Gets or sets the current status of the worker.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WorkerStatus"
+              }
+            ]
+          },
+          "lastActivityDate": {
+            "type": "string",
+            "description": "Gets or sets the last activity date.",
+            "format": "date-time"
+          },
+          "currentProcessingTime": {
+            "type": "string",
+            "description": "Gets or sets the current processing time.",
+            "format": "time-span"
+          },
+          "lastProcessingTime": {
+            "type": "string",
+            "description": "Gets or sets the last processing time.",
+            "format": "time-span"
+          },
+          "discriminator": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkerType": {
+        "type": "string",
+        "description": "A type to describe the worker.",
+        "x-enumNames": [
+          "Unknown",
+          "Queue",
+          "Recurring"
+        ],
+        "enum": [
+          "Unknown",
+          "Queue",
+          "Recurring"
+        ]
+      },
+      "WorkerStatus": {
+        "type": "string",
+        "description": "The different states of a worker.",
+        "x-enumNames": [
+          "Initialized",
+          "Processing",
+          "Idling",
+          "Retrying",
+          "Exception",
+          "Terminated"
+        ],
+        "enum": [
+          "Initialized",
+          "Processing",
+          "Idling",
+          "Retrying",
+          "Exception",
+          "Terminated"
+        ]
+      },
+      "QueueWorkerModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseWorkerModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the default worker.",
+            "additionalProperties": false,
+            "properties": {
+              "count": {
+                "type": "integer",
+                "description": "Gets or sets the queue count.",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "RecurringWorkerModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseWorkerModel"
+          },
+          {
+            "type": "object",
+            "description": "A model containing information about the recurring worker.",
+            "additionalProperties": false,
+            "properties": {
+              "nextActivityDate": {
+                "type": "string",
+                "description": "Gets or sets the next activity date.",
+                "format": "date-time"
+              }
+            }
+          }
+        ]
+      },
+      "PaginationResultModelOfObjectModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ObjectModel"
+            }
+          },
+          "pagination": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PaginationModel"
+              }
+            ]
+          }
+        }
+      },
       "PongModel": {
         "type": "object",
         "description": "A model containing test information",
@@ -4446,140 +4919,6 @@
             ]
           }
         }
-      },
-      "BaseWorkerModel": {
-        "type": "object",
-        "discriminator": {
-          "propertyName": "discriminator",
-          "mapping": {
-            "QueueWorkerModel": "#/components/schemas/QueueWorkerModel",
-            "RecurringWorkerModel": "#/components/schemas/RecurringWorkerModel"
-          }
-        },
-        "description": "The base all results have in common.",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "required": [
-          "discriminator"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Gets or sets the identifier of the worker.",
-            "nullable": true
-          },
-          "workerName": {
-            "type": "string",
-            "description": "Gets or sets the name of the worker.",
-            "nullable": true
-          },
-          "workerType": {
-            "description": "Gets or sets the type of the worker.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/WorkerType"
-              }
-            ]
-          },
-          "workerStatus": {
-            "description": "Gets or sets the current status of the worker.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/WorkerStatus"
-              }
-            ]
-          },
-          "lastActivityDate": {
-            "type": "string",
-            "description": "Gets or sets the last activity date.",
-            "format": "date-time"
-          },
-          "currentProcessingTime": {
-            "type": "string",
-            "description": "Gets or sets the current processing time.",
-            "format": "time-span"
-          },
-          "lastProcessingTime": {
-            "type": "string",
-            "description": "Gets or sets the last processing time.",
-            "format": "time-span"
-          },
-          "discriminator": {
-            "type": "string"
-          }
-        }
-      },
-      "WorkerType": {
-        "type": "string",
-        "description": "A type to describe the worker.",
-        "x-enumNames": [
-          "Unknown",
-          "Queue",
-          "Recurring"
-        ],
-        "enum": [
-          "Unknown",
-          "Queue",
-          "Recurring"
-        ]
-      },
-      "WorkerStatus": {
-        "type": "string",
-        "description": "The different states of a worker.",
-        "x-enumNames": [
-          "Initialized",
-          "Processing",
-          "Idling",
-          "Retrying",
-          "Exception",
-          "Terminated"
-        ],
-        "enum": [
-          "Initialized",
-          "Processing",
-          "Idling",
-          "Retrying",
-          "Exception",
-          "Terminated"
-        ]
-      },
-      "QueueWorkerModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseWorkerModel"
-          },
-          {
-            "type": "object",
-            "description": "A model containing information about the default worker.",
-            "additionalProperties": false,
-            "properties": {
-              "count": {
-                "type": "integer",
-                "description": "Gets or sets the queue count.",
-                "format": "int32"
-              }
-            }
-          }
-        ]
-      },
-      "RecurringWorkerModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseWorkerModel"
-          },
-          {
-            "type": "object",
-            "description": "A model containing information about the recurring worker.",
-            "additionalProperties": false,
-            "properties": {
-              "nextActivityDate": {
-                "type": "string",
-                "description": "Gets or sets the next activity date.",
-                "format": "date-time"
-              }
-            }
-          }
-        ]
       }
     },
     "securitySchemes": {

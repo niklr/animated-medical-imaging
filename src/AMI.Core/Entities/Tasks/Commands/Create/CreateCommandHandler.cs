@@ -125,8 +125,16 @@ namespace AMI.Core.Entities.Tasks.Commands.Create
                 await Context.SaveChangesAsync(cancellationToken);
 
                 var result = await mediator.Send(new GetByIdQuery() { Id = entity.Id.ToString() });
+                if (result == null)
+                {
+                    throw new UnexpectedNullException($"The task '{entity.Id.ToString()}' could not be retrieved after creating it.");
+                }
 
-                await Gateway.NotifyGroupsAsync(entity.Object?.UserId, EventType.TaskCreated, result, cancellationToken);
+                if (entity.Object != null)
+                {
+                    await Events.CreateAsync(entity.Object.UserId, EventType.TaskCreated, result, cancellationToken);
+                    await Gateway.NotifyGroupsAsync(entity.Object.UserId, EventType.TaskCreated, result, cancellationToken);
+                }
 
                 backgroundService.EnqueueTask(result.Id);
 

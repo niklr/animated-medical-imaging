@@ -85,6 +85,7 @@ namespace AMI.Core.Entities.Objects.Commands.Delete
 
             var result = ObjectModel.Create(entity);
 
+            await Events.CreateAsync(entity.UserId, EventType.ObjectDeleted, result, cancellationToken);
             await Gateway.NotifyGroupsAsync(entity.UserId, EventType.ObjectDeleted, result, cancellationToken);
 
             return true;

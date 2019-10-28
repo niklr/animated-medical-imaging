@@ -17,18 +17,21 @@ namespace AMI.Infrastructure.Modules
         /// </summary>
         /// <param name="auditService">The auditing service.</param>
         /// <param name="context">The context.</param>
+        /// <param name="eventService">The events service.</param>
         /// <param name="gateway">The gateway service.</param>
         /// <param name="authService">The identity service.</param>
         /// <param name="principalProvider">The principal provider.</param>
         public CommandHandlerModule(
             IAuditService auditService,
             IAmiUnitOfWork context,
+            IEventService eventService,
             IGatewayService gateway,
             IAuthService authService,
             ICustomPrincipalProvider principalProvider)
         {
             Audit = auditService ?? throw new ArgumentNullException(nameof(auditService));
             Context = context ?? throw new ArgumentNullException(nameof(context));
+            Events = eventService ?? throw new ArgumentNullException(nameof(eventService));
             Gateway = gateway ?? throw new ArgumentNullException(nameof(gateway));
             AuthService = authService ?? throw new ArgumentNullException(nameof(authService));
             PrincipalProvider = principalProvider ?? throw new ArgumentNullException(nameof(principalProvider));
@@ -39,6 +42,9 @@ namespace AMI.Infrastructure.Modules
 
         /// <inheritdoc/>
         public IAmiUnitOfWork Context { get; private set; }
+
+        /// <inheritdoc/>
+        public IEventService Events { get; private set; }
 
         /// <inheritdoc/>
         public IGatewayService Gateway { get; private set; }

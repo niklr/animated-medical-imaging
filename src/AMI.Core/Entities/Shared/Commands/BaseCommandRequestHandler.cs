@@ -32,6 +32,7 @@ namespace AMI.Core.Entities.Shared.Commands
 
             Audit = module.Audit ?? throw new UnexpectedNullException("The auditing service cannot be null.");
             Context = module.Context ?? throw new UnexpectedNullException("The context cannot be null.");
+            Events = module.Events ?? throw new UnexpectedNullException("The events service cannot be null.");
             Gateway = module.Gateway ?? throw new UnexpectedNullException("The gateway service cannot be null.");
             AuthService = module.AuthService ?? throw new UnexpectedNullException("The identity service cannot be null.");
             PrincipalProvider = module.PrincipalProvider ?? throw new UnexpectedNullException("The principal provider cannot be null.");
@@ -46,6 +47,11 @@ namespace AMI.Core.Entities.Shared.Commands
         /// Gets the context.
         /// </summary>
         protected IAmiUnitOfWork Context { get; private set; }
+
+        /// <summary>
+        /// Gets the events service.
+        /// </summary>
+        protected IEventService Events { get; private set; }
 
         /// <summary>
         /// Gets the gateway service.

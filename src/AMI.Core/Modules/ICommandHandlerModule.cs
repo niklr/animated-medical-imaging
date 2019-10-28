@@ -20,6 +20,11 @@ namespace AMI.Core.Modules
         IAmiUnitOfWork Context { get; }
 
         /// <summary>
+        /// Gets the events service.
+        /// </summary>
+        IEventService Events { get; }
+
+        /// <summary>
         /// Gets the gateway service.
         /// </summary>
         IGatewayService Gateway { get; }

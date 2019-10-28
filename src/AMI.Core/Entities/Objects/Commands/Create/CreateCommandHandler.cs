@@ -129,6 +129,7 @@ namespace AMI.Core.Entities.Objects.Commands.Create
 
                 var result = ObjectModel.Create(entity);
 
+                await Events.CreateAsync(entity.UserId, EventType.ObjectCreated, result, cancellationToken);
                 await Gateway.NotifyGroupsAsync(entity.UserId, EventType.ObjectCreated, result, cancellationToken);
 
                 return result;
