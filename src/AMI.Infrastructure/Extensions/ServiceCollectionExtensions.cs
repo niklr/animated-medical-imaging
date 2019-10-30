@@ -54,7 +54,6 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
             services.AddSingleton<IGatewayObserverService, GatewayObserverService>();
-            services.AddSingleton<IWorkerService, WorkerService>();
         }
     }
 }

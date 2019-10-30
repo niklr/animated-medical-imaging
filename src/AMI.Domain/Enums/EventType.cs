@@ -43,21 +43,6 @@
         /// <summary>
         /// The event representing a created audit event.
         /// </summary>
-        AuditEventCreated = 30,
-
-        /// <summary>
-        /// The event representing a created worker.
-        /// </summary>
-        WorkerCreated = 40,
-
-        /// <summary>
-        /// The event representing an updated worker.
-        /// </summary>
-        WorkerUpdated = 41,
-
-        /// <summary>
-        /// The event representing a deleted worker.
-        /// </summary>
-        WorkerDeleted = 42
+        AuditEventCreated = 30
     }
 }

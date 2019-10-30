@@ -8,8 +8,7 @@ import {
   ObjectsAmiApiClient,
   TasksAmiApiClient,
   TokensAmiApiClient,
-  WebhooksAmiApiClient,
-  WorkersAmiApiClient 
+  WebhooksAmiApiClient
 } from './ami-api-client';
 
 @NgModule({
@@ -28,8 +27,7 @@ import {
     ObjectsAmiApiClient,
     TasksAmiApiClient,
     TokensAmiApiClient,
-    WebhooksAmiApiClient,
-    WorkersAmiApiClient
+    WebhooksAmiApiClient
   ]
 })
 export class AmiApiClientModule { }

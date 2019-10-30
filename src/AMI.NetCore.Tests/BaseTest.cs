@@ -14,7 +14,6 @@ using AMI.Core.Helpers;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Mappers;
 using AMI.Core.Providers;
-using AMI.Core.Queues;
 using AMI.Core.Repositories;
 using AMI.Core.Services;
 using AMI.Domain.Entities;
@@ -81,7 +80,6 @@ namespace AMI.NetCore.Tests
             services.AddSingleton<IAppInfoFactory, MockAppInfoFactory>();
             services.AddSingleton<IApiConfiguration, ApiConfiguration>();
             services.AddSingleton<IAppConfiguration, AppConfiguration>();
-            services.AddSingleton<ITaskQueue, TaskQueue>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
             services.AddTransient<IDefaultJsonSerializer, DefaultJsonSerializer>();
 

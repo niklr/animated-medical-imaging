@@ -101,14 +101,6 @@ namespace AMI.Core.Entities.Models
                             Object = serializer.Deserialize<AuditEventModel>(entity.EventSerialized)
                         };
                         break;
-                    case EventType.WorkerCreated:
-                    case EventType.WorkerUpdated:
-                    case EventType.WorkerDeleted:
-                        model.Data = new WorkerEventDataModel()
-                        {
-                            Object = serializer.Deserialize<BaseWorkerModel>(entity.EventSerialized)
-                        };
-                        break;
                     default:
                         break;
                 }

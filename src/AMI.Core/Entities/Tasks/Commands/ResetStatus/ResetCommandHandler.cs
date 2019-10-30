@@ -7,7 +7,6 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Shared.Commands;
 using AMI.Core.IO.Serializers;
 using AMI.Core.Modules;
-using AMI.Core.Queues;
 using AMI.Domain.Enums.Auditing;
 
 namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
@@ -19,7 +18,6 @@ namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
     {
         private readonly IApiConfiguration configuration;
         private readonly IDefaultJsonSerializer serializer;
-        private readonly ITaskQueue queue;
         private readonly int batchSize;
 
         /// <summary>
@@ -28,17 +26,14 @@ namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
         /// <param name="module">The command handler module.</param>
         /// <param name="configuration">The API configuration.</param>
         /// <param name="serializer">The JSON serializer.</param>
-        /// <param name="queue">The task queue.</param>
         public ResetCommandHandler(
             ICommandHandlerModule module,
             IApiConfiguration configuration,
-            IDefaultJsonSerializer serializer,
-            ITaskQueue queue)
+            IDefaultJsonSerializer serializer)
             : base(module)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            this.queue = queue ?? throw new ArgumentNullException(nameof(queue));
 
             batchSize = configuration.Options.BatchSize > 0 ? configuration.Options.BatchSize : 1000;
         }
@@ -75,7 +70,6 @@ namespace AMI.Core.Entities.Tasks.Commands.ResetStatus
                     foreach (var entity in entitiesBatch)
                     {
                         var result = TaskModel.Create(entity, serializer);
-                        queue.Add(result);
                     }
 
                     iteration++;

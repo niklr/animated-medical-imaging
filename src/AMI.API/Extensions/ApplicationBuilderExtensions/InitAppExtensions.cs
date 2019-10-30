@@ -61,9 +61,8 @@ namespace AMI.API.Extensions.ApplicationBuilderExtensions
                 mediator.Send(command, default(CancellationToken)).Wait();
             }
 
-            logger.LogInformation("Reset tasks.");
-            mediator.Send(new ResetTaskStatusCommand(), default(CancellationToken)).Wait();
-
+            // logger.LogInformation("Reset tasks.");
+            // mediator.Send(new ResetTaskStatusCommand(), default(CancellationToken)).Wait();
             logger.LogInformation("Application initialization finished.");
         }
     }

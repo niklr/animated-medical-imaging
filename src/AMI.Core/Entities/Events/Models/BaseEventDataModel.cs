@@ -11,7 +11,6 @@ namespace AMI.Core.Entities.Models
     [KnownType(typeof(TaskEventDataModel))]
     [KnownType(typeof(ObjectEventDataModel))]
     [KnownType(typeof(AuditEventDataModel))]
-    [KnownType(typeof(WorkerEventDataModel))]
     public abstract class BaseEventDataModel
     {
     }
