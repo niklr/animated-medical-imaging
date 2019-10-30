@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Objects.Commands.Clear;
-using Hangfire;
+using AMI.Core.Services;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Tools;
 
-namespace AMI.Hangfire.Services
+namespace AMI.Infrastructure.Services
 {
     /// <summary>
     /// A service to handle the scheduling of cleanups.
@@ -36,19 +37,25 @@ namespace AMI.Hangfire.Services
         }
 
         /// <inheritdoc/>
-        public async Task CleanupAsync(IJobCancellationToken ct)
+        public async Task CleanupAsync(CancellationToken ct)
         {
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
             try
             {
-                // TODO: cleanup events as well
-                var command = new ClearObjectsCommand()
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                if (configuration.Options.CleanupPeriod > 0)
                 {
-                    RefDate = DateTime.Now.AddMinutes(-configuration.Options.CleanupPeriod)
-                };
+                    cts.CancelAfter(configuration.Options.CleanupPeriod * 1000);
 
-                await mediator.Send(command, ct.ShutdownToken);
+                    // TODO: cleanup events as well
+                    var command = new ClearObjectsCommand()
+                    {
+                        RefDate = DateTime.Now.AddMinutes(-configuration.Options.CleanupPeriod)
+                    };
+
+                    await mediator.Send(command, cts.Token);
+                }
             }
             catch (OperationCanceledException)
             {

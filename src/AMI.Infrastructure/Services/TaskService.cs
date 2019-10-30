@@ -6,14 +6,14 @@ using AMI.Core.Entities.Models;
 using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Tasks.Commands.UpdateStatus;
 using AMI.Core.Entities.Tasks.Queries.GetById;
+using AMI.Core.Services;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
-using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Tools;
 
-namespace AMI.Hangfire.Services
+namespace AMI.Infrastructure.Services
 {
     /// <summary>
     /// A service to handle tasks related to background processing.
@@ -41,20 +41,19 @@ namespace AMI.Hangfire.Services
         }
 
         /// <inheritdoc/>
-        public async Task ProcessAsync(string id, IJobCancellationToken ct)
+        public async Task ProcessAsync(string id, CancellationToken ct)
         {
             Ensure.ArgumentNotNullOrWhiteSpace(id, nameof(id));
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
-            // TODO: use IJobCancellationToken
-            var cts = new CancellationTokenSource();
-            if (configuration?.Options?.TimeoutMilliseconds > 0)
-            {
-                cts.CancelAfter(configuration.Options.TimeoutMilliseconds);
-            }
-
             try
             {
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                if (configuration?.Options?.TimeoutMilliseconds > 0)
+                {
+                    cts.CancelAfter(configuration.Options.TimeoutMilliseconds);
+                }
+
                 var task = await mediator.Send(new GetByIdQuery { Id = id });
                 if (task == null)
                 {

@@ -40,8 +40,6 @@ namespace AMI.Hangfire.Extensions
                 return recurringJobManager.Object;
             });
 
-            services.AddTransient<ICleanupService, CleanupService>();
-            services.AddTransient<ITaskService, TaskService>();
             services.AddSingleton<IBackgroundService, BackgroundService>();
         }
 
@@ -57,8 +55,6 @@ namespace AMI.Hangfire.Extensions
             Ensure.ArgumentNotNull(configuration, nameof(configuration));
             Ensure.ArgumentNotNull(constants, nameof(constants));
 
-            services.AddTransient<ICleanupService, CleanupService>();
-            services.AddTransient<ITaskService, TaskService>();
             services.AddSingleton<IBackgroundService, BackgroundService>();
 
             var appOptions = new AppOptions();

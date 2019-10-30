@@ -13,6 +13,15 @@
         string EnqueueTask(string id);
 
         /// <summary>
+        /// Enqueues the event.
+        /// </summary>
+        /// <param name="webhookId">The webhook identifier.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="retryCount">The retry count.</param>
+        /// <returns>A unique identifier of the created background job.</returns>
+        string EnqueueWebhookEvent(string webhookId, string eventId, int retryCount = 0);
+
+        /// <summary>
         /// Schedules the recurring cleanup job.
         /// </summary>
         void ScheduleCleanup();

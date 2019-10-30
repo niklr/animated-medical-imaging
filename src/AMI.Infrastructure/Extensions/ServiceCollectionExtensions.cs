@@ -34,6 +34,8 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
         /// <param name="services">The service collection.</param>
         public static void AddDefaultInfrastructure(this IServiceCollection services)
         {
+            services.AddTransient<ICleanupService, CleanupService>();
+            services.AddTransient<ITaskService, TaskService>();
             services.AddScoped<ICommandHandlerModule, CommandHandlerModule>();
             services.AddScoped<IQueryHandlerModule, QueryHandlerModule>();
             services.AddScoped<IAppLogReader, AppLogReader>();

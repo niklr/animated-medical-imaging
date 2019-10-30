@@ -2,6 +2,7 @@
 using AMI.Core.Configurations;
 using AMI.Core.Constants;
 using AMI.Core.Services;
+using AMI.Hangfire.Proxies;
 using Hangfire;
 
 namespace AMI.Hangfire.Services
@@ -34,7 +35,13 @@ namespace AMI.Hangfire.Services
         /// <inheritdoc/>
         public string EnqueueTask(string id)
         {
-            return client.Enqueue<ITaskService>(x => x.ProcessAsync(id, JobCancellationToken.Null));
+            return client.Enqueue<TaskServiceProxy>(x => x.ProcessAsync(id, JobCancellationToken.Null));
+        }
+
+        /// <inheritdoc/>
+        public string EnqueueWebhookEvent(string webhookId, string eventId, int retryCount = 0)
+        {
+            return string.Empty;
         }
 
         /// <inheritdoc/>
@@ -44,7 +51,7 @@ namespace AMI.Hangfire.Services
 
             if (configuration.Options.CleanupPeriod > 0)
             {
-                manager.AddOrUpdate<ICleanupService>(
+                manager.AddOrUpdate<CleanupServiceProxy>(
                     recurringJobId,
                     x => x.CleanupAsync(JobCancellationToken.Null),
                     "0 * * ? * *", // Every minute
