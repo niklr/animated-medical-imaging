@@ -13,7 +13,7 @@
         string EnqueueTask(string id);
 
         /// <summary>
-        /// Enqueues the event.
+        /// Enqueues the webhook event.
         /// </summary>
         /// <param name="webhookId">The webhook identifier.</param>
         /// <param name="eventId">The event identifier.</param>
