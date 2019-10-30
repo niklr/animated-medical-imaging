@@ -36,6 +36,7 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
         {
             services.AddTransient<ICleanupService, CleanupService>();
             services.AddTransient<ITaskService, TaskService>();
+            services.AddTransient<IWebhookService, WebhookService>();
             services.AddScoped<ICommandHandlerModule, CommandHandlerModule>();
             services.AddScoped<IQueryHandlerModule, QueryHandlerModule>();
             services.AddScoped<IAppLogReader, AppLogReader>();

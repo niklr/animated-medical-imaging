@@ -39,9 +39,9 @@ namespace AMI.Hangfire.Services
         }
 
         /// <inheritdoc/>
-        public string EnqueueWebhookEvent(string webhookId, string eventId, int retryCount = 0)
+        public string EnqueueWebhookEvent(string webhookId, string eventId)
         {
-            return string.Empty;
+            return client.Enqueue<WebhookServiceProxy>(x => x.ProcessAsync(webhookId, eventId, JobCancellationToken.Null));
         }
 
         /// <inheritdoc/>

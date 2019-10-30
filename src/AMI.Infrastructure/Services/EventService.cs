@@ -20,16 +20,19 @@ namespace AMI.Infrastructure.Services
     {
         private readonly ILogger<EventService> logger;
         private readonly IMediator mediator;
+        private readonly IBackgroundService backgroundService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventService"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="mediator">The mediator.</param>
-        public EventService(ILoggerFactory loggerFactory, IMediator mediator)
+        /// <param name="backgroundService">The background service.</param>
+        public EventService(ILoggerFactory loggerFactory, IMediator mediator, IBackgroundService backgroundService)
         {
             logger = loggerFactory?.CreateLogger<EventService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.backgroundService = backgroundService ?? throw new ArgumentNullException(nameof(backgroundService));
         }
 
         /// <inheritdoc/>
@@ -56,11 +59,17 @@ namespace AMI.Infrastructure.Services
                     EventType = eventType
                 };
 
-                // if at least one webhook exists create a background job
+                // create a background job for each webhook
                 var webhooks = await mediator.Send(query, ct);
-                if (webhooks.Count() > 0)
+                if (webhooks != null && webhooks.Count() > 0)
                 {
-                    // TODO: create background job
+                    foreach (var webhook in webhooks)
+                    {
+                        if (webhook != null)
+                        {
+                            backgroundService.EnqueueWebhookEvent(webhook.Id, result.Id);
+                        }
+                    }
                 }
 
                 return result;
