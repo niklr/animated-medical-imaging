@@ -1,4 +1,5 @@
 ﻿using System;
+using AMI.Core.Entities.Shared.Models;
 using AMI.Core.IO.Serializers;
 using AMI.Domain.Entities;
 using AMI.Domain.Enums;
@@ -9,7 +10,7 @@ namespace AMI.Core.Entities.Models
     /// A model containing information about an event that occurred.
     /// An event is created for example when the status of a task changes.
     /// </summary>
-    public class EventModel
+    public class EventModel : IEntity
     {
         /// <summary>
         /// Gets or sets the identifier.

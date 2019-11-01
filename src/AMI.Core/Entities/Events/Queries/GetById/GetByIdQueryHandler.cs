@@ -11,12 +11,12 @@ using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using RNS.Framework.Search;
 
-namespace AMI.Core.Entities.Objects.Queries.GetById
+namespace AMI.Core.Entities.Events.Queries.GetById
 {
     /// <summary>
     /// A query handler to get an entity by its identifier.
     /// </summary>
-    public class GetByIdQueryHandler : BaseQueryRequestHandler<GetByIdQuery, ObjectModel>
+    public class GetByIdQueryHandler : BaseQueryRequestHandler<GetByIdQuery, EventModel>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GetByIdQueryHandler"/> class.
@@ -28,7 +28,7 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
         }
 
         /// <inheritdoc/>
-        protected override async Task<ObjectModel> ProtectedHandleAsync(GetByIdQuery request, CancellationToken cancellationToken)
+        protected override async Task<EventModel> ProtectedHandleAsync(GetByIdQuery request, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -38,29 +38,23 @@ namespace AMI.Core.Entities.Objects.Queries.GetById
                 throw new ForbiddenException("Not authenticated");
             }
 
-            Expression<Func<ObjectEntity, bool>> expression = PredicateBuilder.Create<ObjectEntity>(e => e.Id == Guid.Parse(request.Id));
+            Expression<Func<EventEntity, bool>> expression = PredicateBuilder.Create<EventEntity>(e => e.Id == Guid.Parse(request.Id));
             if (!principal.IsInRole(RoleType.Administrator))
             {
                 expression = expression.And(e => e.UserId == principal.Identity.Name);
             }
 
-            var result = Context.ObjectRepository
+            var result = Context.EventRepository
                 .GetQuery()
                 .Where(expression)
-                .Select(e => new
-                {
-                    Object = e,
-                    Tasks = e.Tasks.OrderByDescending(e1 => e1.CreatedDate).Take(Constants.DefaultPaginationLimit),
-                    Results = e.Tasks.OrderByDescending(e1 => e1.CreatedDate).Select(e1 => e1.Result).Take(Constants.DefaultPaginationLimit)
-                })
                 .FirstOrDefault();
 
             if (result == null)
             {
-                throw new NotFoundException(nameof(ObjectEntity), request.Id);
+                throw new NotFoundException(nameof(WebhookEntity), request.Id);
             }
 
-            var model = ObjectModel.Create(result.Object, result.Tasks, result.Results, Serializer);
+            var model = EventModel.Create(result, Serializer);
 
             await Task.CompletedTask;
 

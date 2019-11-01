@@ -1,6 +1,6 @@
 ﻿using AMI.Core.Entities.Shared.Queries.GetEntity;
 
-namespace AMI.Core.Entities.Objects.Queries.GetById
+namespace AMI.Core.Entities.Events.Queries.GetById
 {
     /// <summary>
     /// A validator for queries to get an entity by its identifier.

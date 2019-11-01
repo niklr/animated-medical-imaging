@@ -11,10 +11,10 @@ namespace AMI.Core.Services
         /// <summary>
         /// Processes the webhook event asynchronous.
         /// </summary>
-        /// <param name="id">The identifier of the webhook.</param>
+        /// <param name="webhookId">The identifier of the webhook.</param>
         /// <param name="eventId">The identifier of the event.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ProcessAsync(string id, string eventId, CancellationToken ct = default);
+        Task ProcessAsync(string webhookId, string eventId, CancellationToken ct = default);
     }
 }

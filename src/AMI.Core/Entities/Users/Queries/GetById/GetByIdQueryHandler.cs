@@ -10,7 +10,7 @@ using AMI.Domain.Exceptions;
 namespace AMI.Core.Entities.Users.Queries.GetById
 {
     /// <summary>
-    /// A query handler to get an object by its identifier.
+    /// A query handler to get an entity by its identifier.
     /// </summary>
     public class GetByIdQueryHandler : BaseQueryRequestHandler<GetByIdQuery, UserModel>
     {

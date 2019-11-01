@@ -14,7 +14,7 @@ using RNS.Framework.Search;
 namespace AMI.Core.Entities.Tasks.Queries.GetById
 {
     /// <summary>
-    /// A query handler to get an object by its identifier.
+    /// A query handler to get an entity by its identifier.
     /// </summary>
     public class GetByIdQueryHandler : BaseQueryRequestHandler<GetByIdQuery, TaskModel>
     {
