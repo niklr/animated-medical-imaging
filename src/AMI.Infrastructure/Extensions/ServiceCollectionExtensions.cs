@@ -1,4 +1,5 @@
 ﻿using AMI.Core.IO.Builders;
+using AMI.Core.IO.Clients;
 using AMI.Core.IO.Generators;
 using AMI.Core.IO.Readers;
 using AMI.Core.IO.Uploaders;
@@ -9,6 +10,7 @@ using AMI.Core.Services;
 using AMI.Core.Strategies;
 using AMI.Domain.Entities;
 using AMI.Infrastructure.IO.Builders;
+using AMI.Infrastructure.IO.Clients;
 using AMI.Infrastructure.IO.Generators;
 using AMI.Infrastructure.IO.Readers;
 using AMI.Infrastructure.IO.Uploaders;
@@ -52,6 +54,7 @@ namespace AMI.Infrastructure.Extensions.ServiceCollectionExtensions
             services.AddScoped<IUserStore<UserEntity>, UserStore<UserEntity>>();
             services.AddScoped<IRoleStore<RoleEntity>, RoleStore<RoleEntity>>();
             services.AddScoped<IAppLogRepository, AppLogRepository>();
+            services.AddSingleton<IJsonHttpClient, JsonHttpClient>();
             services.AddSingleton<IFileSystemStrategy, FileSystemStrategy>();
             services.AddSingleton<IGatewayGroupNameBuilder, GatewayGroupNameBuilder>();
             services.AddSingleton<IGatewayObserverService, GatewayObserverService>();

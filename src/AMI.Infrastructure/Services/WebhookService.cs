@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AMI.Core.Configurations;
+using AMI.Core.IO.Clients;
 using AMI.Core.Services;
 using AMI.Domain.Exceptions;
 using MediatR;
@@ -17,16 +19,26 @@ namespace AMI.Infrastructure.Services
     {
         private readonly ILogger<WebhookService> logger;
         private readonly IMediator mediator;
+        private readonly IApiConfiguration configuration;
+        private readonly IJsonHttpClient httpClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebhookService"/> class.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
         /// <param name="mediator">The mediator.</param>
-        public WebhookService(ILoggerFactory loggerFactory, IMediator mediator)
+        /// <param name="configuration">The API configuration.</param>
+        /// <param name="httpClient">The HTTP client.</param>
+        public WebhookService(
+            ILoggerFactory loggerFactory,
+            IMediator mediator,
+            IApiConfiguration configuration,
+            IJsonHttpClient httpClient)
         {
             logger = loggerFactory?.CreateLogger<WebhookService>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <inheritdoc/>
@@ -36,7 +48,13 @@ namespace AMI.Infrastructure.Services
             Ensure.ArgumentNotNullOrWhiteSpace(eventId, nameof(eventId));
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
-            var webhookModel = mediator.Send(
+            var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            if (configuration?.Options?.RequestTimeoutMilliseconds > 0)
+            {
+                cts.CancelAfter(configuration.Options.RequestTimeoutMilliseconds);
+            }
+
+            var webhookModel = await mediator.Send(
                 new Entities.Webhooks.Queries.GetById.GetByIdQuery()
                 {
                     Id = webhookId
@@ -46,7 +64,7 @@ namespace AMI.Infrastructure.Services
                 throw new UnexpectedNullException("The webhook could not be retrieved.");
             }
 
-            var eventModel = mediator.Send(
+            var eventModel = await mediator.Send(
                 new Entities.Events.Queries.GetById.GetByIdQuery()
                 {
                     Id = eventId
@@ -56,9 +74,18 @@ namespace AMI.Infrastructure.Services
                 throw new UnexpectedNullException("The event could not be retrieved.");
             }
 
-            await Task.CompletedTask;
+            // TODO: set signature in the header
+            var response = await httpClient.PostAsync(webhookModel.Url, eventModel, cts.Token);
+            if (response == null)
+            {
+                throw new UnexpectedNullException("The webhook response is null.");
+            }
 
-            throw new Exception($"WebhookService.ProcessAsync with WebhookId: '{webhookId}' and EventId: '{eventId}' failed.");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new AmiException($"The webhook response is not successful '{response.StatusCode.ToString()}'. " +
+                    $"WebhookId: {webhookId} EventId: {eventId}");
+            }
         }
     }
 }
