@@ -22,6 +22,11 @@ namespace AMI.API.Controllers
             (apiConfiguration = HttpContext.RequestServices.GetService<IApiConfiguration>());
 
         /// <summary>
+        /// Gets the application base URL.
+        /// </summary>
+        protected string AppBaseUrl => $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+
+        /// <summary>
         /// Gets the mediator.
         /// </summary>
         protected IMediator Mediator => mediator ??

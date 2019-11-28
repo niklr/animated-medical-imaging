@@ -15,8 +15,8 @@ export class AuthService extends BaseService {
 
   public user: IdentityModel;
 
-  constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService,
-              private worker: BackgroundWorker, private gateway: GatewayHub, private tokenService: TokenService) {
+  constructor(gc: GarbageCollector, notificationService: NotificationService, logger: LoggerService, private worker: BackgroundWorker,
+              private gateway: GatewayHub, private tokenService: TokenService) {
     super(gc, notificationService, logger);
 
     this.isInitialized = false;

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AMI.API.ViewModels;
 using AMI.Core.Constants;
 using AMI.Core.Entities.Models;
+using AMI.Core.Services;
 using AMI.Domain.Entities;
 using AMI.Domain.Exceptions;
 using Microsoft.AspNetCore.Authentication;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RNS.Framework.Tools;
 
 namespace AMI.API.Controllers
 {
@@ -24,33 +26,63 @@ namespace AMI.API.Controllers
     /// <seealso cref="Controller" />
     [Route("account")]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly IApplicationConstants constants;
         private readonly UserManager<UserEntity> userManager;
+        private readonly ITokenService tokenService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountController"/> class.
         /// </summary>
         /// <param name="constants">The application constants.</param>
         /// <param name="userManager">The user manager.</param>
-        public AccountController(IApplicationConstants constants, UserManager<UserEntity> userManager)
+        /// <param name="tokenService">The token service.</param>
+        public AccountController(IApplicationConstants constants, UserManager<UserEntity> userManager, ITokenService tokenService)
         {
             this.constants = constants ?? throw new ArgumentNullException(nameof(constants));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
 
         /// <summary>
         /// Renders the login page.
         /// </summary>
+        /// <param name="token">The encoded access token.</param>
+        /// <param name="redirectUrl">The URL redirected to after authentication was successful.</param>
         /// <returns>The login page.</returns>
         [HttpGet("login")]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login(string token, string redirectUrl)
         {
-            var result = await HttpContext.AuthenticateAsync("Cookies");
-            if (result?.Succeeded ?? false)
+            if (string.IsNullOrWhiteSpace(token))
             {
-                HttpContext.User = result.Principal;
+                var result = await HttpContext.AuthenticateAsync("Cookies");
+                if (result?.Succeeded ?? false)
+                {
+                    HttpContext.User = result.Principal;
+                }
+            }
+            else
+            {
+                // TODO: authenticate using the encoded access token.
+                var decodedToken = await tokenService.DecodeAsync<AccessTokenModel>(token, CancellationToken);
+                if (decodedToken == null)
+                {
+                    throw new UnexpectedNullException("Incorrect token.");
+                }
+
+                var user = await userManager.FindByNameAsync(decodedToken.Username);
+                if (user == null)
+                {
+                    throw new UnexpectedNullException("Incorrect token.");
+                }
+
+                await SignInAsync(user);
+            }
+
+            if (!string.IsNullOrWhiteSpace(redirectUrl) && redirectUrl.StartsWith(AppBaseUrl))
+            {
+                return Redirect(redirectUrl);
             }
 
             return View();
@@ -93,6 +125,27 @@ namespace AMI.API.Controllers
                 throw new UnexpectedNullException("Incorrect username or password.");
             }
 
+            await SignInAsync(user);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Performs the logout.
+        /// </summary>
+        /// <returns>The logout result.</returns>
+        [HttpPost("logout")]
+        public async Task<IActionResult> PostLogout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        private async Task SignInAsync(UserEntity user)
+        {
+            Ensure.ArgumentNotNull(user, nameof(user));
+
             var model = UserModel.Create(user, constants);
 
             var claims = new List<Claim>
@@ -123,20 +176,6 @@ namespace AMI.API.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
-
-            return Ok();
-        }
-
-        /// <summary>
-        /// Performs the logout.
-        /// </summary>
-        /// <returns>The logout result.</returns>
-        [HttpPost("logout")]
-        public async Task<IActionResult> PostLogout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            return RedirectToAction(nameof(Login));
         }
     }
 }

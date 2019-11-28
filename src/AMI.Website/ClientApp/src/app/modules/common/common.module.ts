@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClickOnceDirective } from '../../directives';
-import { ClipboardUtil, GuidUtil } from '../../utils';
+import { ClipboardUtil, GuidUtil, UrlUtil } from '../../utils';
 import { GuidBadgeComponent } from './guid-badge/guid-badge.component';
 import { PaginationComponent } from './paginator/paginator.component';
 import { TrimTextComponent } from './trim/trim.component';
@@ -20,7 +20,8 @@ import { TrimTextComponent } from './trim/trim.component';
   ],
   providers: [
     ClipboardUtil,
-    GuidUtil
+    GuidUtil,
+    UrlUtil
   ],
   exports: [
     ClickOnceDirective,

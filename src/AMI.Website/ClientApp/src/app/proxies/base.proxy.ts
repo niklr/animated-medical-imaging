@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { ConfigService } from '../services/config.service';
 
 @Injectable()
 export class BaseProxy {
 
+  protected readonly baseUrl: string;
+
   constructor(protected authService: AuthService) {
+    this.baseUrl = ConfigService.options.apiEndpoint;
   }
 
   public preflight(): Promise<void> {

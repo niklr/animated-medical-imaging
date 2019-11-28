@@ -5,7 +5,13 @@
 </div>
 <div class="custom-section">
   <div class="row">
-    <div class="col s12 mt-5">
+    <div class="col s12 offset-m3 m6 center">
+        <button type="button" class="btn waves-effect waves-light grey lighten-1 full-width"
+            [clickFn]="openHangfireDashboard" appClickOnce>Open external dashboard</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 mt-2">
       <ul id="adminTabs" class="tabs">
         <li class="tab col s3"><a class="active" href="#logs">Logs</a></li>
         <li class="tab col s3"><a href="#events">Events</a></li>
