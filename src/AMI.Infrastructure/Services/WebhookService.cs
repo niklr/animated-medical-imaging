@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.IO.Clients;
 using AMI.Core.Services;
+using AMI.Core.Wrappers;
 using AMI.Domain.Exceptions;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -42,13 +43,13 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task ProcessAsync(string webhookId, string eventId, CancellationToken ct = default)
+        public async Task ProcessAsync(string webhookId, string eventId, IWrappedJobCancellationToken ct)
         {
             Ensure.ArgumentNotNullOrWhiteSpace(webhookId, nameof(webhookId));
             Ensure.ArgumentNotNullOrWhiteSpace(eventId, nameof(eventId));
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
-            var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            var cts = CancellationTokenSource.CreateLinkedTokenSource(ct.ShutdownToken);
             if (configuration?.Options?.RequestTimeoutMilliseconds > 0)
             {
                 cts.CancelAfter(configuration.Options.RequestTimeoutMilliseconds);
@@ -58,7 +59,7 @@ namespace AMI.Infrastructure.Services
                 new Entities.Webhooks.Queries.GetById.GetByIdQuery()
                 {
                     Id = webhookId
-                }, ct);
+                }, cts.Token);
             if (webhookModel == null)
             {
                 throw new UnexpectedNullException("The webhook could not be retrieved.");
@@ -68,7 +69,7 @@ namespace AMI.Infrastructure.Services
                 new Entities.Events.Queries.GetById.GetByIdQuery()
                 {
                     Id = eventId
-                }, ct);
+                }, cts.Token);
             if (eventModel == null)
             {
                 throw new UnexpectedNullException("The event could not be retrieved.");

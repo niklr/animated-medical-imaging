@@ -64,7 +64,6 @@ namespace AMI.API.Controllers
             }
             else
             {
-                // TODO: authenticate using the encoded access token.
                 var decodedToken = await tokenService.DecodeAsync<AccessTokenModel>(token, CancellationToken);
                 if (decodedToken == null)
                 {

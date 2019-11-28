@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AMI.Core.Wrappers;
 
 namespace AMI.Core.Services
 {
@@ -14,6 +14,6 @@ namespace AMI.Core.Services
         /// <param name="id">The identifier of the task.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ProcessAsync(string id, CancellationToken ct);
+        Task ProcessAsync(string id, IWrappedJobCancellationToken ct);
     }
 }

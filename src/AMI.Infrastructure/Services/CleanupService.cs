@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AMI.Core.Configurations;
 using AMI.Core.Entities.Objects.Commands.Clear;
 using AMI.Core.Services;
+using AMI.Core.Wrappers;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using RNS.Framework.Tools;
@@ -37,13 +38,13 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task CleanupAsync(CancellationToken ct)
+        public async Task CleanupAsync(IWrappedJobCancellationToken ct)
         {
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
             try
             {
-                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct.ShutdownToken);
                 if (configuration.Options.CleanupPeriod > 0)
                 {
                     cts.CancelAfter(configuration.Options.CleanupPeriod * 1000);

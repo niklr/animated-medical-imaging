@@ -7,6 +7,7 @@ using AMI.Core.Entities.Results.Commands.ProcessObject;
 using AMI.Core.Entities.Tasks.Commands.UpdateStatus;
 using AMI.Core.Entities.Tasks.Queries.GetById;
 using AMI.Core.Services;
+using AMI.Core.Wrappers;
 using AMI.Domain.Enums;
 using AMI.Domain.Exceptions;
 using MediatR;
@@ -41,14 +42,14 @@ namespace AMI.Infrastructure.Services
         }
 
         /// <inheritdoc/>
-        public async Task ProcessAsync(string id, CancellationToken ct)
+        public async Task ProcessAsync(string id, IWrappedJobCancellationToken ct)
         {
             Ensure.ArgumentNotNullOrWhiteSpace(id, nameof(id));
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
             try
             {
-                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct.ShutdownToken);
                 if (configuration?.Options?.TimeoutMilliseconds > 0)
                 {
                     cts.CancelAfter(configuration.Options.TimeoutMilliseconds);

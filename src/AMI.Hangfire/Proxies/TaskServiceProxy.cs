@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AMI.Core.Constants;
 using AMI.Core.Services;
 using AMI.Hangfire.Attributes;
+using AMI.Hangfire.Wrappers;
 using Hangfire;
 using RNS.Framework.Tools;
 
@@ -38,8 +39,7 @@ namespace AMI.Hangfire.Proxies
             Ensure.ArgumentNotNullOrWhiteSpace(id, nameof(id));
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
-            // TODO: use IJobCancellationToken
-            await service.ProcessAsync(id, ct: default);
+            await service.ProcessAsync(id, new JobCancellationTokenWrapper(ct));
         }
     }
 }

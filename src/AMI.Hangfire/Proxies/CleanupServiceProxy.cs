@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AMI.Core.Services;
+using AMI.Hangfire.Wrappers;
 using Hangfire;
 using RNS.Framework.Tools;
 
@@ -31,7 +32,7 @@ namespace AMI.Hangfire.Proxies
         {
             Ensure.ArgumentNotNull(ct, nameof(ct));
 
-            await service.CleanupAsync(ct: default);
+            await service.CleanupAsync(new JobCancellationTokenWrapper(ct));
         }
     }
 }

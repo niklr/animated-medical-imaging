@@ -19,15 +19,14 @@ export class BackgroundWorker {
   }
 
   private notify(): void {
-    setTimeout(function () {
-      const that = this as BackgroundWorker;
+    setTimeout(() => {
       if (!document.hidden) {
-        that._observers.forEach(observer => {
+        this._observers.forEach(observer => {
           observer();
         });
       }
-      that.notify();
-    }.bind(this), 10000);
+      this.notify();
+    }, 10000);
   }
 
   public get lastUserActivity(): Date {

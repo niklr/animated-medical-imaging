@@ -32,7 +32,7 @@ import { BackgroundWorker, GarbageCollector, MomentUtil } from './utils';
  */
 
 export function initConfig(configService: ConfigService) {
-  return () => configService.init();
+  return () => configService.init(0);
 }
 
 export function initBaseAmiApi() {

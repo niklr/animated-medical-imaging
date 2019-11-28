@@ -15,16 +15,22 @@ export class ConfigService {
     this.baseUrl = this.removeTrailingSlash(baseUrl);
   }
 
-  public init(): Promise<void> {
+  public init(retryCount: number): Promise<void> {
     // Everything loaded before calling resolve can be accessed in a non-deferred manner.
     return new Promise<void>((resolve, reject) => {
       const handleError = (error: any) => {
-        const message = `Could not load options: ${JSON.stringify(error)}`;
-        const loadingElement = document.querySelector('#loading');
-        if (loadingElement) {
-          loadingElement.innerHTML = message;
+        if (retryCount > 3) {
+          const message = `Could not load options: ${JSON.stringify(error)}`;
+          const loadingElement = document.querySelector('#loading');
+          if (loadingElement) {
+            loadingElement.innerHTML = message;
+          }
+          reject(message);
+        } else {
+          setTimeout(() => {
+            this.init(++retryCount);
+          }, 500);
         }
-        reject(message);
       };
       this.http.get<IClientOptions>(this.baseUrl + '/options').subscribe(result => {
         ConfigService.options = result;

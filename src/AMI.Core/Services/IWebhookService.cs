@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AMI.Core.Wrappers;
 
 namespace AMI.Core.Services
 {
@@ -15,6 +15,6 @@ namespace AMI.Core.Services
         /// <param name="eventId">The identifier of the event.</param>
         /// <param name="ct">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ProcessAsync(string webhookId, string eventId, CancellationToken ct = default);
+        Task ProcessAsync(string webhookId, string eventId, IWrappedJobCancellationToken ct);
     }
 }
