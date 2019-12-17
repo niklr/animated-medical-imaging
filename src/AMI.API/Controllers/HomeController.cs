@@ -11,7 +11,7 @@ namespace AMI.API.Controllers
     /// <seealso cref="Controller" />
     [Route("")]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IApiConfiguration configuration;
 
@@ -35,13 +35,23 @@ namespace AMI.API.Controllers
         }
 
         /// <summary>
-        /// Gets the test information.
+        /// Gets the remote IP address.
         /// </summary>
-        /// <returns>The test information.</returns>
-        [HttpGet("test")]
-        public IActionResult Test()
+        /// <returns>The remote IP address.</returns>
+        [HttpGet("myip")]
+        public IActionResult MyIp()
         {
             return Ok(HttpContext?.GetRemoteIpAddress(configuration));
+        }
+
+        /// <summary>
+        /// Gets the remote IP address.
+        /// </summary>
+        /// <returns>The remote IP address.</returns>
+        [HttpGet("baseurl")]
+        public IActionResult BaseUrl()
+        {
+            return Ok(AppBaseUrl);
         }
     }
 }

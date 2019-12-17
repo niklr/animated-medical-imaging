@@ -79,8 +79,13 @@ namespace AMI.API.Controllers
                 await SignInAsync(user);
             }
 
-            if (!string.IsNullOrWhiteSpace(redirectUrl) && redirectUrl.StartsWith(AppBaseUrl))
+            if (!string.IsNullOrWhiteSpace(redirectUrl))
             {
+                if (!redirectUrl.StartsWith(AppBaseUrl))
+                {
+                    throw new Exception($"The specified redirect URL '{redirectUrl}' does not start with '{AppBaseUrl}'");
+                }
+
                 return Redirect(redirectUrl);
             }
 
