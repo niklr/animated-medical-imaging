@@ -17,6 +17,7 @@ using AMI.Core.IO.Serializers;
 using AMI.Core.Mappers;
 using AMI.Core.Providers;
 using AMI.Core.Repositories;
+using AMI.Core.Services;
 using AMI.Domain.Enums;
 using AMI.Gif.Extensions.ServiceCollectionExtensions;
 using AMI.Infrastructure.Extensions.ServiceCollectionExtensions;
@@ -72,6 +73,7 @@ namespace AMI.CLI
             services.AddDefaultItk();
 
             services.AddSingleton<IAmiUnitOfWork, MockUnitOfWork>();
+            services.AddSingleton<IBackgroundService, MockBackgroundService>();
             services.AddSingleton<IApplicationConstants, ApplicationConstants>();
             services.AddSingleton<ICustomPrincipalProvider, MockPrincipalProvider>();
             services.AddSingleton<IFileExtensionMapper, FileExtensionMapper>();
