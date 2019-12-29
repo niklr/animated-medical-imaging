@@ -81,9 +81,10 @@ namespace AMI.API.Controllers
 
             if (!string.IsNullOrWhiteSpace(redirectUrl))
             {
-                if (!redirectUrl.StartsWith(AppBaseUrl))
+                var uri = new Uri(redirectUrl);
+                if (!uri.Authority.Equals(Request.Host.Value))
                 {
-                    throw new Exception($"The specified redirect URL '{redirectUrl}' does not start with '{AppBaseUrl}'");
+                    throw new Exception($"The host of the specified redirect URL '{uri.Authority}' does not match with '{Request.Host.Value}'");
                 }
 
                 return Redirect(redirectUrl);
