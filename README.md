@@ -1,5 +1,5 @@
 <h1 align="center">
-	<img src="assets/images/logo_combined.png" alt="animated-medical-imaging logo">
+	<img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/logo_combined.png" alt="animated-medical-imaging logo">
 </h1>
 
 Animated Medical Imaging (AMI) is a container-based solution to streamline the process of generating an optimal subset 
@@ -8,7 +8,7 @@ Despite the focus being on containers tailored for a microservice infrastructure
 it is also possible to process medical images directly in the command line.
 
 <h1 align="center">
-	<img src="assets/images/overview.png" alt="animated-medical-imaging overview">
+	<img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/overview.png" alt="animated-medical-imaging overview">
 </h1>
 
 The container-based solution consists of two services called AMI.API and AMI.Website:
@@ -58,23 +58,23 @@ AMI.Portable.exe --SourcePath SMIR.Brain.XX.O.MR_Flair.36620.mha --DestinationPa
 ```
 
 <p align="center">
-  <img src="assets/images/example1/Z.gif" alt="animated GIF z-axis">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z.gif" alt="animated GIF z-axis">
 </p>
 
 <p align="center">
-  <img src="assets/images/example1/Z_0.png" alt="position 0 z-axis" width="150">
-  <img src="assets/images/example1/Z_1.png" alt="position 1 z-axis" width="150">
-  <img src="assets/images/example1/Z_2.png" alt="position 2 z-axis" width="150">
-  <img src="assets/images/example1/Z_3.png" alt="position 3 z-axis" width="150">
-  <img src="assets/images/example1/Z_4.png" alt="position 4 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_0.png" alt="position 0 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_1.png" alt="position 1 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_2.png" alt="position 2 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_3.png" alt="position 3 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_4.png" alt="position 4 z-axis" width="150">
 </p>
 
 <p align="center">
-  <img src="assets/images/example1/Z_5.png" alt="position 5 z-axis" width="150">
-  <img src="assets/images/example1/Z_6.png" alt="position 6 z-axis" width="150">
-  <img src="assets/images/example1/Z_7.png" alt="position 7 z-axis" width="150">
-  <img src="assets/images/example1/Z_8.png" alt="position 8 z-axis" width="150">
-  <img src="assets/images/example1/Z_9.png" alt="position 9 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_5.png" alt="position 5 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_6.png" alt="position 6 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_7.png" alt="position 7 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_8.png" alt="position 8 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example1/Z_9.png" alt="position 9 z-axis" width="150">
 </p>
 
 The second example [[2]](#ref2) is part of the ISLES 2018: Ischemic Stroke Lesion Segmentation Challenge dataset hosted on the SMIR platform [[3]](#ref3).
@@ -85,23 +85,23 @@ AMI.Portable.exe --SourcePath SMIR.Brain.XX.O.CT.346124.nii --DestinationPath te
 ```
 
 <p align="center">
-  <img src="assets/images/example2/Z.gif" alt="animated GIF z-axis">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z.gif" alt="animated GIF z-axis">
 </p>
 
 <p align="center">
-  <img src="assets/images/example2/Z_0.png" alt="position 0 z-axis" width="150">
-  <img src="assets/images/example2/Z_1.png" alt="position 1 z-axis" width="150">
-  <img src="assets/images/example2/Z_2.png" alt="position 2 z-axis" width="150">
-  <img src="assets/images/example2/Z_3.png" alt="position 3 z-axis" width="150">
-  <img src="assets/images/example2/Z_4.png" alt="position 4 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_0.png" alt="position 0 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_1.png" alt="position 1 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_2.png" alt="position 2 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_3.png" alt="position 3 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_4.png" alt="position 4 z-axis" width="150">
 </p>
 
 <p align="center">
-  <img src="assets/images/example2/Z_5.png" alt="position 5 z-axis" width="150">
-  <img src="assets/images/example2/Z_6.png" alt="position 6 z-axis" width="150">
-  <img src="assets/images/example2/Z_7.png" alt="position 7 z-axis" width="150">
-  <img src="assets/images/example2/Z_8.png" alt="position 8 z-axis" width="150">
-  <img src="assets/images/example2/Z_9.png" alt="position 9 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_5.png" alt="position 5 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_6.png" alt="position 6 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_7.png" alt="position 7 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_8.png" alt="position 8 z-axis" width="150">
+  <img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example2/Z_9.png" alt="position 9 z-axis" width="150">
 </p>
 
 [1]<a name="ref1"></a> [SMIR.Brain.XX.O.MR_Flair.36620.mha: BRATS 2015 - Training - HGG - tcia_pat499_0001](https://www.smir.ch/objects/36620)
@@ -115,7 +115,7 @@ First, the settings can be defined which will be used to process the image uploa
 Finally, the extracted result can be directly viewed in the web browser.
 
 <h1 align="center">
-	<img src="assets/images/example3/ami-website.gif" alt="animated-medical-imaging website">
+	<img src="https://raw.githubusercontent.com/niklr/animated-medical-imaging/master/assets/images/example3/ami-website.gif" alt="animated-medical-imaging website">
 </h1>
 
 ### Installation <a name="installation"></a>
